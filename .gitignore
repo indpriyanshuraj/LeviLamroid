@@ -1,0 +1,53 @@
+# Build directories
+build/
+bin/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Compiled object files & libraries
+*.o
+*.obj
+*.a
+*.la
+*.lai
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Dependency tracking & logs
+*.d
+*.log
+*.bak
+*.tmp
+*.swp
+*~
+
+# IDE & Editor artifacts
+.DS_Store
+.cache/
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+compile_commands.json
+.clangd/
+
+# Ninja build files
+*.ninja*
+.ninja_deps
+.ninja_log
+
+# Distribution binary packages (release artifacts belong in GitHub Releases)
+dist/*.so
+dist/*.zip
+dist/*.levipack
+
+# Starter template build artifacts
+template/build/
+template/dist/
+template/*.so
+template/*.zip
+template/*.levipack

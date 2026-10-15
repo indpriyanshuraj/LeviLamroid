@@ -1,0 +1,1914 @@
+{
+  "metadata": {
+    "version": "1.26.52.3",
+    "target_binary": "libminecraftpe.so",
+    "arch": "arm64-v8a",
+    "source_reference": "bedrock_server_1.26.52.3_linux_debug",
+    "timestamp": "2026-10-10T08:30:00Z",
+    "total_symbols_matched": 99,
+    "domains": [
+      "ACTOR",
+      "PLAYER",
+      "WORLD",
+      "ITEM",
+      "PACKET",
+      "COMMAND",
+      "UI"
+    ]
+  },
+  "symbols": {
+    "_ZN5Actor8baseTickEv": {
+      "name": "Actor::baseTick",
+      "mangled": "_ZN5Actor8baseTickEv",
+      "msvc_signature": "?baseTick@Actor@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self"
+      ],
+      "rva": "0xf560820",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 2,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor3dieERK17ActorDamageSource": {
+      "name": "Actor::die",
+      "mangled": "_ZN5Actor3dieERK17ActorDamageSource",
+      "msvc_signature": "?die@Actor@@UEAAXAEBVActorDamageSource@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self",
+        "const ActorDamageSource& source"
+      ],
+      "rva": "0xf564e7c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 4,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZNK5Actor14getCustomNameB5cxx11Ev": {
+      "name": "Actor::getCustomName",
+      "mangled": "_ZNK5Actor14getCustomNameB5cxx11Ev",
+      "msvc_signature": "?getCustomName@Actor@@UEBAAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ",
+      "return_type": "const std::string&",
+      "arguments": [
+        "const Actor* self"
+      ],
+      "rva": "0xf565888",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 6,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZNK5Actor11getPositionEv": {
+      "name": "Actor::getPosition",
+      "mangled": "_ZNK5Actor11getPositionEv",
+      "msvc_signature": "?getPosition@Actor@@QEBAAEBVVec3@@XZ",
+      "return_type": "const Vec3&",
+      "arguments": [
+        "const Actor* self"
+      ],
+      "rva": "0x85dd088",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": null,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZNK5Actor12hasComponentEj": {
+      "name": "Actor::hasComponent",
+      "mangled": "_ZNK5Actor12hasComponentEj",
+      "msvc_signature": "?hasComponent@Actor@@QEBA_NI@Z",
+      "return_type": "bool",
+      "arguments": [
+        "const Actor* self",
+        "uint32_t componentHash"
+      ],
+      "rva": "0xf583390",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": null,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor4hurtERK17ActorDamageSourcefbb": {
+      "name": "Actor::hurt",
+      "mangled": "_ZN5Actor4hurtERK17ActorDamageSourcefbb",
+      "msvc_signature": "?hurt@Actor@@UEAA_NAEBVActorDamageSource@@M_N1@Z",
+      "return_type": "bool",
+      "arguments": [
+        "Actor* self",
+        "const ActorDamageSource& source",
+        "float damage",
+        "bool knockback",
+        "bool ignite"
+      ],
+      "rva": "0xf5609a8",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 3,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor10normalTickEv": {
+      "name": "Actor::normalTick",
+      "mangled": "_ZN5Actor10normalTickEv",
+      "msvc_signature": "?normalTick@Actor@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self"
+      ],
+      "rva": "0xf27da94",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 1,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor13setCustomNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "Actor::setCustomName",
+      "mangled": "_ZN5Actor13setCustomNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?setCustomName@Actor@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self",
+        "const std::string& name"
+      ],
+      "rva": "0xf57e694",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": null,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor7setPosERK4Vec3": {
+      "name": "Actor::setPos",
+      "mangled": "_ZN5Actor7setPosERK4Vec3",
+      "msvc_signature": "?setPos@Actor@@UEAAXAEBVVec3@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self",
+        "const Vec3& pos"
+      ],
+      "rva": "0xf5655d0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 5,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor6setRotERK4Vec2": {
+      "name": "Actor::setRot",
+      "mangled": "_ZN5Actor6setRotERK4Vec2",
+      "msvc_signature": "?setRot@Actor@@UEAAXAEBVVec2@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self",
+        "const Vec2& rot"
+      ],
+      "rva": "0xf5662b8",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 7,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZN5Actor10teleportToERK4Vec3bfii": {
+      "name": "Actor::teleportTo",
+      "mangled": "_ZN5Actor10teleportToERK4Vec3bfii",
+      "msvc_signature": "?teleportTo@Actor@@UEAAXAEBVVec3@@_NMHH@Z",
+      "return_type": "void",
+      "arguments": [
+        "Actor* self",
+        "const Vec3& pos",
+        "bool shouldStopRiding",
+        "float cause",
+        "int targetDim",
+        "int sourceDim"
+      ],
+      "rva": "0xf5746bc",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "ACTOR",
+      "details": {
+        "class": "Actor",
+        "slot_index": 22,
+        "domain": "ACTOR"
+      }
+    },
+    "_ZNK5Block11getDescriptionB5cxx11Ev": {
+      "name": "Block::getDescription",
+      "mangled": "_ZNK5Block11getDescriptionB5cxx11Ev",
+      "msvc_signature": "?getDescription@Block@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ",
+      "return_type": "std::string",
+      "arguments": [
+        "const Block* self"
+      ],
+      "rva": "0x89a5c30",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "WORLD",
+      "details": {
+        "class": "Block",
+        "slot_index": null,
+        "domain": "WORLD"
+      }
+    },
+    "_ZNK5Block14getRuntimeIdEv": {
+      "name": "Block::getRuntimeId",
+      "mangled": "_ZNK5Block14getRuntimeIdEv",
+      "msvc_signature": "?getRuntimeId@Block@@QEBAIXZ",
+      "return_type": "uint32_t",
+      "arguments": [
+        "const Block* self"
+      ],
+      "rva": "0x89a5c4c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "WORLD",
+      "details": {
+        "class": "Block",
+        "slot_index": null,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN21BlockDefinitionLoader23processCustomComponentsEv": {
+      "name": "BlockDefinitionLoader::processCustomComponents",
+      "mangled": "_ZN21BlockDefinitionLoader23processCustomComponentsEv",
+      "msvc_signature": "?processCustomComponents@BlockDefinitionLoader@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "BlockDefinitionLoader* self"
+      ],
+      "rva": "0x10491ff8",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockDefinitionLoader",
+        "slot_index": null,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN11BlockSource12destroyBlockERK8BlockPosb": {
+      "name": "BlockSource::destroyBlock",
+      "mangled": "_ZN11BlockSource12destroyBlockERK8BlockPosb",
+      "msvc_signature": "?destroyBlock@BlockSource@@UEAA_NAEBVBlockPos@@_N@Z",
+      "return_type": "bool",
+      "arguments": [
+        "BlockSource* self",
+        "const BlockPos& pos",
+        "bool dropResources"
+      ],
+      "rva": "0xfb9a468",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockSource",
+        "slot_index": 10,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN11BlockSource13fetchEntitiesEPK5ActorRK4AABBRSt6vectorIPS0_SaIS6_EE": {
+      "name": "BlockSource::fetchEntities",
+      "mangled": "_ZN11BlockSource13fetchEntitiesEPK5ActorRK4AABBRSt6vectorIPS0_SaIS6_EE",
+      "msvc_signature": "?fetchEntities@BlockSource@@UEAAXPEBVActor@@AEBVAABB@@AEAV?$vector@PEAVActor@@V?$allocator@PEAVActor@@@std@@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "BlockSource* self",
+        "const Actor* except",
+        "const AABB& bb",
+        "std::vector<Actor*>& outEntities"
+      ],
+      "rva": "0xfb9a55c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockSource",
+        "slot_index": 11,
+        "domain": "WORLD"
+      }
+    },
+    "_ZNK11BlockSource8getBlockERK8BlockPos": {
+      "name": "BlockSource::getBlock",
+      "mangled": "_ZNK11BlockSource8getBlockERK8BlockPos",
+      "msvc_signature": "?getBlock@BlockSource@@UEBAAEBVBlock@@AEBVBlockPos@@@Z",
+      "return_type": "const Block&",
+      "arguments": [
+        "const BlockSource* self",
+        "const BlockPos& pos"
+      ],
+      "rva": "0xfb91918",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockSource",
+        "slot_index": 2,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN11BlockSource8setBlockERK8BlockPosRK5Blockia": {
+      "name": "BlockSource::setBlock",
+      "mangled": "_ZN11BlockSource8setBlockERK8BlockPosRK5Blockia",
+      "msvc_signature": "?setBlock@BlockSource@@UEAA_NAEBVBlockPos@@AEBVBlock@@HC@Z",
+      "return_type": "bool",
+      "arguments": [
+        "BlockSource* self",
+        "const BlockPos& pos",
+        "const Block& block",
+        "int updateFlags",
+        "signed char layer"
+      ],
+      "rva": "0xfb99330",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockSource",
+        "slot_index": 9,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN17BlockTypeRegistry4initEv": {
+      "name": "BlockTypeRegistry::init",
+      "mangled": "_ZN17BlockTypeRegistry4initEv",
+      "msvc_signature": "?init@BlockTypeRegistry@@SAXXZ",
+      "return_type": "void",
+      "arguments": [],
+      "rva": "0xad6d44c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "WORLD",
+      "details": {
+        "class": "BlockTypeRegistry",
+        "slot_index": null,
+        "domain": "WORLD"
+      }
+    },
+    "_ZNK15ButtonComponent14getButtonStateEv": {
+      "name": "ButtonComponent::getButtonState",
+      "mangled": "_ZNK15ButtonComponent14getButtonStateEv",
+      "msvc_signature": "?getButtonState@ButtonComponent@@UEBA?AW4ButtonState@@XZ",
+      "return_type": "int",
+      "arguments": [
+        "const ButtonComponent* self"
+      ],
+      "rva": "0x96fc208",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ButtonComponent",
+        "slot_index": 4,
+        "domain": "UI"
+      }
+    },
+    "_ZN15ButtonComponent11handleEventERK11ScreenEvent": {
+      "name": "ButtonComponent::handleEvent",
+      "mangled": "_ZN15ButtonComponent11handleEventERK11ScreenEvent",
+      "msvc_signature": "?handleEvent@ButtonComponent@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
+      "return_type": "uint32_t",
+      "arguments": [
+        "void* self",
+        "const void* event"
+      ],
+      "rva": "0x96fb8e8",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ButtonComponent",
+        "slot_index": 2,
+        "domain": "UI"
+      }
+    },
+    "_ZN15ButtonComponent10setPressedEb": {
+      "name": "ButtonComponent::setPressed",
+      "mangled": "_ZN15ButtonComponent10setPressedEb",
+      "msvc_signature": "?setPressed@ButtonComponent@@UEAAX_N@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "bool pressed"
+      ],
+      "rva": "0x96fc22c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ButtonComponent",
+        "slot_index": 3,
+        "domain": "UI"
+      }
+    },
+    "_ZN20ChatScreenController11handleEventERK11ScreenEvent": {
+      "name": "ChatScreenController::handleEvent",
+      "mangled": "_ZN20ChatScreenController11handleEventERK11ScreenEvent",
+      "msvc_signature": "?handleEvent@ChatScreenController@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
+      "return_type": "uint32_t",
+      "arguments": [
+        "ChatScreenController* self",
+        "const ScreenEvent& event"
+      ],
+      "rva": "0x9a0f020",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "CHAT",
+      "details": {
+        "class": "ChatScreenController",
+        "slot_index": 10,
+        "domain": "CHAT"
+      }
+    },
+    "_ZN20ChatScreenController12propertyBindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "ChatScreenController::propertyBind",
+      "mangled": "_ZN20ChatScreenController12propertyBindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?propertyBind@ChatScreenController@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ChatScreenController* self",
+        "const std::string& propName"
+      ],
+      "rva": "0x9a0f948",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "CHAT",
+      "details": {
+        "class": "ChatScreenController",
+        "slot_index": 18,
+        "domain": "CHAT"
+      }
+    },
+    "_ZN14ClientInstance14getLocalPlayerEv": {
+      "name": "ClientInstance::getLocalPlayer",
+      "mangled": "_ZN14ClientInstance14getLocalPlayerEv",
+      "msvc_signature": "?getLocalPlayer@ClientInstance@@UEBAPEAVLocalPlayer@@XZ",
+      "return_type": "LocalPlayer*",
+      "arguments": [
+        "const ClientInstance* self"
+      ],
+      "rva": "0x97fd534",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ClientInstance",
+        "slot_index": 1,
+        "domain": "UI"
+      }
+    },
+    "_ZN15CommandRegistry14executeCommandER14CommandContext": {
+      "name": "CommandRegistry::executeCommand",
+      "mangled": "_ZN15CommandRegistry14executeCommandER14CommandContext",
+      "msvc_signature": "?executeCommand@CommandRegistry@@QEBA?AUCommandOutputSender@@AEAVCommandContext@@@Z",
+      "return_type": "int",
+      "arguments": [
+        "const CommandRegistry* self",
+        "CommandContext& ctx"
+      ],
+      "rva": "0xc5c8d1c",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "CommandRegistry",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN15CommandRegistry15registerCommandERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEPKcb19CommandPermissionLevel11CommandFlagS8_": {
+      "name": "CommandRegistry::registerCommand",
+      "mangled": "_ZN15CommandRegistry15registerCommandERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEPKcb19CommandPermissionLevel11CommandFlagS8_",
+      "msvc_signature": "?registerCommand@CommandRegistry@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEBD_NW4CommandPermissionLevel@@UCommandFlag@@4@Z",
+      "return_type": "void",
+      "arguments": [
+        "CommandRegistry* self",
+        "const std::string& name",
+        "const char* desc",
+        "bool enabled",
+        "int perm",
+        "int flag1",
+        "int flag2"
+      ],
+      "rva": "0xdc4a370",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "CommandRegistry",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN23CubemapBackgroundScreen7$renderER13ScreenContextRK17FrameRenderObject": {
+      "name": "CubemapBackgroundScreen::$render",
+      "mangled": "_ZN23CubemapBackgroundScreen7$renderER13ScreenContextRK17FrameRenderObject",
+      "msvc_signature": "?$render@CubemapBackgroundScreen@@UEAAXAEAVScreenContext@@AEBVFrameRenderObject@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "CubemapBackgroundScreen* self",
+        "ScreenContext& ctx",
+        "const FrameRenderObject& frameObject"
+      ],
+      "rva": "0x9b7c9e0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "CubemapBackgroundScreen",
+        "slot_index": 2,
+        "domain": "UI"
+      }
+    },
+    "_ZN9Dimension14getBlockSourceEv": {
+      "name": "Dimension::getBlockSource",
+      "mangled": "_ZN9Dimension14getBlockSourceEv",
+      "msvc_signature": "?getBlockSource@Dimension@@UEAAAEAVBlockSource@@XZ",
+      "return_type": "BlockSource&",
+      "arguments": [
+        "Dimension* self"
+      ],
+      "rva": "0x8d0682c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Dimension",
+        "slot_index": 3,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN9Dimension4tickEv": {
+      "name": "Dimension::tick",
+      "mangled": "_ZN9Dimension4tickEv",
+      "msvc_signature": "?tick@Dimension@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Dimension* self"
+      ],
+      "rva": "0x89a5c30",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Dimension",
+        "slot_index": 0,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN8GameMode10attackSlotER8BlockPosEa": {
+      "name": "GameMode::attackSlot",
+      "mangled": "_ZN8GameMode10attackSlotER8BlockPosEa",
+      "msvc_signature": "?attackSlot@GameMode@@UEAA_NAEAVBlockPos@@C@Z",
+      "return_type": "bool",
+      "arguments": [
+        "GameMode* self",
+        "BlockPos& pos",
+        "signed char face"
+      ],
+      "rva": "0xf8a073c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "GameMode",
+        "slot_index": 4,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN8GameMode12destroyBlockERK8BlockPosa": {
+      "name": "GameMode::destroyBlock",
+      "mangled": "_ZN8GameMode12destroyBlockERK8BlockPosa",
+      "msvc_signature": "?destroyBlock@GameMode@@UEAA_NAEBVBlockPos@@C@Z",
+      "return_type": "bool",
+      "arguments": [
+        "GameMode* self",
+        "const BlockPos& pos",
+        "signed char face"
+      ],
+      "rva": "0xf8a03ac",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "GameMode",
+        "slot_index": 3,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN8GameMode9useItemOnER9ItemStackRK8BlockPosEfaRK4Vec3PK5Block": {
+      "name": "GameMode::useItemOn",
+      "mangled": "_ZN8GameMode9useItemOnER9ItemStackRK8BlockPosEfaRK4Vec3PK5Block",
+      "msvc_signature": "?useItemOn@GameMode@@UEAA_NAEAVItemStack@@AEBVBlockPos@@EMAEBVVec3@@PEBVBlock@@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "GameMode* self",
+        "ItemStack& item",
+        "const BlockPos& pos",
+        "unsigned char face",
+        "float clickX",
+        "signed char clickY",
+        "const Vec3& hitPos",
+        "const Block* block"
+      ],
+      "rva": "0xf89fe18",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "GameMode",
+        "slot_index": 2,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN12GameRenderer18renderCurrentFrameEf": {
+      "name": "GameRenderer::renderCurrentFrame",
+      "mangled": "_ZN12GameRenderer18renderCurrentFrameEf",
+      "msvc_signature": "?renderCurrentFrame@GameRenderer@@QEAAXM@Z",
+      "return_type": "void",
+      "arguments": [
+        "GameRenderer* self",
+        "float interpolation"
+      ],
+      "rva": "0xb2e8808",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "GameRenderer",
+        "slot_index": 1,
+        "domain": "UI"
+      }
+    },
+    "_ZN7GuiData20displayClientMessageERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "GuiData::displayClientMessage",
+      "mangled": "_ZN7GuiData20displayClientMessageERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?displayClientMessage@GuiData@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "GuiData* self",
+        "const std::string& msg"
+      ],
+      "rva": "0xa10391c",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "CHAT",
+      "details": {
+        "class": "GuiData",
+        "slot_index": null,
+        "domain": "CHAT"
+      }
+    },
+    "_ZN12ItemRegistry23_tryRegisterAndInitItemERK12HashedString": {
+      "name": "ItemRegistry::_tryRegisterAndInitItem",
+      "mangled": "_ZN12ItemRegistry23_tryRegisterAndInitItemERK12HashedString",
+      "msvc_signature": "?_tryRegisterAndInitItem@ItemRegistry@@QEAA?AV?$SharedPtr@VItem@@@@AEBVHashedString@@@Z",
+      "return_type": "void*",
+      "arguments": [
+        "ItemRegistry* self",
+        "const void* identifier"
+      ],
+      "rva": "0xfbb3014",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemRegistry",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZNK12ItemRegistry19parseItemIdentifierERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERi": {
+      "name": "ItemRegistry::parseItemIdentifier",
+      "mangled": "_ZNK12ItemRegistry19parseItemIdentifierERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERi",
+      "msvc_signature": "?parseItemIdentifier@ItemRegistry@@QEBA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAH@Z",
+      "return_type": "bool",
+      "arguments": [
+        "const ItemRegistry* self",
+        "const std::string& name",
+        "int& outId"
+      ],
+      "rva": "0xfbb5a54",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemRegistry",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN9ItemStack3useER6Player": {
+      "name": "ItemStack::use",
+      "mangled": "_ZN9ItemStack3useER6Player",
+      "msvc_signature": "?use@ItemStack@@QEAAAEAV1@AEAVPlayer@@@Z",
+      "return_type": "ItemStack&",
+      "arguments": [
+        "ItemStack* self",
+        "Player& player"
+      ],
+      "rva": "0x8db7998",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStack",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN9ItemStack10useOnActorER5Actor": {
+      "name": "ItemStack::useOnActor",
+      "mangled": "_ZN9ItemStack10useOnActorER5Actor",
+      "msvc_signature": "?useOnActor@ItemStack@@QEAA_NAEAVActor@@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "ItemStack* self",
+        "Actor& actor"
+      ],
+      "rva": "0x8db7980",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStack",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZNK13ItemStackBase11getCustomNameB5cxx11Ev": {
+      "name": "ItemStackBase::getCustomName",
+      "mangled": "_ZNK13ItemStackBase11getCustomNameB5cxx11Ev",
+      "msvc_signature": "?getCustomName@ItemStackBase@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ",
+      "return_type": "std::string",
+      "arguments": [
+        "const ItemStackBase* self"
+      ],
+      "rva": "0x8db82d4",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStackBase",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZNK13ItemStackBase10isEnchantedEv": {
+      "name": "ItemStackBase::isEnchanted",
+      "mangled": "_ZNK13ItemStackBase10isEnchantedEv",
+      "msvc_signature": "?isEnchanted@ItemStackBase@@QEBA_NXZ",
+      "return_type": "bool",
+      "arguments": [
+        "const ItemStackBase* self"
+      ],
+      "rva": "0x8db82d0",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStackBase",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZNK13ItemStackBase12sameItemAndAuxERKS_": {
+      "name": "ItemStackBase::sameItemAndAux",
+      "mangled": "_ZNK13ItemStackBase12sameItemAndAuxERKS_",
+      "msvc_signature": "?sameItemAndAux@ItemStackBase@@QEBA_NAEBV1@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "const ItemStackBase* self",
+        "const ItemStackBase& other"
+      ],
+      "rva": "0x8db7a00",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStackBase",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN13ItemStackBase13setCustomNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "ItemStackBase::setCustomName",
+      "mangled": "_ZN13ItemStackBase13setCustomNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?setCustomName@ItemStackBase@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ItemStackBase* self",
+        "const std::string& name"
+      ],
+      "rva": "0x8db82e0",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "ItemStackBase",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN5Level14forEachPlayerESt8functionIFbR6PlayerEE": {
+      "name": "Level::forEachPlayer",
+      "mangled": "_ZN5Level14forEachPlayerESt8functionIFbR6PlayerEE",
+      "msvc_signature": "?forEachPlayer@Level@@UEBAXV?$function@$$A6A_NAEAVPlayer@@@Z@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "const Level* self",
+        "std::function<bool(Player&)> callback"
+      ],
+      "rva": "0xfb315e4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Level",
+        "slot_index": 10,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN5Level12saveGameDataEv": {
+      "name": "Level::saveGameData",
+      "mangled": "_ZN5Level12saveGameDataEv",
+      "msvc_signature": "?saveGameData@Level@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Level* self"
+      ],
+      "rva": "0xfb3099c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Level",
+        "slot_index": 4,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN5Level4tickEv": {
+      "name": "Level::tick",
+      "mangled": "_ZN5Level4tickEv",
+      "msvc_signature": "?tick@Level@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Level* self"
+      ],
+      "rva": "0xfb313c4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Level",
+        "slot_index": 6,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN5Level12tickEntitiesEv": {
+      "name": "Level::tickEntities",
+      "mangled": "_ZN5Level12tickEntitiesEv",
+      "msvc_signature": "?tickEntities@Level@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Level* self"
+      ],
+      "rva": "0xfb313d4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "WORLD",
+      "details": {
+        "class": "Level",
+        "slot_index": 7,
+        "domain": "WORLD"
+      }
+    },
+    "_ZN11LocalPlayer9applyTurnERK4Vec2": {
+      "name": "LocalPlayer::applyTurn",
+      "mangled": "_ZN11LocalPlayer9applyTurnERK4Vec2",
+      "msvc_signature": "?applyTurn@LocalPlayer@@UEAAXAEBVVec2@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "LocalPlayer* self",
+        "const Vec2& turn"
+      ],
+      "rva": "0xaac5f58",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "LocalPlayer",
+        "slot_index": 2,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN11LocalPlayer4moveERK4Vec3": {
+      "name": "LocalPlayer::move",
+      "mangled": "_ZN11LocalPlayer4moveERK4Vec3",
+      "msvc_signature": "?move@LocalPlayer@@UEAAXAEBVVec3@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "LocalPlayer* self",
+        "const Vec3& delta"
+      ],
+      "rva": "0xf287188",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "LocalPlayer",
+        "slot_index": 0,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN11LocalPlayer10normalTickEv": {
+      "name": "LocalPlayer::normalTick",
+      "mangled": "_ZN11LocalPlayer10normalTickEv",
+      "msvc_signature": "?normalTick@LocalPlayer@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "LocalPlayer* self"
+      ],
+      "rva": "0xf9e26c0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "LocalPlayer",
+        "slot_index": 1,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN11LocalPlayer12setClientPosERK4Vec3": {
+      "name": "LocalPlayer::setClientPos",
+      "mangled": "_ZN11LocalPlayer12setClientPosERK4Vec3",
+      "msvc_signature": "?setClientPos@LocalPlayer@@UEAAXAEBVVec3@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "LocalPlayer* self",
+        "const Vec3& pos"
+      ],
+      "rva": "0xaac6280",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "LocalPlayer",
+        "slot_index": 8,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN20LoopbackPacketSender4sendER6Packet": {
+      "name": "LoopbackPacketSender::send",
+      "mangled": "_ZN20LoopbackPacketSender4sendER6Packet",
+      "msvc_signature": "?send@LoopbackPacketSender@@UEAAXAEAVPacket@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "LoopbackPacketSender* self",
+        "Packet& packet"
+      ],
+      "rva": "0xc68fac4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PACKET",
+      "details": {
+        "class": "LoopbackPacketSender",
+        "slot_index": 2,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN20LoopbackPacketSender18sendToClientsStateERKSt6vectorIPK12ServerPlayerSaIS3_EERK6Packet13SubClientId": {
+      "name": "LoopbackPacketSender::sendToClientsState",
+      "mangled": "_ZN20LoopbackPacketSender18sendToClientsStateERKSt6vectorIPK12ServerPlayerSaIS3_EERK6Packet13SubClientId",
+      "msvc_signature": "?sendToClientsState@LoopbackPacketSender@@UEAAXAEBV?$vector@PEBVServerPlayer@@V?$allocator@PEBVServerPlayer@@@std@@@std@@AEBVPacket@@W4SubClientId@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "LoopbackPacketSender* self",
+        "const std::vector<const ServerPlayer*>& players",
+        "const Packet& packet",
+        "uint8_t clientId"
+      ],
+      "rva": "0xc69f3ac",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PACKET",
+      "details": {
+        "class": "LoopbackPacketSender",
+        "slot_index": 1,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN13MinecraftGame33_initWaitForMainMenuResourcesEv": {
+      "name": "MinecraftGame::_initWaitForMainMenuResources",
+      "mangled": "_ZN13MinecraftGame33_initWaitForMainMenuResourcesEv",
+      "msvc_signature": "?_initWaitForMainMenuResources@MinecraftGame@@IEAA?AW4WorkResult@SerialWorkList@@XZ",
+      "return_type": "int",
+      "arguments": [
+        "MinecraftGame* self"
+      ],
+      "rva": "0x9941548",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "MinecraftGame",
+        "slot_index": 3,
+        "domain": "UI"
+      }
+    },
+    "_ZN5OreUi4initEv": {
+      "name": "OreUi::init",
+      "mangled": "_ZN5OreUi4initEv",
+      "msvc_signature": "?init@OreUi@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "void* self"
+      ],
+      "rva": "0x96f742c",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "UI",
+      "details": {
+        "class": "OreUi",
+        "slot_index": null,
+        "domain": "UI"
+      }
+    },
+    "_ZNK6Packet5getIdEv": {
+      "name": "Packet::getId",
+      "mangled": "_ZNK6Packet5getIdEv",
+      "msvc_signature": "?getId@Packet@@UEBA?AW4MinecraftPacketIds@@XZ",
+      "return_type": "uint32_t",
+      "arguments": [
+        "const Packet* self"
+      ],
+      "rva": "0x98c1bcc",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PACKET",
+      "details": {
+        "class": "Packet",
+        "slot_index": 1,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN6Packet4readER20ReadOnlyBinaryStream": {
+      "name": "Packet::read",
+      "mangled": "_ZN6Packet4readER20ReadOnlyBinaryStream",
+      "msvc_signature": "?read@Packet@@UEAA?AW4StreamReadResult@@AEAVReadOnlyBinaryStream@@@Z",
+      "return_type": "int",
+      "arguments": [
+        "Packet* self",
+        "ReadOnlyBinaryStream& stream"
+      ],
+      "rva": "0x127cb0cc",
+      "match_type": "vtable_slot",
+      "confidence": 0.95,
+      "domain": "PACKET",
+      "details": {
+        "class": "Packet",
+        "slot_index": 3,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN6Packet5writeER12BinaryStream": {
+      "name": "Packet::write",
+      "mangled": "_ZN6Packet5writeER12BinaryStream",
+      "msvc_signature": "?write@Packet@@UEBAXAEAVBinaryStream@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "const Packet* self",
+        "BinaryStream& stream"
+      ],
+      "rva": "0xd26d89c",
+      "match_type": "vtable_slot",
+      "confidence": 0.95,
+      "domain": "PACKET",
+      "details": {
+        "class": "Packet",
+        "slot_index": 2,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN16PanoramaRenderer7$renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControli": {
+      "name": "PanoramaRenderer::$render",
+      "mangled": "_ZN16PanoramaRenderer7$renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControli",
+      "msvc_signature": "?$render@PanoramaRenderer@@UEAAXAEAVMinecraftUIRenderContext@@AEAVIClientInstance@@AEAVUIControl@@H@Z",
+      "return_type": "void",
+      "arguments": [
+        "PanoramaRenderer* self",
+        "MinecraftUIRenderContext& ctx",
+        "IClientInstance& client",
+        "UIControl& owner",
+        "int layer"
+      ],
+      "rva": "0x967fa98",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "PanoramaRenderer",
+        "slot_index": 17,
+        "domain": "UI"
+      }
+    },
+    "_ZN6Player6attackER5ActorRK17ActorDamageCause": {
+      "name": "Player::attack",
+      "mangled": "_ZN6Player6attackER5ActorRK17ActorDamageCause",
+      "msvc_signature": "?attack@Player@@UEAA_NAEAVActor@@AEBW4ActorDamageCause@@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "Player* self",
+        "Actor& target",
+        "const ActorDamageCause& cause"
+      ],
+      "rva": "0xf9e2e84",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "Player",
+        "slot_index": 9,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN6Player10canUseItemERK13ItemStackBase": {
+      "name": "Player::canUseItem",
+      "mangled": "_ZN6Player10canUseItemERK13ItemStackBase",
+      "msvc_signature": "?canUseItem@Player@@UEAA_NAEBVItemStackBase@@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "Player* self",
+        "const ItemStackBase& item"
+      ],
+      "rva": "0xf9eb460",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "Player",
+        "slot_index": 10,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN6Player4jumpEv": {
+      "name": "Player::jump",
+      "mangled": "_ZN6Player4jumpEv",
+      "msvc_signature": "?jump@Player@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Player* self"
+      ],
+      "rva": "0xfa01170",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "Player",
+        "slot_index": 5,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN6Player10normalTickEv": {
+      "name": "Player::normalTick",
+      "mangled": "_ZN6Player10normalTickEv",
+      "msvc_signature": "?normalTick@Player@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Player* self"
+      ],
+      "rva": "0xf9e26c0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "Player",
+        "slot_index": 1,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN6Player8respawnEv": {
+      "name": "Player::respawn",
+      "mangled": "_ZN6Player8respawnEv",
+      "msvc_signature": "?respawn@Player@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "Player* self"
+      ],
+      "rva": "0xf9e2728",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "Player",
+        "slot_index": 8,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN19ProgressBarRenderer7$renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControli": {
+      "name": "ProgressBarRenderer::$render",
+      "mangled": "_ZN19ProgressBarRenderer7$renderER24MinecraftUIRenderContextR15IClientInstanceR9UIControli",
+      "msvc_signature": "?$render@ProgressBarRenderer@@UEAAXAEAVMinecraftUIRenderContext@@AEAVIClientInstance@@AEAVUIControl@@H@Z",
+      "return_type": "void",
+      "arguments": [
+        "ProgressBarRenderer* self",
+        "MinecraftUIRenderContext& ctx",
+        "IClientInstance& client",
+        "UIControl& owner",
+        "int layer"
+      ],
+      "rva": "0x9685f70",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ProgressBarRenderer",
+        "slot_index": 17,
+        "domain": "UI"
+      }
+    },
+    "_ZN7Recipes15addShapedRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorIS5_SaIS5_EERKSA_I16RecipeIngredientSaISD_EE": {
+      "name": "Recipes::addShapedRecipe",
+      "mangled": "_ZN7Recipes15addShapedRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorIS5_SaIS5_EERKSA_I16RecipeIngredientSaISD_EE",
+      "msvc_signature": "?addShapedRecipe@Recipes@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemInstance@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@3@AEBV?$vector@VRecipeIngredient@@V?$allocator@VRecipeIngredient@@@2@@3@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Recipes* self",
+        "const std::string& name",
+        "const void* result",
+        "const void* pattern",
+        "const void* ingredients"
+      ],
+      "rva": "0xfc3d3d8",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "Recipes",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN7Recipes18addShapelessRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorI16RecipeIngredientSaISA_EE": {
+      "name": "Recipes::addShapelessRecipe",
+      "mangled": "_ZN7Recipes18addShapelessRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorI16RecipeIngredientSaISA_EE",
+      "msvc_signature": "?addShapelessRecipe@Recipes@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemInstance@@AEBV?$vector@VRecipeIngredient@@V?$allocator@VRecipeIngredient@@@2@@3@@Z",
+      "return_type": "void",
+      "arguments": [
+        "Recipes* self",
+        "const std::string& name",
+        "const void* result",
+        "const void* ingredients"
+      ],
+      "rva": "0xfc3e1d4",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "ITEM",
+      "details": {
+        "class": "Recipes",
+        "slot_index": null,
+        "domain": "ITEM"
+      }
+    },
+    "_ZN17RepositoryLoading16findVanillaPacksEv": {
+      "name": "RepositoryLoading::findVanillaPacks",
+      "mangled": "_ZN17RepositoryLoading16findVanillaPacksEv",
+      "msvc_signature": "?findVanillaPacks@RepositoryLoading@@YA?AV?$vector@V?$shared_ptr@VResourcePack@@@std@@V?$allocator@V?$shared_ptr@VResourcePack@@@std@@@2@@std@@XZ",
+      "return_type": "void*",
+      "arguments": [],
+      "rva": "0xc96c79c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "PACK",
+      "details": {
+        "class": "RepositoryLoading",
+        "slot_index": null,
+        "domain": "PACK"
+      }
+    },
+    "_ZNK12ResourcePack11getResourceERKN4Core4PathERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "ResourcePack::getResource",
+      "mangled": "_ZNK12ResourcePack11getResourceERKN4Core4PathERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?getResource@ResourcePack@@QEBA_NAEBVPath@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "const void* self",
+        "const void* path",
+        "std::string& outData"
+      ],
+      "rva": "0x6a3dea0",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "PACK",
+      "details": {
+        "class": "ResourcePack",
+        "slot_index": null,
+        "domain": "PACK"
+      }
+    },
+    "_ZN19ResourcePackManager16_doStackOperationERSt8functionIFvR17ResourcePackStackEE": {
+      "name": "ResourcePackManager::_doStackOperation",
+      "mangled": "_ZN19ResourcePackManager16_doStackOperationERSt8functionIFvR17ResourcePackStackEE",
+      "msvc_signature": "?_doStackOperation@ResourcePackManager@@AEAAXAEAV?$function@$$A6AXAEAVResourcePackStack@@@Z@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "void* fn"
+      ],
+      "rva": "0xc930460",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "PACK",
+      "details": {
+        "class": "ResourcePackManager",
+        "slot_index": null,
+        "domain": "PACK"
+      }
+    },
+    "_ZN19ResourcePackManager8getStackE8PackType": {
+      "name": "ResourcePackManager::getStack",
+      "mangled": "_ZN19ResourcePackManager8getStackE8PackType",
+      "msvc_signature": "?getStack@ResourcePackManager@@QEBAAEBVResourcePackStack@@W4PackType@@@Z",
+      "return_type": "const void*",
+      "arguments": [
+        "const void* self",
+        "int packType"
+      ],
+      "rva": "0xc92d268",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "PACK",
+      "details": {
+        "class": "ResourcePackManager",
+        "slot_index": null,
+        "domain": "PACK"
+      }
+    },
+    "_ZN22ResourcePackRepository22getResourcePackInPathERKN4Core4PathE": {
+      "name": "ResourcePackRepository::getResourcePackInPath",
+      "mangled": "_ZN22ResourcePackRepository22getResourcePackInPathERKN4Core4PathE",
+      "msvc_signature": "?getResourcePackInPath@ResourcePackRepository@@QEAA?AV?$shared_ptr@VResourcePack@@@std@@AEBVPath@@@Z",
+      "return_type": "void*",
+      "arguments": [
+        "void* self",
+        "const void* path"
+      ],
+      "rva": "0xc9356e4",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "PACK",
+      "details": {
+        "class": "ResourcePackRepository",
+        "slot_index": null,
+        "domain": "PACK"
+      }
+    },
+    "_ZN12SceneFactory12createScreenERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "SceneFactory::createScreen",
+      "mangled": "_ZN12SceneFactory12createScreenERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?createScreen@SceneFactory@@UEAA?AV?$shared_ptr@VScreenView@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z",
+      "return_type": "void*",
+      "arguments": [
+        "SceneFactory* self",
+        "const std::string& name"
+      ],
+      "rva": "0x9afd430",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "SceneFactory",
+        "slot_index": 3,
+        "domain": "UI"
+      }
+    },
+    "_ZN12SceneFactory22createScreenControllerERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt10shared_ptrI11ScreenModelE": {
+      "name": "SceneFactory::createScreenController",
+      "mangled": "_ZN12SceneFactory22createScreenControllerERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt10shared_ptrI11ScreenModelE",
+      "msvc_signature": "?createScreenController@SceneFactory@@UEAA?AV?$shared_ptr@VScreenController@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$shared_ptr@VScreenModel@@@3@@Z",
+      "return_type": "void*",
+      "arguments": [
+        "void* self",
+        "const std::string& name",
+        "void* model"
+      ],
+      "rva": "0x9aef950",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "SceneFactory",
+        "slot_index": 2,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController19addStaticScreenVarsERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE": {
+      "name": "ScreenController::addStaticScreenVars",
+      "mangled": "_ZN16ScreenController19addStaticScreenVarsERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
+      "msvc_signature": "?addStaticScreenVars@ScreenController@@UEAAXAEAV?$unordered_map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIPropertyBag@@U?$hash@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$equal_to@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIPropertyBag@@@std@@@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ScreenController* self",
+        "void* screenVarsMap"
+      ],
+      "rva": "0x9b15fa4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 19,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController18addStaticScreenVarsERSt13unordered_mapINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE9UIPropertySt4hashIS6_ESt8equal_toIS6_ESaISt4pairIKS6_S7_EEE": {
+      "name": "ScreenController::addStaticScreenVars",
+      "mangled": "_ZN16ScreenController18addStaticScreenVarsERSt13unordered_mapINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE9UIPropertySt4hashIS6_ESt8equal_toIS6_ESaISt4pairIKS6_S7_EEE",
+      "msvc_signature": "?addStaticScreenVars@ScreenController@@UEAAXAEAV?$unordered_map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIProperty@@U?$hash@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$equal_to@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIProperty@@@std@@@2@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ScreenController* self",
+        "void* screenVarsMap"
+      ],
+      "rva": "0x9b15fa4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 19,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController4bindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEjPv": {
+      "name": "ScreenController::bind",
+      "mangled": "_ZN16ScreenController4bindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEjPv",
+      "msvc_signature": "?bind@ScreenController@@UEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@IPEAX@Z",
+      "return_type": "bool",
+      "arguments": [
+        "ScreenController* self",
+        "const std::string& name",
+        "uint32_t index",
+        "void* outVal"
+      ],
+      "rva": "0x9b1481c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 14,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController4bindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEjS7_": {
+      "name": "ScreenController::bind",
+      "mangled": "_ZN16ScreenController4bindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEjS7_",
+      "msvc_signature": "?bind@ScreenController@@UEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@IPEAV23@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "ScreenController* self",
+        "const std::string& name",
+        "uint32_t index",
+        "void* outVal"
+      ],
+      "rva": "0x9b1481c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 14,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController7canExitEv": {
+      "name": "ScreenController::canExit",
+      "mangled": "_ZN16ScreenController7canExitEv",
+      "msvc_signature": "?canExit@ScreenController@@UEAA_NXZ",
+      "return_type": "bool",
+      "arguments": [
+        "ScreenController* self"
+      ],
+      "rva": "0x9b169dc",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 26,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController11handleEventERK11ScreenEvent": {
+      "name": "ScreenController::handleEvent",
+      "mangled": "_ZN16ScreenController11handleEventERK11ScreenEvent",
+      "msvc_signature": "?handleEvent@ScreenController@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
+      "return_type": "uint32_t",
+      "arguments": [
+        "ScreenController* self",
+        "const void* event"
+      ],
+      "rva": "0x9b14870",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 10,
+        "domain": "UI"
+      }
+    },
+    "_ZN16ScreenController4tickEv": {
+      "name": "ScreenController::tick",
+      "mangled": "_ZN16ScreenController4tickEv",
+      "msvc_signature": "?tick@ScreenController@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ScreenController* self"
+      ],
+      "rva": "0x9b14fec",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenController",
+        "slot_index": 4,
+        "domain": "UI"
+      }
+    },
+    "_ZNK2ui23ScreenTechStackSelector21getTechStackForScreenERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE": {
+      "name": "ScreenTechStackSelector::getTechStackForScreen",
+      "mangled": "_ZNK2ui23ScreenTechStackSelector21getTechStackForScreenERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE",
+      "msvc_signature": "?getTechStackForScreen@ScreenTechStackSelector@ui@@QEBA?AW4TechStack@2@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+      "return_type": "int",
+      "arguments": [
+        "const void* self",
+        "const std::string& screenName"
+      ],
+      "rva": "0x974e844",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "UI",
+      "details": {
+        "class": "ScreenTechStackSelector",
+        "slot_index": null,
+        "domain": "UI"
+      }
+    },
+    "_ZN21ScriptModuleMinecraft12ScriptSystemEv": {
+      "name": "ScriptModuleMinecraft::ScriptSystem",
+      "mangled": "_ZN21ScriptModuleMinecraft12ScriptSystemEv",
+      "msvc_signature": "?ScriptSystem@ScriptModuleMinecraft@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "void* self"
+      ],
+      "rva": "0xe069fe8",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "ScriptModuleMinecraft",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN9Scripting7QuickJSEv": {
+      "name": "Scripting::QuickJS",
+      "mangled": "_ZN9Scripting7QuickJSEv",
+      "msvc_signature": "?QuickJS@Scripting@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "void* self"
+      ],
+      "rva": "0x11432150",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "Scripting",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN14ServerInstance12leaveGameSyncEv": {
+      "name": "ServerInstance::leaveGameSync",
+      "mangled": "_ZN14ServerInstance12leaveGameSyncEv",
+      "msvc_signature": "?leaveGameSync@ServerInstance@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ServerInstance* self"
+      ],
+      "rva": "0xec5d8f8",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "ServerInstance",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN14ServerInstance17startServerThreadEv": {
+      "name": "ServerInstance::startServerThread",
+      "mangled": "_ZN14ServerInstance17startServerThreadEv",
+      "msvc_signature": "?startServerThread@ServerInstance@@QEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ServerInstance* self"
+      ],
+      "rva": "0xec5d8d4",
+      "match_type": "string_xref",
+      "confidence": 0.95,
+      "domain": "COMMAND",
+      "details": {
+        "class": "ServerInstance",
+        "slot_index": null,
+        "domain": "COMMAND"
+      }
+    },
+    "_ZN20ServerNetworkHandler6handleERK17NetworkIdentifierRKSt10shared_ptrI6PacketE": {
+      "name": "ServerNetworkHandler::handle",
+      "mangled": "_ZN20ServerNetworkHandler6handleERK17NetworkIdentifierRKSt10shared_ptrI6PacketE",
+      "msvc_signature": "?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBV?$shared_ptr@VPacket@@@std@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ServerNetworkHandler* self",
+        "const NetworkIdentifier& netId",
+        "const std::shared_ptr<Packet>& packet"
+      ],
+      "rva": "0xc58394c",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PACKET",
+      "details": {
+        "class": "ServerNetworkHandler",
+        "slot_index": 3,
+        "domain": "PACKET"
+      }
+    },
+    "_ZN12ServerPlayer12disconnectB5cxx11Ev": {
+      "name": "ServerPlayer::disconnect",
+      "mangled": "_ZN12ServerPlayer12disconnectB5cxx11Ev",
+      "msvc_signature": "?disconnect@ServerPlayer@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ServerPlayer* self"
+      ],
+      "rva": "0xec4ca24",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "ServerPlayer",
+        "slot_index": 5,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN12ServerPlayer10handleMoveERK18PlayerLocationMode": {
+      "name": "ServerPlayer::handleMove",
+      "mangled": "_ZN12ServerPlayer10handleMoveERK18PlayerLocationMode",
+      "msvc_signature": "?handleMove@ServerPlayer@@UEAAXAEBW4PlayerLocationMode@@@Z",
+      "return_type": "void",
+      "arguments": [
+        "ServerPlayer* self",
+        "const PlayerLocationMode& mode"
+      ],
+      "rva": "0xec44ba0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "ServerPlayer",
+        "slot_index": 8,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN12ServerPlayer10normalTickEv": {
+      "name": "ServerPlayer::normalTick",
+      "mangled": "_ZN12ServerPlayer10normalTickEv",
+      "msvc_signature": "?normalTick@ServerPlayer@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ServerPlayer* self"
+      ],
+      "rva": "0xf9e26c0",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "ServerPlayer",
+        "slot_index": 1,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN12ServerPlayer15postRebuildTickEv": {
+      "name": "ServerPlayer::postRebuildTick",
+      "mangled": "_ZN12ServerPlayer15postRebuildTickEv",
+      "msvc_signature": "?postRebuildTick@ServerPlayer@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "ServerPlayer* self"
+      ],
+      "rva": "0xec451c4",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "PLAYER",
+      "details": {
+        "class": "ServerPlayer",
+        "slot_index": 3,
+        "domain": "PLAYER"
+      }
+    },
+    "_ZN11SoundEngine6playUIERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEff": {
+      "name": "SoundEngine::playUI",
+      "mangled": "_ZN11SoundEngine6playUIERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEff",
+      "msvc_signature": "?playUI@SoundEngine@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@MM@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "const std::string& name",
+        "float volume",
+        "float pitch"
+      ],
+      "rva": "0xb79f978",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "AUDIO",
+      "details": {
+        "class": "SoundEngine",
+        "slot_index": null,
+        "domain": "AUDIO"
+      }
+    },
+    "_ZN25StartMenuScreenController7$onOpenEv": {
+      "name": "StartMenuScreenController::$onOpen",
+      "mangled": "_ZN25StartMenuScreenController7$onOpenEv",
+      "msvc_signature": "?$onOpen@StartMenuScreenController@@UEAAXXZ",
+      "return_type": "void",
+      "arguments": [
+        "StartMenuScreenController* self"
+      ],
+      "rva": "0xa2df314",
+      "match_type": "vtable_slot",
+      "confidence": 0.99,
+      "domain": "UI",
+      "details": {
+        "class": "StartMenuScreenController",
+        "slot_index": 14,
+        "domain": "UI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl16AddInitialScriptEPKc": {
+      "name": "cohtml::ViewImpl::AddInitialScript",
+      "mangled": "_ZN6cohtml8ViewImpl16AddInitialScriptEPKc",
+      "msvc_signature": "?AddInitialScript@ViewImpl@cohtml@@UEAAXPEBD@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "const char* script"
+      ],
+      "rva": "0x6d7e41c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "UI",
+      "details": {
+        "class": "cohtml::ViewImpl",
+        "slot_index": null,
+        "domain": "UI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl13ExecuteScriptEPKc": {
+      "name": "cohtml::ViewImpl::ExecuteScript",
+      "mangled": "_ZN6cohtml8ViewImpl13ExecuteScriptEPKc",
+      "msvc_signature": "?ExecuteScript@ViewImpl@cohtml@@UEAAXPEBD@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "const char* script"
+      ],
+      "rva": "0x6d7e008",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "OREUI",
+      "details": {
+        "class": "ViewImpl",
+        "slot_index": null,
+        "domain": "OREUI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl7LoadURLEPKc": {
+      "name": "cohtml::ViewImpl::LoadURL",
+      "mangled": "_ZN6cohtml8ViewImpl7LoadURLEPKc",
+      "msvc_signature": "?LoadURL@ViewImpl@cohtml@@UEAAXPEBD@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "const char* url"
+      ],
+      "rva": "0x6d6f97c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "OREUI",
+      "details": {
+        "class": "ViewImpl",
+        "slot_index": null,
+        "domain": "OREUI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl10MouseEventERKNS_15MouseEventDataE": {
+      "name": "cohtml::ViewImpl::MouseEvent",
+      "mangled": "_ZN6cohtml8ViewImpl10MouseEventERKNS_15MouseEventDataE",
+      "msvc_signature": "?MouseEvent@ViewImpl@cohtml@@UEAA_NAEBUMouseEventData@2@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "void* self",
+        "const void* eventData"
+      ],
+      "rva": "0x6d7b5a8",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "OREUI",
+      "details": {
+        "class": "ViewImpl",
+        "slot_index": null,
+        "domain": "OREUI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl10TouchEventERKNS_15TouchEventDataE": {
+      "name": "cohtml::ViewImpl::TouchEvent",
+      "mangled": "_ZN6cohtml8ViewImpl10TouchEventERKNS_15TouchEventDataE",
+      "msvc_signature": "?TouchEvent@ViewImpl@cohtml@@UEAA_NAEBUTouchEventData@2@@Z",
+      "return_type": "bool",
+      "arguments": [
+        "void* self",
+        "const void* touchData"
+      ],
+      "rva": "0x6d7a048",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "OREUI",
+      "details": {
+        "class": "ViewImpl",
+        "slot_index": null,
+        "domain": "OREUI"
+      }
+    },
+    "_ZN6cohtml8ViewImpl12TriggerEventEPKc": {
+      "name": "cohtml::ViewImpl::TriggerEvent",
+      "mangled": "_ZN6cohtml8ViewImpl12TriggerEventEPKc",
+      "msvc_signature": "?TriggerEvent@ViewImpl@cohtml@@UEAAXPEBD@Z",
+      "return_type": "void",
+      "arguments": [
+        "void* self",
+        "const char* eventName"
+      ],
+      "rva": "0x6d8590c",
+      "match_type": "pattern_match",
+      "confidence": 0.95,
+      "domain": "UI",
+      "details": {
+        "class": "cohtml::ViewImpl",
+        "slot_index": null,
+        "domain": "UI"
+      }
+    }
+  }
+}

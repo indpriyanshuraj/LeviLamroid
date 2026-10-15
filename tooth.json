@@ -1,0 +1,42 @@
+{
+  "format_version": 3,
+  "format_uuid": "3a8b2c10-4d5e-4f6a-9b12-8e7c6b5a4d3f",
+  "tooth": "github.com/spygamingog/LeviLamroid",
+  "version": "1.0.0-beta",
+  "info": {
+    "name": "LeviLamroid",
+    "description": "Next-generation native C++ mod loader runtime and reverse engineering hook hub for Minecraft Bedrock (Android ARM64). By SpyGamingOG.",
+    "tags": [
+      "platform:android-arm64",
+      "platform:levilaunchroid",
+      "platform:client",
+      "type:loader"
+    ],
+    "avatar_url": "https://github.com/spygamingog.png"
+  },
+  "variants": [
+    {
+      "label": "loader",
+      "platform": "android-arm64",
+      "dependencies": {},
+      "assets": [
+        {
+          "type": "zip",
+          "urls": [
+            "https://{{tooth}}/releases/download/v{{version}}/LeviLamroid-1.0.0-beta-android-arm64.zip"
+          ],
+          "placements": [
+            {
+              "type": "dir",
+              "src": "LeviLamroid/",
+              "dest": "mods/LeviLamroid/"
+            }
+          ]
+        }
+      ],
+      "preserve_files": [],
+      "remove_files": [],
+      "scripts": {}
+    }
+  ]
+}

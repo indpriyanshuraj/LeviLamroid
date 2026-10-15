@@ -1,0 +1,17 @@
+{
+    global:
+        PLGetModRegistration;
+        PLMod_Load;
+        PLMod_Enable;
+        PLMod_Disable;
+        PLMod_Unload;
+        LeviMod_Load;
+        ll_mod_load;
+        ll_mod_enable;
+        ll_mod_disable;
+        ll_mod_unload;
+        _ZN2ll*;
+        _ZN11levilamroid*;
+    local:
+        *;
+};

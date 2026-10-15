@@ -1,0 +1,17 @@
+{
+    "format_version": 2,
+    "header": {
+        "name": "ExampleMod",
+        "description": "Default template client mod for LeviLamroid on Android ARM64",
+        "version": [1, 0, 0],
+        "uuid": "7a3d9b1c-4e8f-4a2b-9c1d-8e7f6a5b4c3d",
+        "entry": "libexample_mod.so",
+        "type": "native_mod"
+    },
+    "dependencies": [
+        {
+            "name": "LeviLamroid",
+            "version": ">=1.0.0"
+        }
+    ]
+}
