@@ -45,7 +45,6 @@ Traditionally on Android Bedrock, each individual client mod had to:
    - **Zero-Latency GNU Build ID Resolution**: Scans the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to extract the unique 20-byte SHA-1 Build ID:
      - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
      - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1` (100% complete RVAs across gameplay, UI, render, audio, commands, and virtual resource pack access strategies)
-   - **No 1.26.62.3 Version**: Scaffolding placeholder 1.26.62.3 was permanently removed as it does not exist on Android Bedrock.
    - **Zero Binary Bloat**: Each supported version adds only ~200 bytes of RVA table entries in `.rodata`, requiring no duplicated hook machinery or bloated codebases.
    - Dynamic pattern scanner (`scanMinecraft`) for automated signature matching on newer releases.
 

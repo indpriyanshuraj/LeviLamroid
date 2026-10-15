@@ -118,3 +118,11 @@ bool installAllHooks() {
 }
 
 } // namespace levilamroid::hooks
+
+namespace ll::hooks {
+
+LL_API bool installAllHooks() {
+    return ::levilamroid::hooks::installAllHooks();
+}
+
+} // namespace ll::hooks

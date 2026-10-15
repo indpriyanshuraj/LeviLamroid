@@ -60,7 +60,7 @@ It establishes five non-negotiable architectural guarantees:
 1. **Canonical Modding Namespace (`ll`)**: LeviLamroid adheres directly to **`namespace ll`** as its official coding namespace, matching LeviLamina on Windows. Modders write against `ll::Logger`, `ll::event::EventBus`, `ll::mcpe::getOffsets()`, and `ll::mod::NativeMod`. This guarantees 100% desktop-to-mobile source parity with zero code rewrites. For compatibility, `namespace levilamroid` and `namespace llntol` are provided as seamless aliases.
 2. **100% LeviLamina Windows Source Parity**: Code written against the official LeviLamina Windows C++ API (`ll::*`) compiles and runs identically on Android without rewriting detour boilerplate or class structures.
 3. **LeviLauncher PreLoader Native Extensions**: Native Android mobile capabilities—including touch pointer routing, physical keyboard mapping, floating HUD touch buttons, launcher drawer registration, and storage access framework compatibility—are exposed out-of-the-box (`pl::*`).
-4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.52.3`, `1.26.45.1`). Fictitious versions (like `1.26.62.3`) do not exist and have been completely eliminated.
+4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.52.3`, `1.26.45.1`).
 5. **Strict Initial Versioning Policy**: All new mods, template starter projects, and LeviLamroid distribution bundles are initialized strictly at version **`v1.0.0`** (or `1.0.0`) unless explicitly instructed by the user to bump versions.
 
 ---
@@ -414,9 +414,6 @@ Located in `#include <levilamroid/api/mcpe/Offsets.h>` or through `#include <lev
 LeviLamroid reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at boot time to match the 20-byte SHA-1 GNU Build ID:
 - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3`
 - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1`
-
-> [!NOTE]
-> **No Version 1.26.62.3 Exists**: Version 1.26.62.3 was an accidental placeholder from early scaffolding and never existed for Android Bedrock. All `rva1_26_62` fields and comments have been permanently removed.
 
 ### 8.2 Version Functions
 - `const EngineOffsets& ll::mcpe::getOffsets()`: Returns the active RVA offset table.
