@@ -68,3 +68,15 @@ This marks the **Initial Beta Testing Release** of **LeviLamroid** (`v1.0.0-beta
 
 #### 8. Official C++20 Starter Template
 - Complete ready-to-build mod template in `template/` including `CMakeLists.txt`, `manifest.json`, HUD button demo, event bus listeners, and one-click packaging (`package.sh`).
+
+#### 9. High-Level Human Engine APIs & Dynamic Symbol Linkage
+- **Human-Friendly Engine APIs**: Added `ll::ui` and `ll::render` namespaces with convenient callbacks (`ll::ui::onStartMenuOpen`, `ll::ui::onPlayButtonClicked`, `ll::ui::forceJsonUIForScreen`, `ll::render::suppressVanillaBackground`, `ll::render::registerPostClearCallback`, `ll::isInWorld()`, `ll::isMainMenu()`), removing the need for client mods to hardcode raw hex addresses or manage complex memory detours.
+- **RTLD_GLOBAL Self-Promotion**: Automatically promotes `liblevilamroid.so` to `RTLD_GLOBAL` at initialization so subsequent mods can resolve symbols seamlessly across dlopen boundaries.
+- **Dynamic Symbol Dispatch**: Client headers resolve functions dynamically via `dlsym`, preventing launcher load-time `dlopen` failures.
+
+#### 10. Robust In-World Detection & Skybox Pass Protection
+- **Verified Golden RVAs for Tick Cycles**: Corrected `LocalPlayer::move`, `Player::normalTick`, `Level::tick`, `GameMode::destroyBlock`, and `GameMode::useItemOn` for Bedrock 1.26.52.3 (`0x0F9E26C0`, `0x0FB313C4`, `0x0F287188`, `0x0F8A03AC`, `0x0F89FE18`) and 1.26.45.1 (`0x0F0B1680`, `0x0F222D0C`, `0x0EA8DE1C`, `0x0EF72C18`, `0x0EF72684`), replacing stale placeholder addresses.
+- **`Actor::normalTick` Interception**: Added hook on `Actor::normalTick` (`0x0F27DA94` / `0x0EA412D4`) guaranteeing that entity ticks in world continuously affirm `setInWorld(true)` and `setIsMainMenu(false)`.
+- **Screen Exit Guarding**: Purged rogue `setIsMainMenu(true)` call from `hooked_menuExit`, ensuring screen transitions (exiting menus to load worlds, closing pause menus) never falsely report being on the main menu.
+- **Dual-State Render Pass Protection**: OpenGL ES `glClear` callbacks and cubemap/panorama suppressions now require both `isMainMenu() && !isInWorld()`. In-world skyboxes and RenderDragon passes are 100% untouched.
+- **Safe Fallback Semantics**: `ll::isMainMenu()` now defaults to `false` when unbound, preventing false positive menu states during engine initialization and world loading.

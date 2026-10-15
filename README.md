@@ -133,6 +133,23 @@ bool ll_mod_load(void*) {
         // Render custom 3D scenes or HUDs here (OpenGL ES 3.0)
     });
 
+    // 6. High-Level Human Functions (Zero Hardcoded Offsets)
+    ll::ui::forceJsonUIForScreen("/main-menu");
+    ll::ui::onStartMenuOpen([]() {
+        ll::Logger::getInstance().info("Start Menu Opened via human callback!");
+    });
+    ll::ui::onPlayButtonClicked([]() {
+        ll::Logger::getInstance().info("Play button clicked!");
+    });
+    ll::render::suppressVanillaBackground(true); // Suppresses vanilla cubemap/panorama ONLY on menu, never in world
+    ll::render::registerPostClearCallback([](int width, int height) {
+        // Direct GPU thread render pass immediately after glClear
+    });
+
+    if (ll::isInWorld()) {
+        // Safe check: player is active in world, custom menu scenes are disabled
+    }
+
     return true;
 }
 ```

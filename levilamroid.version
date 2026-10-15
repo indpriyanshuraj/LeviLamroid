@@ -10,6 +10,7 @@
         ll_mod_enable;
         ll_mod_disable;
         ll_mod_unload;
+        ll_*;
         _ZN2ll*;
         _ZN11levilamroid*;
     local:

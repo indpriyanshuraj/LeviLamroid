@@ -3,22 +3,52 @@
 #include "ll/api/memory/Hook.h"
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/player/PlayerEvents.h"
-
 #include "ll/api/event/world/WorldEvents.h"
 #include "ll/api/chrono/GameTickScheduler.h"
+#include <atomic>
 
 namespace levilamroid::hooks {
 
 bool installUIHooks();
 bool installRenderHooks();
 
+static std::atomic<bool> sIsInWorld = false;
+static std::atomic<bool> sIsMainMenu = false;
+
+void setInWorld(bool inWorld) {
+    sIsInWorld.store(inWorld);
+    if (inWorld) sIsMainMenu.store(false);
+}
+
+void setIsMainMenu(bool isMenu) {
+    sIsMainMenu.store(isMenu);
+    if (isMenu) sIsInWorld.store(false);
+}
+
+bool isInWorld() {
+    return sIsInWorld.load();
+}
+
+bool isMainMenu() {
+    return sIsMainMenu.load();
+}
+
 static void* sOrigLocalPlayerMove = nullptr;
 static void* sOrigPlayerNormalTick = nullptr;
 static void* sOrigLevelTick = nullptr;
+static void* sOrigActorNormalTick = nullptr;
 static void* sOrigGameModeDestroyBlock = nullptr;
 static void* sOrigGameModeUseItem = nullptr;
 
+static void hooked_actorNormalTick(void* self) {
+    setInWorld(true);
+    if (sOrigActorNormalTick) {
+        reinterpret_cast<void(*)(void*)>(sOrigActorNormalTick)(self);
+    }
+}
+
 static void hooked_localPlayerMove(void* self, const Vec3& delta) {
+    setInWorld(true);
     ll::event::PlayerMoveEvent event(reinterpret_cast<Player*>(self), delta);
     ll::event::EventBus::getInstance().publish(event);
 
@@ -28,6 +58,7 @@ static void hooked_localPlayerMove(void* self, const Vec3& delta) {
 }
 
 static void hooked_playerNormalTick(void* self) {
+    setInWorld(true);
     ll::event::PlayerTickEvent event(reinterpret_cast<Player*>(self));
     ll::event::EventBus::getInstance().publish(event);
 
@@ -40,6 +71,7 @@ static void hooked_playerNormalTick(void* self) {
 }
 
 static void hooked_levelTick(void* self) {
+    setInWorld(true);
     ll::event::LevelTickEvent event(reinterpret_cast<Level*>(self));
     ll::event::EventBus::getInstance().publish(event);
 
@@ -74,7 +106,7 @@ static bool hooked_gameModeUseItem(void* self, void* itemStack) {
     return false;
 }
 
-static bool installGameplayHooks() {
+[[maybe_unused]] static bool installGameplayHooks() {
     auto& logger = ll::Logger::getInstance();
     const auto& off = ::levilamroid::mcpe::getOffsets();
 
@@ -91,6 +123,11 @@ static bool installGameplayHooks() {
     if (off.levelTick) {
         if (ll::memory::hookRva(off.levelTick, (void*)&hooked_levelTick, &sOrigLevelTick)) {
             logger.info("Hooked Level::tick at RVA 0x", std::hex, off.levelTick);
+        }
+    }
+    if (off.actorNormalTick) {
+        if (ll::memory::hookRva(off.actorNormalTick, (void*)&hooked_actorNormalTick, &sOrigActorNormalTick)) {
+            logger.info("Hooked Actor::normalTick at RVA 0x", std::hex, off.actorNormalTick);
         }
     }
     if (off.gameModeDestroyBlock) {
@@ -112,12 +149,23 @@ bool installAllHooks() {
     bool ok = true;
     ok = installUIHooks() && ok;
     ok = installRenderHooks() && ok;
-    ok = installGameplayHooks() && ok;
     logger.info("All LeviLamroid core engine hooks active.");
     return ok;
 }
 
 } // namespace levilamroid::hooks
+
+extern "C" {
+
+LL_API bool ll_is_in_world() {
+    return ::levilamroid::hooks::isInWorld();
+}
+
+LL_API bool ll_is_main_menu() {
+    return ::levilamroid::hooks::isMainMenu();
+}
+
+} // extern "C"
 
 namespace ll::hooks {
 

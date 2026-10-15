@@ -49,6 +49,7 @@
     - 17.16 [Math & Spatial Coordinate Types (`BlockPos`, `Vec3`, `HashedString`, `BoundingBox`)](#1716-math--spatial-coordinate-types-blockpos-vec3-hashedstring-boundingbox)
 18. [Bundled Third-Party Utilities (`nlohmann::json`, `glm`)](#18-bundled-third-party-utilities-nlohmannjson-glm)
 19. [Version Policy & Starter Template (`v1.0.0`)](#19-version-policy--starter-template-v100)
+24. [High-Level Human Engine APIs (`ll::ui`, `ll::render`, `ll::isInWorld`)](#24-high-level-human-engine-apis-llui-llrender-llisinworld)
 
 ---
 
@@ -1234,4 +1235,34 @@ It details:
 - **Hooking conversions** (RVA and Itanium VTable slot indexing)
 - **Android mobile input** (`pl::input` and `pl::modmenu`)
 - **What cannot exist on Android** (Windows SEH, PDB runtime parsing, Win32 APIs)
+
+---
+
+## 24. High-Level Human Engine APIs (`ll::ui`, `ll::render`, `ll::isInWorld`)
+
+To allow client mods to function seamlessly without hardcoding version-specific memory RVAs or managing manual memory detours, LeviLamroid provides high-level human helper APIs:
+
+### 24.1 UI Human Functions (`ll::ui`)
+Header: `#include "ll/api/ui/UI.h"`
+
+- `void ll::ui::forceJsonUIForScreen(const std::string& screenName)`: Forces the specified screen (e.g. `"/main-menu"`, `"start_screen"`) to use the legacy JSON UI tech stack instead of OreUI.
+- `void ll::ui::onStartMenuOpen(void (*cb)())`: Registers a callback invoked immediately when the start menu controller opens.
+- `void ll::ui::onPlayButtonClicked(void (*cb)())`: Registers a callback invoked when the user taps the Play button on the main menu.
+- `void ll::ui::onSettingsButtonClicked(void (*cb)())`: Registers a callback invoked when Settings is tapped.
+- `void ll::ui::onRealmsButtonClicked(void (*cb)())`: Registers a callback invoked when Realms is tapped.
+- `void ll::ui::onDressingRoomButtonClicked(void (*cb)())`: Registers a callback invoked when the Dressing Room / Profile button is tapped.
+- `void ll::ui::onMarketplaceButtonClicked(void (*cb)())`: Registers a callback invoked when Marketplace is tapped.
+- `void ll::ui::onMenuExit(void (*cb)())`: Registers a callback invoked when returning or exiting a sub-menu back to the start menu.
+
+### 24.2 Render Human Functions (`ll::render`)
+Header: `#include "ll/api/render/Render.h"`
+
+- `void ll::render::suppressVanillaBackground(bool suppress)`: Suppresses vanilla cubemap panorama drawing strictly on menus. Automatically disabled when in-world so gameplay skies are untouched.
+- `void ll::render::registerPostClearCallback(void (*cb)(int width, int height))`: Registers a GPU render callback executed immediately after the OpenGL ES `glClear` color pass. Strictly active on menus and disabled in-world.
+
+### 24.3 Engine State Queries (`ll`)
+Header: `#include "levilamroid/LeviLamroid.h"`
+
+- `bool ll::isInWorld()`: Returns `true` when playing in an active world. Continuously affirmed by golden tick hooks (`Player::normalTick`, `Level::tick`, `Actor::normalTick`, and `LocalPlayer::move`). Automatically resets to `false` when the start menu opens.
+- `bool ll::isMainMenu()`: Returns `true` strictly while idling on the start menu (`StartMenuScreenController::$onOpen`). Automatically set to `false` as soon as world loading begins (`ProgressBarRenderer`) or world ticks start. Defaults safely to `false` if uninitialized.
 

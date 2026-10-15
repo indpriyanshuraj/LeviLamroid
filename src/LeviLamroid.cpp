@@ -91,6 +91,11 @@ static PLModRegistration sLoaderRegistration = {
 // Lifecycle Exports & Automatic Constructor
 __attribute__((constructor))
 static void levilamroid_init_ctor() {
+    // Promote liblevilamroid.so to RTLD_GLOBAL so subsequent dlopened mods can resolve its symbols
+    Dl_info info;
+    if (dladdr(reinterpret_cast<void*>(&levilamroid_init_ctor), &info) && info.dli_fname) {
+        dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+    }
     levilamroid::init();
 }
 

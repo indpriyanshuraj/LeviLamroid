@@ -31,6 +31,15 @@
 #include "levilamroid/api/sound/SoundEngine.h"
 #include "levilamroid/api/sound/FmodSound.h"
 
+// High-level human-friendly engine state & hooks
+#include "ll/api/ui/UI.h"
+#include "ll/api/render/Render.h"
+
+extern "C" {
+LL_API bool ll_is_in_world();
+LL_API bool ll_is_main_menu();
+}
+
 // Canonical LeviLamroid namespace: ll (standard LeviLamina modding namespace)
 namespace ll {
 
@@ -39,6 +48,22 @@ bool init();
 
 /// Shutdown and clean up hooks
 void shutdown();
+
+/// Human function: Check if player is currently in-world
+inline bool isInWorld() {
+    using Fn = bool (*)();
+    static auto fn = reinterpret_cast<Fn>(dlsym(ui::getLoaderHandle(), "ll_is_in_world"));
+    if (fn) return fn();
+    return false;
+}
+
+/// Human function: Check if client is currently in main menu
+inline bool isMainMenu() {
+    using Fn = bool (*)();
+    static auto fn = reinterpret_cast<Fn>(dlsym(ui::getLoaderHandle(), "ll_is_main_menu"));
+    if (fn) return fn();
+    return false;
+}
 
 // Engine subsystem aliases under ll::
 namespace sound = ::levilamroid::sound;
