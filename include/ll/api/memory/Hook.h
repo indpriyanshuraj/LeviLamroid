@@ -59,6 +59,9 @@ LL_API bool hookRva(uintptr_t rva, void* detour, void** original);
 /// Hook a function via Global Offset Table (GOT) relocation slot
 LL_API bool hookGotSlot(uintptr_t gotRva, void* detour, void** original);
 
+/// Hook a function by an IDA-style byte pattern signature, with optional fast-path fallback RVA
+LL_API bool hookSignature(const std::string& pattern, void* detour, void** original, uintptr_t fallbackRva = 0);
+
 /// Resolve a symbol dynamically from libminecraftpe.so or loaded libraries
 LL_API void* findMinecraftSymbol(const char* symbolName);
 

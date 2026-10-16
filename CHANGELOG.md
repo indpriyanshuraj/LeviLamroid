@@ -4,9 +4,33 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.1-beta] - 2026-10-16
+
+### Added
+- **100% Signature-Based Engine Hooking**:
+  - All core engine hooks across gameplay (`LocalPlayer::move`, `Player::normalTick`, `Level::tick`, `Actor::normalTick`, `GameMode::destroyBlock`, `GameMode::useItemOn`), rendering (`PanoramaRenderer::render`, `CubemapBackgroundScreen::render`, `ProgressBarRenderer::render`), and UI (`StartMenuScreenController::tick`, `_onOpen`, buttons, exit) now use `ll::memory::hookSignature`.
+  - Built-in $O(1)$ fast-path verification checks against known RVAs in under 1 µs, falling back to automated `memchr`-accelerated ELF `.text` wildcard scanning for seamless resilience across point updates.
+- **Expanded Multi-Version Bedrock Support**:
+  - Full native support for **Minecraft Bedrock 1.26.44.3**, **1.26.45.1**, **1.26.51.1**, and **1.26.52.3** on LeviLauncher (Android ARM64).
+  - Centralized version resolution in `Offsets.cpp` using ELF `PT_NOTE` segment GNU Build ID hashing with zero version coupling in mod runtime headers.
+- **Dynamic Profile & Configuration Discovery**:
+  - `NativeMod::getConfigDir()` and packaging automation now dynamically scan all active LeviLauncher profile directories under `/sdcard/Android/media/org.levimc.launcher/minecraft/*/mods`.
+  - Exported `ll_mcpe_get_detected_version()` for clean dynamic version querying across loaded native mods.
+
+### Fixed & Improved
+- **Start Menu Lifecycle & Sub-Screen Return Synchronization**:
+  - Hooked `StartMenuScreenController::tick` to create a robust, universal lifecycle tracker for the start screen across all Bedrock versions.
+  - Correctly defers initial menu entry events and callbacks until Bedrock finishes loading assets and dismisses the loading screen (`!isLoading()`).
+  - Automatically detects when returning/popping back to the start menu from any sub-screen (Play, Settings, Realms, Dressing Room, Marketplace), reliably dispatching `onStartMenuOpen()` and publishing `StartMenuOpenEvent` so client mods can seamlessly restore main menu state, background effects, or custom camera orientations.
+- **Backbuffer GPU FBO Filtering (`hooked_glClear`)**:
+  - Post-clear rendering callbacks strictly target the default display framebuffer (`GL_FRAMEBUFFER_BINDING == 0`), preventing redundant draw cycles and texture corruption during off-screen UI composition passes.
+- **Purged Hardcoded Profile Paths**:
+  - Eliminated legacy hardcoded profile references (`Minecraft_1.26.45.1`) across mod headers and scripts, ensuring complete version-agnostic profile management.
+
 ---
 
 ## [1.0.0-beta] - 2026-10-15
+
 
 ### Initial Beta Testing Release (by SpyGamingOG)
 

@@ -158,3 +158,7 @@ LL_API uintptr_t findFunctionRva(std::string_view name);
 
 } // namespace levilamroid::mcpe
 
+extern "C" {
+LL_API const char* ll_mcpe_get_detected_version();
+}
+

@@ -7,7 +7,7 @@
 
 namespace ll::memory {
 
-static std::vector<int> parsePattern(const std::string& pattern) {
+std::vector<int> parsePattern(const std::string& pattern) {
     std::vector<int> bytes;
     std::istringstream stream(pattern);
     std::string byteStr;
@@ -22,6 +22,24 @@ static std::vector<int> parsePattern(const std::string& pattern) {
     return bytes;
 }
 
+bool verifyPattern(uintptr_t addr, const std::string& patternStr) {
+    if (!addr || patternStr.empty()) return false;
+    auto pattern = parsePattern(patternStr);
+    if (pattern.empty()) return false;
+
+    if (!SafeMemory::isReadable(reinterpret_cast<const void*>(addr), pattern.size())) {
+        return false;
+    }
+
+    const uint8_t* memory = reinterpret_cast<const uint8_t*>(addr);
+    for (size_t i = 0; i < pattern.size(); ++i) {
+        if (pattern[i] != -1 && memory[i] != static_cast<uint8_t>(pattern[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 uintptr_t scanPattern(const std::string& patternStr, uintptr_t start, size_t length) {
     if (start == 0 || length == 0) return 0;
     auto pattern = parsePattern(patternStr);
@@ -29,18 +47,39 @@ uintptr_t scanPattern(const std::string& patternStr, uintptr_t start, size_t len
 
     const uint8_t* memory = reinterpret_cast<const uint8_t*>(start);
     size_t patternSize = pattern.size();
+    if (length < patternSize) return 0;
 
-    for (size_t i = 0; i <= length - patternSize; ++i) {
+    // Find first non-wildcard byte for memchr acceleration
+    size_t firstNonWildcardIdx = 0;
+    while (firstNonWildcardIdx < patternSize && pattern[firstNonWildcardIdx] == -1) {
+        firstNonWildcardIdx++;
+    }
+    if (firstNonWildcardIdx >= patternSize) return start;
+
+    uint8_t firstByte = static_cast<uint8_t>(pattern[firstNonWildcardIdx]);
+    const uint8_t* searchPtr = memory + firstNonWildcardIdx;
+    size_t remainingLen = length - patternSize;
+
+    while (remainingLen > 0) {
+        const uint8_t* match = reinterpret_cast<const uint8_t*>(std::memchr(searchPtr, firstByte, remainingLen));
+        if (!match) break;
+
+        const uint8_t* candidateStart = match - firstNonWildcardIdx;
         bool found = true;
         for (size_t j = 0; j < patternSize; ++j) {
-            if (pattern[j] != -1 && memory[i + j] != static_cast<uint8_t>(pattern[j])) {
+            if (pattern[j] != -1 && candidateStart[j] != static_cast<uint8_t>(pattern[j])) {
                 found = false;
                 break;
             }
         }
         if (found) {
-            return start + i;
+            return reinterpret_cast<uintptr_t>(candidateStart);
         }
+
+        size_t consumed = (match + 1) - searchPtr;
+        if (consumed >= remainingLen) break;
+        remainingLen -= consumed;
+        searchPtr = match + 1;
     }
     return 0;
 }
@@ -48,8 +87,9 @@ uintptr_t scanPattern(const std::string& patternStr, uintptr_t start, size_t len
 uintptr_t scanMinecraft(const std::string& pattern) {
     uintptr_t base = getMinecraftBase();
     if (!base) return 0;
-    // Scan executable text section (~150MB)
-    return scanPattern(pattern, base, 0x0A000000);
+    // Scan text segments of libminecraftpe.so (~328MB on Android ARM64)
+    return scanPattern(pattern, base, 0x15000000);
 }
 
 } // namespace ll::memory
+

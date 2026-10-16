@@ -572,25 +572,40 @@ const SymbolEntry* findSymbolInfo(std::string_view identifier) {
 }
 
 void* resolveSymbolAddress(std::string_view identifier) {
+    // 1. Direct lookup in active multi-version EngineOffsets table (1.26.52.3, 1.26.51.1, 1.26.45.1)
+    uintptr_t engineRva = findFunctionRva(identifier);
+    if (engineRva != 0) {
+        uintptr_t base = ll::memory::getMinecraftBase();
+        if (base != 0) return reinterpret_cast<void*>(base + engineRva);
+    }
+
     const auto* info = findSymbolInfo(identifier);
     std::string ver = getDetectedVersion();
 
-    // 1. Try dynamic symbol lookup via Itanium name
+    // 2. Try dynamic symbol lookup via Itanium name
     if (info && info->itaniumSymbol && info->itaniumSymbol[0] != '\0') {
         void* sym = ll::memory::findMinecraftSymbol(info->itaniumSymbol);
         if (sym) return sym;
     }
 
-    // 2. Direct string dlsym lookup if it's already a mangled name
+    // 3. Direct string dlsym lookup if it's already a mangled name
     if (identifier.starts_with("_ZN") || identifier.starts_with("_ZK")) {
         void* sym = ll::memory::findMinecraftSymbol(std::string(identifier).c_str());
         if (sym) return sym;
     }
 
-    // 3. Fallback to version RVA table
+    // 4. Fallback to version RVA table
     if (info) {
+        if (info->humanName) {
+            uintptr_t hRva = findFunctionRva(info->humanName);
+            if (hRva != 0) {
+                uintptr_t base = ll::memory::getMinecraftBase();
+                if (base != 0) return reinterpret_cast<void*>(base + hRva);
+            }
+        }
+
         uintptr_t rva = 0;
-        if (ver.find("1.26.45") != std::string::npos) {
+        if (ver.find("1.26.44") != std::string::npos || ver.find("1.26.45") != std::string::npos) {
             rva = info->rva1_26_45;
         } else {
             rva = info->rva1_26_52;
@@ -601,7 +616,7 @@ void* resolveSymbolAddress(std::string_view identifier) {
             if (base != 0) return reinterpret_cast<void*>(base + rva);
         }
 
-        // 4. Invariant Pattern Scan fallback if RVA shifted
+        // 5. Invariant Pattern Scan fallback if RVA shifted
         if (info->idaSignature && info->idaSignature[0] != '\0') {
             uintptr_t scanned = ll::memory::scanMinecraft(info->idaSignature);
             if (scanned != 0) {

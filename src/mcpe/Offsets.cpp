@@ -114,7 +114,7 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     // Chat, Command & Packet System RVAs
     .chatScreenControllerHandleEvent     = 0x09A0F020,
     .chatScreenControllerPropertyBind    = 0x09A0F948,
-    .commandRegistryRegisterCommand      = 0x0DC4A4BC,
+    .commandRegistryRegisterCommand      = 0x0DC4A370,
     .loopbackPacketSenderSend            = 0x0C68FAD4,
     .serverNetworkHandlerHandle          = 0x0C58394C,
 
@@ -125,7 +125,7 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .itemRegistryParseItemIdentifier     = 0x0FBB5A54,
     .blockTypeRegistryInit               = 0x0AD6D44C,
     .blockDefinitionLoaderProcessCustomComponents = 0x10491FF8,
-    .actorNormalTick                     = 0x0F27DA94,
+    .actorNormalTick                     = 0x0F27DA98,
     .actorBaseTick                       = 0x0F560820,
     .actorHurt                           = 0x0F5609A8,
     .actorDie                            = 0x0F564E7C,
@@ -140,6 +140,136 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .clientInstanceIsShowingMenuSlot = 151
 };
 
+// Verified Golden Offsets for Minecraft Bedrock 1.26.44.3 (Android ARM64)
+static const EngineOffsets kOffsets_1_26_44_3 = {
+    // UI Screen Tech Stack
+    .getTechStackForScreen    = 0x0938B7B4,
+
+    // Start Menu Screen Controller
+    .startMenuOnOpen          = 0x09EBD9FC,
+    .startMenuTick            = 0x09EC0678,
+
+    // Direct Menu Button Handlers
+    .playButton               = 0x09EF3E04,
+    .settingsButton           = 0x09EF7360,
+    .realmsButton             = 0x09EF7690,
+    .dressingRoomButton       = 0x09EF8310,
+    .marketplaceButton        = 0x09EF8944,
+    .menuExit                 = 0x0A15252C,
+
+    // RenderDragon & Skybox Passes
+    .progressBarRender        = 0x092BECCC,
+    .panoramaRender           = 0x092B8E60,
+    .cubemapBackgroundRender  = 0x097C9A20,
+    .cubemapFaceSubmit        = 0,
+    .cubemapRendererRender    = 0,
+    .mainMenuCubemapPass      = 0,
+    .cubemapDraw              = 0,
+
+    // GPU / libGLESv2 Hooks
+    .glClearGotRva            = 0x124C9D28,
+
+    // MinecraftUIRenderContext Virtual Method RVAs
+    .uiDrawImage              = 0x0AD84690,
+    .uiFlushImages            = 0x0AD85A64,
+    .uiFillRectangle          = 0x0AD86020,
+    .uiDrawRectangle          = 0x0AD873F0,
+    .uiDrawText               = 0x0AD844D0,
+    .uiFlushText              = 0x0AD845D0,
+    .uiDrawNineslice          = 0x0AD85680,
+    .uiGetScreenContext       = 0x0AD87EDC,
+
+    // Player / GameMode / World
+    .localPlayerMove          = 0x0EA8E37C,
+    .playerNormalTick         = 0x0F0B1BE0,
+    .levelTick                = 0x0F22326C,
+    .gameModeDestroyBlock     = 0x0EF73178,
+    .gameModeUseItem          = 0x04C0B120,
+    .gameModeUseItemOn        = 0x0EF72BE4,
+    .gameModeAttack           = 0x04C0BE40,
+    .soundEnginePlay          = 0x0B284980,
+    .soundEnginePlayUI        = 0x0B284B04,
+    .soundEnginePlayAt        = 0x0B284F6C,
+    .soundEngineStop          = 0x0B2850A8,
+
+    // Resource Pack & Asset Access Strategy RVAs
+    .directoryPackGetAsset    = 0x1042D0C4,
+    .zipPackGetAsset          = 0x1040D318,
+    .directoryPackHasAsset    = 0x10441D4C,
+    .zipPackHasAsset          = 0x1040DA6C,
+    .packForEachInAssetSet    = 0x10437E7C,
+    .resourcePackManagerLoad  = 0x0C594BB8,
+    .resourcePackManagerGetStack = 0x0C594960,
+    .resourcePackManagerDoStackOp = 0x0C59B36C,
+    .resourcePackGetResource  = 0x06695294,
+    .textureGroupLoadAsync    = 0x0A403730,
+    .textureGroupEnableLRU    = 0x0A404BC8,
+    .textureHotReloaderRegister = 0x0ACF87B8,
+    .textureHotReloaderRegisterAtlas = 0x0ACFA140,
+    .blockGraphicsGetTextureItem = 0x0A2246D4,
+    .cubemapLoadPanoramas     = 0x097C66E0,
+    .resourcePackRepositoryGetResourcePackInPath = 0x0C59FF90,
+    .repositoryLoadingFindVanillaPacks           = 0x0C5D9224,
+
+    // OreUI (Cohtml Engine) RVAs
+    .cohtmlLoadURL               = 0x069C1B1C,
+    .cohtmlLoadURLImpl           = 0x069C1B24,
+    .cohtmlExecuteScript         = 0x069D0134,
+    .cohtmlAddInitialScript      = 0x069D0548,
+    .cohtmlTriggerEvent          = 0x069D7A38,
+    .cohtmlRegisterForEvent      = 0x069D3CA4,
+    .cohtmlUnregisterFromEvent   = 0x069D4218,
+    .cohtmlTryDispatchClickEvent = 0x069CE170,
+    .cohtmlMouseEvent            = 0x069CD6DC,
+    .cohtmlTouchEvent            = 0x069CC180,
+    .oreUiInit                   = 0x09230524,
+
+    // JSON UI & Screen Controller RVAs
+    .screenControllerTick                = 0x096D747C,
+    .screenControllerHandleEvent         = 0x096D6F48,
+    .screenControllerBind                = 0x096D6EF4,
+    .screenControllerAddStaticScreenVars = 0x096D8434,
+    .screenControllerSetScreenState      = 0x096D8704,
+    .screenControllerCanExit             = 0x096D8E6C,
+    .screenControllerGetScreenModel      = 0x096E5AF0,
+    .sceneFactoryCreateScreenController  = 0x09765630,
+    .sceneFactoryCreateScreen            = 0x097836D8,
+    .buttonComponentHandleEvent          = 0x09338E0C,
+    .buttonComponentSetPressed           = 0x09339750,
+    .buttonComponentGetButtonState       = 0x0933972C,
+    .dataDrivenUILayout                  = 0x091998F8,
+    .dataDrivenUIUIRoot                  = 0x0C59D404,
+    .guiDataDisplayClientMessage         = 0x09CFBC70,
+
+    // Chat, Command & Packet System RVAs
+    .chatScreenControllerHandleEvent     = 0x09684918,
+    .chatScreenControllerPropertyBind    = 0x09685238,
+    .commandRegistryRegisterCommand      = 0x0D607B04,
+    .loopbackPacketSenderSend            = 0x0C2E279C,
+    .serverNetworkHandlerHandle          = 0x0C1E5BEC,
+
+    // Behavior, Recipes, Items, Blocks & Scripting RVAs
+    .recipesAddShapedRecipe              = 0x0F2FC668,
+    .recipesAddShapelessRecipe            = 0x0F2FD534,
+    .itemRegistryTryRegisterAndInitItem  = 0x0F2B00C8,
+    .itemRegistryParseItemIdentifier     = 0x0F2B2AE0,
+    .blockTypeRegistryInit               = 0x0954DA44,
+    .blockDefinitionLoaderProcessCustomComponents = 0x0FB27464,
+    .actorNormalTick                     = 0x0EA41838,
+    .actorBaseTick                       = 0x0EC84B80,
+    .actorHurt                           = 0x0EC84D08,
+    .actorDie                            = 0x0EC891B0,
+    .actorTeleportTo                     = 0x0EC984CC,
+    .actorHasComponent                   = 0x0D6C20E8,
+    .actorSetCustomName                  = 0x0ECA2184,
+    .scriptingQuickJS                    = 0x10918134,
+    .scriptModuleMinecraftScriptSystem   = 0x0DA5509C,
+
+    // VTable Slots
+    .clientInstanceLocalPlayerSlot = 32,
+    .clientInstanceIsShowingMenuSlot = 150
+};
+
 // Verified Golden Offsets for Minecraft Bedrock 1.26.45.1 (Android ARM64)
 static const EngineOffsets kOffsets_1_26_45_1 = {
     .getTechStackForScreen    = 0x0938B714,
@@ -152,7 +282,7 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .marketplaceButton        = 0x09EF88A4,
     .menuExit                 = 0x0A15248C,
     .progressBarRender        = 0x092BEC2C,
-    .panoramaRender           = 0x0967FA98,
+    .panoramaRender           = 0x092B8DC0,
     .cubemapBackgroundRender  = 0x097C99A4,
     .cubemapFaceSubmit        = 0, // In-world skybox sharing; do not suppress
     .cubemapRendererRender    = 0,
@@ -179,9 +309,9 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .soundEnginePlayAt        = 0x0B284EC4,
     .soundEngineStop          = 0x0B285000,
     .directoryPackGetAsset    = 0x1042CB64,
-    .zipPackGetAsset          = 0x1042D28C,
+    .zipPackGetAsset          = 0x1040CDB8,
     .directoryPackHasAsset    = 0x104417EC,
-    .zipPackHasAsset          = 0x10432C5C,
+    .zipPackHasAsset          = 0x1040D50C,
     .packForEachInAssetSet    = 0x1043791C,
     .resourcePackManagerLoad  = 0x0C594B18,
     .resourcePackManagerGetStack = 0x0C5948C0,
@@ -240,7 +370,7 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .itemRegistryParseItemIdentifier     = 0x0F2B2580,
     .blockTypeRegistryInit               = 0x0954D9A4,
     .blockDefinitionLoaderProcessCustomComponents = 0x0FB26F04,
-    .actorNormalTick                     = 0x0EA412D4,
+    .actorNormalTick                     = 0x0EA412D8,
     .actorBaseTick                       = 0x0EC84620,
     .actorHurt                           = 0x0EC847A8,
     .actorDie                            = 0x0EC88C50,
@@ -253,6 +383,136 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
     .clientInstanceIsShowingMenuSlot = 150 // Slot 150 in 1.26.4x
+};
+
+// Verified Golden Offsets for Minecraft Bedrock 1.26.51.1 (Android ARM64)
+static const EngineOffsets kOffsets_1_26_51_1 = {
+    // UI Screen Tech Stack
+    .getTechStackForScreen    = 0x0974E7A4,
+
+    // Start Menu Screen Controller
+    .startMenuOnOpen          = 0x0A2DF2A4,
+    .startMenuTick            = 0x0A2E1F84,
+
+    // Direct Menu Button Handlers
+    .playButton               = 0x0A3133DC,
+    .settingsButton           = 0x0A31713C,
+    .realmsButton             = 0x0A31746C,
+    .dressingRoomButton       = 0x0A3180EC,
+    .marketplaceButton        = 0x0A318734,
+    .menuExit                 = 0x0A5674D0,
+
+    // RenderDragon & Skybox Passes
+    .progressBarRender        = 0x09685ED0,
+    .panoramaRender           = 0x0967F9F8,
+    .cubemapBackgroundRender  = 0x09B7C960,
+    .cubemapFaceSubmit        = 0,
+    .cubemapRendererRender    = 0,
+    .mainMenuCubemapPass      = 0,
+    .cubemapDraw              = 0,
+
+    // GPU / libGLESv2 Hooks
+    .glClearGotRva            = 0x13289078,
+
+    // MinecraftUIRenderContext Virtual Method RVAs
+    .uiDrawImage              = 0x0B2508C0,
+    .uiFlushImages            = 0x0B251C94,
+    .uiFillRectangle          = 0x0B252250,
+    .uiDrawRectangle          = 0x0B253620,
+    .uiDrawText               = 0x0B250700,
+    .uiFlushText              = 0x0B250800,
+    .uiDrawNineslice          = 0x0B2518B0,
+    .uiGetScreenContext       = 0x0B25410C,
+
+    // Player / GameMode / World
+    .localPlayerMove          = 0x0F286DF8,
+    .playerNormalTick         = 0x0F9E2300,
+    .levelTick                = 0x0FB31004,
+    .gameModeDestroyBlock     = 0x0F89FFEC,
+    .gameModeUseItem          = 0x04C0B120,
+    .gameModeUseItemOn        = 0x0F89FA58,
+    .gameModeAttack           = 0x04C0BE40,
+    .soundEnginePlay          = 0x0B79F720,
+    .soundEnginePlayUI        = 0x0B79F8A4,
+    .soundEnginePlayAt        = 0x0B79FD0C,
+    .soundEngineStop          = 0x0B79FE48,
+
+    // Resource Pack & Asset Access Strategy RVAs
+    .directoryPackGetAsset    = 0x111EE468,
+    .zipPackGetAsset          = 0x11157AC0,
+    .directoryPackHasAsset    = 0x111F844C,
+    .zipPackHasAsset          = 0x11158214,
+    .packForEachInAssetSet    = 0x1117F918,
+    .resourcePackManagerLoad  = 0x0C92D160,
+    .resourcePackManagerGetStack = 0x0C92CF10,
+    .resourcePackManagerDoStackOp = 0x0C930108,
+    .resourcePackGetResource  = 0x06A3DE00,
+    .textureGroupLoadAsync    = 0x0A777490,
+    .textureGroupEnableLRU    = 0x0A778928,
+    .textureHotReloaderRegister = 0x0B1FC160,
+    .textureHotReloaderRegisterAtlas = 0x0B1FDAE8,
+    .blockGraphicsGetTextureItem = 0x0A66DBA0,
+    .cubemapLoadPanoramas     = 0x09B799A8,
+    .resourcePackRepositoryGetResourcePackInPath = 0x0C93538C,
+    .repositoryLoadingFindVanillaPacks           = 0x0C96C444,
+
+    // OreUI (Cohtml Engine) RVAs
+    .cohtmlLoadURL               = 0x06D6F8DC,
+    .cohtmlLoadURLImpl           = 0x06D6F8E4,
+    .cohtmlExecuteScript         = 0x06D7DF68,
+    .cohtmlAddInitialScript      = 0x06D7E37C,
+    .cohtmlTriggerEvent          = 0x06D8586C,
+    .cohtmlRegisterForEvent      = 0x06D81AD8,
+    .cohtmlUnregisterFromEvent   = 0x06D81B54,
+    .cohtmlTryDispatchClickEvent = 0x06D7BF9C,
+    .cohtmlMouseEvent            = 0x06D7B508,
+    .cohtmlTouchEvent            = 0x06D79FA8,
+    .oreUiInit                   = 0x096F738C,
+
+    // JSON UI & Screen Controller RVAs
+    .screenControllerTick                = 0x09B14F6C,
+    .screenControllerHandleEvent         = 0x09B147F0,
+    .screenControllerBind                = 0x09B1479C,
+    .screenControllerAddStaticScreenVars = 0x09B15014,
+    .screenControllerSetScreenState      = 0x09B161F4,
+    .screenControllerCanExit             = 0x09B1695C,
+    .screenControllerGetScreenModel      = 0x09B23694,
+    .sceneFactoryCreateScreenController  = 0x09AEE67C,
+    .sceneFactoryCreateScreen            = 0x09AFD3B0,
+    .buttonComponentHandleEvent          = 0x096FB848,
+    .buttonComponentSetPressed           = 0x096FC18C,
+    .buttonComponentGetButtonState       = 0x096FC168,
+    .dataDrivenUILayout                  = 0x09C35650,
+    .dataDrivenUIUIRoot                  = 0x0B868ECC,
+    .guiDataDisplayClientMessage         = 0x0A1038AC,
+
+    // Chat, Command & Packet System RVAs
+    .chatScreenControllerHandleEvent     = 0x09A0EFA0,
+    .chatScreenControllerPropertyBind    = 0x09A0F8C8,
+    .commandRegistryRegisterCommand      = 0x0DC4A018,
+    .loopbackPacketSenderSend            = 0x0C68F9D8,
+    .serverNetworkHandlerHandle          = 0x0C583850,
+
+    // Behavior, Recipes, Items, Blocks & Scripting RVAs
+    .recipesAddShapedRecipe              = 0x0FC3D018,
+    .recipesAddShapelessRecipe            = 0x0FC3DE14,
+    .itemRegistryTryRegisterAndInitItem  = 0x0FBB2C54,
+    .itemRegistryParseItemIdentifier     = 0x0FBB5694,
+    .blockTypeRegistryInit               = 0x0AD6C1FC,
+    .blockDefinitionLoaderProcessCustomComponents = 0x10491C38,
+    .actorNormalTick                     = 0x0F27D708,
+    .actorBaseTick                       = 0x0F560460,
+    .actorHurt                           = 0x0F5605E8,
+    .actorDie                            = 0x0F564ABC,
+    .actorTeleportTo                     = 0x0F5742FC,
+    .actorHasComponent                   = 0x0F582FD0,
+    .actorSetCustomName                  = 0x0F57E2D4,
+    .scriptingQuickJS                    = 0x11431518,
+    .scriptModuleMinecraftScriptSystem   = 0x0E069C90,
+
+    // VTable Slots
+    .clientInstanceLocalPlayerSlot = 32,
+    .clientInstanceIsShowingMenuSlot = 151
 };
 
 static std::string sDetectedVersion = "1.26.52.3";
@@ -272,8 +532,12 @@ std::string getDetectedVersion() {
 void setTargetVersion(const std::string& version) {
     std::lock_guard<std::mutex> lock(sOffsetMutex);
     sDetectedVersion = version;
-    if (version.find("1.26.45") != std::string::npos) {
+    if (version.find("1.26.44") != std::string::npos) {
+        sActiveOffsets = kOffsets_1_26_44_3;
+    } else if (version.find("1.26.45") != std::string::npos) {
         sActiveOffsets = kOffsets_1_26_45_1;
+    } else if (version.find("1.26.51") != std::string::npos) {
+        sActiveOffsets = kOffsets_1_26_51_1;
     } else {
         sActiveOffsets = kOffsets_1_26_52_3;
     }
@@ -319,11 +583,17 @@ void autoDetectVersion() {
 
     if (!buildId.empty()) {
         ll::Logger::getInstance().info("Discovered libminecraftpe.so GNU Build ID: ", buildId);
-        if (buildId.starts_with("56de9eed")) {
+        if (buildId.starts_with("b480c79a")) {
+            setTargetVersion("1.26.44.3");
+            return;
+        } else if (buildId.starts_with("56de9eed")) {
             setTargetVersion("1.26.52.3");
             return;
-        } else if (buildId.starts_with("868e275c")) {
+        } else if (buildId.starts_with("868e275c") || buildId.starts_with("86895c02")) {
             setTargetVersion("1.26.45.1");
+            return;
+        } else if (buildId.starts_with("712509dc")) {
+            setTargetVersion("1.26.51.1");
             return;
         }
     }
@@ -334,9 +604,17 @@ void autoDetectVersion() {
         char line[512];
         while (fgets(line, sizeof(line), fp)) {
             if (strstr(line, "libminecraftpe.so")) {
-                if (strstr(line, "1.26.45")) {
+                if (strstr(line, "1.26.44")) {
+                    fclose(fp);
+                    setTargetVersion("1.26.44.3");
+                    return;
+                } else if (strstr(line, "1.26.45")) {
                     fclose(fp);
                     setTargetVersion("1.26.45.1");
+                    return;
+                } else if (strstr(line, "1.26.51")) {
+                    fclose(fp);
+                    setTargetVersion("1.26.51.1");
                     return;
                 }
             }
@@ -348,8 +626,14 @@ void autoDetectVersion() {
     std::ifstream cmdline("/proc/self/cmdline");
     std::string cmd;
     if (std::getline(cmdline, cmd)) {
-        if (cmd.find("1.26.45") != std::string::npos) {
+        if (cmd.find("1.26.44") != std::string::npos) {
+            setTargetVersion("1.26.44.3");
+            return;
+        } else if (cmd.find("1.26.45") != std::string::npos) {
             setTargetVersion("1.26.45.1");
+            return;
+        } else if (cmd.find("1.26.51") != std::string::npos) {
+            setTargetVersion("1.26.51.1");
             return;
         }
     }
@@ -360,8 +644,9 @@ void autoDetectVersion() {
 
 uintptr_t findFunctionRva(std::string_view name) {
     const auto& off = getOffsets();
-    if (name == "getTechStackForScreen") return off.getTechStackForScreen;
-    if (name == "startMenuOnOpen") return off.startMenuOnOpen;
+    if (name == "getTechStackForScreen" || name == "ScreenTechStackSelector::getTechStackForScreen") return off.getTechStackForScreen;
+    if (name == "startMenuOnOpen" || name == "StartMenuScreenController::_onOpen" || name == "StartMenuScreenController::onOpen") return off.startMenuOnOpen;
+    if (name == "startMenuTick" || name == "StartMenuScreenController::tick") return off.startMenuTick;
     if (name == "playButton") return off.playButton;
     if (name == "settingsButton") return off.settingsButton;
     if (name == "realmsButton") return off.realmsButton;
@@ -376,18 +661,43 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "mainMenuCubemapPass") return off.mainMenuCubemapPass;
     if (name == "cubemapDraw") return off.cubemapDraw;
     if (name == "glClearGotRva") return off.glClearGotRva;
-    if (name == "localPlayerMove") return off.localPlayerMove;
-    if (name == "playerNormalTick") return off.playerNormalTick;
-    if (name == "directoryPackGetAsset") return off.directoryPackGetAsset;
-    if (name == "zipPackGetAsset") return off.zipPackGetAsset;
-    if (name == "directoryPackHasAsset") return off.directoryPackHasAsset;
-    if (name == "zipPackHasAsset") return off.zipPackHasAsset;
+
+    // UI Virtual Methods
+    if (name == "uiDrawImage" || name == "MinecraftUIRenderContext::drawImage") return off.uiDrawImage;
+    if (name == "uiFlushImages" || name == "MinecraftUIRenderContext::flushImages") return off.uiFlushImages;
+    if (name == "uiFillRectangle" || name == "MinecraftUIRenderContext::fillRectangle") return off.uiFillRectangle;
+    if (name == "uiDrawRectangle" || name == "MinecraftUIRenderContext::drawRectangle") return off.uiDrawRectangle;
+    if (name == "uiDrawText" || name == "MinecraftUIRenderContext::drawText") return off.uiDrawText;
+    if (name == "uiFlushText" || name == "MinecraftUIRenderContext::flushText") return off.uiFlushText;
+    if (name == "uiDrawNineslice" || name == "MinecraftUIRenderContext::drawNineslice") return off.uiDrawNineslice;
+    if (name == "uiGetScreenContext" || name == "MinecraftUIRenderContext::getScreenContext") return off.uiGetScreenContext;
+
+    // Player, World & GameMode
+    if (name == "localPlayerMove" || name == "LocalPlayer::move" || name == "LocalPlayerMove") return off.localPlayerMove;
+    if (name == "playerNormalTick" || name == "Player::normalTick" || name == "PlayerNormalTick") return off.playerNormalTick;
+    if (name == "levelTick" || name == "Level::tick" || name == "LevelTick") return off.levelTick;
+    if (name == "gameModeDestroyBlock" || name == "GameMode::destroyBlock") return off.gameModeDestroyBlock;
+    if (name == "gameModeUseItem" || name == "GameMode::useItem") return off.gameModeUseItem;
+    if (name == "gameModeUseItemOn" || name == "GameMode::useItemOn") return off.gameModeUseItemOn;
+    if (name == "gameModeAttack" || name == "GameMode::attack") return off.gameModeAttack;
+
+    // Audio / SoundEngine
+    if (name == "soundEnginePlay" || name == "SoundEngine::play") return off.soundEnginePlay;
+    if (name == "soundEnginePlayUI" || name == "SoundEngine::playUI") return off.soundEnginePlayUI;
+    if (name == "soundEnginePlayAt" || name == "SoundEngine::playAt") return off.soundEnginePlayAt;
+    if (name == "soundEngineStop" || name == "SoundEngine::stop") return off.soundEngineStop;
+
+    // Resource Packs & Assets
+    if (name == "directoryPackGetAsset" || name == "DirectoryPackAccessStrategy::getAsset") return off.directoryPackGetAsset;
+    if (name == "zipPackGetAsset" || name == "ZipPackAccessStrategy::getAsset") return off.zipPackGetAsset;
+    if (name == "directoryPackHasAsset" || name == "DirectoryPackAccessStrategy::hasAsset") return off.directoryPackHasAsset;
+    if (name == "zipPackHasAsset" || name == "ZipPackAccessStrategy::hasAsset") return off.zipPackHasAsset;
     if (name == "packForEachInAssetSet") return off.packForEachInAssetSet;
-    if (name == "resourcePackManagerLoad") return off.resourcePackManagerLoad;
-    if (name == "resourcePackManagerGetStack") return off.resourcePackManagerGetStack;
+    if (name == "resourcePackManagerLoad" || name == "ResourcePackManager::load") return off.resourcePackManagerLoad;
+    if (name == "resourcePackManagerGetStack" || name == "ResourcePackManager::getStack") return off.resourcePackManagerGetStack;
     if (name == "resourcePackManagerDoStackOp") return off.resourcePackManagerDoStackOp;
-    if (name == "resourcePackGetResource") return off.resourcePackGetResource;
-    if (name == "textureGroupLoadAsync") return off.textureGroupLoadAsync;
+    if (name == "resourcePackGetResource" || name == "ResourcePack::getResource") return off.resourcePackGetResource;
+    if (name == "textureGroupLoadAsync" || name == "TextureGroup::loadAsync") return off.textureGroupLoadAsync;
     if (name == "textureGroupEnableLRU") return off.textureGroupEnableLRU;
     if (name == "textureHotReloaderRegister") return off.textureHotReloaderRegister;
     if (name == "textureHotReloaderRegisterAtlas") return off.textureHotReloaderRegisterAtlas;
@@ -396,23 +706,23 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "resourcePackRepositoryGetResourcePackInPath") return off.resourcePackRepositoryGetResourcePackInPath;
     if (name == "repositoryLoadingFindVanillaPacks") return off.repositoryLoadingFindVanillaPacks;
 
-    // OreUI
-    if (name == "cohtmlLoadURL") return off.cohtmlLoadURL;
+    // OreUI (Cohtml Engine)
+    if (name == "cohtmlLoadURL" || name == "cohtml::View::LoadURL") return off.cohtmlLoadURL;
     if (name == "cohtmlLoadURLImpl") return off.cohtmlLoadURLImpl;
-    if (name == "cohtmlExecuteScript") return off.cohtmlExecuteScript;
+    if (name == "cohtmlExecuteScript" || name == "cohtml::View::ExecuteScript") return off.cohtmlExecuteScript;
     if (name == "cohtmlAddInitialScript") return off.cohtmlAddInitialScript;
-    if (name == "cohtmlTriggerEvent") return off.cohtmlTriggerEvent;
+    if (name == "cohtmlTriggerEvent" || name == "cohtml::View::TriggerEvent") return off.cohtmlTriggerEvent;
     if (name == "cohtmlRegisterForEvent") return off.cohtmlRegisterForEvent;
     if (name == "cohtmlUnregisterFromEvent") return off.cohtmlUnregisterFromEvent;
     if (name == "cohtmlTryDispatchClickEvent") return off.cohtmlTryDispatchClickEvent;
-    if (name == "cohtmlMouseEvent") return off.cohtmlMouseEvent;
-    if (name == "cohtmlTouchEvent") return off.cohtmlTouchEvent;
+    if (name == "cohtmlMouseEvent" || name == "cohtml::ViewImpl::MouseEvent") return off.cohtmlMouseEvent;
+    if (name == "cohtmlTouchEvent" || name == "cohtml::ViewImpl::TouchEvent") return off.cohtmlTouchEvent;
     if (name == "oreUiInit") return off.oreUiInit;
 
     // JSON UI & Screen Controller
-    if (name == "screenControllerTick") return off.screenControllerTick;
-    if (name == "screenControllerHandleEvent") return off.screenControllerHandleEvent;
-    if (name == "screenControllerBind") return off.screenControllerBind;
+    if (name == "screenControllerTick" || name == "ScreenController::tick") return off.screenControllerTick;
+    if (name == "screenControllerHandleEvent" || name == "ScreenController::handleEvent") return off.screenControllerHandleEvent;
+    if (name == "screenControllerBind" || name == "ScreenController::bind") return off.screenControllerBind;
     if (name == "screenControllerAddStaticScreenVars") return off.screenControllerAddStaticScreenVars;
     if (name == "screenControllerSetScreenState") return off.screenControllerSetScreenState;
     if (name == "screenControllerCanExit") return off.screenControllerCanExit;
@@ -424,32 +734,40 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "buttonComponentGetButtonState") return off.buttonComponentGetButtonState;
     if (name == "dataDrivenUILayout") return off.dataDrivenUILayout;
     if (name == "dataDrivenUIUIRoot") return off.dataDrivenUIUIRoot;
-    if (name == "guiDataDisplayClientMessage") return off.guiDataDisplayClientMessage;
+    if (name == "guiDataDisplayClientMessage" || name == "GuiData::displayClientMessage") return off.guiDataDisplayClientMessage;
 
     // Chat, Command & Packet System
-    if (name == "chatScreenControllerHandleEvent") return off.chatScreenControllerHandleEvent;
+    if (name == "chatScreenControllerHandleEvent" || name == "ChatScreenController::handleEvent") return off.chatScreenControllerHandleEvent;
     if (name == "chatScreenControllerPropertyBind") return off.chatScreenControllerPropertyBind;
-    if (name == "commandRegistryRegisterCommand") return off.commandRegistryRegisterCommand;
-    if (name == "loopbackPacketSenderSend") return off.loopbackPacketSenderSend;
-    if (name == "serverNetworkHandlerHandle") return off.serverNetworkHandlerHandle;
+    if (name == "commandRegistryRegisterCommand" || name == "CommandRegistry::registerCommand") return off.commandRegistryRegisterCommand;
+    if (name == "loopbackPacketSenderSend" || name == "LoopbackPacketSender::send") return off.loopbackPacketSenderSend;
+    if (name == "serverNetworkHandlerHandle" || name == "ServerNetworkHandler::handle") return off.serverNetworkHandlerHandle;
 
     // Behavior, Recipes, Items, Blocks & Scripting
-    if (name == "recipesAddShapedRecipe") return off.recipesAddShapedRecipe;
-    if (name == "recipesAddShapelessRecipe") return off.recipesAddShapelessRecipe;
-    if (name == "itemRegistryTryRegisterAndInitItem") return off.itemRegistryTryRegisterAndInitItem;
+    if (name == "recipesAddShapedRecipe" || name == "Recipes::addShapedRecipe") return off.recipesAddShapedRecipe;
+    if (name == "recipesAddShapelessRecipe" || name == "Recipes::addShapelessRecipe") return off.recipesAddShapelessRecipe;
+    if (name == "itemRegistryTryRegisterAndInitItem" || name == "ItemRegistry::tryRegisterAndInitItem") return off.itemRegistryTryRegisterAndInitItem;
     if (name == "itemRegistryParseItemIdentifier") return off.itemRegistryParseItemIdentifier;
-    if (name == "blockTypeRegistryInit") return off.blockTypeRegistryInit;
+    if (name == "blockTypeRegistryInit" || name == "BlockTypeRegistry::init") return off.blockTypeRegistryInit;
     if (name == "blockDefinitionLoaderProcessCustomComponents") return off.blockDefinitionLoaderProcessCustomComponents;
-    if (name == "actorNormalTick") return off.actorNormalTick;
-    if (name == "actorBaseTick") return off.actorBaseTick;
-    if (name == "actorHurt") return off.actorHurt;
-    if (name == "actorDie") return off.actorDie;
-    if (name == "actorTeleportTo") return off.actorTeleportTo;
-    if (name == "actorHasComponent") return off.actorHasComponent;
-    if (name == "actorSetCustomName") return off.actorSetCustomName;
+    if (name == "actorNormalTick" || name == "Actor::normalTick") return off.actorNormalTick;
+    if (name == "actorBaseTick" || name == "Actor::baseTick") return off.actorBaseTick;
+    if (name == "actorHurt" || name == "Actor::hurt") return off.actorHurt;
+    if (name == "actorDie" || name == "Actor::die") return off.actorDie;
+    if (name == "actorTeleportTo" || name == "Actor::teleportTo") return off.actorTeleportTo;
+    if (name == "actorHasComponent" || name == "Actor::hasComponent") return off.actorHasComponent;
+    if (name == "actorSetCustomName" || name == "Actor::setCustomName") return off.actorSetCustomName;
     if (name == "scriptingQuickJS") return off.scriptingQuickJS;
     if (name == "scriptModuleMinecraftScriptSystem") return off.scriptModuleMinecraftScriptSystem;
     return 0;
 }
 
 } // namespace levilamroid::mcpe
+
+extern "C" {
+LL_API const char* ll_mcpe_get_detected_version() {
+    static std::string ver;
+    ver = ::levilamroid::mcpe::getDetectedVersion();
+    return ver.c_str();
+}
+}

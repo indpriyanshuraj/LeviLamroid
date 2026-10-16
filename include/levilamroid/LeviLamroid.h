@@ -38,6 +38,7 @@
 extern "C" {
 LL_API bool ll_is_in_world();
 LL_API bool ll_is_main_menu();
+LL_API bool ll_is_loading();
 }
 
 // Canonical LeviLamroid namespace: ll (standard LeviLamina modding namespace)
@@ -61,6 +62,14 @@ inline bool isInWorld() {
 inline bool isMainMenu() {
     using Fn = bool (*)();
     static auto fn = reinterpret_cast<Fn>(dlsym(ui::getLoaderHandle(), "ll_is_main_menu"));
+    if (fn) return fn();
+    return false;
+}
+
+/// Human function: Check if client is currently loading resources/world
+inline bool isLoading() {
+    using Fn = bool (*)();
+    static auto fn = reinterpret_cast<Fn>(dlsym(ui::getLoaderHandle(), "ll_is_loading"));
     if (fn) return fn();
     return false;
 }

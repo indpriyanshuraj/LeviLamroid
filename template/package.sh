@@ -54,10 +54,7 @@ if [ -d "/sdcard" ]; then
     cp -f "${ZIP_OUT}" "/sdcard/Download/ExampleMod-1.0.0-android-arm64.zip" 2>/dev/null || true
 
     # Auto-deploy to LeviLauncher profiles
-    for profile_dir in \
-        "/sdcard/Android/media/org.levimc.launcher/minecraft/com.mojang.minecraftpe/mods" \
-        "/sdcard/Android/media/org.levimc.launcher/minecraft/Minecraft_1.26.45.1/mods"
-    do
+    for profile_dir in /sdcard/Android/media/org.levimc.launcher/minecraft/*/mods; do
         if [ -d "${profile_dir}" ]; then
             mod_dir="${profile_dir}/ExampleMod"
             mkdir -p "${mod_dir}"

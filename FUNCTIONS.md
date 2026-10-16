@@ -1,7 +1,7 @@
 # LeviLamroid Functions & API Master Reference
 
-> **LeviLamroid Version**: `1.0.0-beta` (Initial Beta Testing Release)  
-> **Initial Mod Project Version**: `v1.0.0-beta`  
+> **LeviLamroid Version**: `1.0.1-beta` (Beta Testing Release)  
+> **Initial Mod Project Version**: `v1.0.1-beta`  
 > **Target Platform**: Minecraft Bedrock Edition (Android ARM64) on LeviLauncher  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
 > **Architecture**: Native C++ Mod Loader Runtime (Windows LeviLamina Source Parity + Android PreLoader Extensions)  
@@ -61,7 +61,7 @@ It establishes five non-negotiable architectural guarantees:
 1. **Canonical Modding Namespace (`ll`)**: LeviLamroid adheres directly to **`namespace ll`** as its official coding namespace, matching LeviLamina on Windows. Modders write against `ll::Logger`, `ll::event::EventBus`, `ll::mcpe::getOffsets()`, and `ll::mod::NativeMod`. This guarantees 100% desktop-to-mobile source parity with zero code rewrites. For compatibility, `namespace levilamroid` and `namespace llntol` are provided as seamless aliases.
 2. **100% LeviLamina Windows Source Parity**: Code written against the official LeviLamina Windows C++ API (`ll::*`) compiles and runs identically on Android without rewriting detour boilerplate or class structures.
 3. **LeviLauncher PreLoader Native Extensions**: Native Android mobile capabilities—including touch pointer routing, physical keyboard mapping, floating HUD touch buttons, launcher drawer registration, and storage access framework compatibility—are exposed out-of-the-box (`pl::*`).
-4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.52.3`, `1.26.45.1`).
+4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.52.3`, `1.26.51.1`, `1.26.45.1`, `1.26.44.3`).
 5. **Strict Initial Versioning Policy**: All new mods, template starter projects, and LeviLamroid distribution bundles are initialized strictly at version **`v1.0.0`** (or `1.0.0`) unless explicitly instructed by the user to bump versions.
 
 ---
@@ -306,6 +306,8 @@ Located in `#include <ll/api/memory/Hook.h>`.
   *Features*: Atomic 16-byte instruction patch, executable trampoline buffer allocation, and instruction cache invalidation (`__builtin___clear_cache`).
 - `LL_API bool hookRva(uintptr_t rva, void* detour, void** original)`  
   Convenience helper hooking `getMinecraftBase() + rva`.
+- `LL_API bool hookSignature(const char* pattern, void* detour, void** original, uintptr_t fallbackRva = 0)`  
+  Installs an inline AArch64 machine-code detour using hybrid signature resolution. Features an $O(1)$ fast-path direct memory verification against `fallbackRva`, falling back to automated `memchr`-accelerated ELF pattern scanning across `.text` if the RVA drifts. Eliminates hardcoded RVAs breaking between Bedrock updates.
 - `LL_API bool hookGotSlot(uintptr_t gotRva, void* detour, void** original)`  
   Hooks an imported function pointer in the Global Offset Table (GOT) at `getMinecraftBase() + gotRva`. Used for intercepting EGL/GLES calls (`glClear`, `eglSwapBuffers`).
 
@@ -414,11 +416,14 @@ Located in `#include <levilamroid/api/mcpe/Offsets.h>` or through `#include <lev
 ### 8.1 Automated Version Identification
 LeviLamroid reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at boot time to match the 20-byte SHA-1 GNU Build ID:
 - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3`
+- `712509dc...` / `19d675681604a80ce6a8ff35dfb66f287e0766e0` $\rightarrow$ Bedrock `1.26.51.1`
 - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1`
+- `b480c79a...` / `7ff153b6cba8d148e64c2ec582f3484f9ea4457e` $\rightarrow$ Bedrock `1.26.44.3`
 
 ### 8.2 Version Functions
 - `const EngineOffsets& ll::mcpe::getOffsets()`: Returns the active RVA offset table.
-- `std::string ll::mcpe::getDetectedVersion()`: Returns active version string (`"1.26.52.3"` or `"1.26.45.1"`).
+- `std::string ll::mcpe::getDetectedVersion()`: Returns active version string (`"1.26.52.3"`, `"1.26.51.1"`, `"1.26.45.1"`, or `"1.26.44.3"`).
+- `extern "C" const char* ll_mcpe_get_detected_version()`: Returns active version string pointer for C and dlsym consumers.
 - `void ll::mcpe::setTargetVersion(const std::string& version)`: Manually forces a version profile.
 - `void ll::mcpe::autoDetectVersion()`: Probes ELF GNU Build ID and `/proc/self/maps`.
 - `uintptr_t ll::mcpe::findFunctionRva(std::string_view name)`: Looks up an RVA by symbol name.
@@ -447,12 +452,14 @@ Both `1.26.52.3` and `1.26.45.1` now have **100% complete golden offset coverage
   - `textureHotReloaderRegister` (0x0B1FC23C), `textureHotReloaderRegisterAtlas` (0x0B1FDBC4)
   - `blockGraphicsGetTextureItem` (0x0A66DC10), `cubemapLoadPanoramas` (0x09B79A28)
   - `resourcePackRepositoryGetResourcePackInPath` (0x0C9356E4), `repositoryLoadingFindVanillaPacks` (0x0C96C79C)
+  - `actorNormalTick` (0x0F27DA98 - 10-pass off-by-4 corrected from trailing RET)
+  - `commandRegistryRegisterCommand` (0x0DC4A370 - true AAPCS64 hardware stack frame entry)
   - `glClearGotRva` (0x132893d8)
   - VTable Slots: `clientInstanceLocalPlayerSlot` = 32, `clientInstanceIsShowingMenuSlot` = 151
 - **Minecraft 1.26.45.1**:
   - All 19 resource pack and texture access strategy RVAs fully discovered and matched:
-    - `directoryPackGetAsset` (0x1042CB64), `zipPackGetAsset` (0x1042D28C)
-    - `directoryPackHasAsset` (0x104417EC), `zipPackHasAsset` (0x10432C5C)
+    - `directoryPackGetAsset` (0x1042CB64), `zipPackGetAsset` (0x1040CDB8 - VTable Slot 07)
+    - `directoryPackHasAsset` (0x104417EC), `zipPackHasAsset` (0x1040D50C - VTable Slot 05)
     - `packForEachInAssetSet` (0x1043791C), `resourcePackGetResource` (0x066951F4)
     - `resourcePackManagerLoad` (0x0C594B18), `resourcePackManagerGetStack` (0x0C5948C0), `resourcePackManagerDoStackOp` (0x0C59B2CC)
     - `textureGroupLoadAsync` (0x0A403690), `textureGroupEnableLRU` (0x0A404B28)
@@ -460,9 +467,9 @@ Both `1.26.52.3` and `1.26.45.1` now have **100% complete golden offset coverage
     - `blockGraphicsGetTextureItem` (0x0A224634), `cubemapLoadPanoramas` (0x097C6640)
     - `resourcePackRepositoryGetResourcePackInPath` (0x0C59FEF0), `repositoryLoadingFindVanillaPacks` (0x0C5D9184)
   - Full OreUI Cohtml engine (`cohtmlLoadURL` 0x069C1A7C, `cohtmlExecuteScript` 0x069D0094, `oreUiInit` 0x09230484)
-  - Full JSON UI & ScreenControllers (`startMenuOnOpen` 0x09EBD95C, `screenControllerTick` 0x096D73DC, etc.)
-  - Full Chat, Commands & Network Packets (`commandRegistryRegisterCommand` 0x0D6075CC, `loopbackPacketSenderSend` 0x0C2E26FC)
-  - Full Recipes, Items, Blocks & Scripting (`recipesAddShapedRecipe` 0x0F2FC108, `itemRegistryTryRegisterAndInitItem` 0x0F2AFB68, `actorNormalTick` 0x0EA412D4, `actorHurt` 0x0EC847A8, `actorDie` 0x0EC88C50, `scriptingQuickJS` 0x10917BD4)
+  - Full JSON UI & ScreenControllers (`startMenuOnOpen` 0x09EBD95C, `screenControllerTick` 0x096D73DC, `screenControllerHandleEvent` 0x096D6EA8)
+  - Full Chat, Commands & Network Packets (`commandRegistryRegisterCommand` 0x0D6075CC, `loopbackPacketSenderSend` 0x0C2E26FC, `serverNetworkHandlerHandle` 0x0C1E5B4C)
+  - Full Recipes, Items, Blocks & Scripting (`recipesAddShapedRecipe` 0x0F2FC108, `itemRegistryTryRegisterAndInitItem` 0x0F2AFB68, `actorNormalTick` 0x0EA412D8 - 10-pass off-by-4 corrected, `actorHurt` 0x0EC847A8, `actorDie` 0x0EC88C50, `playerJump` 0x0F0CFA28, `playerGetSupplies` 0x0F0C6758)
   - `glClearGotRva` (0x124C9688)
   - VTable Slots: `clientInstanceLocalPlayerSlot` = 32, `clientInstanceIsShowingMenuSlot` = 150
 
@@ -1246,7 +1253,7 @@ To allow client mods to function seamlessly without hardcoding version-specific 
 Header: `#include "ll/api/ui/UI.h"`
 
 - `void ll::ui::forceJsonUIForScreen(const std::string& screenName)`: Forces the specified screen (e.g. `"/main-menu"`, `"start_screen"`) to use the legacy JSON UI tech stack instead of OreUI.
-- `void ll::ui::onStartMenuOpen(void (*cb)())`: Registers a callback invoked immediately when the start menu controller opens.
+- `void ll::ui::onStartMenuOpen(void (*cb)())`: Registers a callback invoked immediately when the start menu opens, or when returning from any sub-screen back to the main start menu.
 - `void ll::ui::onPlayButtonClicked(void (*cb)())`: Registers a callback invoked when the user taps the Play button on the main menu.
 - `void ll::ui::onSettingsButtonClicked(void (*cb)())`: Registers a callback invoked when Settings is tapped.
 - `void ll::ui::onRealmsButtonClicked(void (*cb)())`: Registers a callback invoked when Realms is tapped.
@@ -1258,11 +1265,12 @@ Header: `#include "ll/api/ui/UI.h"`
 Header: `#include "ll/api/render/Render.h"`
 
 - `void ll::render::suppressVanillaBackground(bool suppress)`: Suppresses vanilla cubemap panorama drawing strictly on menus. Automatically disabled when in-world so gameplay skies are untouched.
-- `void ll::render::registerPostClearCallback(void (*cb)(int width, int height))`: Registers a GPU render callback executed immediately after the OpenGL ES `glClear` color pass. Strictly active on menus and disabled in-world.
+- `void ll::render::registerPostClearCallback(void (*cb)(int width, int height))`: Registers a GPU render callback executed immediately after the OpenGL ES `glClear` color pass on the default backbuffer (FBO 0). Strictly active on menus and disabled in-world.
 
 ### 24.3 Engine State Queries (`ll`)
 Header: `#include "levilamroid/LeviLamroid.h"`
 
 - `bool ll::isInWorld()`: Returns `true` when playing in an active world. Continuously affirmed by golden tick hooks (`Player::normalTick`, `Level::tick`, `Actor::normalTick`, and `LocalPlayer::move`). Automatically resets to `false` when the start menu opens.
-- `bool ll::isMainMenu()`: Returns `true` strictly while idling on the start menu (`StartMenuScreenController::$onOpen`). Automatically set to `false` as soon as world loading begins (`ProgressBarRenderer`) or world ticks start. Defaults safely to `false` if uninitialized.
+- `bool ll::isMainMenu()`: Returns `true` strictly while idling on the start menu (`StartMenuScreenController`). Automatically set to `false` as soon as world loading begins (`ProgressBarRenderer`) or world ticks start. Defaults safely to `false` if uninitialized.
+- `bool ll::isLoading()`: Returns `true` while the engine is loading assets, progress bar screens, or world data. Automatically resets to `false` when the start menu ticks or finishes loading.
 

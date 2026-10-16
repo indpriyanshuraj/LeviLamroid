@@ -16,4 +16,11 @@ LL_API uintptr_t scanModule(const std::string& moduleName, const std::string& pa
 /// Scan within libminecraftpe.so
 LL_API uintptr_t scanMinecraft(const std::string& pattern);
 
+/// Parse IDA pattern string into byte vector (-1 for wildcards)
+LL_API std::vector<int> parsePattern(const std::string& pattern);
+
+/// Verify if memory at address matches an IDA byte pattern
+LL_API bool verifyPattern(uintptr_t addr, const std::string& pattern);
+
 } // namespace ll::memory
+

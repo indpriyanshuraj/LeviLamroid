@@ -219,7 +219,35 @@ bool hookGotSlot(uintptr_t gotRva, void* detour, void** original) {
     return true;
 }
 
+bool hookSignature(const std::string& pattern, void* detour, void** original, uintptr_t fallbackRva) {
+    uintptr_t base = getMinecraftBase();
+    if (!base || pattern.empty() || !detour) return false;
+
+    // 1. Fast-Path: Check if fallbackRva matches the signature
+    if (fallbackRva != 0) {
+        uintptr_t targetAddr = base + fallbackRva;
+        if (verifyPattern(targetAddr, pattern)) {
+            Logger::getInstance().info("Hooked via verified signature fast-path at RVA 0x", std::hex, fallbackRva);
+            return hook(reinterpret_cast<void*>(targetAddr), detour, original);
+        } else {
+            Logger::getInstance().warn("Fallback RVA 0x", std::hex, fallbackRva, " did not match signature. Scanning libminecraftpe.so...");
+        }
+    }
+
+    // 2. Scan libminecraftpe.so for the pattern
+    uintptr_t foundAddr = scanMinecraft(pattern);
+    if (foundAddr != 0) {
+        Logger::getInstance().info("Hooked via signature scan at 0x", std::hex, foundAddr, 
+                                   " (RVA 0x", std::hex, (foundAddr - base), ")");
+        return hook(reinterpret_cast<void*>(foundAddr), detour, original);
+    }
+
+    Logger::getInstance().error("Failed to find signature in libminecraftpe.so: ", pattern);
+    return false;
+}
+
 namespace internal {
+
 
 bool registerHookHelper(const char* name, const char* symbolOrPattern, void* detour, void** original) {
     if (!symbolOrPattern) return false;

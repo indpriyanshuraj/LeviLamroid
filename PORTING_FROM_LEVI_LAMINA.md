@@ -4,11 +4,11 @@
 > **Source Platform**: LeviLamina on Windows (Bedrock Dedicated Server / BDS)  
 > **Target Platform**: LeviLamroid on Android ARM64 (`liblevilamroid.so`)  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
-> **Standard Version**: `v1.0.0-beta` (Initial Beta Testing Release)
+> **Standard Version**: `v1.0.1-beta` (Public Beta Release)
 
 > [!WARNING]
 > ### ⚠️ Under Active Development — Beta Testing Notice
-> LeviLamroid is currently in its initial **Beta Testing Release** (`v1.0.0-beta`).
+> LeviLamroid is currently in active **Beta Testing** (`v1.0.1-beta`).
 > - While the core `ll::` API provides drop-in source parity with Windows LeviLamina, Android Bedrock is a full closed-source graphical client (unlike headless BDS).
 > - Certain game hooks, event handlers, and engine RVAs are under active beta testing and may vary or fail across different minor Minecraft releases.
 > - Developers porting mods should test thoroughly and report any broken hooks or missing symbols on [GitHub Issues](https://github.com/spygamingog/LeviLamroid/issues).
@@ -45,7 +45,7 @@ This means that clean, well-structured LeviLamina mods can be ported to Android 
 | **Command System** | `ll::command::CommandRegistrar` | `ll::command::CommandRegistrar` | **100% Identical** |
 | **Task Scheduling** | `ll::chrono` game tick clock | `ll::chrono::GameTickScheduler` | **100% Identical** |
 | **Form Dialogs** | `ll::form::SimpleForm` | `ll::form::SimpleForm` / `ModalForm` | **100% Identical** |
-| **Function Hooking** | `ll::memory::hook` | `ll::memory::hook` / `hookRva` | **Compatible** (AArch64 Trampoline) |
+| **Function Hooking** | `ll::memory::hook` | `ll::memory::hook` / `hookRva` / `hookSignature` | **Compatible** (AArch64 Trampoline & Hybrid Sigs) |
 | **ImGui UI Overlay** | Direct3D 11/12 Backend | OpenGL ES 3.0 Backend | **Adapted** (Android EGL Recovery) |
 | **Mobile Input** | N/A (Keyboard/Mouse only) | `pl::input` (Multi-Touch + Keys) | **LeviLamroid Exclusive** |
 | **HUD Touch Buttons** | N/A | `pl::modmenu` Floating Widgets | **LeviLamroid Exclusive** |

@@ -10,9 +10,9 @@
 `LeviLamroid` is designed as a standalone, non-intrusive native loader shim for Minecraft Bedrock on Android ARM64.
 Its responsibility is strictly isolated:
 1. **Host-Level Hook Management**: Provide safe, thread-safe, conflict-free hooking into `libminecraftpe.so`.
-2. **Centralized Engine Offsets**: Maintain golden RVAs across Bedrock version families (`1.26.52.3`, `1.26.45.1`) with dynamic runtime version detection.
+2. **Centralized Engine Offsets**: Maintain golden RVAs across supported Bedrock version families with dynamic runtime version detection.
 3. **Event Dispatching**: Broadcast engine callbacks (UI, Render, Input, World) through `ll::event::EventBus`.
-4. **Mod Loading & PreLoader Bridge**: Dynamically load secondary client mods (e.g. `AnimatedMojang`, `PaperBridge`) from `mods/` and interface with LeviLauncher's PreLoader ABI.
+4. **Mod Loading & PreLoader Bridge**: Dynamically load secondary client mods from `mods/` and interface with LeviLauncher's PreLoader ABI.
 
 ---
 

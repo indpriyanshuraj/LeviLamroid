@@ -23,9 +23,19 @@ public:
         return std::filesystem::path("config") / mName;
 #else
         std::error_code ec;
+        const std::filesystem::path baseLauncherDir = "/sdcard/Android/media/org.levimc.launcher/minecraft";
+        if (std::filesystem::exists(baseLauncherDir, ec)) {
+            for (const auto& entry : std::filesystem::directory_iterator(baseLauncherDir, ec)) {
+                if (entry.is_directory(ec)) {
+                    auto candidate = entry.path() / "mods" / mName;
+                    if (std::filesystem::exists(candidate, ec)) {
+                        return candidate;
+                    }
+                }
+            }
+        }
         const std::filesystem::path candidateDirs[] = {
-            std::filesystem::path("/sdcard/Android/media/org.levimc.launcher/minecraft/com.mojang.minecraftpe/mods") / mName,
-            std::filesystem::path("/sdcard/Android/media/org.levimc.launcher/minecraft/Minecraft_1.26.45.1/mods") / mName,
+            baseLauncherDir / "com.mojang.minecraftpe/mods" / mName,
             std::filesystem::path("/sdcard/Android/media/org.levimc.launcher/mods") / mName,
             std::filesystem::path("/sdcard/games/com.mojang/mods") / mName
         };

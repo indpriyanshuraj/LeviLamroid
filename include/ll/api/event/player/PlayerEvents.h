@@ -1,6 +1,10 @@
 #pragma once
 #include "ll/api/event/Event.h"
+#if __has_include("mc/deps/core/math/Vec3.h")
 #include "mc/deps/core/math/Vec3.h"
+#else
+struct Vec3 { float x, y, z; };
+#endif
 
 class Player;
 class LocalPlayer;

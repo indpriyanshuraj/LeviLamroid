@@ -19,10 +19,12 @@ echo "=== 2. Packaging LeviLamroid Distribution ==="
 mkdir -p "${DIST_DIR}"
 cp -f "${BUILD_DIR}/liblevilamroid.so" "${DIST_DIR}/liblevilamroid.so"
 cp -f "${SCRIPT_DIR}/manifest.json" "${DIST_DIR}/manifest.json" 2>/dev/null || true
+mkdir -p "${DIST_DIR}/data"
+cp -rf "${SCRIPT_DIR}/data/"* "${DIST_DIR}/data/" 2>/dev/null || true
 
 # Build levipack and zip
 LEVIPACK_OUT="${DIST_DIR}/levilamroid.levipack"
-ZIP_OUT="${DIST_DIR}/LeviLamroid-1.0.0-beta-android-arm64.zip"
+ZIP_OUT="${DIST_DIR}/LeviLamroid-1.0.1-beta-android-arm64.zip"
 
 python3 -c "
 import zipfile, os
@@ -43,6 +45,11 @@ zip_files = [
 with zipfile.ZipFile('${ZIP_OUT}', 'w', zipfile.ZIP_DEFLATED) as zf:
     for src, arc in zip_files:
         if os.path.isfile(src): zf.write(src, 'LeviLamroid/' + arc)
+    for root, dirs, files in os.walk('${SCRIPT_DIR}/data'):
+        for f in files:
+            p = os.path.join(root, f)
+            rel = os.path.relpath(p, '${SCRIPT_DIR}')
+            zf.write(p, 'LeviLamroid/' + rel)
 "
 
 # Copy to /sdcard/Download and /sdcard/MG if sdcard is present
@@ -50,19 +57,17 @@ if [ -d "/sdcard" ]; then
     mkdir -p /sdcard/Download /sdcard/MG 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/Download/levilamroid.levipack" 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/MG/levilamroid.levipack" 2>/dev/null || true
-    cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.0-beta-android-arm64.zip" 2>/dev/null || true
-    cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.0-beta-android-arm64.zip" 2>/dev/null || true
+    cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
+    cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
 
     # Auto-deploy to LeviLauncher profiles as core loader
-    for profile_dir in \
-        "/sdcard/Android/media/org.levimc.launcher/minecraft/com.mojang.minecraftpe/mods" \
-        "/sdcard/Android/media/org.levimc.launcher/minecraft/Minecraft_1.26.45.1/mods"
-    do
+    for profile_dir in /sdcard/Android/media/org.levimc.launcher/minecraft/*/mods; do
         if [ -d "${profile_dir}" ]; then
             mod_dir="${profile_dir}/LeviLamroid"
-            mkdir -p "${mod_dir}"
+            mkdir -p "${mod_dir}/data"
             cp -f "${DIST_DIR}/liblevilamroid.so" "${mod_dir}/"
             cp -f "${SCRIPT_DIR}/manifest.json" "${mod_dir}/" 2>/dev/null || true
+            cp -rf "${SCRIPT_DIR}/data/"* "${mod_dir}/data/" 2>/dev/null || true
             echo "Deployed LeviLamroid to ${mod_dir}"
 
             # Enable in mods_config.json with order 0 (load first)
@@ -89,4 +94,4 @@ if os.path.isfile(p):
     done
 fi
 
-echo "=== Successfully built, packaged, and deployed LeviLamroid v1.0.0-beta ==="
+echo "=== Successfully built, packaged, and deployed LeviLamroid v1.0.1-beta ==="

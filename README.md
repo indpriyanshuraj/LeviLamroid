@@ -3,7 +3,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Android%20ARM64-green.svg)](https://github.com/spygamingog)
 [![Target](https://img.shields.io/badge/Minecraft-Bedrock%20v1.26.x-blue.svg)](https://minecraft.net)
 [![Role](https://img.shields.io/badge/Role-Core%20Mod%20Loader%20Runtime-orange.svg)](src/)
-[![Version](https://img.shields.io/badge/Version-1.0.0--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.1--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
 [![Status](https://img.shields.io/badge/Status-Beta%20Testing-yellow.svg)](https://github.com/spygamingog/LeviLamroid)
 
 A next-generation native C++ mod loader runtime and reverse-engineering hook hub for **Minecraft Bedrock Edition (Android ARM64)**.
@@ -12,11 +12,11 @@ Developed and maintained by **[SpyGamingOG](https://github.com/spygamingog)**.
 Inspired by the architecture of Windows [LeviLamina](https://github.com/LiteLDev/LeviLamina), redesigned from the ground up for Android ARM64 Linux kernels and **LeviLauncher (LeviLaunchroid)**.
 
 > [!WARNING]
-> ### ⚠️ Under Active Development — Initial Beta Testing Release (`v1.0.0-beta`)
-> **LeviLamroid is currently in its initial public beta testing phase.**
-> - **Development Status**: Active Reverse Engineering & Rapid Iteration.
-> - **Beta Notice & Potential Instability**: Because Minecraft Bedrock on Android is a rapidly shifting closed-source client binary with frequent updates and device-specific GPU drivers, **some hooks, functions, or RVAs may still be experimental, unstable, or not yet fully mapped** across certain minor engine versions or patched APKs.
-> - **Bug Reports Welcome**: If you encounter an unmapped RVA, a broken hook, or an unexpected crash, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
+> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.1-beta`)
+> **LeviLamroid is currently in active public beta testing.**
+> - **Development Status**: Active Reverse Engineering, Signature-Based Hooking & Multi-Version Runtime.
+> - **Multi-Version Coverage**: Native verified support across Bedrock 1.26.44.3, 1.26.45.1, 1.26.51.1, and 1.26.52.3 on LeviLauncher.
+> - **Bug Reports Welcome**: If you encounter an unmapped signature, a broken hook, or an unexpected crash, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
 
 ---
 
@@ -38,13 +38,16 @@ Traditionally on Android Bedrock, each individual client mod had to:
 1. **Universal Hook Engine (`ll::memory`)**:
    - `hook(target, detour, original)`: Inline detour hooking with automated AArch64 trampoline allocation and CPU instruction cache invalidation (`__builtin___clear_cache`).
    - `hookRva(rva, detour, original)`: RVA-based hooking relative to `libminecraftpe.so` base.
+   - `hookSignature(pattern, detour, original, fallbackRva)`: Hybrid Signature Hooking Engine with $O(1)$ fast-path direct memory verification and automated `memchr`-accelerated ELF `.text` pattern scanning fallback.
    - `hookGotSlot(gotRva, detour, original)`: Global Offset Table (GOT) relocation hooking for GLES (`glClear`) / libc functions.
    - LeviLaunchroid PreLoader ABI bridge.
 
 2. **Dynamic Multi-Version Detection Engine (`ll::mcpe`)**:
    - **Zero-Latency GNU Build ID Resolution**: Scans the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to extract the unique 20-byte SHA-1 Build ID:
      - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
+     - `19d675681604a80ce6a8ff35dfb66f287e0766e0` $\rightarrow$ Bedrock `1.26.51.1` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
      - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1` (100% complete RVAs across gameplay, UI, render, audio, commands, and virtual resource pack access strategies)
+     - `7ff153b6cba8d148e64c2ec582f3484f9ea4457e` $\rightarrow$ Bedrock `1.26.44.3` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
    - **Zero Binary Bloat**: Each supported version adds only ~200 bytes of RVA table entries in `.rodata`, requiring no duplicated hook machinery or bloated codebases.
    - Dynamic pattern scanner (`scanMinecraft`) for automated signature matching on newer releases.
 
