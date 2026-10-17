@@ -25,6 +25,10 @@ cmake_install.cmake
 *.swp
 *~
 
+# xmake
+.xmake/
+.xmake-cache/
+
 # IDE & Editor artifacts
 .DS_Store
 .cache/
@@ -52,3 +56,7 @@ template/dist/
 template/*.so
 template/*.zip
 template/*.levipack
+
+# git
+commit_msg.txt
+.patch

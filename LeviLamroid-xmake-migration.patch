@@ -1,0 +1,1117 @@
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+new file mode 100644
+index 0000000..47e9793
+--- /dev/null
++++ b/.github/workflows/build.yml
+@@ -0,0 +1,95 @@
++name: Build
++
++# CI only. Releases live in release.yml. xmake is the sole build system for
++# this project, so a green run here is the real thing.
++#
++# Target is Android ARM64 (arm64-v8a) only, matching LeviLaunchroid.
++
++on:
++  push:
++    branches: [main, master]
++  pull_request:
++  workflow_dispatch:
++
++permissions:
++  contents: read
++
++concurrency:
++  group: build-${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: true
++
++env:
++  # GitHub Actions has no TTY; this forces true-colour output into the log.
++  XMAKE_COLORTERM: truecolor
++  NDK_VERSION: r28c
++  ABI: arm64-v8a
++
++jobs:
++  build:
++    name: android-${{ env.ABI }}
++    runs-on: ubuntu-latest
++    timeout-minutes: 30
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      # One step wires up three caches:
++      #   actions-cache-folder -> the xmake binary itself
++      #   package-cache        -> the xrepo package store (~/.xmake/packages)
++      #   build-cache          -> the .build_cache object cache, and it turns
++      #                           build.ccache ON for CI (off by default there)
++      - name: Setup xmake (with caches)
++        uses: xmake-io/github-action-setup-xmake@v1
++        with:
++          xmake-version: latest
++          actions-cache-folder: ".xmake-cache"
++          actions-cache-key: ${{ runner.os }}-${{ env.ABI }}
++          package-cache: true
++          package-cache-key: ${{ runner.os }}-${{ env.ABI }}-${{ hashFiles('xmake.lua', 'xmake-requires.lock') }}
++          build-cache: true
++          build-cache-key: ${{ runner.os }}-${{ env.ABI }}
++          project-path: "."
++
++      - name: Setup Android NDK
++        id: ndk
++        uses: nttld/setup-ndk@v1
++        with:
++          ndk-version: ${{ env.NDK_VERSION }}
++
++      # Guard against the version drift that already exists in this repo
++      # (LeviLamroid.h said 1.0.0-beta while manifest.json said 1.0.1-beta).
++      - name: Check version consistency
++        run: python3 scripts/sync_version.py --check
++
++      - name: Configure
++        run: >
++          xmake f -p android -a ${{ env.ABI }} -m release
++          --ndk=${{ steps.ndk.outputs.ndk-path }} -y -v
++
++      - name: Build
++        run: xmake -y -v
++
++      - name: Summary
++        if: always()
++        run: |
++          {
++            echo "### LeviLamroid build - android-${{ env.ABI }}"
++            echo ""
++            echo "| Artifact | Size |"
++            echo "| --- | --- |"
++            for f in build/android/${{ env.ABI }}/release/liblevilamroid.so \
++                     build/android/${{ env.ABI }}/release/levilamroid.levipack; do
++              [ -f "$f" ] && echo "| $(basename "$f") | $(du -h "$f" | cut -f1) |"
++            done
++          } >> "$GITHUB_STEP_SUMMARY"
++
++      - name: Upload artifacts
++        uses: actions/upload-artifact@v4
++        with:
++          name: LeviLamroid-android-${{ env.ABI }}
++          path: |
++            build/android/${{ env.ABI }}/release/liblevilamroid.so
++            build/android/${{ env.ABI }}/release/levilamroid.levipack
++          if-no-files-found: error
++          retention-days: 14
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+new file mode 100644
+index 0000000..2a5b601
+--- /dev/null
++++ b/.github/workflows/release.yml
+@@ -0,0 +1,186 @@
++name: Release
++
++# Tag-driven release pipeline. Four gated stages, so a broken version or a
++# failed build never reaches the published release:
++#
++#   prepare -> resolve + validate the version (single source of truth)
++#   build   -> xmake build for android/arm64-v8a
++#   release -> publish two assets per release: the raw .so and the .levipack,
++#              plus SHA256SUMS
++#   attest  -> build provenance for the shipped binaries
++#
++# Target is Android ARM64 (arm64-v8a) only.
++
++on:
++  push:
++    tags: ["v*"]
++  workflow_dispatch:
++    inputs:
++      version:
++        description: "Version to release, e.g. 1.0.2-beta (must match the repo)"
++        required: true
++
++permissions:
++  contents: read
++
++# A release must never be cancelled mid-flight, so this does NOT cancel.
++concurrency:
++  group: release-${{ github.ref }}
++  cancel-in-progress: false
++
++env:
++  XMAKE_COLORTERM: truecolor
++  NDK_VERSION: r28c
++  ABI: arm64-v8a
++
++jobs:
++  prepare:
++    name: Validate version
++    runs-on: ubuntu-latest
++    outputs:
++      version: ${{ steps.resolve.outputs.version }}
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      - name: Resolve version
++        id: resolve
++        run: |
++          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
++            RAW="${{ github.event.inputs.version }}"
++          else
++            RAW="${GITHUB_REF_NAME}"
++          fi
++          V="${RAW#v}"
++          echo "version=$V" >> "$GITHUB_OUTPUT"
++          echo "Resolved version: $V"
++
++      - name: Verify version is consistent across the repo
++        run: python3 scripts/sync_version.py --check "${{ steps.resolve.outputs.version }}"
++
++  build:
++    name: android-${{ env.ABI }}
++    needs: prepare
++    runs-on: ubuntu-latest
++    timeout-minutes: 30
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      - name: Setup xmake (with caches)
++        uses: xmake-io/github-action-setup-xmake@v1
++        with:
++          xmake-version: latest
++          actions-cache-folder: ".xmake-cache"
++          actions-cache-key: ${{ runner.os }}-${{ env.ABI }}
++          package-cache: true
++          package-cache-key: ${{ runner.os }}-${{ env.ABI }}-${{ hashFiles('xmake.lua', 'xmake-requires.lock') }}
++          build-cache: true
++          build-cache-key: ${{ runner.os }}-${{ env.ABI }}
++          project-path: "."
++
++      - name: Setup Android NDK
++        id: ndk
++        uses: nttld/setup-ndk@v1
++        with:
++          ndk-version: ${{ env.NDK_VERSION }}
++
++      - name: Configure
++        run: >
++          xmake f -p android -a ${{ env.ABI }} -m release
++          --ndk=${{ steps.ndk.outputs.ndk-path }} -y -v
++
++      - name: Build
++        run: xmake -y -v
++
++      # Two assets: the raw shared library and the packaged .levipack.
++      - name: Stage artifacts
++        run: |
++          V="${{ needs.prepare.outputs.version }}"
++          mkdir -p dist
++          cp build/android/${{ env.ABI }}/release/liblevilamroid.so \
++             "dist/LeviLamroid-${V}-android-${{ env.ABI }}.so"
++          cp build/android/${{ env.ABI }}/release/levilamroid.levipack \
++             "dist/LeviLamroid-${V}-android-${{ env.ABI }}.levipack"
++          ls -l dist
++
++      - name: Checksums
++        working-directory: dist
++        run: sha256sum * > SHA256SUMS.txt
++
++      - uses: actions/upload-artifact@v4
++        with:
++          name: dist
++          path: dist/*
++          if-no-files-found: error
++          retention-days: 7
++
++  release:
++    name: Publish release
++    needs: [prepare, build]
++    runs-on: ubuntu-latest
++    # `environment: release` lets you require a reviewer before anything is
++    # published; configure it under Settings -> Environments.
++    environment: release
++    permissions:
++      contents: write
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      - uses: actions/download-artifact@v4
++        with:
++          name: dist
++          path: dist
++
++      - name: Compose release notes
++        run: |
++          V="${{ needs.prepare.outputs.version }}"
++          {
++            echo "## LeviLamroid v${V} - Android ARM64"
++            echo
++            echo "Native C++ mod-loader runtime for Minecraft Bedrock on LeviLauncher."
++            echo
++            echo "Supported Bedrock builds: 1.26.44.3 / 1.26.45.1 / 1.26.51.1 / 1.26.52.3."
++            echo
++            echo "### Assets"
++            echo
++            echo "- \`LeviLamroid-${V}-android-arm64-v8a.levipack\` - install this in LeviLauncher (contains \`liblevilamroid.so\`, \`manifest.json\`, \`data/\`)."
++            echo "- \`LeviLamroid-${V}-android-arm64-v8a.so\` - the raw shared library."
++            echo "- \`SHA256SUMS.txt\` - verify both downloads against it."
++            echo
++            echo "Full history: [CHANGELOG.md](CHANGELOG.md)."
++          } > RELEASE_NOTES.md
++          cat RELEASE_NOTES.md
++
++      - name: Publish
++        uses: softprops/action-gh-release@v2
++        with:
++          name: "LeviLamroid v${{ needs.prepare.outputs.version }}"
++          tag_name: v${{ needs.prepare.outputs.version }}
++          body_path: RELEASE_NOTES.md
++          files: dist/*
++          fail_on_unmatched_files: true
++          generate_release_notes: false
++
++  attest:
++    name: Build provenance
++    needs: [build, release]
++    runs-on: ubuntu-latest
++    permissions:
++      contents: read
++      id-token: write
++      attestations: write
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: dist
++          path: dist
++      # Publishes a signed SLSA-style provenance record tying each .levipack and
++      # .so to this exact workflow run and commit.
++      - uses: actions/attest-build-provenance@v2
++        with:
++          subject-path: "dist/*.levipack, dist/*.so"
+diff --git a/.gitignore b/.gitignore
+index c73f5c1..c5f5eb5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -25,6 +25,10 @@ cmake_install.cmake
+ *.swp
+ *~
+ 
++# xmake
++.xmake/
++.xmake-cache/
++
+ # IDE & Editor artifacts
+ .DS_Store
+ .cache/
+diff --git a/BUILDING.md b/BUILDING.md
+new file mode 100644
+index 0000000..a8fdaf4
+--- /dev/null
++++ b/BUILDING.md
+@@ -0,0 +1,149 @@
++# Building LeviLamroid
++
++LeviLamroid is built with **xmake**. There is no second build system: the CI and
++every published release are produced by `xmake.lua` and nothing else.
++
++---
++
++## Prerequisites
++
++- **Android NDK** r28c or newer (`r29` also works). Set `ANDROID_NDK_HOME`, or
++  pass `--ndk=<path>` explicitly.
++- **xmake** >= 2.9.8. Install with
++  `curl -fsSL https://xmake.io/shget.text | bash` (or your package manager).
++
++## Build
++
++```bash
++# configure once
++xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y
++
++# build (+ package automatically)
++xmake -y
++
++# outputs
++#   build/android/arm64-v8a/release/liblevilamroid.so
++#   build/android/arm64-v8a/release/levilamroid.levipack
++```
++
++Useful variants:
++
++```bash
++# debug build (symbols, no LTO/strip)
++xmake f -p android -a arm64-v8a -m debug --ndk=$ANDROID_NDK_HOME -y && xmake -y
++
++# verbose engine-discovery logging
++xmake f -p android -a arm64-v8a -m release --ll_verbose_log=y -y && xmake -y
++
++# clean
++xmake clean --all
++```
++
++The `.levipack` is produced automatically after every successful build: the
++`after_build` hook bundles `liblevilamroid.so`, `manifest.json` and `data/` into
++it.
++
++## Deploy to a device
++
++```bash
++xmake deploy
++```
++
++Copies the built `.levipack` into the `mods/LeviLamroid/` directory of every
++LeviLauncher profile it finds under
++`/sdcard/Android/media/org.levimc.launcher/minecraft/`. Build first.
++
++## Build cache
++
++xmake keeps a **built-in content-addressed object cache** (`build.ccache`). It
++preprocesses each translation unit, hashes the result together with the compile
++flags, and stores the object file, so a recompile with unchanged inputs is a
++cache hit. It is on by default locally and lives under the build directory
++(`build/.build_cache`).
++
++Two things that keep the hit rate high, and that this repo already follows:
++
++- Use **relative** include directories (`add_includedirs("include")`), never an
++  absolute path like `os.projectdir()`; absolute paths change the cache key and
++  cause 0% hits.
++- Do not enable it for C++ modules; it is incompatible with module builds.
++
++Tuning knobs (all optional):
++
++```bash
++# share one cache across every checkout on this machine
++xmake f --policies=build.ccache.global_storage:y
++
++# put the cache somewhere explicit
++xmake f --ccachedir=/path/to/cache
++
++# turn it off entirely
++xmake f --ccache=n
++```
++
++`xmake -v` prints a `build cache stats:` block (hit rate, hits/misses, remote
++hits, preprocess failures) so you can see whether it is actually helping.
++
++## Editor / IDE support
++
++Generate the files editors want from the same `xmake.lua`, so they cannot drift
++from the real build:
++
++```bash
++xmake project -k compile_commands .vscode   # clangd / ccls / VS Code
++xmake project -k vsxmake -m "debug,release" # Visual Studio
++xmake project -k ninja                      # alternate backend
++```
++
++These outputs are gitignored. To regenerate `compile_commands.json` on every
++build, uncomment the `plugin.compile_commands.autoupdate` rule in `xmake.lua`.
++
++---
++
++## Versioning
++
++The version is defined in one place and mirrored by a script:
++
++```bash
++python3 scripts/sync_version.py                 # print the current version
++python3 scripts/sync_version.py --check          # fail if the repo has drifted
++python3 scripts/sync_version.py --set 1.0.2-beta # update every tracked file
++```
++
++It keeps `xmake.lua`, `manifest.json` and `include/levilamroid/LeviLamroid.h` in
++step. `--check` runs in CI, so a PR that bumps one file but not the others is
++rejected before it can ship a mislabelled `.levipack`.
++
++## Releases
++
++Releases are cut by pushing a tag:
++
++```bash
++python3 scripts/sync_version.py --set 1.0.2-beta
++git commit -am "Release v1.0.2-beta"
++git tag v1.0.2-beta
++git push origin main --tags
++```
++
++`release.yml` then validates the version, builds android/arm64-v8a with xmake,
++attaches the `.levipack` and the raw `.so` plus `SHA256SUMS.txt`, publishes the
++GitHub Release, and records build provenance. A manual `workflow_dispatch` run
++with a version input does the same without a tag.
++
++See [PACKAGING.md](PACKAGING.md) for what the release assets are.
++
++---
++
++## Adding this to the README
++
++Paste the following into `README.md` (indented here so the fences stay readable):
++
++    ## Building
++
++    LeviLamroid is built with **xmake**. See [BUILDING.md](BUILDING.md) for the
++    full guide.
++
++    ```bash
++    xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y
++    xmake -y
++    ```
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 2c949a1..e28f911 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,6 +4,22 @@ All notable changes to **LeviLamroid** are documented here.
+ 
+ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
+ 
++## [Unreleased]
++
++### Changed
++- Migrated the build to **xmake** (`xmake.lua`) as the sole build system; removed `CMakeLists.txt` and `package.sh`.
++- Deployment moved to `xmake deploy`.
++
++### Added
++- GitHub Actions CI (`.github/workflows/build.yml`) with xmake binary, package and build caches and coloured logs.
++- Tag-driven release pipeline (`.github/workflows/release.yml`) publishing the `.levipack` and the raw `.so`, with checksums and build-provenance attestation.
++- `scripts/sync_version.py` as the single source of truth for the version.
++- `BUILDING.md` and `PACKAGING.md` documentation.
++- `compile_commands.json` generation for clangd / IDE intellisense via xmake.
++
++### Fixed
++- Version drift between `manifest.json` and `LeviLamroid.h`.
++
+ ## [1.0.1-beta] - 2026-10-16
+ 
+ ### Added
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+deleted file mode 100644
+index f412d27..0000000
+--- a/CMakeLists.txt
++++ /dev/null
+@@ -1,46 +0,0 @@
+-cmake_minimum_required(VERSION 3.22)
+-project(LeviLamroid VERSION 1.0.1 LANGUAGES CXX)
+-
+-set(CMAKE_CXX_STANDARD 20)
+-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+-
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fPIC -fvisibility=hidden -Wall -Wextra -pthread")
+-
+-include_directories(
+-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+-)
+-
+-link_directories(
+-    /system/lib64
+-    /data/data/com.termux/files/usr/lib
+-)
+-
+-set(SOURCES
+-    src/LeviLamroid.cpp
+-    src/memory/Hook.cpp
+-    src/memory/PatternScan.cpp
+-    src/mcpe/Offsets.cpp
+-    src/mcpe/Symbols.cpp
+-    src/hooks/CoreHooks.cpp
+-    src/hooks/UIHooks.cpp
+-    src/hooks/RenderHooks.cpp
+-    src/plugin/PluginManager.cpp
+-)
+-
+-add_library(levilamroid SHARED ${SOURCES})
+-
+-target_link_options(levilamroid PRIVATE
+-    "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/levilamroid.version"
+-)
+-
+-target_link_libraries(levilamroid
+-    PRIVATE
+-    dl
+-    log
+-    GLESv3
+-)
+-
+-set_target_properties(levilamroid PROPERTIES
+-    OUTPUT_NAME "levilamroid"
+-    PREFIX "lib"
+-)
+diff --git a/PACKAGING.md b/PACKAGING.md
+new file mode 100644
+index 0000000..c661d63
+--- /dev/null
++++ b/PACKAGING.md
+@@ -0,0 +1,98 @@
++# Packaging and distribution: tooth.json vs the .levipack
++
++There are two different package formats in play in this repo, and only one of
++them is the right one for LeviLamroid. This note explains the difference, why the
++current `tooth.json` is broken, and what a release should ship.
++
++---
++
++## 1. `tooth.json` is lip's manifest (the LeviLamina ecosystem)
++
++`tooth.json` is the package manifest for **lip**, LiteLDev's package manager for
++LeviLamina. Its documented examples and tutorials are all Windows/LeviLamina:
++`platform: "win-x64"`, dependencies on `github.com/LiteLDev/LeviLamina`, assets
++placed into `plugins/` or `mods/`, tags like `platform:levilamina`, `type:mod`.
++
++The *format* itself is platform-generic - the `platform` field is a .NET runtime
++identifier (RID) that supports globs and an empty "match all" value, and lip runs
++on Windows, Linux and macOS. So an Android variant is not forbidden by the schema.
++But every documented workflow, the LeviLamina dependency model, and the examples
++are built around the Windows LeviLamina client/server, not Android.
++
++**Bottom line:** tooth.json is a LeviLamina-ecosystem manifest. It is not the
++native delivery format for an Android native mod.
++
++## 2. The Android format is `manifest.json` + the `.levipack`
++
++LeviLaunchroid's native modules use a different manifest, `manifest.json`:
++
++```json
++{
++  "type": "preload-native",
++  "name": "...",
++  "author": "...",
++  "version": "1.0.0",
++  "entry": "libsome_mod.so",
++  "minecraft_versions": [],
++  "overwrite_files": [],
++  "overwrite_folders": []
++}
++```
++
++LeviLamroid's own `manifest.json` already matches this shape exactly
++(`"type": "preload-native"`, `"entry": "liblevilamroid.so"`,
++`"minecraft_versions": [...]`). The `.levipack` bundle wraps that manifest plus
++`liblevilamroid.so` and the `data/` offset tables. **That is the real, functional
++package for this project.**
++
++## 3. The current `tooth.json` is invalid
++
++Three concrete problems:
++
++1. **Wrong `format_uuid`.** For format version 3 the value is fixed and must be
++   `289f771f-2c9a-4d73-9f3f-8492495a924d`. The repo has
++   `3a8b2c10-4d5e-4f6a-9b12-8e7c6b5a4d3f`, which lip's JSON-Schema validation
++   will reject.
++2. **Version drift.** `tooth.json` says `1.0.0-beta`; `manifest.json` says
++   `1.0.1-beta`; the header says `1.0.0-beta`. `scripts/sync_version.py --check`
++   catches this.
++3. **Dead asset URL.** The manifest points at
++   `.../releases/download/v{{version}}/LeviLamroid-1.0.0-beta-android-arm64.zip`,
++   but the release workflow publishes
++   `LeviLamroid-<version>-android-arm64-v8a.levipack`. The URL would 404.
++
++## 4. Current decision: `tooth.json` is left untouched
++
++`tooth.json` is not part of this migration. It is not read by the build, not
++shipped in a release, and not touched by `scripts/sync_version.py`. It is left
++byte-for-byte as it is.
++
++The three problems above are therefore still present and worth revisiting if and
++when a lip / Bedrinth listing is actually wanted. At that point the options are:
++
++- **Drop it**, if you are not publishing through lip / Bedrinth - the simplest
++  option for an Android-only native loader; or
++- **Fix it**: correct the `format_uuid`, let `sync_version.py` own the version
++  again, and point `urls` at the artifact the release workflow actually uploads.
++  Verify first that a `platform` of `android-arm64` is accepted by whatever
++  consumes it - the docs only demonstrate Windows RIDs, so treat Android support
++  as unverified until you see it install.
++
++The `.levipack` + `manifest.json` remains the artifact users install in
++LeviLauncher.
++
++---
++
++## 5. What a release ships
++
++`release.yml` publishes, for `android/arm64-v8a` only:
++
++| Asset | What it is |
++| --- | --- |
++| `LeviLamroid-<version>-android-arm64-v8a.levipack` | the installable bundle: `liblevilamroid.so` + `manifest.json` + `data/` |
++| `LeviLamroid-<version>-android-arm64-v8a.so` | the raw shared library, for manual placement |
++| `SHA256SUMS.txt` | checksums for both |
++
++plus a **build-provenance attestation** (`actions/attest-build-provenance`) that
++cryptographically ties both binaries to the exact workflow run and commit, and
++the composed release notes.
+diff --git a/README.md b/README.md
+index 7c0e938..a5e28cd 100644
+--- a/README.md
++++ b/README.md
+@@ -84,6 +84,18 @@ Traditionally on Android Bedrock, each individual client mod had to:
+ 
+ ---
+ 
++## Building
++
++LeviLamroid is built with **xmake**. See [BUILDING.md](BUILDING.md) for the full
++guide.
++
++```bash
++xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y
++xmake -y
++```
++
++---
++
+ ## Installation
+ 
+ ### Automatic Installation
+diff --git a/include/levilamroid/LeviLamroid.h b/include/levilamroid/LeviLamroid.h
+index 676b1a2..8f3aeb8 100644
+--- a/include/levilamroid/LeviLamroid.h
++++ b/include/levilamroid/LeviLamroid.h
+@@ -2,8 +2,8 @@
+ 
+ #define LEVILAMROID_VERSION_MAJOR 1
+ #define LEVILAMROID_VERSION_MINOR 0
+-#define LEVILAMROID_VERSION_PATCH 0
+-#define LEVILAMROID_VERSION_STRING "1.0.0-beta"
++#define LEVILAMROID_VERSION_PATCH 1
++#define LEVILAMROID_VERSION_STRING "1.0.1-beta"
+ 
+ // LeviLamina Windows Parity Headers
+ #include "ll/api/Logger.h"
+diff --git a/package.sh b/package.sh
+deleted file mode 100644
+index 3184039..0000000
+--- a/package.sh
++++ /dev/null
+@@ -1,97 +0,0 @@
+-#!/usr/bin/env bash
+-set -e
+-
+-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+-BUILD_DIR="${SCRIPT_DIR}/build"
+-DIST_DIR="${SCRIPT_DIR}/dist"
+-
+-echo "=== 1. Building LeviLamroid for Android ARM64 ==="
+-mkdir -p "${BUILD_DIR}"
+-cd "${BUILD_DIR}"
+-if [ -f "/data/data/com.termux/files/usr/bin/clang++" ]; then
+-    cmake -DCMAKE_CXX_COMPILER=/data/data/com.termux/files/usr/bin/clang++ ..
+-else
+-    cmake ..
+-fi
+-make -j$(nproc || echo 4)
+-
+-echo "=== 2. Packaging LeviLamroid Distribution ==="
+-mkdir -p "${DIST_DIR}"
+-cp -f "${BUILD_DIR}/liblevilamroid.so" "${DIST_DIR}/liblevilamroid.so"
+-cp -f "${SCRIPT_DIR}/manifest.json" "${DIST_DIR}/manifest.json" 2>/dev/null || true
+-mkdir -p "${DIST_DIR}/data"
+-cp -rf "${SCRIPT_DIR}/data/"* "${DIST_DIR}/data/" 2>/dev/null || true
+-
+-# Build levipack and zip
+-LEVIPACK_OUT="${DIST_DIR}/levilamroid.levipack"
+-ZIP_OUT="${DIST_DIR}/LeviLamroid-1.0.1-beta-android-arm64.zip"
+-
+-python3 -c "
+-import zipfile, os
+-levipack_files = [
+-    ('${DIST_DIR}/liblevilamroid.so', 'liblevilamroid.so'),
+-    ('${SCRIPT_DIR}/manifest.json', 'manifest.json')
+-]
+-with zipfile.ZipFile('${LEVIPACK_OUT}', 'w', zipfile.ZIP_DEFLATED) as zf:
+-    for src, arc in levipack_files:
+-        if os.path.isfile(src): zf.write(src, arc)
+-
+-zip_files = [
+-    ('${DIST_DIR}/liblevilamroid.so', 'liblevilamroid.so'),
+-    ('${SCRIPT_DIR}/manifest.json', 'manifest.json'),
+-    ('${SCRIPT_DIR}/README.md', 'README.md'),
+-    ('${SCRIPT_DIR}/FUNCTIONS.md', 'FUNCTIONS.md')
+-]
+-with zipfile.ZipFile('${ZIP_OUT}', 'w', zipfile.ZIP_DEFLATED) as zf:
+-    for src, arc in zip_files:
+-        if os.path.isfile(src): zf.write(src, 'LeviLamroid/' + arc)
+-    for root, dirs, files in os.walk('${SCRIPT_DIR}/data'):
+-        for f in files:
+-            p = os.path.join(root, f)
+-            rel = os.path.relpath(p, '${SCRIPT_DIR}')
+-            zf.write(p, 'LeviLamroid/' + rel)
+-"
+-
+-# Copy to /sdcard/Download and /sdcard/MG if sdcard is present
+-if [ -d "/sdcard" ]; then
+-    mkdir -p /sdcard/Download /sdcard/MG 2>/dev/null || true
+-    cp -f "${LEVIPACK_OUT}" "/sdcard/Download/levilamroid.levipack" 2>/dev/null || true
+-    cp -f "${LEVIPACK_OUT}" "/sdcard/MG/levilamroid.levipack" 2>/dev/null || true
+-    cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
+-    cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
+-
+-    # Auto-deploy to LeviLauncher profiles as core loader
+-    for profile_dir in /sdcard/Android/media/org.levimc.launcher/minecraft/*/mods; do
+-        if [ -d "${profile_dir}" ]; then
+-            mod_dir="${profile_dir}/LeviLamroid"
+-            mkdir -p "${mod_dir}/data"
+-            cp -f "${DIST_DIR}/liblevilamroid.so" "${mod_dir}/"
+-            cp -f "${SCRIPT_DIR}/manifest.json" "${mod_dir}/" 2>/dev/null || true
+-            cp -rf "${SCRIPT_DIR}/data/"* "${mod_dir}/data/" 2>/dev/null || true
+-            echo "Deployed LeviLamroid to ${mod_dir}"
+-
+-            # Enable in mods_config.json with order 0 (load first)
+-            cfg_file="${profile_dir}/mods_config.json"
+-            python3 -c "
+-import json, os
+-p = '${cfg_file}'
+-if os.path.isfile(p):
+-    try:
+-        with open(p, 'r') as f: data = json.load(f)
+-        found = False
+-        for m in data:
+-            if m.get('name') == 'LeviLamroid':
+-                m['enabled'] = True
+-                m['order'] = 0
+-                found = True
+-        if not found:
+-            data.insert(0, {'name': 'LeviLamroid', 'enabled': True, 'order': 0})
+-        for idx, m in enumerate(data): m['order'] = idx
+-        with open(p, 'w') as f: json.dump(data, f, indent=2)
+-    except Exception as e: print(f'mods_config update error: {e}')
+-"
+-        fi
+-    done
+-fi
+-
+-echo "=== Successfully built, packaged, and deployed LeviLamroid v1.0.1-beta ==="
+diff --git a/scripts/sync_version.py b/scripts/sync_version.py
+new file mode 100644
+index 0000000..6ddcd4e
+--- /dev/null
++++ b/scripts/sync_version.py
+@@ -0,0 +1,153 @@
++#!/usr/bin/env python3
++"""Single source of truth for the LeviLamroid version.
++
++The canonical version lives in xmake.lua's set_version() (numeric). The full
++version (which may add a suffix such as "-beta") is mirrored into manifest.json
++and the runtime header. This script checks that they agree, or propagates a
++version to them.
++
++Tracked files:
++    xmake.lua                                set_version("X")       (numeric)
++    manifest.json                            "version": "X[-suffix]" (full)
++    include/levilamroid/LeviLamroid.h        LEVILAMROID_VERSION_*  (full)
++
++tooth.json is deliberately NOT tracked - it is a legacy lip manifest that is not
++read by the build or shipped in a release, and is left untouched.
++
++Usage:
++    python3 scripts/sync_version.py                     # print the full version
++    python3 scripts/sync_version.py --check              # exit 1 if the repo drifts
++    python3 scripts/sync_version.py --check 1.0.2-beta    # exit 1 unless all == arg
++    python3 scripts/sync_version.py --set 1.0.2-beta      # write it everywhere
++"""
++import argparse
++import json
++import pathlib
++import re
++import sys
++
++ROOT = pathlib.Path(__file__).resolve().parents[1]
++XMAKE = ROOT / "xmake.lua"
++MANIFEST = ROOT / "manifest.json"
++HEADER = ROOT / "include" / "levilamroid" / "LeviLamroid.h"
++
++VER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$")
++
++
++def die(msg):
++    sys.exit(f"error: {msg}")
++
++
++def numeric(v):
++    return v.split("-")[0] if v else v
++
++
++def parse(v):
++    if not VER_RE.match(v):
++        die(f"version '{v}' is not MAJOR.MINOR.PATCH[-suffix]")
++    return v
++
++
++def read_xmake():
++    m = re.search(r'set_version\(\s*"([^"]+)"\s*\)', XMAKE.read_text())
++    if not m:
++        die("set_version() not found in xmake.lua")
++    return m.group(1)
++
++
++def read_json_version(path):
++    try:
++        return json.loads(path.read_text()).get("version")
++    except FileNotFoundError:
++        return None
++
++
++def read_header_version():
++    m = re.search(r'LEVILAMROID_VERSION_STRING\s+"([^"]+)"', HEADER.read_text())
++    return m.group(1) if m else None
++
++
++def write_xmake(v):
++    text = re.sub(r'(set_version\(\s*)"[^"]*"', r'\g<1>"' + numeric(v) + '"', XMAKE.read_text())
++    XMAKE.write_text(text)
++
++
++def write_json_version(path, v):
++    data = json.loads(path.read_text())
++    data["version"] = v
++    path.write_text(json.dumps(data, indent=2) + "\n")
++
++
++def write_header(v):
++    major, minor, patch = numeric(v).split(".")
++    text = HEADER.read_text()
++    text = re.sub(r"(#define LEVILAMROID_VERSION_MAJOR\s+)\d+", r"\g<1>" + major, text)
++    text = re.sub(r"(#define LEVILAMROID_VERSION_MINOR\s+)\d+", r"\g<1>" + minor, text)
++    text = re.sub(r"(#define LEVILAMROID_VERSION_PATCH\s+)\d+", r"\g<1>" + patch, text)
++    text = re.sub(r'(#define LEVILAMROID_VERSION_STRING\s+)"[^"]*"', r'\g<1>"' + v + '"', text)
++    HEADER.write_text(text)
++
++
++def cmd_set(v):
++    parse(v)
++    for p in (XMAKE, MANIFEST, HEADER):
++        if not p.exists():
++            die(f"missing {p}")
++    write_xmake(v)
++    write_json_version(MANIFEST, v)
++    write_header(v)
++    print(f"version set to {v} in xmake.lua, manifest.json, LeviLamroid.h")
++
++
++def cmd_check(expected):
++    xmake_v = read_xmake()
++    manifest_v = read_json_version(MANIFEST)
++    header_v = read_header_version()
++
++    if expected:
++        parse(expected)
++        rows = [
++            ("xmake.lua", xmake_v, xmake_v == numeric(expected)),
++            ("manifest.json", manifest_v, manifest_v == expected),
++            ("LeviLamroid.h", header_v, header_v == expected),
++        ]
++        target = expected
++    else:
++        # Internal consistency: xmake is numeric; manifest and header must be
++        # equal to each other and share xmake's numeric core.
++        full = manifest_v
++        rows = [
++            ("xmake.lua", xmake_v, numeric(xmake_v) == numeric(full or "")),
++            ("manifest.json", manifest_v, manifest_v is not None),
++            ("LeviLamroid.h", header_v, header_v == full),
++        ]
++        target = full or "(none)"
++
++    print(f"target version: {target}")
++    bad = False
++    for name, value, ok in rows:
++        print(f"  {'OK      ' if ok else 'MISMATCH'} {name}: {value}")
++        bad = bad or not ok
++
++    if bad:
++        hint = expected or (manifest_v or "1.0.0")
++        print("\nVersion drift detected. Fix with: python3 scripts/sync_version.py --set " + hint)
++        sys.exit(1)
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--check", nargs="?", const="", metavar="VERSION")
++    ap.add_argument("--set", dest="setver", metavar="VERSION")
++    args = ap.parse_args()
++
++    if args.setver:
++        cmd_set(args.setver)
++    elif args.check is not None:
++        cmd_check(args.check)
++    else:
++        print(read_json_version(MANIFEST) or read_xmake())
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/xmake.lua b/xmake.lua
+new file mode 100644
+index 0000000..0b1b358
+--- /dev/null
++++ b/xmake.lua
+@@ -0,0 +1,165 @@
++-- LeviLamroid - xmake build script (Minecraft Bedrock, Android ARM64)
++-- The build system for this project. There is no second one.
++--
++--   xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y
++--   xmake -y
++--
++-- Output: build/android/arm64-v8a/release/liblevilamroid.so
++--         build/android/arm64-v8a/release/levilamroid.levipack
++
++set_project("LeviLamroid")
++set_version("1.0.1")
++set_license("LGPL-3.0")
++
++add_rules("mode.debug", "mode.release")
++
++-- Freeze dependency resolution (the npm-package.lock / cargo.lock equivalent).
++set_policy("package.requires_lock", true)
++
++-- LeviLaunchroid targets ARM64 only, so the build is ARM64 only.
++set_allowedplats("android")
++set_allowedarchs("arm64-v8a")
++
++-- ---------------------------------------------------------------------------
++-- Build cache (ccache-style, built into xmake)
++-- ---------------------------------------------------------------------------
++-- xmake's built-in object cache (build.ccache) is ON by default locally and
++-- lives in build/.build_cache. The CI setup action turns it on via
++-- build-cache: true. Tuning knobs, all optional:
++--
++--   set_policy("build.ccache", false)                 -- turn the cache off
++--   set_policy("build.ccache.global_storage", true)   -- share one cache across
++--                                                      checkouts: ~/.xmake/.build_cache
++--   xmake f --ccachedir=/path/to/cache                 -- explicit cache dir
++--
++-- Keep include dirs RELATIVE (add_includedirs("include")) - an absolute path
++-- changes the cache key and drops the hit rate to 0.
++--
++-- set_policy("build.ccache.global_storage", true)
++set_policy("package.build.ccache", true)   -- also cache xrepo package builds (xmake >= 3.0.5)
++
++-- ---------------------------------------------------------------------------
++-- IDE / tooling files (generated on demand, not committed)
++-- ---------------------------------------------------------------------------
++-- xmake emits the files editors and analysers want, straight from this file, so
++-- they can never drift from the real build:
++--
++--   xmake project -k compile_commands .vscode   # clangd / ccls / VS Code
++--   xmake project -k ninja / -k makefile        # alternate backends
++--   xmake project -k vsxmake -m "debug,release" # Visual Studio
++--
++-- Uncomment to regenerate compile_commands.json on every build:
++-- add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode", lsp = "clangd"})
++
++-- ---------------------------------------------------------------------------
++-- OPTIONAL SLIM-DOWN: source the third-party libs from xrepo instead of
++-- vendoring them. All three are in the official xmake-repo and are available
++-- for android/arm64-v8a. Uncomment the add_requires() lines AND delete
++-- include/glm, include/imgui, include/nlohmann (~500 files), then uncomment the
++-- add_packages() line inside the target. This is what makes the CI package
++-- cache worth having.
++--
++-- Note: GLES/EGL/KHR headers are NOT packages - they come from the NDK sysroot,
++-- so those stay as-is either way.
++-- ---------------------------------------------------------------------------
++-- add_requires("glm 1.0.3")
++-- add_requires("nlohmann_json v3.12.0")
++-- add_requires("imgui v1.92.7", {configs = {android = true, opengl3 = true}})
++
++option("ll_verbose_log")
++    set_default(false)
++    set_showmenu(true)
++    set_description("Enable verbose engine discovery / hook logging")
++option_end()
++
++target("levilamroid")
++    set_kind("shared")
++    set_basename("levilamroid")              -- -> liblevilamroid.so
++    set_languages("c++20")
++    set_runtimes("c++_shared")
++
++    add_files("src/**.cpp")
++    add_includedirs("include")
++    -- add_packages("glm", "nlohmann_json", "imgui")   -- with the add_requires above
++
++    if has_config("ll_verbose_log") then
++        add_defines("LEVILAMROID_VERBOSE_LOG")
++    end
++
++    set_warnings("all", "extra")
++
++    if is_mode("release") then
++        set_optimize("fastest")
++        set_strip("all")
++        set_policy("build.optimization.lto", true)
++    end
++
++    -- Visibility: only the loader ABI listed in levilamroid.version leaves the .so.
++    add_cxflags("-fPIC",
++                "-fvisibility=hidden",
++                "-fvisibility-inlines-hidden",
++                "-ffunction-sections",
++                "-fdata-sections")
++
++    add_shflags("-Wl,--gc-sections",
++                "-Wl,-z,max-page-size=16384",   -- required for Android 16 KB pages
++                "-Wl,--version-script=" .. path.join(os.projectdir(), "levilamroid.version"),
++                {force = true})
++
++    add_links("log", "GLESv3", "dl", "m", "android")
++
++    -- Package liblevilamroid.so + manifest.json + data/ into a .levipack.
++    after_build(function (target)
++        if not target:is_plat("android") then return end
++        import("utils.archive")
++
++        local outdir  = target:targetdir()
++        local packdir = path.join(outdir, "pack")
++        os.tryrm(packdir)
++        os.mkdir(packdir)
++        os.cp(target:targetfile(), path.join(packdir, "liblevilamroid.so"))
++        os.cp(path.join(os.projectdir(), "manifest.json"), packdir)
++        if os.isdir(path.join(os.projectdir(), "data")) then
++            os.cp(path.join(os.projectdir(), "data"), path.join(packdir, "data"))
++        end
++
++        local levipack     = path.join(outdir, "levilamroid.levipack")
++        local levipack_zip = levipack .. ".zip"
++        os.tryrm(levipack)
++        os.tryrm(levipack_zip)
++        archive.archive(levipack_zip, "*", {curdir = packdir, recurse = true})
++        os.mv(levipack_zip, levipack)
++        cprint("${bright green}[LeviLamroid]${reset} packaged " .. levipack)
++    end)
++
++-- ---------------------------------------------------------------------------
++-- Local deploy: `xmake deploy`
++-- Replaces the deployment half of the old package.sh: copies the built
++-- .levipack into every LeviLauncher profile on a connected device. Run after
++-- a successful `xmake` build.
++-- ---------------------------------------------------------------------------
++task("deploy")
++    set_category("plugin")
++    set_description("Copy the built .levipack into LeviLauncher profiles")
++    on_run(function ()
++        local outdir   = path.join(os.projectdir(), "build", "android", "arm64-v8a", "release")
++        local levipack = path.join(outdir, "levilamroid.levipack")
++        assert(os.isfile(levipack), "build it first: xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y && xmake -y")
++
++        local root = "/sdcard/Android/media/org.levimc.launcher/minecraft"
++        local count = 0
++        if os.isdir(root) then
++            for _, profile in ipairs(os.dirs(path.join(root, "*"))) do
++                local moddir = path.join(profile, "mods", "LeviLamroid")
++                os.mkdir(moddir)
++                os.cp(levipack, path.join(moddir, "levilamroid.levipack"))
++                cprint("${bright green}[deploy]${reset} " .. moddir)
++                count = count + 1
++            end
++        end
++        if count == 0 then
++            cprint("${yellow}[deploy]${reset} no LeviLauncher profiles found; package is at " .. levipack)
++        else
++            cprint("${bright green}[deploy]${reset} installed to " .. count .. " profile(s)")
++        end
++    end)

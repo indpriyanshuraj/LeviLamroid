@@ -84,6 +84,18 @@ Traditionally on Android Bedrock, each individual client mod had to:
 
 ---
 
+## Building
+
+LeviLamroid is built with **xmake**. See [BUILDING.md](BUILDING.md) for the full
+guide.
+
+```bash
+xmake f -p android -a arm64-v8a -m release --ndk=$ANDROID_NDK_HOME -y
+xmake -y
+```
+
+---
+
 ## Installation
 
 ### Automatic Installation

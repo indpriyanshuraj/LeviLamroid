@@ -1,0 +1,95 @@
+name: Build
+
+# CI only. Releases live in release.yml. xmake is the sole build system for
+# this project, so a green run here is the real thing.
+#
+# Target is Android ARM64 (arm64-v8a) only, matching LeviLaunchroid.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # GitHub Actions has no TTY; this forces true-colour output into the log.
+  XMAKE_COLORTERM: truecolor
+  NDK_VERSION: r28c
+  ABI: arm64-v8a
+
+jobs:
+  build:
+    name: android-${{ env.ABI }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # One step wires up three caches:
+      #   actions-cache-folder -> the xmake binary itself
+      #   package-cache        -> the xrepo package store (~/.xmake/packages)
+      #   build-cache          -> the .build_cache object cache, and it turns
+      #                           build.ccache ON for CI (off by default there)
+      - name: Setup xmake (with caches)
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: ".xmake-cache"
+          actions-cache-key: ${{ runner.os }}-${{ env.ABI }}
+          package-cache: true
+          package-cache-key: ${{ runner.os }}-${{ env.ABI }}-${{ hashFiles('xmake.lua', 'xmake-requires.lock') }}
+          build-cache: true
+          build-cache-key: ${{ runner.os }}-${{ env.ABI }}
+          project-path: "."
+
+      - name: Setup Android NDK
+        id: ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: ${{ env.NDK_VERSION }}
+
+      # Guard against the version drift that already exists in this repo
+      # (LeviLamroid.h said 1.0.0-beta while manifest.json said 1.0.1-beta).
+      - name: Check version consistency
+        run: python3 scripts/sync_version.py --check
+
+      - name: Configure
+        run: >
+          xmake f -p android -a ${{ env.ABI }} -m release
+          --ndk=${{ steps.ndk.outputs.ndk-path }} -y -v
+
+      - name: Build
+        run: xmake -y -v
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### LeviLamroid build - android-${{ env.ABI }}"
+            echo ""
+            echo "| Artifact | Size |"
+            echo "| --- | --- |"
+            for f in build/android/${{ env.ABI }}/release/liblevilamroid.so \
+                     build/android/${{ env.ABI }}/release/levilamroid.levipack; do
+              [ -f "$f" ] && echo "| $(basename "$f") | $(du -h "$f" | cut -f1) |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeviLamroid-android-${{ env.ABI }}
+          path: |
+            build/android/${{ env.ABI }}/release/liblevilamroid.so
+            build/android/${{ env.ABI }}/release/levilamroid.levipack
+          if-no-files-found: error
+          retention-days: 14

@@ -4,6 +4,22 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- Migrated the build to **xmake** (`xmake.lua`) as the sole build system; removed `CMakeLists.txt` and `package.sh`.
+- Deployment moved to `xmake deploy`.
+
+### Added
+- GitHub Actions CI (`.github/workflows/build.yml`) with xmake binary, package and build caches and coloured logs.
+- Tag-driven release pipeline (`.github/workflows/release.yml`) publishing the `.levipack` and the raw `.so`, with checksums and build-provenance attestation.
+- `scripts/sync_version.py` as the single source of truth for the version.
+- `BUILDING.md` and `PACKAGING.md` documentation.
+- `compile_commands.json` generation for clangd / IDE intellisense via xmake.
+
+### Fixed
+- Version drift between `manifest.json` and `LeviLamroid.h`.
+
 ## [1.0.1-beta] - 2026-10-16
 
 ### Added
