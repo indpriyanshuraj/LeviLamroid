@@ -1,23 +1,89 @@
 #pragma once
-#include <string_view>
-#include <cstddef>
-#include "ll/api/memory/Hook.h"
+
+/**
+ * @file Hook.hpp
+ * @brief Memory hook API.
+ */
+
+#include <utility>
+
+#include "pl/Export.hpp"
 
 namespace pl::memory {
 
-using HookPriority = ::ll::memory::HookPriority;
+using FuncPtr = void *;
 
-inline bool hook(void* target, void* detour, void** original, HookPriority priority = HookPriority::Normal) {
-    (void)priority;
-    return ::ll::memory::hook(target, detour, original);
-}
+/**
+ * @brief Hook chain priority. Lower values run earlier.
+ */
+enum class HookPriority : int {
+  Highest = 0,
+  High = 100,
+  Normal = 200,
+  Low = 300,
+  Lowest = 400,
+};
 
-inline bool unhook(void* target, void* detour) {
-    (void)target;
-    (void)detour;
-    return true;
-}
+/**
+ * @brief Installs a detour for a target function.
+ */
+PL_EXPORT int hook(FuncPtr target, FuncPtr detour, FuncPtr *originalFunc,
+                   HookPriority priority = HookPriority::Normal);
 
-void* resolveVtableFunction(std::string_view className, size_t slot, std::string_view moduleName = "libminecraftpe.so");
+/**
+ * @brief Removes a detour from a target function.
+ */
+PL_EXPORT bool unhook(FuncPtr target, FuncPtr detour);
+
+/**
+ * @brief RAII owner for an installed hook.
+ */
+class HookHandle {
+public:
+  HookHandle() = default;
+
+  HookHandle(FuncPtr target, FuncPtr detour, FuncPtr *originalFunc,
+             HookPriority priority = HookPriority::Normal)
+      : mTarget(target), mDetour(detour),
+        mInstalled(hook(target, detour, originalFunc, priority) == 0) {}
+
+  HookHandle(const HookHandle &) = delete;
+  HookHandle &operator=(const HookHandle &) = delete;
+
+  HookHandle(HookHandle &&other) noexcept { swap(other); }
+
+  HookHandle &operator=(HookHandle &&other) noexcept {
+    if (this != &other) {
+      reset();
+      swap(other);
+    }
+    return *this;
+  }
+
+  ~HookHandle() { reset(); }
+
+  [[nodiscard]] bool installed() const noexcept { return mInstalled; }
+
+  void reset() {
+    if (mInstalled) {
+      unhook(mTarget, mDetour);
+      mInstalled = false;
+    }
+    mTarget = nullptr;
+    mDetour = nullptr;
+  }
+
+  void swap(HookHandle &other) noexcept {
+    std::swap(mTarget, other.mTarget);
+    std::swap(mDetour, other.mDetour);
+    std::swap(mInstalled, other.mInstalled);
+  }
+
+private:
+  FuncPtr mTarget{};
+  FuncPtr mDetour{};
+  bool mInstalled{};
+};
 
 } // namespace pl::memory
+

@@ -234,10 +234,23 @@ bool hookSignature(const std::string& pattern, void* detour, void** original, ui
         }
     }
 
-    // 2. Scan libminecraftpe.so for the pattern
+    // 2. Localized scan near fallbackRva (+/- 64KB) if fallbackRva provided
+    if (fallbackRva != 0) {
+        uintptr_t winStart = (fallbackRva > 0x10000) ? (base + fallbackRva - 0x10000) : base;
+        uintptr_t foundAddr = scanPattern(pattern, winStart, 0x20000);
+        if (foundAddr != 0) {
+            Logger::getInstance().info("Hooked via localized signature scan at 0x", std::hex, foundAddr,
+                                       " (RVA 0x", std::hex, (foundAddr - base), ")");
+            return hook(reinterpret_cast<void*>(foundAddr), detour, original);
+        }
+        Logger::getInstance().warn("Signature not found in localized window for RVA 0x", std::hex, fallbackRva);
+        return false;
+    }
+
+    // 3. Fallback: only scan full libminecraftpe.so if NO fallback RVA was known at all
     uintptr_t foundAddr = scanMinecraft(pattern);
     if (foundAddr != 0) {
-        Logger::getInstance().info("Hooked via signature scan at 0x", std::hex, foundAddr, 
+        Logger::getInstance().info("Hooked via full signature scan at 0x", std::hex, foundAddr, 
                                    " (RVA 0x", std::hex, (foundAddr - base), ")");
         return hook(reinterpret_cast<void*>(foundAddr), detour, original);
     }

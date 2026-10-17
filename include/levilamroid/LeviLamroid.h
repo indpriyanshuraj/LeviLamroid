@@ -2,8 +2,8 @@
 
 #define LEVILAMROID_VERSION_MAJOR 1
 #define LEVILAMROID_VERSION_MINOR 0
-#define LEVILAMROID_VERSION_PATCH 0
-#define LEVILAMROID_VERSION_STRING "1.0.0-beta"
+#define LEVILAMROID_VERSION_PATCH 2
+#define LEVILAMROID_VERSION_STRING "1.0.2-beta"
 
 // LeviLamina Windows Parity Headers
 #include "ll/api/Logger.h"
@@ -34,6 +34,23 @@
 // High-level human-friendly engine state & hooks
 #include "ll/api/ui/UI.h"
 #include "ll/api/render/Render.h"
+
+// Item & Creative Inventory Subsystem
+#include "levilamroid/api/math/HashedString.h"
+#include "levilamroid/api/item/CreativeItemCategory.h"
+#include "levilamroid/api/item/CreativeGroup.h"
+#include "levilamroid/api/item/IconInfo.h"
+#include "levilamroid/api/item/Item.h"
+#include "levilamroid/api/item/ItemStack.h"
+#include "levilamroid/api/item/ItemRegistry.h"
+
+// Block Subsystem
+#include "levilamroid/api/block/BlockGroup.h"
+#include "levilamroid/api/block/BlockPos.h"
+#include "levilamroid/api/block/BlockLegacy.h"
+#include "levilamroid/api/block/Block.h"
+#include "levilamroid/api/block/CustomBlockDefinition.h"
+#include "levilamroid/api/block/BlockTypeRegistry.h"
 
 extern "C" {
 LL_API bool ll_is_in_world();

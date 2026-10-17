@@ -23,12 +23,12 @@ public:
     [[nodiscard]] virtual Level& getLevel() const;
     [[nodiscard]] virtual Dimension& getDimension() const;
 
-    [[nodiscard]] virtual const Vec3& getPosition() const noexcept;
-    [[nodiscard]] virtual const Vec2& getRotation() const noexcept;
-    [[nodiscard]] virtual float getEyeHeight() const noexcept;
-    [[nodiscard]] virtual const AABB& getAABB() const noexcept;
-    [[nodiscard]] virtual int getHealth() const noexcept;
-    [[nodiscard]] virtual bool isAlive() const noexcept;
+    [[nodiscard]] const Vec3& getPosition() const noexcept { return mPosition; }
+    [[nodiscard]] const Vec2& getRotation() const noexcept { return mRotation; }
+    [[nodiscard]] float getEyeHeight() const noexcept { return 1.62f; }
+    [[nodiscard]] const AABB& getAABB() const noexcept { return mAABB; }
+    [[nodiscard]] int getHealth() const noexcept { return mHealth; }
+    [[nodiscard]] bool isAlive() const noexcept { return mHealth > 0; }
 
     [[nodiscard]] uintptr_t getVTable() const noexcept {
         return *reinterpret_cast<const uintptr_t*>(this);

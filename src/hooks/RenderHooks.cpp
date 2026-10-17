@@ -110,37 +110,6 @@ bool installRenderHooks() {
         }
     }
 
-    // PanoramaRenderer::render
-    // Raw RVA: 1.26.44.3: 0x092B8E60 | 1.26.45.1: 0x092B8DC0 | 1.26.51.1: 0x0967F9F8 | 1.26.52.3: 0x0967FA98
-    if (ll::memory::hookSignature("ED 33 B7 6D EB 2B 01 6D E9 23 02 6D FD 7B 03 A9 FC 23 00 F9 FA 67 05 A9 F8 5F 06 A9 F6 57 07 A9 F4 4F 08 A9 FD C3 00 91 FF 83 13 D1 59 D0 3B D5",
-                                  (void*)&hooked_panoramaRender, &sOrigPanoramaRender, off.panoramaRender)) { /* 0x092B8E60 */
-        logger.info("Hooked PanoramaRenderer::render via signature [Raw RVA: 0x", std::hex, off.panoramaRender, "]");
-    }
-
-    // CubemapBackgroundScreen::render
-    // Raw RVA: 1.26.44.3: 0x097C9A20 | 1.26.45.1: 0x097C9980 | 1.26.51.1: 0x09B7C960 | 1.26.52.3: 0x09B7C9E0
-    if (off.cubemapBackgroundRender) {
-        // 1.26.5x layout
-        bool ok = ll::memory::hookSignature("FF 03 02 D1 FD 7B 04 A9 F7 2B 00 F9 F6 57 06 A9 F4 4F 07 A9 FD 03 01 91 56 D0 3B D5 D7 1B 98 52",
-                                            (void*)&hooked_cubemapBackgroundRender, &sOrigCubemapBackgroundRender, off.cubemapBackgroundRender); /* 0x09B7C9E0 */
-        if (!ok) {
-            // 1.26.4x layout
-            ok = ll::memory::hookSignature("FD 7B BE A9 F3 0B 00 F9 FD 03 00 91 F3 03 00 AA ? ? ? ? E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8",
-                                           (void*)&hooked_cubemapBackgroundRender, &sOrigCubemapBackgroundRender, off.cubemapBackgroundRender); /* 0x097C9A20 */
-        }
-        if (ok) {
-            logger.info("Hooked CubemapBackgroundScreen::render via signature [Raw RVA: 0x", std::hex, off.cubemapBackgroundRender, "]");
-        }
-    }
-
-    // ProgressBarRenderer::render
-    // Raw RVA: 1.26.44.3: 0x092BECCC | 1.26.45.1: 0x092BEC2C | 1.26.51.1: 0x09685ED0 | 1.26.52.3: 0x09685F70
-    if (ll::memory::hookSignature("FF 03 05 D1 EF 3B 0A 6D ED 33 0B 6D EB 2B 0C 6D E9 23 0D 6D FD 7B 0E A9 FC 6F 0F A9 FA 67 10 A9",
-                                  (void*)&hooked_progressBarRender, &sOrigProgressBarRender, off.progressBarRender)) { /* 0x092BECCC */
-        logger.info("Hooked ProgressBarRenderer::render via signature [Raw RVA: 0x", std::hex, off.progressBarRender, "]");
-    }
-
-
     logger.info("LeviLamroid Render hook subsystem initialized.");
     return true;
 }

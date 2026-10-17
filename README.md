@@ -3,7 +3,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Android%20ARM64-green.svg)](https://github.com/spygamingog)
 [![Target](https://img.shields.io/badge/Minecraft-Bedrock%20v1.26.x-blue.svg)](https://minecraft.net)
 [![Role](https://img.shields.io/badge/Role-Core%20Mod%20Loader%20Runtime-orange.svg)](src/)
-[![Version](https://img.shields.io/badge/Version-1.0.1--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.2--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
 [![Status](https://img.shields.io/badge/Status-Beta%20Testing-yellow.svg)](https://github.com/spygamingog/LeviLamroid)
 
 A next-generation native C++ mod loader runtime and reverse-engineering hook hub for **Minecraft Bedrock Edition (Android ARM64)**.
@@ -12,9 +12,9 @@ Developed and maintained by **[SpyGamingOG](https://github.com/spygamingog)**.
 Inspired by the architecture of Windows [LeviLamina](https://github.com/LiteLDev/LeviLamina), redesigned from the ground up for Android ARM64 Linux kernels and **LeviLauncher (LeviLaunchroid)**.
 
 > [!WARNING]
-> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.1-beta`)
+> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.2-beta`)
 > **LeviLamroid is currently in active public beta testing.**
-> - **Development Status**: Active Reverse Engineering, Signature-Based Hooking & Multi-Version Runtime.
+> - **Development Status**: Active Reverse Engineering, Native Item & Block Systems, Dynamic Texture Interception & Multi-Version Runtime.
 > - **Multi-Version Coverage**: Native verified support across Bedrock 1.26.44.3, 1.26.45.1, 1.26.51.1, and 1.26.52.3 on LeviLauncher.
 > - **Bug Reports Welcome**: If you encounter an unmapped signature, a broken hook, or an unexpected crash, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
 

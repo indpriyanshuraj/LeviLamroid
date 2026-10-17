@@ -53,6 +53,16 @@ struct EngineOffsets {
     uintptr_t gameModeUseItemOn;
     uintptr_t gameModeAttack;
 
+    // Verified Engine & Graphics RVAs
+    uintptr_t clientInstanceUpdate;
+    uintptr_t clientInstanceGetLocalPlayer;
+    uintptr_t localPlayerApplyTurnDelta;
+    uintptr_t tessellatorBegin;
+    uintptr_t blockSourceGetBlock;
+    uintptr_t blockSourceGetBrightness;
+    uintptr_t commandAutocomplete;
+    uintptr_t commandRequestPacketWrite;
+
     // Audio / SoundEngine RVAs (Method B & Sound Physics)
     uintptr_t soundEnginePlay;
     uintptr_t soundEnginePlayUI;
@@ -131,6 +141,30 @@ struct EngineOffsets {
     uintptr_t actorSetCustomName;
     uintptr_t scriptingQuickJS;
     uintptr_t scriptModuleMinecraftScriptSystem;
+
+    // Item & Creative Inventory Subsystem RVAs (Audited 1.26.52.3 ARM64)
+    uintptr_t itemRegistryRegisterItem;
+    uintptr_t itemRegistryGetItem;
+    uintptr_t itemRegistryPostInitHook;
+    uintptr_t itemConstructor;
+    uintptr_t itemSetIconInfo;
+    uintptr_t itemSetDescriptionId;
+    uintptr_t itemVtable;
+    uintptr_t itemStackVtable;
+    uintptr_t itemStackCopyCtor;
+    uintptr_t vanillaItemsServerInitCreativeCallback;
+    uintptr_t vanillaItemsApplyHardcodedLegacyIcons;
+    uintptr_t creativeItemRegistryReset;
+    uintptr_t creativeItemInitializerCtor;
+    uintptr_t creativeItemInitializerAddCreativeServer;
+    uintptr_t playerGetSelectedItem;
+    uintptr_t containerGetItem;
+    uintptr_t containerSetItem;
+    uintptr_t blockItemVtable;
+    uintptr_t blockItemUseOn;
+    uintptr_t blockSourceSetBlock;
+    uintptr_t blockTypeRegistryGetInstance;
+    uintptr_t blockTypeRegistryLookupByName;
 
     // VTable Slot Indices
     size_t clientInstanceLocalPlayerSlot; // Slot 32

@@ -58,4 +58,18 @@ public:
     void* getItemStack() const { return mItemStack; }
 };
 
+class PlayerAttackEvent : public Event {
+private:
+    Player* mPlayer;
+    void* mTargetActor;
+
+public:
+    PlayerAttackEvent(Player* player, void* targetActor)
+        : mPlayer(player), mTargetActor(targetActor) {}
+
+    Player* getPlayer() const { return mPlayer; }
+    void* getTargetActor() const { return mTargetActor; }
+};
+
 } // namespace ll::event
+

@@ -161,4 +161,33 @@ bool ll_mod_unload(void* /*modContext*/) {
     return true;
 }
 
+// ----------------------------------------------------------------------------
+// NDK libc++ Fallback Symbols for older/differing Android dynamic linkers
+// Prevents "dlopen failed: cannot locate symbol _ZNSt6__ndk113__hash_memoryEPKvm"
+// ----------------------------------------------------------------------------
+__attribute__((visibility("default")))
+size_t _ZNSt6__ndk113__hash_memoryEPKvm(const void* ptr, size_t len) {
+    const auto* data = static_cast<const unsigned char*>(ptr);
+    size_t hash = 14695981039346656037ULL;
+    for (size_t i = 0; i < len; ++i) {
+        hash ^= data[i];
+        hash *= 1099511628211ULL;
+    }
+    return hash;
+}
+
+__attribute__((visibility("default")))
+size_t _ZNSt6__ndk112__next_primeEm(size_t n) {
+    static const size_t primes[] = {
+        53UL, 97UL, 193UL, 389UL, 769UL, 1543UL, 3079UL, 6151UL, 12289UL, 24593UL,
+        49157UL, 98317UL, 196613UL, 393241UL, 786433UL, 1572869UL, 3145739UL,
+        6291469UL, 12582917UL, 25165843UL, 50331653UL, 100663319UL, 201326611UL,
+        402653189UL, 805306457UL, 1610612741UL, 3221225473UL, 4294967291UL
+    };
+    for (size_t p : primes) {
+        if (p >= n) return p;
+    }
+    return n | 1;
+}
+
 } // extern "C"

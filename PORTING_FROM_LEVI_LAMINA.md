@@ -4,11 +4,11 @@
 > **Source Platform**: LeviLamina on Windows (Bedrock Dedicated Server / BDS)  
 > **Target Platform**: LeviLamroid on Android ARM64 (`liblevilamroid.so`)  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
-> **Standard Version**: `v1.0.1-beta` (Public Beta Release)
+> **Standard Version**: `v1.0.2-beta` (Public Beta Release)
 
 > [!WARNING]
 > ### ⚠️ Under Active Development — Beta Testing Notice
-> LeviLamroid is currently in active **Beta Testing** (`v1.0.1-beta`).
+> LeviLamroid is currently in active **Beta Testing** (`v1.0.2-beta`).
 > - While the core `ll::` API provides drop-in source parity with Windows LeviLamina, Android Bedrock is a full closed-source graphical client (unlike headless BDS).
 > - Certain game hooks, event handlers, and engine RVAs are under active beta testing and may vary or fail across different minor Minecraft releases.
 > - Developers porting mods should test thoroughly and report any broken hooks or missing symbols on [GitHub Issues](https://github.com/spygamingog/LeviLamroid/issues).

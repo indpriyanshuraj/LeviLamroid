@@ -1,7 +1,7 @@
 # LeviLamroid Functions & API Master Reference
 
-> **LeviLamroid Version**: `1.0.1-beta` (Beta Testing Release)  
-> **Initial Mod Project Version**: `v1.0.1-beta`  
+> **LeviLamroid Version**: `1.0.2-beta` (Beta Testing Release)  
+> **Initial Mod Project Version**: `v1.0.2-beta`  
 > **Target Platform**: Minecraft Bedrock Edition (Android ARM64) on LeviLauncher  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
 > **Architecture**: Native C++ Mod Loader Runtime (Windows LeviLamina Source Parity + Android PreLoader Extensions)  
@@ -1168,7 +1168,12 @@ cmd.alias("mc");
 cmd.execute([](const std::vector<std::string>& args) {
     ll::Logger::getInstance().info("Command executed with ", args.size(), " arguments.");
 });
+
+> [!TIP]
+> **Native Command Dispatching**:
+> LeviLamroid automatically intercepts `CommandRequestPacket` via `LoopbackPacketSender::send`. When a player executes any registered command (e.g., `/mycommand` or `/levi give`), it is caught client-side, executed immediately via `CommandHandle::invoke`, and cancelled before reaching the server, preventing "Unknown command" messages.
 ```
+
 
 ---
 
@@ -1273,4 +1278,81 @@ Header: `#include "levilamroid/LeviLamroid.h"`
 - `bool ll::isInWorld()`: Returns `true` when playing in an active world. Continuously affirmed by golden tick hooks (`Player::normalTick`, `Level::tick`, `Actor::normalTick`, and `LocalPlayer::move`). Automatically resets to `false` when the start menu opens.
 - `bool ll::isMainMenu()`: Returns `true` strictly while idling on the start menu (`StartMenuScreenController`). Automatically set to `false` as soon as world loading begins (`ProgressBarRenderer`) or world ticks start. Defaults safely to `false` if uninitialized.
 - `bool ll::isLoading()`: Returns `true` while the engine is loading assets, progress bar screens, or world data. Automatically resets to `false` when the start menu ticks or finishes loading.
+
+---
+
+## 25. Native Item & Block Registration Subsystems (`levilamroid::item` & `levilamroid::block`)
+
+LeviLamroid provides a native C++ item and block registration pipeline that integrates directly into Minecraft Bedrock's internal registries without requiring JSON behavior packs:
+
+### 25.1 Item Registration API
+Header: `#include "levilamroid/api/item/ItemRegistry.h"` or `#include "ll/api/item/ItemRegistry.h"`
+
+```cpp
+struct CustomItemDefinition {
+    std::string identifier;        // e.g. "levitest:cosmic_blade"
+    std::string descriptionId;     // e.g. "item.levitest:cosmic_blade.name"
+    std::string iconName;          // e.g. "cosmic_blade"
+    int iconFrame = 0;
+    int category = 4;              // 1=Construction, 2=Nature, 3=Equipment, 4=Items
+    std::string creativeGroup;     // e.g. "itemGroup.name.sword", "itemGroup.name.misc"
+    short maxDamage = 0;
+    uint8_t maxStackSize = 64;     // 1 for weapons, up to 64 for materials
+    bool isHandEquipped = false;
+    bool allowOffhand = false;
+    bool isBlock = false;
+    short id = 0;                  // Numeric ID assigned at registration
+};
+
+// High-level C++ registration
+bool registerCustomItem(const CustomItemDefinition& def);
+std::vector<CustomItemDefinition> getRegisteredCustomItems();
+
+// Canonical C ABI exports
+extern "C" {
+    bool ll_item_register_full(const char* id, const char* name, const char* icon, int cat, const char* grp, int stack, bool offhand, bool handEq, short maxDmg);
+    bool ll_item_give_player(void* playerPtr, const char* identifier, int count, int aux);
+}
+```
+
+### 25.2 Block Registration API
+Header: `#include "levilamroid/api/block/BlockTypeRegistry.h"`
+
+```cpp
+struct CustomBlockDefinition {
+    std::string identifier;        // e.g. "levitest:astral_block"
+    std::string displayName;       // e.g. "Astral Block"
+    std::string textureName;       // Terrain atlas key
+    int category = 1;              // 1=Construction
+    std::string creativeGroup;     // e.g. "itemGroup.name.stone"
+    float destroyTime = 1.5f;
+    float explosionResistance = 6.0f;
+    uint8_t lightEmission = 0;
+};
+
+bool registerCustomBlock(const CustomBlockDefinition& def);
+std::vector<CustomBlockDefinition> getRegisteredCustomBlocks();
+
+extern "C" {
+    bool ll_block_register(const char* identifier, const char* displayName, const char* textureName, int category, const char* creativeGroup, float destroyTime, float explosionResistance, uint8_t lightEmission);
+}
+```
+
+---
+
+## 26. Dynamic Asset, Atlas & Command Interception Subsystems
+
+### 26.1 Dynamic Asset Interception (`levilamroid::resource`)
+- **Dynamic Pack Access Strategies**: Intercepts `DirectoryPackAccessStrategy::getAsset` / `hasAsset` and `ZipPackAccessStrategy::getAsset` / `hasAsset`.
+- **Texture Atlas Dynamic Patching**: Intercepts queries for `textures/item_texture.json` and `textures/terrain_texture.json`, dynamically appending texture definitions with `"resource_pack_name": "vanilla"` so custom textures resolve in both the 2D UI and 3D RenderDragon pipelines.
+- **Automatic Mod Asset Mounting**: `PluginManager::loadPlugin` automatically indexes `resource_packs/` and `resources/` within mod directories and registers their assets into the dynamic asset pipeline.
+
+### 26.2 Client-Side Command Interception (`ll::command`)
+Header: `#include "ll/api/command/CommandRegistrar.h"`
+
+- **Packet Level Interception**: Hooks `LoopbackPacketSender::send` for Packet ID 77 (`CommandRequestPacket`), allowing client-registered commands (e.g. `/levi give`, `/levi camlock`) to be processed locally and canceled before network transmission, preventing "Unknown command" server rejections.
+- **Camera Orientation**:
+  - `void ll_camera_set_locked(bool locked)`: Freezes or unlocks camera pitch/yaw deltas via `LocalPlayer::applyTurnDelta`.
+  - `bool ll_camera_is_locked()`: Returns whether camera rotation is currently frozen.
+
 

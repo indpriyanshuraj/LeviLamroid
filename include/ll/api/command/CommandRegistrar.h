@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <memory>
 #include <mutex>
+#include <vector>
+#include <algorithm>
 
 namespace ll::command {
 
@@ -22,6 +24,10 @@ public:
 
     static CommandRegistrar& getClientInstance() { return getInstance(true); }
     static CommandRegistrar& getServerInstance() { return getInstance(false); }
+
+    const std::unordered_map<std::string, std::shared_ptr<CommandHandle>>& getCommands() const {
+        return mCommands;
+    }
 
     CommandHandle& getOrCreateCommand(
         const std::string& name,
@@ -52,6 +58,54 @@ public:
             }
         }
         return nullptr;
+    }
+
+    std::vector<std::string> getCompletions(const std::string& input) const {
+        std::lock_guard<std::mutex> lock(mMutex);
+        std::vector<std::string> results;
+
+        if (input.empty() || input == "/") {
+            for (const auto& [name, _] : mCommands) {
+                results.push_back("/" + name);
+            }
+            return results;
+        }
+
+        // If typing the root command name, e.g. "/l" or "/cos"
+        if (input.find(' ') == std::string::npos) {
+            std::string prefix = (input[0] == '/') ? input.substr(1) : input;
+            for (const auto& [name, handle] : mCommands) {
+                if (name.rfind(prefix, 0) == 0) {
+                    results.push_back("/" + name);
+                }
+                for (const auto& a : handle->getAliases()) {
+                    if (a.rfind(prefix, 0) == 0) {
+                        results.push_back("/" + a);
+                    }
+                }
+            }
+            return results;
+        }
+
+        // If typing arguments / subcommands, e.g. "/levi " or "/levi par"
+        std::string clean = (input[0] == '/') ? input.substr(1) : input;
+        size_t firstSpace = clean.find(' ');
+        std::string cmdName = clean.substr(0, firstSpace);
+
+        auto cmd = findCommand(cmdName);
+        if (!cmd) return results;
+
+        std::string subPrefix = clean.substr(firstSpace + 1);
+        // Find if there's a second space (sub-subcommand)
+        size_t secondSpace = subPrefix.find(' ');
+        if (secondSpace == std::string::npos) {
+            for (const auto& sub : cmd->getSubcommands()) {
+                if (sub.rfind(subPrefix, 0) == 0) {
+                    results.push_back(sub);
+                }
+            }
+        }
+        return results;
     }
 
     bool dispatchCommand(const std::string& line) {

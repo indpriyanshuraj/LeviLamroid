@@ -50,23 +50,34 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .uiGetScreenContext       = 0x0B2541E8,
 
     // Player / GameMode / World
-    .localPlayerMove          = 0x0F287188,
+    .localPlayerMove          = 0,
     .playerNormalTick         = 0x0F9E26C0,
-    .levelTick                = 0x0FB313C4,
-    .gameModeDestroyBlock     = 0x0F8A03AC,
-    .gameModeUseItem          = 0x04C0B120,
-    .gameModeUseItemOn        = 0x0F89FE18,
-    .gameModeAttack           = 0x04C0BE40,
+    .levelTick                = 0,
+    .gameModeDestroyBlock     = 0, // Inlined with PC-relative cbz/adrp; do not hook
+    .gameModeUseItem          = 0, // Inlined with PC-relative cbz/adrp; do not hook
+    .gameModeUseItemOn        = 0,
+    .gameModeAttack           = 0, // Relative branch b in prologue; do not hook
+
+    // Verified Engine & Graphics RVAs
+    .clientInstanceUpdate          = 0x098036A4,
+    .clientInstanceGetLocalPlayer  = 0, // Hidden struct return buffer; use playerNormalTick
+    .localPlayerApplyTurnDelta     = 0x0AAC9774,
+    .tessellatorBegin              = 0x0A76E7F8,
+    .blockSourceGetBlock           = 0x0FB91918,
+    .blockSourceGetBrightness      = 0x0FB92F9C,
+    .commandAutocomplete          = 0x0EBEAE44,
+    .commandRequestPacketWrite     = 0x0C250668,
+
     .soundEnginePlay          = 0x0B79F7F4,
     .soundEnginePlayUI        = 0x0B79F978,
     .soundEnginePlayAt        = 0x0B79FDE0,
     .soundEngineStop          = 0x0B79FF1C,
 
     // Resource Pack & Asset Access Strategy RVAs (Audited 1.26.52.3)
-    .directoryPackGetAsset    = 0x111EE8A8,
-    .zipPackGetAsset          = 0x11157F00,
-    .directoryPackHasAsset    = 0x111F888C,
-    .zipPackHasAsset          = 0x11158654,
+    .directoryPackGetAsset    = 0x111EEE94,
+    .zipPackGetAsset          = 0x11158670,
+    .directoryPackHasAsset    = 0x111EE8A8,
+    .zipPackHasAsset          = 0x11157F00,
     .packForEachInAssetSet    = 0x1117FD58,
     .resourcePackManagerLoad  = 0x0C92D4B8,
     .resourcePackManagerGetStack = 0x0C92D268,
@@ -115,7 +126,7 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .chatScreenControllerHandleEvent     = 0x09A0F020,
     .chatScreenControllerPropertyBind    = 0x09A0F948,
     .commandRegistryRegisterCommand      = 0x0DC4A370,
-    .loopbackPacketSenderSend            = 0x0C68FAD4,
+    .loopbackPacketSenderSend            = 0,
     .serverNetworkHandlerHandle          = 0x0C58394C,
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
@@ -134,6 +145,30 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .actorSetCustomName                  = 0x0F57E694,
     .scriptingQuickJS                    = 0x11432150,
     .scriptModuleMinecraftScriptSystem   = 0x0E069FE8,
+
+    // Item & Creative Inventory Subsystem RVAs (Audited 1.26.52.3 ARM64)
+    .itemRegistryRegisterItem               = 0x0FBB0064,
+    .itemRegistryGetItem                    = 0x0FBC1640,
+    .itemRegistryPostInitHook               = 0x0FBB77DC,
+    .itemConstructor                        = 0x0FF7D35C,
+    .itemSetIconInfo                        = 0x0FF83DDC, // Real Item::setIcon(std::string const& name, int frame) in 1.26.52.3
+    .itemSetDescriptionId                   = 0, // Inlined in Item::Item; 0x0FF81EA4 was engine panic assertion
+    .itemVtable                             = 0x1308A650,
+    .itemStackVtable                        = 0x1308BE60,
+    .itemStackCopyCtor                      = 0x0FF9DB08,
+    .vanillaItemsServerInitCreativeCallback = 0, // Managed via ItemRegistry
+    .vanillaItemsApplyHardcodedLegacyIcons  = 0x0FF43810,
+    .creativeItemRegistryReset              = 0x0FBC3604,
+    .creativeItemInitializerCtor            = 0x0FFFC988,
+    .creativeItemInitializerAddCreativeServer = 0,
+    .playerGetSelectedItem                  = 0x0F9F7BE4,
+    .containerGetItem                       = 0x0F6EFE7C,
+    .containerSetItem                       = 0x0F6EFEB8,
+    .blockItemVtable                        = 0x13099938, // _ZTV9BlockItem
+    .blockItemUseOn                         = 0x1000B300, // BlockItem::_useOn
+    .blockSourceSetBlock                    = 0x095ADDC8,
+    .blockTypeRegistryGetInstance           = 0x103E33A8,
+    .blockTypeRegistryLookupByName          = 0x103E5C9C,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
@@ -183,19 +218,27 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .localPlayerMove          = 0x0EA8E37C,
     .playerNormalTick         = 0x0F0B1BE0,
     .levelTick                = 0x0F22326C,
-    .gameModeDestroyBlock     = 0x0EF73178,
-    .gameModeUseItem          = 0x04C0B120,
-    .gameModeUseItemOn        = 0x0EF72BE4,
-    .gameModeAttack           = 0x04C0BE40,
+    .gameModeDestroyBlock     = 0,
+    .gameModeUseItem          = 0,
+    .gameModeUseItemOn        = 0,
+    .gameModeAttack           = 0,
+    .clientInstanceUpdate          = 0,
+    .clientInstanceGetLocalPlayer  = 0,
+    .localPlayerApplyTurnDelta     = 0,
+    .tessellatorBegin              = 0,
+    .blockSourceGetBlock           = 0,
+    .blockSourceGetBrightness      = 0,
+    .commandAutocomplete          = 0,
+    .commandRequestPacketWrite     = 0,
     .soundEnginePlay          = 0x0B284980,
     .soundEnginePlayUI        = 0x0B284B04,
     .soundEnginePlayAt        = 0x0B284F6C,
     .soundEngineStop          = 0x0B2850A8,
 
     // Resource Pack & Asset Access Strategy RVAs
-    .directoryPackGetAsset    = 0x1042D0C4,
+    .directoryPackGetAsset    = 0x1042D8C0,
     .zipPackGetAsset          = 0x1040D318,
-    .directoryPackHasAsset    = 0x10441D4C,
+    .directoryPackHasAsset    = 0x1042D0C4,
     .zipPackHasAsset          = 0x1040DA6C,
     .packForEachInAssetSet    = 0x10437E7C,
     .resourcePackManagerLoad  = 0x0C594BB8,
@@ -245,7 +288,7 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .chatScreenControllerHandleEvent     = 0x09684918,
     .chatScreenControllerPropertyBind    = 0x09685238,
     .commandRegistryRegisterCommand      = 0x0D607B04,
-    .loopbackPacketSenderSend            = 0x0C2E279C,
+    .loopbackPacketSenderSend            = 0,
     .serverNetworkHandlerHandle          = 0x0C1E5BEC,
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
@@ -264,6 +307,30 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .actorSetCustomName                  = 0x0ECA2184,
     .scriptingQuickJS                    = 0x10918134,
     .scriptModuleMinecraftScriptSystem   = 0x0DA5509C,
+
+    // Item & Creative Inventory Subsystem RVAs
+    .itemRegistryRegisterItem               = 0,
+    .itemRegistryGetItem                    = 0,
+    .itemRegistryPostInitHook               = 0,
+    .itemConstructor                        = 0,
+    .itemSetIconInfo                        = 0x0F65DD84,
+    .itemSetDescriptionId                   = 0,
+    .itemVtable                             = 0,
+    .itemStackVtable                        = 0,
+    .itemStackCopyCtor                      = 0,
+    .vanillaItemsServerInitCreativeCallback = 0,
+    .vanillaItemsApplyHardcodedLegacyIcons  = 0,
+    .creativeItemRegistryReset              = 0,
+    .creativeItemInitializerCtor            = 0,
+    .creativeItemInitializerAddCreativeServer = 0,
+    .playerGetSelectedItem                  = 0,
+    .containerGetItem                       = 0,
+    .containerSetItem                       = 0,
+    .blockItemVtable                        = 0,
+    .blockItemUseOn                         = 0,
+    .blockSourceSetBlock                    = 0,
+    .blockTypeRegistryGetInstance           = 0,
+    .blockTypeRegistryLookupByName          = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
@@ -300,17 +367,25 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .localPlayerMove          = 0x0EA8DE1C,
     .playerNormalTick         = 0x0F0B1680,
     .levelTick                = 0x0F222D0C,
-    .gameModeDestroyBlock     = 0x0EF72C18,
-    .gameModeUseItem          = 0x04C0B120,
-    .gameModeUseItemOn        = 0x0EF72684,
-    .gameModeAttack           = 0x04C0BE40,
+    .gameModeDestroyBlock     = 0,
+    .gameModeUseItem          = 0,
+    .gameModeUseItemOn        = 0,
+    .gameModeAttack           = 0,
+    .clientInstanceUpdate          = 0,
+    .clientInstanceGetLocalPlayer  = 0,
+    .localPlayerApplyTurnDelta     = 0,
+    .tessellatorBegin              = 0,
+    .blockSourceGetBlock           = 0,
+    .blockSourceGetBrightness      = 0,
+    .commandAutocomplete          = 0,
+    .commandRequestPacketWrite     = 0,
     .soundEnginePlay          = 0x0B2848E0,
     .soundEnginePlayUI        = 0x0B284A5C,
     .soundEnginePlayAt        = 0x0B284EC4,
     .soundEngineStop          = 0x0B285000,
-    .directoryPackGetAsset    = 0x1042CB64,
+    .directoryPackGetAsset    = 0x1042D360,
     .zipPackGetAsset          = 0x1040CDB8,
-    .directoryPackHasAsset    = 0x104417EC,
+    .directoryPackHasAsset    = 0x1042CB64,
     .zipPackHasAsset          = 0x1040D50C,
     .packForEachInAssetSet    = 0x1043791C,
     .resourcePackManagerLoad  = 0x0C594B18,
@@ -360,7 +435,7 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .chatScreenControllerHandleEvent     = 0x09684878,
     .chatScreenControllerPropertyBind    = 0x09685198,
     .commandRegistryRegisterCommand      = 0x0D6075CC,
-    .loopbackPacketSenderSend            = 0x0C2E26FC,
+    .loopbackPacketSenderSend            = 0,
     .serverNetworkHandlerHandle          = 0x0C1E5B4C,
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
@@ -379,6 +454,30 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .actorSetCustomName                  = 0x0ECA1C24,
     .scriptingQuickJS                    = 0x10917BD4,
     .scriptModuleMinecraftScriptSystem   = 0x0DA54B3C,
+
+    // Item & Creative Inventory Subsystem RVAs
+    .itemRegistryRegisterItem               = 0,
+    .itemRegistryGetItem                    = 0,
+    .itemRegistryPostInitHook               = 0,
+    .itemConstructor                        = 0,
+    .itemSetIconInfo                        = 0x0F65D824,
+    .itemSetDescriptionId                   = 0,
+    .itemVtable                             = 0,
+    .itemStackVtable                        = 0,
+    .itemStackCopyCtor                      = 0,
+    .vanillaItemsServerInitCreativeCallback = 0,
+    .vanillaItemsApplyHardcodedLegacyIcons  = 0,
+    .creativeItemRegistryReset              = 0,
+    .creativeItemInitializerCtor            = 0,
+    .creativeItemInitializerAddCreativeServer = 0,
+    .playerGetSelectedItem                  = 0,
+    .containerGetItem                       = 0,
+    .containerSetItem                       = 0,
+    .blockItemVtable                        = 0,
+    .blockItemUseOn                         = 0,
+    .blockSourceSetBlock                    = 0,
+    .blockTypeRegistryGetInstance           = 0,
+    .blockTypeRegistryLookupByName          = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
@@ -428,19 +527,27 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .localPlayerMove          = 0x0F286DF8,
     .playerNormalTick         = 0x0F9E2300,
     .levelTick                = 0x0FB31004,
-    .gameModeDestroyBlock     = 0x0F89FFEC,
-    .gameModeUseItem          = 0x04C0B120,
-    .gameModeUseItemOn        = 0x0F89FA58,
-    .gameModeAttack           = 0x04C0BE40,
+    .gameModeDestroyBlock     = 0,
+    .gameModeUseItem          = 0,
+    .gameModeUseItemOn        = 0,
+    .gameModeAttack           = 0,
+    .clientInstanceUpdate          = 0,
+    .clientInstanceGetLocalPlayer  = 0,
+    .localPlayerApplyTurnDelta     = 0,
+    .tessellatorBegin              = 0,
+    .blockSourceGetBlock           = 0,
+    .blockSourceGetBrightness      = 0,
+    .commandAutocomplete          = 0,
+    .commandRequestPacketWrite     = 0,
     .soundEnginePlay          = 0x0B79F720,
     .soundEnginePlayUI        = 0x0B79F8A4,
     .soundEnginePlayAt        = 0x0B79FD0C,
     .soundEngineStop          = 0x0B79FE48,
 
     // Resource Pack & Asset Access Strategy RVAs
-    .directoryPackGetAsset    = 0x111EE468,
+    .directoryPackGetAsset    = 0x111EEA54,
     .zipPackGetAsset          = 0x11157AC0,
-    .directoryPackHasAsset    = 0x111F844C,
+    .directoryPackHasAsset    = 0x111EE468,
     .zipPackHasAsset          = 0x11158214,
     .packForEachInAssetSet    = 0x1117F918,
     .resourcePackManagerLoad  = 0x0C92D160,
@@ -490,7 +597,7 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .chatScreenControllerHandleEvent     = 0x09A0EFA0,
     .chatScreenControllerPropertyBind    = 0x09A0F8C8,
     .commandRegistryRegisterCommand      = 0x0DC4A018,
-    .loopbackPacketSenderSend            = 0x0C68F9D8,
+    .loopbackPacketSenderSend            = 0,
     .serverNetworkHandlerHandle          = 0x0C583850,
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
@@ -509,6 +616,30 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .actorSetCustomName                  = 0x0F57E2D4,
     .scriptingQuickJS                    = 0x11431518,
     .scriptModuleMinecraftScriptSystem   = 0x0E069C90,
+
+    // Item & Creative Inventory Subsystem RVAs
+    .itemRegistryRegisterItem               = 0,
+    .itemRegistryGetItem                    = 0,
+    .itemRegistryPostInitHook               = 0,
+    .itemConstructor                        = 0,
+    .itemSetIconInfo                        = 0x0FF7C448,
+    .itemSetDescriptionId                   = 0,
+    .itemVtable                             = 0,
+    .itemStackVtable                        = 0,
+    .itemStackCopyCtor                      = 0,
+    .vanillaItemsServerInitCreativeCallback = 0,
+    .vanillaItemsApplyHardcodedLegacyIcons  = 0,
+    .creativeItemRegistryReset              = 0,
+    .creativeItemInitializerCtor            = 0,
+    .creativeItemInitializerAddCreativeServer = 0,
+    .playerGetSelectedItem                  = 0,
+    .containerGetItem                       = 0,
+    .containerSetItem                       = 0,
+    .blockItemVtable                        = 0,
+    .blockItemUseOn                         = 0,
+    .blockSourceSetBlock                    = 0,
+    .blockTypeRegistryGetInstance           = 0,
+    .blockTypeRegistryLookupByName          = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
@@ -749,6 +880,8 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "itemRegistryTryRegisterAndInitItem" || name == "ItemRegistry::tryRegisterAndInitItem") return off.itemRegistryTryRegisterAndInitItem;
     if (name == "itemRegistryParseItemIdentifier") return off.itemRegistryParseItemIdentifier;
     if (name == "blockTypeRegistryInit" || name == "BlockTypeRegistry::init") return off.blockTypeRegistryInit;
+    if (name == "blockTypeRegistryGetInstance" || name == "BlockTypeRegistry::getInstance") return off.blockTypeRegistryGetInstance;
+    if (name == "blockTypeRegistryLookupByName" || name == "BlockTypeRegistry::lookupByName") return off.blockTypeRegistryLookupByName;
     if (name == "blockDefinitionLoaderProcessCustomComponents") return off.blockDefinitionLoaderProcessCustomComponents;
     if (name == "actorNormalTick" || name == "Actor::normalTick") return off.actorNormalTick;
     if (name == "actorBaseTick" || name == "Actor::baseTick") return off.actorBaseTick;
@@ -757,6 +890,8 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "actorTeleportTo" || name == "Actor::teleportTo") return off.actorTeleportTo;
     if (name == "actorHasComponent" || name == "Actor::hasComponent") return off.actorHasComponent;
     if (name == "actorSetCustomName" || name == "Actor::setCustomName") return off.actorSetCustomName;
+    if (name == "itemSetIconInfo" || name == "Item::setIconInfo") return off.itemSetIconInfo;
+    if (name == "itemConstructor" || name == "Item::Item") return off.itemConstructor;
     if (name == "scriptingQuickJS") return off.scriptingQuickJS;
     if (name == "scriptModuleMinecraftScriptSystem") return off.scriptModuleMinecraftScriptSystem;
     return 0;

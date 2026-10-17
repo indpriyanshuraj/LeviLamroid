@@ -112,9 +112,7 @@ struct ModuleInfo {
       onBoolConfigChanged;
 };
 
-#if defined(__aarch64__) && defined(_LIBCPP_VERSION)
 static_assert(sizeof(ModuleInfo) == 272, "pl::modmenu::ModuleInfo size must be 272 bytes on ARM64");
-#endif
 
 /**
  * @brief Metadata and callbacks for an on-screen button.
@@ -144,9 +142,7 @@ struct ButtonInfo {
       onEvent;
 };
 
-#if defined(__aarch64__) && defined(_LIBCPP_VERSION)
 static_assert(sizeof(ButtonInfo) == 272, "pl::modmenu::ButtonInfo size must be 272 bytes on ARM64");
-#endif
 
 
 /**

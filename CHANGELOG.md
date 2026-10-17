@@ -4,6 +4,45 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.2-beta] - 2026-10-17
+
+### Added
+- **Native C++ Item Subsystem (`ItemRegistry` & `Item`)**:
+  - Direct in-memory item registration via hooked `ItemRegistry::registerItem` (`0x0FBB0064` on 1.26.52.3 ARM64) and native `Item::Item` constructor (`0x0FF7D35C`).
+  - Strict AArch64 in-memory structure field alignment: `mMaxStackSize` (+0x88), `mCreativeCategory` (+0x140), `mCreativeGroup` (+0x148 as `HashedString`), `mAllowOffhand` (+0x1C8), `mIsHandEquipped` (+0x1CA), and `mMaxDamage` (+0x1D0).
+  - Robust Bedrock `SharedPtr<Item>` allocation with heap-allocated `BedrockControlBlock` (`mWeakRef = 1`, `mStrongRef = 1`), completely eliminating crashes on world entry.
+  - Hooked `ItemRegistry::postInit` (`0x0FBB77DC`) for thread-safe item injection upon registry creation.
+  - Exported canonical C APIs `ll_item_register_full` and `ll_item_give_player` for cross-module mod linking.
+- **Dynamic Asset & Texture Pipeline Interception**:
+  - Hooked `DirectoryPackAccessStrategy::getAsset` / `hasAsset` and `ZipPackAccessStrategy::getAsset` / `hasAsset` across supported Bedrock versions.
+  - Intercepts requests for `textures/item_texture.json` and `textures/terrain_texture.json`, dynamically appending texture definitions with `"resource_pack_name": "vanilla"` so custom textures resolve in both the 2D UI and 3D RenderDragon pipelines.
+  - Native `Item::setIcon` call (`0x0FF83DDC`) linking item icon strings directly to registered atlas keys.
+  - Dynamic `.lang` localization merging for in-game item and block display names (`item.<id>.name`, `tile.<id>.name`).
+  - Automatic asset mounting: `PluginManager::loadPlugin` automatically indexes `resource_packs/` and `resources/` within mod directories and registers their assets into the dynamic asset pipeline.
+- **Creative Inventory & Category Injection**:
+  - Hooked `serverInitCreativeItemsCallback` (`0x0FBC3604` / `VanillaItems::serverInitCreativeItemsCallback`) to register custom items directly into Bedrock's `CreativeItemRegistry` alongside vanilla items.
+  - Single items (weapons/swords) and stackable items (materials/blocks) properly respect category (Construction, Equipment, Items) and stack counts.
+- **Custom Block System Foundation & `BlockItem` VTable ABI**:
+  - Introduced `BlockHooks.cpp` and `levilamroid::block::registerCustomBlock` (`ll_block_register`).
+  - Reconstructed custom `_ZTV9BlockItem` VTable (`sCustomBlockItemVtableStorage` derived from native `0x13099938`) with overridden virtual slots:
+    - Slot 95: `buildDescriptionId` -> returns `"tile.<id>.name"`.
+    - Slot 118: `getIconInfo` -> returns `ItemIconInfo(textureKey, 0, 1)`.
+    - Slot 131: `_useOn` -> custom block placement logic (`BlockItem::_useOn` at `0x1000B300`).
+  - Backing `BlockType` resolution via `BlockTypeRegistry::getInstance` (`0x103E33A8`) and `BlockTypeRegistry::lookupByName` (`0x103E5C9C`).
+- **Client-Side Command Interception (`LoopbackPacketSender::send`)**:
+  - Hooked `LoopbackPacketSender::send` for Packet ID 77 (`CommandRequestPacket`), allowing client-registered commands (e.g. `/levi give`, `/levi fx`, `/levi camlock`) to be processed locally and canceled before network transmission, preventing "Unknown command" server rejections.
+  - Camera orientation control via hooked `LocalPlayer::applyTurnDelta` (`0x0AAC9774`) with `ll_camera_set_locked`.
+  - Continuous local player tracking via hooked `ClientInstance::update` (`0x098036A4`) and `ClientInstance::getLocalPlayer` (`0x09808050`).
+- **Gameplay Action Hooks & 3D World FX**:
+  - Hooked `SurvivalMode::startDestroyBlock` (`0x0F8A4048`), `SurvivalMode::useItem` (`0x0F8A4244`), and `GameMode::attack` (`0x0F89FA74`).
+  - Added `PlayerAttackEvent` in `include/ll/api/event/player/PlayerEvents.h`.
+  - Mathematical 3D Celestial Double-Helix particle vortex generator around the player in real-time world space.
+- **Build System & Packaging Automation**:
+  - Added `xmake.lua` configurations for both `LeviLamroid` and `LeviItems` enabling sub-second incremental builds on Termux / Linux ARM64.
+  - Packaging automation (`package.sh`) producing `LeviLamroid-1.0.2-beta-android-arm64.zip` and auto-deploying to active LeviLauncher profiles.
+
+---
+
 ## [1.0.1-beta] - 2026-10-16
 
 ### Added

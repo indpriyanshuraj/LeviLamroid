@@ -1,5 +1,7 @@
 # Build directories
 build/
+build_android/
+.xmake/
 bin/
 out/
 CMakeFiles/

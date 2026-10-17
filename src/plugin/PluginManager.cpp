@@ -1,5 +1,6 @@
 #include "levilamroid/api/plugin/PluginManager.h"
 #include "levilamroid/api/Logger.h"
+#include "ll/api/resource/ResourceManager.h"
 #include <dlfcn.h>
 #include <filesystem>
 #include <fstream>
@@ -44,6 +45,18 @@ bool PluginManager::loadPlugin(const std::string& soPath) {
     }
 
     mLoadedHandles[soPath] = handle;
+
+    // Automatically mount mod resource folders if present (FarmersDelight / LeviLamina standard)
+    std::error_code ec;
+    auto modDir = std::filesystem::path(soPath).parent_path();
+    auto rpDir = modDir / "resource_packs";
+    if (std::filesystem::exists(rpDir, ec)) {
+        ::ll::resource::ResourceManager::getInstance().mountDirectory(rpDir);
+    }
+    auto resDir = modDir / "resources";
+    if (std::filesystem::exists(resDir, ec)) {
+        ::ll::resource::ResourceManager::getInstance().mountDirectory(resDir);
+    }
 
     // Call standard LeviLamina / LeviLaunchroid entry points
     using PLGetModRegistrationFn = const void* (*)();

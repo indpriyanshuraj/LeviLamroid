@@ -14,17 +14,24 @@ else
     cmake ..
 fi
 make -j$(nproc || echo 4)
+SO_SOURCE="${BUILD_DIR}/liblevilamroid.so"
+
+if [ -z "${SO_SOURCE}" ] || [ ! -f "${SO_SOURCE}" ]; then
+    echo "ERROR: liblevilamroid.so not found after build!"
+    exit 1
+fi
+echo "Found built library at: ${SO_SOURCE}"
 
 echo "=== 2. Packaging LeviLamroid Distribution ==="
 mkdir -p "${DIST_DIR}"
-cp -f "${BUILD_DIR}/liblevilamroid.so" "${DIST_DIR}/liblevilamroid.so"
+cp -f "${SO_SOURCE}" "${DIST_DIR}/liblevilamroid.so"
 cp -f "${SCRIPT_DIR}/manifest.json" "${DIST_DIR}/manifest.json" 2>/dev/null || true
 mkdir -p "${DIST_DIR}/data"
 cp -rf "${SCRIPT_DIR}/data/"* "${DIST_DIR}/data/" 2>/dev/null || true
 
 # Build levipack and zip
 LEVIPACK_OUT="${DIST_DIR}/levilamroid.levipack"
-ZIP_OUT="${DIST_DIR}/LeviLamroid-1.0.1-beta-android-arm64.zip"
+ZIP_OUT="${DIST_DIR}/LeviLamroid-1.0.2-beta-android-arm64.zip"
 
 python3 -c "
 import zipfile, os
@@ -57,8 +64,8 @@ if [ -d "/sdcard" ]; then
     mkdir -p /sdcard/Download /sdcard/MG 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/Download/levilamroid.levipack" 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/MG/levilamroid.levipack" 2>/dev/null || true
-    cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
-    cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.1-beta-android-arm64.zip" 2>/dev/null || true
+    cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.2-beta-android-arm64.zip" 2>/dev/null || true
+    cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.2-beta-android-arm64.zip" 2>/dev/null || true
 
     # Auto-deploy to LeviLauncher profiles as core loader
     for profile_dir in /sdcard/Android/media/org.levimc.launcher/minecraft/*/mods; do
@@ -94,4 +101,4 @@ if os.path.isfile(p):
     done
 fi
 
-echo "=== Successfully built, packaged, and deployed LeviLamroid v1.0.1-beta ==="
+echo "=== Successfully built, packaged, and deployed LeviLamroid v1.0.2-beta ==="

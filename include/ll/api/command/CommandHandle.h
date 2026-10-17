@@ -25,6 +25,7 @@ private:
     std::string mDescription;
     CommandPermissionLevel mPerm;
     std::vector<std::string> mAliases;
+    std::vector<std::string> mSubcommands;
     Callback mCallback;
 
 public:
@@ -35,9 +36,15 @@ public:
     const std::string& getDescription() const { return mDescription; }
     CommandPermissionLevel getPermissionLevel() const { return mPerm; }
     const std::vector<std::string>& getAliases() const { return mAliases; }
+    const std::vector<std::string>& getSubcommands() const { return mSubcommands; }
 
     CommandHandle& alias(std::string_view a) {
         mAliases.emplace_back(a);
+        return *this;
+    }
+
+    CommandHandle& subcommand(std::string_view sub) {
+        mSubcommands.emplace_back(sub);
         return *this;
     }
 

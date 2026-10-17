@@ -13,6 +13,7 @@
         ll_*;
         _ZN2ll*;
         _ZN11levilamroid*;
+        _ZNSt6__ndk1*;
     local:
         *;
 };
