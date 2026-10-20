@@ -445,15 +445,14 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
         return false;
     }
 
+    const auto& off = ::levilamroid::mcpe::getOffsets();
     uintptr_t* clientVtable = *reinterpret_cast<uintptr_t**>(client);
 
     // ClientInstance::getSceneFactory()
-    // In ClientInstance (1.26.52.3 ARM64):
-    // Slot 226 (offset 0x710): virtual ::SceneFactory& getSceneFactory() const
     void* sceneFactory = *(void**)((uintptr_t)client + 0x1e8);
-    if (!sceneFactory && clientVtable) {
+    if (!sceneFactory && clientVtable && off.clientInstanceSceneFactorySlot > 0) {
         using GetSceneFactoryFn = void* (*)(void*);
-        auto getSceneFactory = reinterpret_cast<GetSceneFactoryFn>(clientVtable[0x710 / 8]);
+        auto getSceneFactory = reinterpret_cast<GetSceneFactoryFn>(clientVtable[off.clientInstanceSceneFactorySlot]);
         if (getSceneFactory) {
             sceneFactory = getSceneFactory(client);
         }
@@ -464,11 +463,9 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
     }
 
     // ClientInstance::getCurrentSceneStack()
-    // In ClientInstance (1.26.52.3 ARM64):
-    // Slot 236 (offset 0x760): virtual ::Bedrock::NotNullNonOwnerPtr<::ISceneStack> getCurrentSceneStack()
     void* sceneStack = *(void**)((uintptr_t)client + 0x5b8);
-    if (!sceneStack && clientVtable) {
-        void* fn = reinterpret_cast<void*>(clientVtable[0x760 / 8]);
+    if (!sceneStack && clientVtable && off.clientInstanceSceneStackSlot > 0) {
+        void* fn = reinterpret_cast<void*>(clientVtable[off.clientInstanceSceneStackSlot]);
         if (fn) {
             alignas(16) uint8_t ptrBuf[32] = {0};
             register void* x0_in __asm__("x0") = client;
@@ -501,15 +498,11 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
     };
     RawSharedPtr ctrlShared = { ctrl, nullptr };
 
-    // Step 1: SceneFactory::createUIScene(screenName, ctrlShared) at RVA 0x09AE87E8
-    // In AAPCS64 ABI:
-    // x8: &uiSceneShared (return buffer for std::shared_ptr<UIScene>)
-    // x0: sceneFactory
-    // x1: &sName
-    // x2: &ctrlShared
+    // Step 1: SceneFactory::createUIScene(screenName, ctrlShared)
     alignas(16) uint8_t uiSceneShared[16] = {0};
     std::string sName = screenName;
-    void* fnCreateUIScene = reinterpret_cast<void*>(mcBase + 0x09AE87E8);
+    uintptr_t rvaCreateUIScene = off.sceneFactoryCreateUIScene;
+    void* fnCreateUIScene = rvaCreateUIScene ? reinterpret_cast<void*>(mcBase + rvaCreateUIScene) : nullptr;
     if (fnCreateUIScene) {
         register void* x0_f __asm__("x0") = sceneFactory;
         register void* x1_n __asm__("x1") = &sName;
@@ -526,39 +519,16 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
 
     void* uiScenePtr = *reinterpret_cast<void**>(uiSceneShared);
     if (!uiScenePtr) {
-        ll::Logger::getInstance().warn("§e[LeviLamroid] Strategy 1 createUIScene returned null, trying fallback 0x09B3FD08...");
-        uint32_t flags = 0;
-        void* fnCreateUIScene2 = reinterpret_cast<void*>(mcBase + 0x09B3FD08);
-        if (fnCreateUIScene2) {
-            register void* x0_f2 __asm__("x0") = sceneFactory;
-            register void* x1_n2 __asm__("x1") = &sName;
-            register void* x2_fl __asm__("x2") = &flags;
-            register void* x8_r2 __asm__("x8") = uiSceneShared;
-            register void* fn_call2 __asm__("x16") = fnCreateUIScene2;
-            __asm__ volatile(
-                "blr %4\n"
-                : "+r"(x0_f2), "+r"(x1_n2), "+r"(x2_fl), "+r"(x8_r2)
-                : "r"(fn_call2)
-                : "x3", "x4", "x5", "x6", "x7", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x17", "x30", "memory"
-            );
-            uiScenePtr = *reinterpret_cast<void**>(uiSceneShared);
-        }
-    }
-
-    if (!uiScenePtr) {
         ll::Logger::getInstance().error("§c[LeviLamroid] Failed to create UI Scene for: ", screenName);
         return false;
     }
 
     ll::Logger::getInstance().info("§a[LeviLamroid] UIScene created successfully! [UIScene: 0x", std::hex, (uintptr_t)uiScenePtr, "]");
 
-    // Step 2: Wrap UIScene into AbstractScene via SceneFactory::_createScreen at RVA 0x09AEB298
-    // In AAPCS64 ABI:
-    // x8: &abstractSceneShared (return buffer for std::shared_ptr<AbstractScene>)
-    // x0: sceneFactory
-    // x1: uiSceneShared (&std::shared_ptr<UIScene>)
+    // Step 2: Wrap UIScene into AbstractScene via SceneFactory::_createScreen
     alignas(16) uint8_t abstractSceneShared[16] = {0};
-    void* fnCreateScreen = reinterpret_cast<void*>(mcBase + 0x09AEB298);
+    uintptr_t rvaCreateScreen = off.sceneFactoryCreateScreenAbstract;
+    void* fnCreateScreen = rvaCreateScreen ? reinterpret_cast<void*>(mcBase + rvaCreateScreen) : nullptr;
     if (fnCreateScreen) {
         register void* x0_cs __asm__("x0") = sceneFactory;
         register void* x1_cs __asm__("x1") = uiSceneShared;
@@ -577,14 +547,12 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
 
     ll::Logger::getInstance().info("§a[LeviLamroid] AbstractScene ready! [AbstractScene: 0x", std::hex, (uintptr_t)abstractScenePtr, "] Pushing to SceneStack...");
 
-    // Step 3: ISceneStack::pushScreen at offset 0xD0 (slot 26)
-    // x0: sceneStack
-    // x1: std::shared_ptr<AbstractScene> address
-    // w2: flush (0 / false)
+    // Step 3: ISceneStack::pushScreen
     uintptr_t* stackVtable = *reinterpret_cast<uintptr_t**>(sceneStack);
-    if (stackVtable && stackVtable[0xD0 / 8]) {
+    size_t pushSlot = off.sceneStackPushScreenSlot ? off.sceneStackPushScreenSlot : 26;
+    if (stackVtable && stackVtable[pushSlot]) {
         using PushScreenFn = void (*)(void* stack, void* sceneShared, bool flush);
-        auto pushScreen = reinterpret_cast<PushScreenFn>(stackVtable[0xD0 / 8]);
+        auto pushScreen = reinterpret_cast<PushScreenFn>(stackVtable[pushSlot]);
         pushScreen(sceneStack, pushScenePtr, false);
         ll::Logger::getInstance().info("§a[LeviLamroid] Screen pushed to SceneStack successfully!");
         return true;
@@ -599,11 +567,13 @@ LL_API bool ll_ui_close_screen() {
     void* client = ll_service_get_client_instance();
     if (!client) return false;
 
+    const auto& off = ::levilamroid::mcpe::getOffsets();
     void* sceneStack = *(void**)((uintptr_t)client + 0x5b8);
     if (!sceneStack) {
         uintptr_t* clientVtable = *reinterpret_cast<uintptr_t**>(client);
-        if (clientVtable && clientVtable[0x758 / 8]) {
-            void* fn = reinterpret_cast<void*>(clientVtable[0x758 / 8]);
+        size_t stackSlot = off.clientInstanceSceneStackSlot > 0 ? off.clientInstanceSceneStackSlot : (0x758 / 8);
+        if (clientVtable && clientVtable[stackSlot]) {
+            void* fn = reinterpret_cast<void*>(clientVtable[stackSlot]);
             alignas(16) uint8_t ptrBuf[32] = {0};
             register void* x0_in __asm__("x0") = client;
             register void* x8_in __asm__("x8") = ptrBuf;
@@ -620,9 +590,10 @@ LL_API bool ll_ui_close_screen() {
     if (!sceneStack) return false;
 
     uintptr_t* stackVtable = *reinterpret_cast<uintptr_t**>(sceneStack);
-    if (stackVtable && stackVtable[0xD8 / 8]) {
+    size_t popSlot = off.sceneStackSchedulePopSlot ? off.sceneStackSchedulePopSlot : 27;
+    if (stackVtable && stackVtable[popSlot]) {
         using SchedulePopScreenFn = void (*)(void* stack, int totalPopNumber);
-        auto schedulePopScreen = reinterpret_cast<SchedulePopScreenFn>(stackVtable[0xD8 / 8]);
+        auto schedulePopScreen = reinterpret_cast<SchedulePopScreenFn>(stackVtable[popSlot]);
         schedulePopScreen(sceneStack, 1);
         ::levilamroid::hooks::dispatchPauseMenuClose(nullptr);
         ll::Logger::getInstance().info("§a[LeviLamroid] Screen popped from SceneStack successfully!");

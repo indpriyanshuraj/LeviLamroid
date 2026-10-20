@@ -3,7 +3,7 @@
   "name": "LeviLamroid",
   "author": "SpyGamingOG",
   "description": "Next-generation native C++ mod loader runtime and reverse-engineering hook hub for Minecraft Bedrock Edition (Android ARM64).",
-  "version": "1.0.4-beta",
+  "version": "1.0.5-beta",
   "entry": "liblevilamroid.so",
   "minecraft_versions": [
     "1.26.52.3",

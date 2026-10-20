@@ -4,6 +4,50 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.5-beta] - 2026-10-20
+
+### Full Engine Parity & Cross-Version Harmonization (1.26.52.3 & 1.26.45.1)
+- **100% Mathematical RVA Reconciliation**:
+  - Closed all remaining gaps in `kOffsets_1_26_52_3` and `kOffsets_1_26_45_1`:
+    - `creativeItemInitializerAddCreativeServer`: 1.26.52.3: `0x1002227C` (1.26.45.1: `0x0F6D9374`)
+    - `minecraftGameClientUpdate`: 1.26.52.3: `0x099D34D0` (1.26.45.1: `0x095FB3E8`, VTable slot 6)
+    - `oreUiSceneRender`: 1.26.52.3: `0x095E613C` (1.26.45.1: `0x09220244`)
+    - `uiSceneRender`: 1.26.52.3: `0x09AA0090` (1.26.45.1: `0x09704394`)
+    - `gameModeUseItemOn`: 1.26.52.3: `0x0F89FE18`, 1.26.45.1: `0x0EF72684`
+    - `gameModeDestroyBlock`: 1.26.52.3: `0x0F8A03AC`, 1.26.45.1: `0x0EF72C18`
+    - `gameModeAttack`: 1.26.52.3: `0x0F8A073C`, 1.26.45.1: `0x0EF72F9C`
+    - `localPlayerMove`: 1.26.52.3: `0x0F287188`, 1.26.45.1: `0x0EA8DE1C`
+    - `levelTick`: 1.26.52.3: `0x0FB313C4`, 1.26.45.1: `0x0F222D0C`
+    - `clientInstanceRequestLeaveGame`: 1.26.52.3: `0x09800FF8`, 1.26.45.1: `0x0943C430`
+    - `commandRegistryRegisterCommand`: 1.26.52.3: `0x0867F848`, 1.26.45.1: `0x0D6075CC`
+    - `loopbackPacketSenderSend`: 1.26.52.3: `0x0C68FAC4`, 1.26.45.1: `0x0C2E26EC`
+    - `serverNetworkHandlerHandle`: 1.26.52.3: `0x0C58394C`, 1.26.45.1: `0x0C1E5B4C`
+
+### Dynamic Multi-Version UI Engine & Crash Prevention
+- **Eliminated Hardcoded Screen Offsets in `src/hooks/UIHooks.cpp`**:
+  - Replaced hardcoded vtable slot constants (`0x710/8`, `0x760/8`, `0x758/8`, `0xD0/8`, `0xD8/8`) and RVAs with dynamic `EngineOffsets` fields:
+    - `off.clientInstanceSceneFactorySlot` (1.26.52.3: 226, 1.26.45.1: 224)
+    - `off.clientInstanceSceneStackSlot` (1.26.52.3: 236, 1.26.45.1: 235)
+    - `off.sceneFactoryCreateUIScene` (1.26.52.3: `0x09AE87E8`, 1.26.45.1: `0x0975E3B0`)
+    - `off.sceneFactoryCreateScreenAbstract` (1.26.52.3: `0x09AEB298`, 1.26.45.1: `0x097609CC`)
+    - `off.sceneStackPushScreenSlot` (Slot 26 across all versions)
+    - `off.sceneStackSchedulePopSlot` (Slot 27 across all versions)
+  - Completely fixes crashes when opening or popping screens (`ll_ui_open_screen`, `ll_ui_close_screen`) on 1.26.45.1 and earlier profiles.
+
+### Fabric-API Lifecycle Event Subsystem
+- **New Core Events (`ll::event`)**:
+  - `WorldJoinEvent`: Published when the local player enters the world / transitions out of loading.
+  - `WorldLeaveEvent`: Published on `ClientInstance::requestLeaveGame`, resetting client state and cache.
+  - `ClientTickEvent`: Published per-frame from `MinecraftGame::clientUpdate`.
+  - `PlayerMoveEvent`: Intercepted via `LocalPlayer::move` with delta vectors.
+  - `BlockBreakEvent`: Intercepted via `GameMode::destroyBlock` with coordinate bounds.
+  - `PlayerAttackEvent`: Intercepted via `GameMode::attack` with target actor reference.
+
+### Multi-Mod Verification
+- **Test Mods Fully Validated & Deployed**:
+  - `LeviItems`: 3D custom blocks, consumable food, and custom entity spawn eggs tested across both versions.
+  - `LeviAdvancements`: JsonUI advancement tree, toasts, and custom pause menu button tested across both versions without version-specific code branches.
+
 ## [1.0.4-beta] - 2026-10-20
 
 ### Reverse Engineering & Multi-Version Golden RVAs (Bedrock 1.26.45.1 Android ARM64)

@@ -1,6 +1,6 @@
 # LeviLamroid Functions & API Master Reference
 
-> **LeviLamroid Version**: `1.0.4-beta` (Beta Testing Release)  
+> **LeviLamroid Version**: `1.0.5-beta` (Beta Testing Release)  
 > **Target Platform**: Minecraft Bedrock Edition (Android ARM64) on LeviLauncher  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
 > **Architecture**: Native C++ Mod Loader Runtime (Windows LeviLamina Source Parity + Android PreLoader Extensions)  

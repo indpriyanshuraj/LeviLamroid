@@ -213,6 +213,34 @@ static void hooked_clientInstanceUpdate(void* self) {
     }
 }
 
+static void* sOrigClientInstanceRequestLeaveGame = nullptr;
+
+static void hooked_clientInstanceRequestLeaveGame(void* self, bool b1, bool b2) {
+    ll::Logger::getInstance().info("ClientInstance::requestLeaveGame triggered.");
+    setInWorld(false);
+    setIsMainMenu(true);
+    sCurrentLocalPlayer = nullptr;
+    sCurrentLevel = nullptr;
+
+    ll::event::WorldLeaveEvent leaveEv;
+    ll::event::EventBus::getInstance().publish(leaveEv);
+
+    if (sOrigClientInstanceRequestLeaveGame) {
+        reinterpret_cast<void(*)(void*, bool, bool)>(sOrigClientInstanceRequestLeaveGame)(self, b1, b2);
+    }
+}
+
+static void* sOrigMinecraftGameClientUpdate = nullptr;
+
+static void hooked_minecraftGameClientUpdate(void* self, void* arg1) {
+    ll::event::ClientTickEvent ev(sCurrentClientInstance);
+    ll::event::EventBus::getInstance().publish(ev);
+
+    if (sOrigMinecraftGameClientUpdate) {
+        reinterpret_cast<void(*)(void*, void*)>(sOrigMinecraftGameClientUpdate)(self, arg1);
+    }
+}
+
 static void hooked_playerNormalTick(void* self) {
     sCurrentLocalPlayer = self;
     if (self && isPointerReadable(reinterpret_cast<uint8_t*>(self) + 472, sizeof(void*))) {
@@ -220,6 +248,8 @@ static void hooked_playerNormalTick(void* self) {
     }
     if (!sIsInWorld.load()) {
         setInWorld(true);
+        ll::event::WorldJoinEvent joinEv;
+        ll::event::EventBus::getInstance().publish(joinEv);
     }
 
     // Publish PlayerTickEvent
@@ -231,6 +261,23 @@ static void hooked_playerNormalTick(void* self) {
     }
 }
 
+static void* sOrigLocalPlayerMove = nullptr;
+
+static void hooked_localPlayerMove(void* self, const void* delta) {
+    if (self) {
+        sCurrentLocalPlayer = self;
+        if (delta && isPointerReadable(delta, sizeof(float) * 3)) {
+            const float* d = reinterpret_cast<const float*>(delta);
+            Vec3 v{d[0], d[1], d[2]};
+            ll::event::PlayerMoveEvent ev(reinterpret_cast<Player*>(self), v);
+            ll::event::EventBus::getInstance().publish(ev);
+        }
+    }
+    if (sOrigLocalPlayerMove) {
+        reinterpret_cast<void(*)(void*, const void*)>(sOrigLocalPlayerMove)(self, delta);
+    }
+}
+
 static void hooked_applyTurnDelta(void* self, void* delta) {
     if (sCameraLocked.load()) {
         return; // Freeze camera orientation when camera locked
@@ -238,6 +285,38 @@ static void hooked_applyTurnDelta(void* self, void* delta) {
     if (sOrigApplyTurnDelta) {
         reinterpret_cast<void(*)(void*, void*)>(sOrigApplyTurnDelta)(self, delta);
     }
+}
+
+static void* sOrigGameModeDestroyBlock = nullptr;
+
+static bool hooked_gameModeDestroyBlock(void* self, const void* pos, uint8_t face) {
+    void* player = self ? *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(self) + 0x8) : nullptr;
+    if (!player) player = sCurrentLocalPlayer;
+    if (pos && isPointerReadable(pos, sizeof(int) * 3)) {
+        const int* p = reinterpret_cast<const int*>(pos);
+        BlockPos bpos{p[0], p[1], p[2]};
+        ll::event::BlockBreakEvent ev(nullptr, bpos, reinterpret_cast<Player*>(player));
+        ll::event::EventBus::getInstance().publish(ev);
+        if (ev.isCancelled()) return false;
+    }
+    if (sOrigGameModeDestroyBlock) {
+        return reinterpret_cast<bool(*)(void*, const void*, uint8_t)>(sOrigGameModeDestroyBlock)(self, pos, face);
+    }
+    return false;
+}
+
+static void* sOrigGameModeAttack = nullptr;
+
+static bool hooked_gameModeAttack(void* self, void* targetActor) {
+    void* player = self ? *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(self) + 0x8) : nullptr;
+    if (!player) player = sCurrentLocalPlayer;
+    ll::event::PlayerAttackEvent ev(reinterpret_cast<Player*>(player), targetActor);
+    ll::event::EventBus::getInstance().publish(ev);
+    if (ev.isCancelled()) return false;
+    if (sOrigGameModeAttack) {
+        return reinterpret_cast<bool(*)(void*, void*)>(sOrigGameModeAttack)(self, targetActor);
+    }
+    return false;
 }
 
 static void* sOrigGameModeUseItem = nullptr;
@@ -319,7 +398,7 @@ static void handleMobSpawn(void* /*player*/, void* /*itemStack*/, const void* po
 }
 
 static void handleBlockPlacement(
-    void* self,
+    [[maybe_unused]] void* self,
     void* player,
     void* itemStack,
     const ::levilamroid::item::CustomItemDefinition& def,
@@ -574,6 +653,36 @@ static bool installGameplayHooks() {
     if (off.loopbackPacketSenderSend) {
         if (ll::memory::hookRva(off.loopbackPacketSenderSend, (void*)&hooked_loopbackPacketSenderSend, &sOrigLoopbackPacketSenderSend)) {
             logger.info("Hooked LoopbackPacketSender::send [RVA: 0x", std::hex, off.loopbackPacketSenderSend, "]");
+        }
+    }
+
+    if (off.clientInstanceRequestLeaveGame) {
+        if (ll::memory::hookRva(off.clientInstanceRequestLeaveGame, (void*)&hooked_clientInstanceRequestLeaveGame, &sOrigClientInstanceRequestLeaveGame)) {
+            logger.info("Hooked ClientInstance::requestLeaveGame [RVA: 0x", std::hex, off.clientInstanceRequestLeaveGame, "]");
+        }
+    }
+
+    if (off.minecraftGameClientUpdate) {
+        if (ll::memory::hookRva(off.minecraftGameClientUpdate, (void*)&hooked_minecraftGameClientUpdate, &sOrigMinecraftGameClientUpdate)) {
+            logger.info("Hooked MinecraftGame::clientUpdate [RVA: 0x", std::hex, off.minecraftGameClientUpdate, "]");
+        }
+    }
+
+    if (off.localPlayerMove) {
+        if (ll::memory::hookRva(off.localPlayerMove, (void*)&hooked_localPlayerMove, &sOrigLocalPlayerMove)) {
+            logger.info("Hooked LocalPlayer::move [RVA: 0x", std::hex, off.localPlayerMove, "]");
+        }
+    }
+
+    if (off.gameModeDestroyBlock) {
+        if (ll::memory::hookRva(off.gameModeDestroyBlock, (void*)&hooked_gameModeDestroyBlock, &sOrigGameModeDestroyBlock)) {
+            logger.info("Hooked GameMode::destroyBlock [RVA: 0x", std::hex, off.gameModeDestroyBlock, "]");
+        }
+    }
+
+    if (off.gameModeAttack) {
+        if (ll::memory::hookRva(off.gameModeAttack, (void*)&hooked_gameModeAttack, &sOrigGameModeAttack)) {
+            logger.info("Hooked GameMode::attack [RVA: 0x", std::hex, off.gameModeAttack, "]");
         }
     }
 

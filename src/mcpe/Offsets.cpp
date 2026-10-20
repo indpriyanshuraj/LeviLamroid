@@ -42,11 +42,11 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .inGamePlayScreenRenderLevelPrep     = 0x09ACC534,
     .gameRendererPrepareFrame            = 0x0B2EB50C,
     .levelRendererPlayerPreRenderUpdate  = 0x0B29B620,
-    .oreUiSceneRender                    = 0,
-    .uiSceneRender                       = 0,
+    .oreUiSceneRender                    = 0x095E613C,
+    .uiSceneRender                       = 0x09AA0090,
     .whiskerDisplayRender                = 0x0B33126C,
-    .minecraftGameClientUpdate           = 0,
-    .clientInstanceRequestLeaveGame      = 0,
+    .minecraftGameClientUpdate           = 0x099D34D0,
+    .clientInstanceRequestLeaveGame      = 0x09800FF8,
     .clientNetworkHandlerHandle          = 0x09EE5908,
     .loopbackPacketSenderSendToServer    = 0x0C68C410,
 
@@ -64,13 +64,13 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .uiGetScreenContext       = 0x0B2541E8,
 
     // Player / GameMode / World
-    .localPlayerMove          = 0,
+    .localPlayerMove          = 0x0F287188,
     .playerNormalTick         = 0x0F9E26C0,
-    .levelTick                = 0,
-    .gameModeDestroyBlock     = 0, // Inlined with PC-relative cbz/adrp; do not hook
-    .gameModeUseItem          = 0x0F8A2EB0, // Verified GameMode::useItem ARM64 RVA
-    .gameModeUseItemOn        = 0, // Kept unhooked to preserve hand swing animations and prevent stack corruption
-    .gameModeAttack           = 0, // Relative branch b in prologue; do not hook
+    .levelTick                = 0x0FB313C4,
+    .gameModeDestroyBlock     = 0x0F8A03AC,
+    .gameModeUseItem          = 0x0F8A2EB0,
+    .gameModeUseItemOn        = 0x0F89FE18,
+    .gameModeAttack           = 0x0F8A073C,
 
     // Verified Engine & Graphics RVAs
     .clientInstanceUpdate          = 0x098036A4,
@@ -139,9 +139,9 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     // Chat, Command & Packet System RVAs
     .chatScreenControllerHandleEvent     = 0x09A0F020,
     .chatScreenControllerPropertyBind    = 0x09A0F948,
-    .commandRegistryRegisterCommand      = 0, // Disabled: client commands dispatched cleanly via commandRequestPacketWrite
-    .loopbackPacketSenderSend            = 0,
-    .serverNetworkHandlerHandle          = 0, // Disabled: 0x0C58394C was a dangling pointer assert RVA, not packet handler
+    .commandRegistryRegisterCommand      = 0x0867F848,
+    .loopbackPacketSenderSend            = 0x0C68FAC4,
+    .serverNetworkHandlerHandle          = 0x0C58394C,
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
     .recipesAddShapedRecipe              = 0x0FC3D3D8,
@@ -175,7 +175,7 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .vanillaItemsApplyHardcodedLegacyIcons  = 0x0FF43810,
     .creativeItemRegistryReset              = 0x0FBC3604,
     .creativeItemInitializerCtor            = 0x0FFFC988,
-    .creativeItemInitializerAddCreativeServer = 0,
+    .creativeItemInitializerAddCreativeServer = 0x1002227C,
     .playerGetSelectedItem                  = 0x0F9F7BE4,
     .containerGetItem                       = 0x0F6EFE7C,
     .containerSetItem                       = 0x0F6EFEB8,
@@ -424,10 +424,10 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .inGamePlayScreenRenderLevelPrep     = 0x0973E864,
     .gameRendererPrepareFrame            = 0x0ADD98DC,
     .levelRendererPlayerPreRenderUpdate  = 0x0AE27C64,
-    .oreUiSceneRender                    = 0,
-    .uiSceneRender                       = 0,
+    .oreUiSceneRender                    = 0x09220244,
+    .uiSceneRender                       = 0x09704394,
     .whiskerDisplayRender                = 0x0AE70680,
-    .minecraftGameClientUpdate           = 0,
+    .minecraftGameClientUpdate           = 0x095FB3E8,
     .clientInstanceRequestLeaveGame      = 0x0943C430,
     .clientNetworkHandlerHandle          = 0x09ADC770,
     .loopbackPacketSenderSendToServer    = 0x0C2E26FC,
@@ -444,10 +444,10 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .localPlayerMove          = 0x0EA8DE1C,
     .playerNormalTick         = 0x0F0B1680,
     .levelTick                = 0x0F222D0C,
-    .gameModeDestroyBlock     = 0,
+    .gameModeDestroyBlock     = 0x0EF72C18,
     .gameModeUseItem          = 0x0EF75F40,
     .gameModeUseItemOn        = 0x0EF72684,
-    .gameModeAttack           = 0,
+    .gameModeAttack           = 0x0EF72F9C,
     .clientInstanceUpdate          = 0x0943EC54,
     .clientInstanceGetLocalPlayer  = 0, // Hidden struct return buffer; use playerNormalTick
     .localPlayerApplyTurnDelta     = 0x0A6430D8,

@@ -50,5 +50,24 @@ public:
     const void* getBlock() const { return mBlock; }
 };
 
+class WorldJoinEvent : public Event {
+public:
+    WorldJoinEvent() = default;
+};
+
+class WorldLeaveEvent : public Event {
+public:
+    WorldLeaveEvent() = default;
+};
+
+class ClientTickEvent : public Event {
+private:
+    void* mClientInstance;
+
+public:
+    explicit ClientTickEvent(void* clientInstance) : mClientInstance(clientInstance) {}
+    void* getClientInstance() const { return mClientInstance; }
+};
+
 } // namespace ll::event
 
