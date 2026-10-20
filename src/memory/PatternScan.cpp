@@ -1,9 +1,12 @@
 #include "levilamroid/api/memory/PatternScan.h"
 #include "levilamroid/api/memory/Hook.h"
+#include "ll/api/Logger.h"
 #include <vector>
 #include <sstream>
 #include <cstring>
 #include <unistd.h>
+#include <unordered_map>
+#include <mutex>
 
 namespace ll::memory {
 
@@ -89,6 +92,86 @@ uintptr_t scanMinecraft(const std::string& pattern) {
     if (!base) return 0;
     // Scan text segments of libminecraftpe.so (~328MB on Android ARM64)
     return scanPattern(pattern, base, 0x15000000);
+}
+
+uintptr_t scanMinecraftText(const std::string& pattern) {
+    uintptr_t base = getMinecraftBase();
+    if (!base) return 0;
+    // Android ARM64 1.26.52.3 .text boundaries: offset 0x064C64E0, size 0x0C44AFCC (~205.8MB)
+    uintptr_t textStart = base + 0x064C64E0;
+    size_t textSize = 0x0C44AFCC;
+    return scanPattern(pattern, textStart, textSize);
+}
+
+static std::unordered_map<std::string, uintptr_t> sResolvedCache;
+static std::mutex sCacheMutex;
+
+uintptr_t SignatureEngine::resolve(std::string_view name, uintptr_t fallbackRva, const std::string& pattern) {
+    std::string key(name);
+    {
+        std::lock_guard<std::mutex> lock(sCacheMutex);
+        auto it = sResolvedCache.find(key);
+        if (it != sResolvedCache.end()) {
+            return it->second;
+        }
+    }
+
+    uintptr_t base = getMinecraftBase();
+    if (!base) return 0;
+
+    // 1. Fast-path: Check fallback RVA with pattern verification
+    if (fallbackRva != 0) {
+        uintptr_t targetAddr = base + fallbackRva;
+        if (pattern.empty() || verifyPattern(targetAddr, pattern)) {
+            std::lock_guard<std::mutex> lock(sCacheMutex);
+            sResolvedCache[key] = targetAddr;
+            return targetAddr;
+        }
+    }
+
+    // 2. Localized window scan around fallback RVA (+/- 64KB)
+    if (fallbackRva != 0 && !pattern.empty()) {
+        uintptr_t winStart = (fallbackRva > 0x10000) ? (base + fallbackRva - 0x10000) : base;
+        uintptr_t foundAddr = scanPattern(pattern, winStart, 0x20000);
+        if (foundAddr != 0) {
+            std::lock_guard<std::mutex> lock(sCacheMutex);
+            sResolvedCache[key] = foundAddr;
+            return foundAddr;
+        }
+    }
+
+    // 3. Fast .text section scan (205 MB)
+    if (!pattern.empty()) {
+        uintptr_t foundAddr = scanMinecraftText(pattern);
+        if (foundAddr != 0) {
+            std::lock_guard<std::mutex> lock(sCacheMutex);
+            sResolvedCache[key] = foundAddr;
+            return foundAddr;
+        }
+
+        // 4. Fallback full binary scan
+        foundAddr = scanMinecraft(pattern);
+        if (foundAddr != 0) {
+            std::lock_guard<std::mutex> lock(sCacheMutex);
+            sResolvedCache[key] = foundAddr;
+            return foundAddr;
+        }
+    }
+
+    // 5. Fallback address if pattern scan failed but RVA was provided
+    if (fallbackRva != 0) {
+        uintptr_t targetAddr = base + fallbackRva;
+        std::lock_guard<std::mutex> lock(sCacheMutex);
+        sResolvedCache[key] = targetAddr;
+        return targetAddr;
+    }
+
+    return 0;
+}
+
+void SignatureEngine::clearCache() {
+    std::lock_guard<std::mutex> lock(sCacheMutex);
+    sResolvedCache.clear();
 }
 
 } // namespace ll::memory

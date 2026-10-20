@@ -96,7 +96,8 @@ static void levilamroid_init_ctor() {
     if (dladdr(reinterpret_cast<void*>(&levilamroid_init_ctor), &info) && info.dli_fname) {
         dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
     }
-    levilamroid::init();
+    // Heavy hook initialization deferred to PLGetModRegistration() / PLMod_Load() to avoid
+    // blocking Android dynamic linker thread or triggering ANR during MainActivity.onCreate.
 }
 
 __attribute__((destructor))

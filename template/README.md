@@ -10,12 +10,13 @@ A production-ready C++20 starter template for building native client mods for **
 ## Features Included in This Template
 
 1. **LeviLamina & LeviLauncher Universal Lifecycle**: Uses `ll::mod::NativeMod` and the `LL_REGISTER_MOD` macro to export both LeviLauncher PreLoader (`PLGetModRegistration`) and LeviLamina (`ll_mod_load`) C ABIs.
-2. **On-Screen Floating HUD Button**: Demonstrates `pl::modmenu::registerButton` to create customizable on-screen touch buttons for mobile users.
-3. **LeviLauncher Drawer Module**: Registers a toggle switch in the launcher top-bar menu.
-4. **Hardware Input Interception**: Captures physical keyboard shortcuts (e.g. key `O` to toggle features) and touch events without interfering with the player camera.
-5. **Event Bus Integration**: Subscribes to `ll::event::StartMenuOpenEvent` and render events.
-6. **Persistent JSON Configuration**: Automatically reads and writes `/sdcard/Android/media/org.levimc.launcher/minecraft/<profile>/mods/<ModName>/config.json` using `nlohmann::json`.
-7. **One-Click Packaging & Deployment**: `package.sh` builds the `.so`, generates `.levipack` and `.zip` archives, and auto-deploys to active LeviLauncher profiles.
+2. **Fabric RenderDragon 3D ESP & 2D HUD**: Subscribes to `ll::event::RenderLevelEvent` (3D in-world geometry, entity ESP, tracers, waypoint markers) and `ll::event::UIRenderEvent` (2D in-game HUDs, armor status, coords overlay).
+3. **On-Screen Floating HUD Button**: Demonstrates `pl::modmenu::registerButton` to create customizable on-screen touch buttons for mobile users.
+4. **LeviLauncher Drawer Module**: Registers a toggle switch in the launcher top-bar menu.
+5. **Hardware Input Interception**: Captures physical keyboard shortcuts (e.g. key `O` to toggle features) and touch events without interfering with the player camera.
+6. **Event Bus Integration**: Subscribes to `ll::event::StartMenuOpenEvent`, `RenderLevelEvent`, `UIRenderEvent`, and `RenderFramePrepareEvent`.
+7. **Persistent JSON Configuration**: Automatically reads and writes `/sdcard/Android/media/org.levimc.launcher/minecraft/<profile>/mods/<ModName>/config.json` using `nlohmann::json`.
+8. **One-Click Packaging & Deployment**: `package.sh` builds the `.so`, generates `.levipack` and `.zip` archives, and auto-deploys to active LeviLauncher profiles.
 
 ---
 

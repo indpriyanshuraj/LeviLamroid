@@ -3,7 +3,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Android%20ARM64-green.svg)](https://github.com/spygamingog)
 [![Target](https://img.shields.io/badge/Minecraft-Bedrock%20v1.26.x-blue.svg)](https://minecraft.net)
 [![Role](https://img.shields.io/badge/Role-Core%20Mod%20Loader%20Runtime-orange.svg)](src/)
-[![Version](https://img.shields.io/badge/Version-1.0.2--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.3--beta-purple.svg)](https://github.com/spygamingog/LeviLamroid/releases)
 [![Status](https://img.shields.io/badge/Status-Beta%20Testing-yellow.svg)](https://github.com/spygamingog/LeviLamroid)
 
 A next-generation native C++ mod loader runtime and reverse-engineering hook hub for **Minecraft Bedrock Edition (Android ARM64)**.
@@ -12,9 +12,10 @@ Developed and maintained by **[SpyGamingOG](https://github.com/spygamingog)**.
 Inspired by the architecture of Windows [LeviLamina](https://github.com/LiteLDev/LeviLamina), redesigned from the ground up for Android ARM64 Linux kernels and **LeviLauncher (LeviLaunchroid)**.
 
 > [!WARNING]
-> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.2-beta`)
+> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.3-beta`)
 > **LeviLamroid is currently in active public beta testing.**
-> - **Development Status**: Active Reverse Engineering, Native Item & Block Systems, Dynamic Texture Interception & Multi-Version Runtime.
+> - **Reverse Engineering Status**: Core hooking, UI screen navigation, RenderDragon graphics passes, and audio are verified and stable. **Internal Item & Block C++ Component Graphs (`FoodItemComponent`, `SpawnEggItem`, `BlockDefinitionGroup` state permutation schemas) are NOT completely discovered** and are undergoing active reverse engineering.
+> - **Crash Mitigation**: LeviLamroid safely intercepts `GameMode::useItem` and `GameMode::useItemOn` to handle consumption and placement via command bridges and stack decrementing, preventing engine crashes while component schemas continue to be mapped.
 > - **Multi-Version Coverage**: Native verified support across Bedrock 1.26.44.3, 1.26.45.1, 1.26.51.1, and 1.26.52.3 on LeviLauncher.
 > - **Bug Reports Welcome**: If you encounter an unmapped signature, a broken hook, or an unexpected crash, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
 
@@ -52,9 +53,9 @@ Traditionally on Android Bedrock, each individual client mod had to:
    - Dynamic pattern scanner (`scanMinecraft`) for automated signature matching on newer releases.
 
 3. **Event-Driven Architecture (`ll::event::EventBus`)**:
-   - **UI Navigation Events**: `StartMenuOpenEvent`, `PlayButtonClickedEvent`, `SettingsButtonClickedEvent`, `RealmsButtonClickedEvent`, `MarketplaceButtonClickedEvent`, `DressingRoomButtonClickedEvent`, `MenuExitEvent`, `ScreenTechStackQueryEvent`.
+   - **UI Navigation Events**: `StartMenuOpenEvent`, `PauseMenuOpenEvent`, `PauseMenuCloseEvent`, `PlayButtonClickedEvent`, `SettingsButtonClickedEvent`, `RealmsButtonClickedEvent`, `MarketplaceButtonClickedEvent`, `DressingRoomButtonClickedEvent`, `MenuExitEvent`, `ScreenTechStackQueryEvent`.
    - **Render Events**: `GlClearEvent` (GPU render thread interception), `CubemapRenderEvent` (skybox suppression & overriding), `ProgressBarRenderEvent`.
-   - **Gameplay Events**: `PlayerMoveEvent`, `PlayerTickEvent`, `LevelTickEvent`, `BlockBreakEvent`.
+   - **Gameplay Events**: `PlayerMoveEvent`, `PlayerTickEvent`, `PlayerUseItemEvent`, `LevelTickEvent`, `BlockBreakEvent`.
 
 4. **Dynamic Plugin Manager (`ll::plugin::PluginManager`)**:
    - Auto-discovers and loads `.so` client mods from LeviLauncher `mods/` directories.
@@ -79,8 +80,39 @@ Traditionally on Android Bedrock, each individual client mod had to:
      - Overrides existing vanilla block textures (`textures/blocks/stone.png`), item textures (`textures/items/diamond_sword.png`), or `sounds/sound_definitions.json` dynamically in RAM without modifying APK assets or creating disk files.
      - *Best for*: Texture replacement mods, dynamic item skins, vanilla asset overrides.
 
-7. **100% LeviLamina API Parity (`include/ll/api/`)**:
+7. **Client Fabric API & RenderDragon In-Game Graphics Pipeline (`ll::event`)**:
+   - **3D World Render Pass (`ll::event::RenderLevelEvent`)**:
+     - Hooked directly into `InGamePlayScreen::_renderLevel` (`0x09ACD4C8`).
+     - Enables in-world 3D drawing: entity ESP, tracers, waypoint markers, custom mob bounding boxes, and block outlines.
+   - **2D In-Game HUD & UI Pass (`ll::event::UIRenderEvent`)**:
+     - Hooked into `InGamePlayScreen::render` (`0x09ACC828`) and `MinecraftUIRenderContext::flushImages` (`0x0B251D70`).
+     - Enables 2D in-game HUDs: armor status overlays, keystrokes, coordinate displays, custom crosshairs, and minimaps.
+   - **Frame Preparation (`ll::event::RenderFramePrepareEvent`)**:
+     - Hooked into `GameRenderer::_prepareFrame` (`0x0B2EB50C`) for matrix transformations and camera projection updates.
+   - **Camera Interpolation (`LevelRendererPlayer::preRenderUpdate`)**:
+     - Hooked into `LevelRendererPlayer::preRenderUpdate` (`0x0B29B620`) for smooth camera motion, view bobbing, and free-cam.
+   - **Network & Transaction Hooks**:
+     - Intercepts `ClientNetworkHandler::handle` (`0x09EE5908`), `LoopbackPacketSender::sendToServer` (`0x0C68C410`), and `LocalPlayer::sendComplexInventoryTransaction` (`0x0AACF1A0`).
+
+8. **Dynamic Boot Signature Scanner Engine (`ll::memory::SignatureEngine`)**:
+   - High-performance, multi-tier signature engine scanning the 205.8 MB `.text` section of `libminecraftpe.so`.
+   - **Fast-Path**: Verifies the known RVA against the 100% unique AOB signature in $O(1)$ time.
+   - **Localized Search**: Searches a $\pm 64\text{ KB}$ window around the RVA if minor binary drift occurred.
+   - **Full `.text` Scan**: Scans with `scanMinecraftText` using `memchr` vector acceleration.
+   - Thread-safe RVA caching guarantees that once resolved, lookups have zero runtime overhead.
+
+9. **Native Custom Blocks & Placement Interception (`ll::block`)**:
+   - `ll_block_register(identifier, displayName, textureName, ...)` and `ll_block_register_with_base(...)`.
+   - Reverse-engineered base constructor `BlockItem::BlockItem` (`0x10009DC4`), vtable `0x13099938`, and placement routine `BlockItem::_useOn` (`0x1000B300`).
+   - *Technical Note*: Full runtime block state permutation graphs and schema registration remain under active reverse engineering. LeviLamroid currently intercepts placement in `GameMode::useItemOn` to safely trigger block placement without memory corruption.
+
+10. **100% LeviLamina API Parity (`include/ll/api/`)**:
    - Provides drop-in compatibility headers for Windows LeviLamina client mods, allowing seamless compilation and porting to Android.
+
+11. **Unified BP-in-RP Addon Ingestion Architecture (`ll::resource` & `ll::addon`)**:
+   - **Zero Behavior Pack Overhead**: Merges Behavior Pack JSON definitions (`items/*.json`, `blocks/*.json`, `recipes/*.json`) directly inside the mod's single Resource Pack directory.
+   - **Safe Ingestion & Component Sanitization**: Automatically scans `blocks/` before `items/`, strips `"minecraft:block_placer"` to avoid Bedrock 1.21+ schema validator discards, and remaps unsafe creative categories to ensure clean inventory visibility while native components are being reversed.
+   - **No Experimental Warnings**: Bypasses the need for world-level Behavior Pack activation, avoiding "Holiday Creator Features" experimental prompts and keeping Xbox achievements intact.
 
 ---
 
@@ -140,6 +172,12 @@ bool ll_mod_load(void*) {
     ll::ui::forceJsonUIForScreen("/main-menu");
     ll::ui::onStartMenuOpen([]() {
         ll::Logger::getInstance().info("Start Menu Opened via human callback!");
+    });
+    ll::ui::onPauseMenuOpen([](void* pauseController) {
+        ll::Logger::getInstance().info("In-Game Pause Menu Opened!");
+    });
+    ll::ui::onPauseMenuClose([]() {
+        ll::Logger::getInstance().info("In-Game Pause Menu Closed!");
     });
     ll::ui::onPlayButtonClicked([]() {
         ll::Logger::getInstance().info("Play button clicked!");

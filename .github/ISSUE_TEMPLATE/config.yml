@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💡 Community Ideas & Suggestions
+    url: https://github.com/spygamingog/LeviLamroid/discussions/categories/ideas
+    about: Share and discuss ideas, suggestions, and feature proposals with the LeviLamroid community!
+  - name: 💬 General Q&A
+    url: https://github.com/spygamingog/LeviLamroid/discussions/categories/q-a
+    about: Ask questions and get help with mod development or LeviLauncher setup.

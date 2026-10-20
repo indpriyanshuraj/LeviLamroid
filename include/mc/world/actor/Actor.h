@@ -16,9 +16,9 @@ public:
 
     virtual ~Actor() = default;
 
-    virtual void setPos(const Vec3& pos);
-    virtual void swing();
-    virtual void setHealth(int health);
+    void setPos(const Vec3& pos) noexcept { mPosition = pos; }
+    void swing() noexcept {}
+    void setHealth(int health) noexcept { mHealth = health; }
 
     [[nodiscard]] virtual Level& getLevel() const;
     [[nodiscard]] virtual Dimension& getDimension() const;

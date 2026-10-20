@@ -28,7 +28,10 @@ private:
     void registerEventListeners();
 
     bool mEnabled{false};
-    bool mCustomFeatureActive{false};
+    bool mCustomFeatureActive{true};
+    bool mEspEnabled{true};
+    bool mHudEnabled{true};
+    uint64_t mFrameCounter{0};
 };
 
 } // namespace example

@@ -46,11 +46,17 @@ public:
     /// Dynamically append custom item names into .lang buffer
     bool patchLangFile(std::string& inOutLang) const;
 
+    /// Dynamically inject custom screen json definitions into ui/_ui_defs.json
+    bool patchUiDefsJson(std::string& inOutJson) const;
+
     /// Register a direct memory/file asset
     void registerAsset(const std::string& relativePath, const std::filesystem::path& diskPath);
 
     /// Get list of all mounted directories
     std::vector<std::filesystem::path> getMountedDirectories() const;
+
+    /// Enumerate all mounted assets whose relative path starts with prefix
+    void forEachAssetMatching(std::string_view prefix, const std::function<void(const std::string& relPath)>& callback) const;
 };
 
 } // namespace ll::resource

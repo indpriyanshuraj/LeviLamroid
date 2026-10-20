@@ -53,4 +53,43 @@ public:
     const float* getSecondaryColor() const { return mSecondaryColor; }
 };
 
+/// Dispatched during InGamePlayScreen::_renderLevel for custom 3D world, entity ESP, and block geometry
+class RenderLevelEvent : public Event {
+private:
+    void* mScreenContext;
+    const void* mFrameRenderObject;
+
+public:
+    RenderLevelEvent(void* screenCtx, const void* frameObj)
+        : mScreenContext(screenCtx), mFrameRenderObject(frameObj) {}
+
+    void* getScreenContext() const { return mScreenContext; }
+    const void* getFrameRenderObject() const { return mFrameRenderObject; }
+};
+
+/// Dispatched during InGamePlayScreen::render for 2D in-game HUD and custom overlays
+class UIRenderEvent : public Event {
+private:
+    void* mScreenContext;
+    const void* mFrameRenderObject;
+
+public:
+    UIRenderEvent(void* screenCtx, const void* frameObj)
+        : mScreenContext(screenCtx), mFrameRenderObject(frameObj) {}
+
+    void* getScreenContext() const { return mScreenContext; }
+    const void* getFrameRenderObject() const { return mFrameRenderObject; }
+};
+
+/// Dispatched during GameRenderer::_prepareFrame
+class RenderFramePrepareEvent : public Event {
+private:
+    void* mScreenContext;
+
+public:
+    explicit RenderFramePrepareEvent(void* screenCtx) : mScreenContext(screenCtx) {}
+    void* getScreenContext() const { return mScreenContext; }
+};
+
 } // namespace ll::event
+

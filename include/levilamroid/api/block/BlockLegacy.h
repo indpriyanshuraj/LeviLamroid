@@ -12,12 +12,12 @@ class BlockLegacy {
 public:
     virtual ~BlockLegacy() = default;
 
-    /// Get raw identifier without namespace (e.g. "stone", "astral_block")
+    /// Get raw identifier without namespace (e.g. "stone", "custom_block")
     [[nodiscard]] inline const HashedString& getRawNameId() const noexcept {
         return *reinterpret_cast<const HashedString*>(reinterpret_cast<const uint8_t*>(this) + 0x08);
     }
 
-    /// Get complete identifier (e.g. "minecraft:stone", "levitest:astral_block")
+    /// Get complete identifier (e.g. "minecraft:stone", "custom:my_block")
     [[nodiscard]] inline const HashedString& getFullName() const noexcept {
         return *reinterpret_cast<const HashedString*>(reinterpret_cast<const uint8_t*>(this) + 0x28);
     }

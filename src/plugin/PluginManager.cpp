@@ -46,7 +46,7 @@ bool PluginManager::loadPlugin(const std::string& soPath) {
 
     mLoadedHandles[soPath] = handle;
 
-    // Automatically mount mod resource folders if present (FarmersDelight / LeviLamina standard)
+    // Automatically mount mod resource folders if present (Native Mod standard)
     std::error_code ec;
     auto modDir = std::filesystem::path(soPath).parent_path();
     auto rpDir = modDir / "resource_packs";

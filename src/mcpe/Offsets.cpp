@@ -36,6 +36,20 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .mainMenuCubemapPass      = 0, // False RVA: was LevelRendererCamera::setupViewArea (0x0B2DC860)
     .cubemapDraw              = 0, // False RVA: was LevelRenderer internal (0x0B29A6AC)
 
+    // Verified Client-Side Fabric Engine & RenderDragon RVAs (Step B & C 1.26.52.3)
+    .inGamePlayScreenRender              = 0x09ACC828,
+    .inGamePlayScreenRenderLevel         = 0x09ACD4C8,
+    .inGamePlayScreenRenderLevelPrep     = 0x09ACC534,
+    .gameRendererPrepareFrame            = 0x0B2EB50C,
+    .levelRendererPlayerPreRenderUpdate  = 0x0B29B620,
+    .oreUiSceneRender                    = 0,
+    .uiSceneRender                       = 0,
+    .whiskerDisplayRender                = 0x0B33126C,
+    .minecraftGameClientUpdate           = 0,
+    .clientInstanceRequestLeaveGame      = 0,
+    .clientNetworkHandlerHandle          = 0x09EE5908,
+    .loopbackPacketSenderSendToServer    = 0x0C68C410,
+
     // GPU / libGLESv2 Hooks
     .glClearGotRva            = 0x132893d8, // Hooked with strict sIsOnMainMenu guard to prevent in-world interference
 
@@ -54,8 +68,8 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .playerNormalTick         = 0x0F9E26C0,
     .levelTick                = 0,
     .gameModeDestroyBlock     = 0, // Inlined with PC-relative cbz/adrp; do not hook
-    .gameModeUseItem          = 0, // Inlined with PC-relative cbz/adrp; do not hook
-    .gameModeUseItemOn        = 0,
+    .gameModeUseItem          = 0x0F8A2EB0, // Verified GameMode::useItem ARM64 RVA
+    .gameModeUseItemOn        = 0, // Kept unhooked to preserve hand swing animations and prevent stack corruption
     .gameModeAttack           = 0, // Relative branch b in prologue; do not hook
 
     // Verified Engine & Graphics RVAs
@@ -66,7 +80,7 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .blockSourceGetBlock           = 0x0FB91918,
     .blockSourceGetBrightness      = 0x0FB92F9C,
     .commandAutocomplete          = 0x0EBEAE44,
-    .commandRequestPacketWrite     = 0x0C250668,
+    .commandRequestPacketWrite     = 0,
 
     .soundEnginePlay          = 0x0B79F7F4,
     .soundEnginePlayUI        = 0x0B79F978,
@@ -125,9 +139,9 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     // Chat, Command & Packet System RVAs
     .chatScreenControllerHandleEvent     = 0x09A0F020,
     .chatScreenControllerPropertyBind    = 0x09A0F948,
-    .commandRegistryRegisterCommand      = 0x0DC4A370,
+    .commandRegistryRegisterCommand      = 0, // Disabled: client commands dispatched cleanly via commandRequestPacketWrite
     .loopbackPacketSenderSend            = 0,
-    .serverNetworkHandlerHandle          = 0x0C58394C,
+    .serverNetworkHandlerHandle          = 0, // Disabled: 0x0C58394C was a dangling pointer assert RVA, not packet handler
 
     // Behavior, Recipes, Items, Blocks & Scripting RVAs
     .recipesAddShapedRecipe              = 0x0FC3D3D8,
@@ -155,8 +169,9 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .itemSetDescriptionId                   = 0, // Inlined in Item::Item; 0x0FF81EA4 was engine panic assertion
     .itemVtable                             = 0x1308A650,
     .itemStackVtable                        = 0x1308BE60,
+    .itemInstanceVtable                     = 0x1308AC00,
     .itemStackCopyCtor                      = 0x0FF9DB08,
-    .vanillaItemsServerInitCreativeCallback = 0, // Managed via ItemRegistry
+    .vanillaItemsServerInitCreativeCallback = 0x0FF5A2D4,
     .vanillaItemsApplyHardcodedLegacyIcons  = 0x0FF43810,
     .creativeItemRegistryReset              = 0x0FBC3604,
     .creativeItemInitializerCtor            = 0x0FFFC988,
@@ -164,15 +179,33 @@ static const EngineOffsets kOffsets_1_26_52_3 = {
     .playerGetSelectedItem                  = 0x0F9F7BE4,
     .containerGetItem                       = 0x0F6EFE7C,
     .containerSetItem                       = 0x0F6EFEB8,
+    .blockItemConstructor                   = 0x10009DC4,
     .blockItemVtable                        = 0x13099938, // _ZTV9BlockItem
     .blockItemUseOn                         = 0x1000B300, // BlockItem::_useOn
-    .blockSourceSetBlock                    = 0x095ADDC8,
+    .blockSourceSetBlock                    = 0x0FB99330,
     .blockTypeRegistryGetInstance           = 0x103E33A8,
     .blockTypeRegistryLookupByName          = 0x103E5C9C,
+    .blockTypeRegistryLookupByNameImpl      = 0x103E7220,
+    .blockTypeRegistryGetDirectAccessBlocks = 0x103E7800,
+    .blockDefinitionGroupInitBlockTypeFromDefinition = 0x104826B0,
+    .blockDefinitionGroupInitBlockFromDefinition     = 0x10482AE0,
+    .registerItemAndBlockDefinitions        = 0x0FBC3A2C,
+    .screenControllerRegisterButtonEventHandler = 0x09B18244,
+    .screenControllerBindString             = 0x09B1CBA0,
+    .screenControllerBindStringForAnyCollection = 0x09B1D084,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
-    .clientInstanceIsShowingMenuSlot = 151
+    .clientInstanceIsShowingMenuSlot = 151,
+    .levelGetBlockDefinitionGroupSlot = 28,
+
+    // Scene Factory & Scene Stack RVAs and Slots (1.26.52.3 Audited)
+    .sceneFactoryCreateUIScene = 0x09AE87E8,
+    .sceneFactoryCreateScreenAbstract = 0x09AEB298,
+    .clientInstanceSceneFactorySlot = 226, // 0x710
+    .clientInstanceSceneStackSlot = 236,   // 0x760
+    .sceneStackPushScreenSlot = 26,        // 0xD0
+    .sceneStackSchedulePopSlot = 27        // 0xD8
 };
 
 // Verified Golden Offsets for Minecraft Bedrock 1.26.44.3 (Android ARM64)
@@ -200,6 +233,19 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .cubemapRendererRender    = 0,
     .mainMenuCubemapPass      = 0,
     .cubemapDraw              = 0,
+
+    .inGamePlayScreenRender              = 0,
+    .inGamePlayScreenRenderLevel         = 0,
+    .inGamePlayScreenRenderLevelPrep     = 0,
+    .gameRendererPrepareFrame            = 0,
+    .levelRendererPlayerPreRenderUpdate  = 0,
+    .oreUiSceneRender                    = 0,
+    .uiSceneRender                       = 0,
+    .whiskerDisplayRender                = 0,
+    .minecraftGameClientUpdate           = 0,
+    .clientInstanceRequestLeaveGame      = 0,
+    .clientNetworkHandlerHandle          = 0,
+    .loopbackPacketSenderSendToServer    = 0,
 
     // GPU / libGLESv2 Hooks
     .glClearGotRva            = 0x124C9D28,
@@ -268,8 +314,8 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .oreUiInit                   = 0x09230524,
 
     // JSON UI & Screen Controller RVAs
-    .screenControllerTick                = 0x096D747C,
-    .screenControllerHandleEvent         = 0x096D6F48,
+    .screenControllerTick                = 0x096D6F48,
+    .screenControllerHandleEvent         = 0x096D747C,
     .screenControllerBind                = 0x096D6EF4,
     .screenControllerAddStaticScreenVars = 0x096D8434,
     .screenControllerSetScreenState      = 0x096D8704,
@@ -317,6 +363,7 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .itemSetDescriptionId                   = 0,
     .itemVtable                             = 0,
     .itemStackVtable                        = 0,
+    .itemInstanceVtable                     = 0,
     .itemStackCopyCtor                      = 0,
     .vanillaItemsServerInitCreativeCallback = 0,
     .vanillaItemsApplyHardcodedLegacyIcons  = 0,
@@ -326,15 +373,31 @@ static const EngineOffsets kOffsets_1_26_44_3 = {
     .playerGetSelectedItem                  = 0,
     .containerGetItem                       = 0,
     .containerSetItem                       = 0,
+    .blockItemConstructor                   = 0,
     .blockItemVtable                        = 0,
     .blockItemUseOn                         = 0,
     .blockSourceSetBlock                    = 0,
     .blockTypeRegistryGetInstance           = 0,
     .blockTypeRegistryLookupByName          = 0,
+    .blockTypeRegistryLookupByNameImpl      = 0,
+    .blockTypeRegistryGetDirectAccessBlocks = 0,
+    .blockDefinitionGroupInitBlockTypeFromDefinition = 0,
+    .blockDefinitionGroupInitBlockFromDefinition     = 0,
+    .registerItemAndBlockDefinitions        = 0,
+    .screenControllerRegisterButtonEventHandler = 0,
+    .screenControllerBindString             = 0,
+    .screenControllerBindStringForAnyCollection = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
-    .clientInstanceIsShowingMenuSlot = 150
+    .clientInstanceIsShowingMenuSlot = 150,
+    .levelGetBlockDefinitionGroupSlot = 28,
+    .sceneFactoryCreateUIScene = 0,
+    .sceneFactoryCreateScreenAbstract = 0,
+    .clientInstanceSceneFactorySlot = 0,
+    .clientInstanceSceneStackSlot = 0,
+    .sceneStackPushScreenSlot = 0,
+    .sceneStackSchedulePopSlot = 0
 };
 
 // Verified Golden Offsets for Minecraft Bedrock 1.26.45.1 (Android ARM64)
@@ -355,6 +418,20 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .cubemapRendererRender    = 0,
     .mainMenuCubemapPass      = 0,
     .cubemapDraw              = 0,
+
+    .inGamePlayScreenRender              = 0,
+    .inGamePlayScreenRenderLevel         = 0,
+    .inGamePlayScreenRenderLevelPrep     = 0,
+    .gameRendererPrepareFrame            = 0,
+    .levelRendererPlayerPreRenderUpdate  = 0,
+    .oreUiSceneRender                    = 0,
+    .uiSceneRender                       = 0,
+    .whiskerDisplayRender                = 0,
+    .minecraftGameClientUpdate           = 0,
+    .clientInstanceRequestLeaveGame      = 0,
+    .clientNetworkHandlerHandle          = 0,
+    .loopbackPacketSenderSendToServer    = 0,
+
     .glClearGotRva            = 0x124C9688,
     .uiDrawImage              = 0x0AD845F0,
     .uiFlushImages            = 0x0AD859C4,
@@ -369,7 +446,7 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .levelTick                = 0x0F222D0C,
     .gameModeDestroyBlock     = 0,
     .gameModeUseItem          = 0,
-    .gameModeUseItemOn        = 0,
+    .gameModeUseItemOn        = 0x0DD6F05C,
     .gameModeAttack           = 0,
     .clientInstanceUpdate          = 0,
     .clientInstanceGetLocalPlayer  = 0,
@@ -415,8 +492,8 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .oreUiInit                   = 0x09230484,
 
     // JSON UI & Screen Controller RVAs
-    .screenControllerTick                = 0x096D73DC,
-    .screenControllerHandleEvent         = 0x096D6EA8,
+    .screenControllerTick                = 0x096D6EA8,
+    .screenControllerHandleEvent         = 0x096D73DC,
     .screenControllerBind                = 0x096D6E54,
     .screenControllerAddStaticScreenVars = 0x096D8394,
     .screenControllerSetScreenState      = 0x096D8664,
@@ -464,6 +541,7 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .itemSetDescriptionId                   = 0,
     .itemVtable                             = 0,
     .itemStackVtable                        = 0,
+    .itemInstanceVtable                     = 0,
     .itemStackCopyCtor                      = 0,
     .vanillaItemsServerInitCreativeCallback = 0,
     .vanillaItemsApplyHardcodedLegacyIcons  = 0,
@@ -473,15 +551,31 @@ static const EngineOffsets kOffsets_1_26_45_1 = {
     .playerGetSelectedItem                  = 0,
     .containerGetItem                       = 0,
     .containerSetItem                       = 0,
+    .blockItemConstructor                   = 0,
     .blockItemVtable                        = 0,
     .blockItemUseOn                         = 0,
-    .blockSourceSetBlock                    = 0,
+    .blockSourceSetBlock                    = 0x10A0AD58,
     .blockTypeRegistryGetInstance           = 0,
     .blockTypeRegistryLookupByName          = 0,
+    .blockTypeRegistryLookupByNameImpl      = 0,
+    .blockTypeRegistryGetDirectAccessBlocks = 0,
+    .blockDefinitionGroupInitBlockTypeFromDefinition = 0,
+    .blockDefinitionGroupInitBlockFromDefinition     = 0,
+    .registerItemAndBlockDefinitions        = 0,
+    .screenControllerRegisterButtonEventHandler = 0,
+    .screenControllerBindString             = 0,
+    .screenControllerBindStringForAnyCollection = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
-    .clientInstanceIsShowingMenuSlot = 150 // Slot 150 in 1.26.4x
+    .clientInstanceIsShowingMenuSlot = 150, // Slot 150 in 1.26.4x
+    .levelGetBlockDefinitionGroupSlot = 28,
+    .sceneFactoryCreateUIScene = 0,
+    .sceneFactoryCreateScreenAbstract = 0,
+    .clientInstanceSceneFactorySlot = 0,
+    .clientInstanceSceneStackSlot = 0,
+    .sceneStackPushScreenSlot = 0,
+    .sceneStackSchedulePopSlot = 0
 };
 
 // Verified Golden Offsets for Minecraft Bedrock 1.26.51.1 (Android ARM64)
@@ -510,6 +604,19 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .mainMenuCubemapPass      = 0,
     .cubemapDraw              = 0,
 
+    .inGamePlayScreenRender              = 0,
+    .inGamePlayScreenRenderLevel         = 0,
+    .inGamePlayScreenRenderLevelPrep     = 0,
+    .gameRendererPrepareFrame            = 0,
+    .levelRendererPlayerPreRenderUpdate  = 0,
+    .oreUiSceneRender                    = 0,
+    .uiSceneRender                       = 0,
+    .whiskerDisplayRender                = 0,
+    .minecraftGameClientUpdate           = 0,
+    .clientInstanceRequestLeaveGame      = 0,
+    .clientNetworkHandlerHandle          = 0,
+    .loopbackPacketSenderSendToServer    = 0,
+
     // GPU / libGLESv2 Hooks
     .glClearGotRva            = 0x13289078,
 
@@ -529,7 +636,7 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .levelTick                = 0x0FB31004,
     .gameModeDestroyBlock     = 0,
     .gameModeUseItem          = 0,
-    .gameModeUseItemOn        = 0,
+    .gameModeUseItemOn        = 0x0E3AF224,
     .gameModeAttack           = 0,
     .clientInstanceUpdate          = 0,
     .clientInstanceGetLocalPlayer  = 0,
@@ -577,9 +684,9 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .oreUiInit                   = 0x096F738C,
 
     // JSON UI & Screen Controller RVAs
-    .screenControllerTick                = 0x09B14F6C,
-    .screenControllerHandleEvent         = 0x09B147F0,
-    .screenControllerBind                = 0x09B1479C,
+    .screenControllerTick                = 0x09B14FEC,
+    .screenControllerHandleEvent         = 0x09B14870,
+    .screenControllerBind                = 0x09B1481C,
     .screenControllerAddStaticScreenVars = 0x09B15014,
     .screenControllerSetScreenState      = 0x09B161F4,
     .screenControllerCanExit             = 0x09B1695C,
@@ -626,6 +733,7 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .itemSetDescriptionId                   = 0,
     .itemVtable                             = 0,
     .itemStackVtable                        = 0,
+    .itemInstanceVtable                     = 0,
     .itemStackCopyCtor                      = 0,
     .vanillaItemsServerInitCreativeCallback = 0,
     .vanillaItemsApplyHardcodedLegacyIcons  = 0,
@@ -635,15 +743,31 @@ static const EngineOffsets kOffsets_1_26_51_1 = {
     .playerGetSelectedItem                  = 0,
     .containerGetItem                       = 0,
     .containerSetItem                       = 0,
+    .blockItemConstructor                   = 0,
     .blockItemVtable                        = 0,
     .blockItemUseOn                         = 0,
-    .blockSourceSetBlock                    = 0,
+    .blockSourceSetBlock                    = 0x0E389AA0,
     .blockTypeRegistryGetInstance           = 0,
     .blockTypeRegistryLookupByName          = 0,
+    .blockTypeRegistryLookupByNameImpl      = 0,
+    .blockTypeRegistryGetDirectAccessBlocks = 0,
+    .blockDefinitionGroupInitBlockTypeFromDefinition = 0,
+    .blockDefinitionGroupInitBlockFromDefinition     = 0,
+    .registerItemAndBlockDefinitions        = 0,
+    .screenControllerRegisterButtonEventHandler = 0,
+    .screenControllerBindString             = 0,
+    .screenControllerBindStringForAnyCollection = 0,
 
     // VTable Slots
     .clientInstanceLocalPlayerSlot = 32,
-    .clientInstanceIsShowingMenuSlot = 151
+    .clientInstanceIsShowingMenuSlot = 151,
+    .levelGetBlockDefinitionGroupSlot = 28,
+    .sceneFactoryCreateUIScene = 0,
+    .sceneFactoryCreateScreenAbstract = 0,
+    .clientInstanceSceneFactorySlot = 0,
+    .clientInstanceSceneStackSlot = 0,
+    .sceneStackPushScreenSlot = 0,
+    .sceneStackSchedulePopSlot = 0
 };
 
 static std::string sDetectedVersion = "1.26.52.3";
@@ -882,6 +1006,7 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "blockTypeRegistryInit" || name == "BlockTypeRegistry::init") return off.blockTypeRegistryInit;
     if (name == "blockTypeRegistryGetInstance" || name == "BlockTypeRegistry::getInstance") return off.blockTypeRegistryGetInstance;
     if (name == "blockTypeRegistryLookupByName" || name == "BlockTypeRegistry::lookupByName") return off.blockTypeRegistryLookupByName;
+    if (name == "blockTypeRegistryLookupByNameImpl" || name == "BlockTypeRegistry::_lookupByNameImpl") return off.blockTypeRegistryLookupByNameImpl;
     if (name == "blockDefinitionLoaderProcessCustomComponents") return off.blockDefinitionLoaderProcessCustomComponents;
     if (name == "actorNormalTick" || name == "Actor::normalTick") return off.actorNormalTick;
     if (name == "actorBaseTick" || name == "Actor::baseTick") return off.actorBaseTick;

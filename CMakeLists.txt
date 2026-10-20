@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(LeviLamroid VERSION 1.0.2 LANGUAGES CXX)
+project(LeviLamroid VERSION 1.0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,8 +27,11 @@ set(SOURCES
     src/hooks/ResourceHooks.cpp
     src/hooks/ItemHooks.cpp
     src/hooks/BlockHooks.cpp
+    src/hooks/RecipeHooks.cpp
+    src/hooks/CommandHooks.cpp
     src/plugin/PluginManager.cpp
     src/resource/ResourceManager.cpp
+    src/resource/AddonIngestion.cpp
 )
 
 add_library(levilamroid SHARED ${SOURCES})

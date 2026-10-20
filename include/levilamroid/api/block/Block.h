@@ -25,7 +25,7 @@ public:
         return getRuntimeId();
     }
 
-    /// Get full block name string (e.g. "minecraft:stone", "levitest:astral_block")
+    /// Get full block name string (e.g. "minecraft:stone", "custom:my_block")
     [[nodiscard]] inline const std::string& getTypeName() const noexcept {
         const auto* legacy = getLegacyBlock();
         if (legacy) {

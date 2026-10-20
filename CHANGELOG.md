@@ -4,6 +4,97 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.3-beta] - 2026-10-20
+
+> **Reverse Engineering Status Notice**: Native C++ item & block component graphs (`FoodItemComponent`, `SpawnEggItem`, `BlockDefinitionGroup` state permutation schemas) are **NOT completely discovered** in Bedrock 1.26.x ARM64 and remain under active reverse engineering. Beta 1.0.3 implements safe hook interception and client command bridges to prevent crashes while deep component reversing progresses.
+
+### Fixed & Resolved Issues
+- **Issue #1 Resolved: Pause Menu Lifecycle Events & APIs**:
+  - Implemented `ll::event::PauseMenuOpenEvent` and `ll::event::PauseMenuCloseEvent` in `include/ll/api/event/ui/UIEvents.h`.
+  - Added public C ABI lifecycle functions in `include/ll/api/ui/UI.h` and `src/hooks/UIHooks.cpp`:
+    - `ll_ui_on_pause_menu_open(void (*cb)(void* pauseScreenController))`
+    - `ll_ui_on_pause_menu_close(void (*cb)())`
+    - `bool ll_ui_is_in_pause_menu()`
+  - Wired into `hooked_getTechStackForScreen` ("pause_screen"), `hooked_screenControllerHandleEvent` (resume/exit button actions), and `ll_ui_close_screen()`.
+- **Issue #2 Diagnosed & Resolved: ANR & BedrockTools Mod Conflict**:
+  - **Tombstone Diagnosis**: Traced Xiaomi HyperOS MIUI Scout / Android watchdog timeout (`SIGQUIT` / ANR: `MainActivity.onCreate` took 2458ms > 2000ms threshold) when BedrockTools was loaded before LeviLamroid.
+  - **Constructor Deferred Initialization**: Removed heavy pattern scans and synchronous file I/O from `__attribute__((constructor))` in `src/LeviLamroid.cpp`. Deferred initialization to `PLMod_Load` / `PLGetModRegistration`, ensuring `dlopen()` completes instantaneously.
+  - **Cooperative Hook Chaining**: Lowered `pl_hook` priority in `src/memory/Hook.cpp` from `0` (`Highest`) to `200` (`Normal`), preventing LeviLamroid from clobbering BedrockTools (`libBedrockTools.so`) and `libThickBaddieOutline.so` trampolines.
+- **Custom Food & Spawn Egg Gameplay Mechanics**:
+  - `levitest:astral_fruit`: Fixed unmapped food component crash in `GameMode::useItem`. Implemented full consumption mechanics in `src/hooks/CoreHooks.cpp` and `LeviItems.cpp`: applies `instant_health` (+8 HP) and `saturation`, plays `random.burp` and `random.eat` sounds, drops 1 `levitest:astral_core`, decrements inventory stack count, and triggers celestial sparkle burst.
+  - `levitest:cosmic_golem_spawn_egg`: Replaced placeholder stub with physical `/summon iron_golem <x> <y> <z> "Cosmic Golem"`, plays `mob.irongolem.death` and `block.anvil.use` audio, decrements stack count, and triggers radiant particle bursts.
+- **Custom Block Items Creative Inventory Visibility**:
+  - Removed `"minecraft:block_placer"` component from `astral_block.json` and `astral_crafting_table.json` which caused Bedrock 1.21+ to discard custom block items during definition validation.
+  - Swapped ingestion order in `src/resource/AddonIngestion.cpp` so `blocks/` is parsed before `items/`, establishing base block references and enabling clean display in creative tabs under `itemGroup.name.stone`.
+
+### Added & Reverse-Engineered
+- **Bedrock 1.26.52.3 ARM64 Offsets & VTable Consolidation (`Offsets.h` & `Offsets.cpp`)**:
+  - Audited and saved all confirmed RVAs and slots into `kOffsets_1_26_52_3`:
+    - `sceneFactoryCreateUIScene`: `0x09AE87E8`
+    - `sceneFactoryCreateScreenAbstract`: `0x09AEB298`
+    - `clientInstanceSceneFactorySlot`: 226 (`0x710`)
+    - `clientInstanceSceneStackSlot`: 236 (`0x760`)
+    - `sceneStackPushScreenSlot`: 26 (`0xD0`)
+    - `sceneStackSchedulePopSlot`: 27 (`0xD8`)
+    - `levelGetBlockDefinitionGroupSlot`: 28 (`+0xE0` / 224 bytes)
+    - `gameModeUseItem`: `0x0F8A2EB0`
+    - `blockItemConstructor`: `0x10009DC4`
+    - `blockItemVtable`: `0x13099938` (`_ZTV9BlockItem`)
+    - `blockItemUseOn`: `0x1000B300`
+    - `blockTypeRegistryGetInstance`: `0x103E33A8`
+    - `blockTypeRegistryLookupByName`: `0x103E5C9C`
+    - `blockTypeRegistryLookupByNameImpl`: `0x103E7220`
+    - `blockTypeRegistryGetDirectAccessBlocks`: `0x103E7800`
+    - `blockDefinitionGroupInitBlockTypeFromDefinition`: `0x104826B0`
+    - `blockDefinitionGroupInitBlockFromDefinition`: `0x10482AE0`
+    - `registerItemAndBlockDefinitions`: `0x0FBC3A2C`
+    - `screenControllerRegisterButtonEventHandler`: `0x09B18244`
+    - `screenControllerBindString`: `0x09B1CBA0`
+    - `screenControllerBindStringForAnyCollection`: `0x09B1D084`
+- **RenderDragon Graphics & In-Game Event Pipeline**:
+  - `InGamePlayScreen::_renderLevel` (`0x09ACD4C8`) $\rightarrow$ `ll::event::RenderLevelEvent` for 3D in-world rendering, entity ESP, waypoints, and block wireframes.
+  - `InGamePlayScreen::render` (`0x09ACC828`) & `flushImages` (`0x0B251D70`) $\rightarrow$ `ll::event::UIRenderEvent` for 2D in-game HUDs, armor status, and custom overlays.
+  - `GameRenderer::_prepareFrame` (`0x0B2EB50C`) $\rightarrow$ `ll::event::RenderFramePrepareEvent` for camera transforms and matrix projection.
+  - `LevelRendererPlayer::preRenderUpdate` (`0x0B29B620`) for view angle and camera interpolation hooks.
+- **Dynamic Boot Signature Scanner Engine (`ll::memory::SignatureEngine`)**:
+  - Fast `.text` scanner (`scanMinecraftText`) scanning 205.8 MB `.text` section directly.
+  - 3-tier fallback resolution: Fast-path RVA verification $\rightarrow$ localized window scan (+/- 64KB) $\rightarrow$ full `.text` pattern scan.
+  - In-memory RVA resolution cache with thread-safe access.
+- **Updated Test Mods**:
+  - Rebuilt and deployed `LeviItems` v1.0.0 (Custom Items, 3D Blocks, Custom Food, Mob Egg, ModMenu HUD).
+  - Rebuilt and deployed `LeviAdvancements` v1.0.0 (Java Advancements UI, Custom Toasts, Tree Layout).
+
+### Added
+- **Dedicated Native BlockType & Block Permutation Isolation**:
+  - Implemented `getOrCreateCustomBlockInstance` in `BlockHooks.cpp`: creates an independent `BlockType` (size `0x10b0`) and dedicated `Block` state permutation (size `0x140`) for every custom block instead of forwarding to the template vanilla block.
+  - Automatically rebinds all internal cross-pointers: updates every pointer in `customBlockState` referencing `baseBlockType` to `customBlockType`, and every pointer in `customBlockType` referencing `baseBlockState` to `customBlockState`.
+  - Assigns unique, collision-free Block IDs (`10600+`) at offset `+0x380` on `BlockType`, keeping vanilla block IDs (Stone = 1) and palettes completely isolated.
+  - Prevents `BlockGraphics::initBlocks` from hijacking vanilla block textures (e.g., Stone being re-textured with Astral Block). Vanilla stone retains its pristine gray texture and behavior while custom blocks render their own atlas textures in 3D in hand, inventory, and world placement.
+- **Native Custom Block Placement Subsystem (`BlockHooks` & `GameMode::useItemOn`)**:
+  - Implemented inline hook for `GameMode::useItemOn` (`0x0F8A2084` on 1.26.52.3, `0x0E3AF224` on 1.26.51.1, `0x0DD6F05C` on 1.26.45.1 ARM64) to detect when a player uses a custom block item on a world block.
+  - Directional face vector solver translating clicked block face index (`0: Down`, `1: Up`, `2: North`, `3: South`, `4: West`, `5: East`) into precise 3D placement coordinates.
+  - Dynamic `Dimension` and `BlockSource` retrieval directly from player entity pointer hierarchy (`Player::mDimension` at offset `+0x1C0`, `Dimension::getBlockSource` at offset `+0x120`).
+  - Automated block permutation lookup from `BlockTypeRegistry::_lookupByNameImpl` (`0x103E6300`) and safe placement execution through `BlockSource::setBlock` (`0x0FB99330`).
+  - Real-time player arm swinging animation dispatch (`Player::swing` at vtable slot 230 / offset `+0x730`) and survival inventory stack size decrementing.
+- **BlockItem VTable Promotion & In-Hand Recognition**:
+  - Promoted in-memory custom block items to Bedrock's native `BlockItem` VTable (`_ZTV9BlockItem` at `0x13099938`).
+  - Set block item flag bit `0x4` at offset `+0x112`, enabling Bedrock's `Item::isBlock` check to recognize the held item as a placeable block.
+  - Linked terrain texture atlas (`atlas.terrain` at offset `+0x10`) for 3D in-hand cube rendering.
+  - Bound backing `BlockType*` pointer at offset `+0x138` from `BlockTypeRegistry::_lookupByNameImpl`.
+
+### Fixed & Improved
+- **Double `.name.name` Localization Suffix Fix**:
+  - Corrected block item description ID format from `"tile." + identifier + ".name"` to `"tile." + identifier`.
+  - Bedrock automatically appends `.name` during UI localization lookups, resolving `tile.<id>.name` directly in `en_US.lang` to display the human-readable block name (e.g. `Astral Block`) instead of raw identifier strings.
+- **Modloader Architecture Decoupling & Cleanup**:
+  - Completely purged all mod-specific namespaces (`levitest:`) and hardcoded references from `ResourceManager.cpp` and core headers.
+  - Enforced clean, generic modloader architecture where all custom block and item registrations flow strictly through public SDK APIs (`ll_block_register`, `ll_item_register_full`).
+- **Build System & Packaging Update**:
+  - Updated `manifest.json` and `package.sh` to produce `LeviLamroid-1.0.3-beta-android-arm64.zip`.
+  - Deployed updated libraries to all launcher profiles and `/sdcard/MG/`.
+
+---
+
 ## [1.0.2-beta] - 2026-10-17
 
 ### Added
@@ -22,13 +113,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Creative Inventory & Category Injection**:
   - Hooked `serverInitCreativeItemsCallback` (`0x0FBC3604` / `VanillaItems::serverInitCreativeItemsCallback`) to register custom items directly into Bedrock's `CreativeItemRegistry` alongside vanilla items.
   - Single items (weapons/swords) and stackable items (materials/blocks) properly respect category (Construction, Equipment, Items) and stack counts.
-- **Custom Block System Foundation & `BlockItem` VTable ABI**:
-  - Introduced `BlockHooks.cpp` and `levilamroid::block::registerCustomBlock` (`ll_block_register`).
-  - Reconstructed custom `_ZTV9BlockItem` VTable (`sCustomBlockItemVtableStorage` derived from native `0x13099938`) with overridden virtual slots:
-    - Slot 95: `buildDescriptionId` -> returns `"tile.<id>.name"`.
-    - Slot 118: `getIconInfo` -> returns `ItemIconInfo(textureKey, 0, 1)`.
-    - Slot 131: `_useOn` -> custom block placement logic (`BlockItem::_useOn` at `0x1000B300`).
-  - Backing `BlockType` resolution via `BlockTypeRegistry::getInstance` (`0x103E33A8`) and `BlockTypeRegistry::lookupByName` (`0x103E5C9C`).
+- **Custom Block System Foundation & `BlockRegistry`**:
+  - Introduced `BlockHooks.cpp`, `levilamroid::block::registerCustomBlock`, and `BlockRegistry` singleton (`ll_block_register`, `ll_block_is_registered`, `ll_block_get_count`).
+  - Automatic `CustomItemDefinition` synthesis for registered custom blocks, integrating them natively into Bedrock's creative inventory and item system with 64-stack support and offhand allowance.
+  - Complete decoupling from vanilla block types (zero modification or hijacking of vanilla blocks).
+  - Forwarding headers under `include/ll/api/block/` (`Block.h`, `BlockLegacy.h`, `BlockGroup.h`, `BlockPos.h`, `CustomBlockDefinition.h`, `BlockTypeRegistry.h`).
 - **Client-Side Command Interception (`LoopbackPacketSender::send`)**:
   - Hooked `LoopbackPacketSender::send` for Packet ID 77 (`CommandRequestPacket`), allowing client-registered commands (e.g. `/levi give`, `/levi fx`, `/levi camlock`) to be processed locally and canceled before network transmission, preventing "Unknown command" server rejections.
   - Camera orientation control via hooked `LocalPlayer::applyTurnDelta` (`0x0AAC9774`) with `ll_camera_set_locked`.

@@ -31,6 +31,20 @@ struct EngineOffsets {
     uintptr_t mainMenuCubemapPass;
     uintptr_t cubemapDraw;
 
+    // Verified Client-Side Fabric Engine & RenderDragon RVAs (1.26.52.3)
+    uintptr_t inGamePlayScreenRender;
+    uintptr_t inGamePlayScreenRenderLevel;
+    uintptr_t inGamePlayScreenRenderLevelPrep;
+    uintptr_t gameRendererPrepareFrame;
+    uintptr_t levelRendererPlayerPreRenderUpdate;
+    uintptr_t oreUiSceneRender;
+    uintptr_t uiSceneRender;
+    uintptr_t whiskerDisplayRender;
+    uintptr_t minecraftGameClientUpdate;
+    uintptr_t clientInstanceRequestLeaveGame;
+    uintptr_t clientNetworkHandlerHandle;
+    uintptr_t loopbackPacketSenderSendToServer;
+
     // GPU / libGLESv2 Hooks
     uintptr_t glClearGotRva;
 
@@ -151,6 +165,7 @@ struct EngineOffsets {
     uintptr_t itemSetDescriptionId;
     uintptr_t itemVtable;
     uintptr_t itemStackVtable;
+    uintptr_t itemInstanceVtable;
     uintptr_t itemStackCopyCtor;
     uintptr_t vanillaItemsServerInitCreativeCallback;
     uintptr_t vanillaItemsApplyHardcodedLegacyIcons;
@@ -160,15 +175,37 @@ struct EngineOffsets {
     uintptr_t playerGetSelectedItem;
     uintptr_t containerGetItem;
     uintptr_t containerSetItem;
+    uintptr_t blockItemConstructor;
     uintptr_t blockItemVtable;
     uintptr_t blockItemUseOn;
     uintptr_t blockSourceSetBlock;
     uintptr_t blockTypeRegistryGetInstance;
     uintptr_t blockTypeRegistryLookupByName;
+    uintptr_t blockTypeRegistryLookupByNameImpl;
+    uintptr_t blockTypeRegistryGetDirectAccessBlocks;
+
+    // Block Definition Group & Modern Engine Registration RVAs (Audited 1.26.52.3)
+    uintptr_t blockDefinitionGroupInitBlockTypeFromDefinition;
+    uintptr_t blockDefinitionGroupInitBlockFromDefinition;
+    uintptr_t registerItemAndBlockDefinitions;
+
+    // ScreenController Property & Event Registration RVAs
+    uintptr_t screenControllerRegisterButtonEventHandler;
+    uintptr_t screenControllerBindString;
+    uintptr_t screenControllerBindStringForAnyCollection;
 
     // VTable Slot Indices
     size_t clientInstanceLocalPlayerSlot; // Slot 32
     size_t clientInstanceIsShowingMenuSlot; // Slot 151 (1.26.5x+) / 150 (1.26.4x)
+    size_t levelGetBlockDefinitionGroupSlot; // Slot 28 (+0xE0 / 224 bytes)
+
+    // Scene Factory & Scene Stack RVAs and Slots (1.26.52.3 Audited)
+    uintptr_t sceneFactoryCreateUIScene;
+    uintptr_t sceneFactoryCreateScreenAbstract;
+    size_t clientInstanceSceneFactorySlot; // Slot 226 (0x710)
+    size_t clientInstanceSceneStackSlot;   // Slot 236 (0x760)
+    size_t sceneStackPushScreenSlot;       // Slot 26 (0xD0)
+    size_t sceneStackSchedulePopSlot;      // Slot 27 (0xD8)
 };
 
 /// Verified ARM64 Offhand Item Slot Accessor Pattern (Sig123)

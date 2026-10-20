@@ -24,7 +24,13 @@ struct ItemIconInfo {
     ItemIconInfo(const std::string& name, int frame = 0, int totalFrames = 1)
         : mIcon(name), mFrame(frame), mAtlasTotalFrames(totalFrames) {}
 };
+// NOTE: sizeof(ItemIconInfo) depends on HashedString which depends on std::string ABI.
+//   Android NDK libc++ (LLVM): 32 + 4 + 4 = 40 bytes  ✓
+//   Host GCC libstdc++:        40 + 4 + 4 = 48 bytes (cross-compile host only — harmless)
+// _LIBCPP_VERSION is defined by libc++ (NDK) but NOT by host GCC libstdc++.
+#if defined(__ANDROID__) || defined(_LIBCPP_VERSION)
 static_assert(sizeof(ItemIconInfo) == 40, "ItemIconInfo must be exactly 40 bytes on ARM64");
+#endif
 
 struct ResolvedItemIconInfo {
     std::string      mIconName;

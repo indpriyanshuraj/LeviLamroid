@@ -19,15 +19,13 @@ static bool hooked_directoryPackHasAsset(void* self, void* pathPtr, bool flag1, 
     }
     if (res) return true;
 
-    // Intercept item, block, and atlas texture requests from mounted resources
+    // Intercept any mounted custom asset requests (textures, models, entities, particles, UI, blocks)
     if (pathPtr) {
         const std::string* pathStr = reinterpret_cast<const std::string*>(pathPtr);
         if (pathStr && !pathStr->empty() && pathStr->size() < 1024) {
             const std::string& p = *pathStr;
-            if (p.find("textures/") != std::string::npos || p.find("blocks/") != std::string::npos) {
-                if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
-                    return true;
-                }
+            if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
+                return true;
             }
         }
     }
@@ -41,15 +39,13 @@ static bool hooked_zipPackHasAsset(void* self, void* pathPtr, bool flag1, bool f
     }
     if (res) return true;
 
-    // Intercept item, block, and atlas texture requests from mounted resources
+    // Intercept any mounted custom asset requests (textures, models, entities, particles, UI, blocks)
     if (pathPtr) {
         const std::string* pathStr = reinterpret_cast<const std::string*>(pathPtr);
         if (pathStr && !pathStr->empty() && pathStr->size() < 1024) {
             const std::string& p = *pathStr;
-            if (p.find("textures/") != std::string::npos || p.find("blocks/") != std::string::npos) {
-                if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
-                    return true;
-                }
+            if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
+                return true;
             }
         }
     }
@@ -104,18 +100,39 @@ static bool hooked_directoryPackGetAsset(void* self, void* pathPtr, std::string&
                 }
             }
 
-            // 4. Patch lang file when loaded
+            // 4. Patch lang file when loaded (merge custom item & UI translations)
             if (p.find(".lang") != std::string::npos) {
                 if (res) {
                     ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer);
                     return true;
                 } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
+                    ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer);
+                    return true;
+                } else {
+                    outBuffer.clear();
+                    if (::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer)) {
+                        return true;
+                    }
+                }
+            }
+
+            // 5. Patch _ui_defs.json when loaded (inject custom JSON UI screen definitions)
+            if (p.find("_ui_defs.json") != std::string::npos) {
+                if (res) {
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
+                    return true;
+                } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
+                    return true;
+                } else {
+                    outBuffer = "{\"ui_defs\":[]}";
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
                     return true;
                 }
             }
 
-            // 5. Fallback for custom mounted textures (items, blocks, etc.)
-            if (!res && (p.find("textures/") != std::string::npos || p.find("blocks/") != std::string::npos || p.find("blocks.json") != std::string::npos)) {
+            // 6. Fallback for any mounted custom assets (textures, models, entities, particles, blocks)
+            if (!res && ::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
                 if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
                     return true;
                 }
@@ -172,10 +189,29 @@ static bool hooked_zipPackGetAsset(void* self, void* pathPtr, std::string& outBu
                     ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer);
                     return true;
                 } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
+                    ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer);
+                    return true;
+                } else {
+                    outBuffer.clear();
+                    if (::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer)) {
+                        return true;
+                    }
+                }
+            }
+            if (p.find("_ui_defs.json") != std::string::npos) {
+                if (res) {
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
+                    return true;
+                } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
+                    return true;
+                } else {
+                    outBuffer = "{\"ui_defs\":[]}";
+                    ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
                     return true;
                 }
             }
-            if (!res && (p.find("textures/") != std::string::npos || p.find("blocks/") != std::string::npos || p.find("blocks.json") != std::string::npos)) {
+            if (!res && ::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
                 if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
                     return true;
                 }
@@ -184,6 +220,27 @@ static bool hooked_zipPackGetAsset(void* self, void* pathPtr, std::string& outBu
     }
 
     return res;
+}
+
+static void* sOrigPackForEachInAssetSet = nullptr;
+
+static void hooked_packForEachInAssetSet(void* self, const void* pathPtr, void* callback) {
+    if (sOrigPackForEachInAssetSet) {
+        reinterpret_cast<void(*)(void*, const void*, void*)>(sOrigPackForEachInAssetSet)(self, pathPtr, callback);
+    }
+
+    if (pathPtr && callback) {
+        const std::string* pathStr = reinterpret_cast<const std::string*>(pathPtr);
+        if (pathStr && !pathStr->empty() && pathStr->size() < 256) {
+            std::string p = *pathStr;
+            ::ll::resource::ResourceManager::getInstance().forEachAssetMatching(p, [callback](const std::string& relPath) {
+                try {
+                    auto fn = reinterpret_cast<const std::function<void(const std::string&)>*>(callback);
+                    (*fn)(relPath);
+                } catch (...) {}
+            });
+        }
+    }
 }
 
 bool installResourceHooks() {
@@ -208,6 +265,11 @@ bool installResourceHooks() {
     if (off.zipPackHasAsset) {
         if (ll::memory::hookRva(off.zipPackHasAsset, (void*)&hooked_zipPackHasAsset, &sOrigZipPackHasAsset)) {
             logger.info("Hooked ZipPack::hasAsset [RVA: 0x", std::hex, off.zipPackHasAsset, "]");
+        }
+    }
+    if (off.packForEachInAssetSet) {
+        if (ll::memory::hookRva(off.packForEachInAssetSet, (void*)&hooked_packForEachInAssetSet, &sOrigPackForEachInAssetSet)) {
+            logger.info("Hooked Pack::forEachInAssetSet [RVA: 0x", std::hex, off.packForEachInAssetSet, "]");
         }
     }
 

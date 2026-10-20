@@ -172,9 +172,27 @@ bool hook(void* target, void* detour, void** original) {
 
     // 1. Attempt LeviLaunchroid PreLoader hook API if present in host
     using PlMemoryHookFn = int (*)(void*, void*, void**, int);
-    static auto fnPlMemHook = reinterpret_cast<PlMemoryHookFn>(dlsym(RTLD_DEFAULT, "_ZN2pl6memory4hookEPvS1_PS1_NS0_12HookPriorityE"));
+    static PlMemoryHookFn fnPlMemHook = nullptr;
+    static bool sPlResolved = false;
+    if (!sPlResolved) {
+        sPlResolved = true;
+        void* h = dlopen("libpreloader.so", RTLD_NOLOAD);
+        if (h) {
+            fnPlMemHook = reinterpret_cast<PlMemoryHookFn>(dlsym(h, "pl_hook"));
+            if (!fnPlMemHook) {
+                fnPlMemHook = reinterpret_cast<PlMemoryHookFn>(dlsym(h, "_ZN2pl6memory4hookEPvS1_PS1_NS0_12HookPriorityE"));
+            }
+        }
+        if (!fnPlMemHook) {
+            fnPlMemHook = reinterpret_cast<PlMemoryHookFn>(dlsym(RTLD_DEFAULT, "pl_hook"));
+        }
+        if (!fnPlMemHook) {
+            fnPlMemHook = reinterpret_cast<PlMemoryHookFn>(dlsym(RTLD_DEFAULT, "_ZN2pl6memory4hookEPvS1_PS1_NS0_12HookPriorityE"));
+        }
+    }
     if (fnPlMemHook) {
-        int res = fnPlMemHook(target, detour, original, 0);
+        // Pass HookPriority::Normal (200) to allow cooperative hook chaining with other mods (e.g. BedrockTools)
+        int res = fnPlMemHook(target, detour, original, 200);
         if (res == 0) return true;
     }
 
@@ -247,10 +265,13 @@ bool hookSignature(const std::string& pattern, void* detour, void** original, ui
         return false;
     }
 
-    // 3. Fallback: only scan full libminecraftpe.so if NO fallback RVA was known at all
-    uintptr_t foundAddr = scanMinecraft(pattern);
+    // 3. Fallback: scan .text section first, then full binary if needed
+    uintptr_t foundAddr = scanMinecraftText(pattern);
+    if (foundAddr == 0) {
+        foundAddr = scanMinecraft(pattern);
+    }
     if (foundAddr != 0) {
-        Logger::getInstance().info("Hooked via full signature scan at 0x", std::hex, foundAddr, 
+        Logger::getInstance().info("Hooked via signature scan at 0x", std::hex, foundAddr, 
                                    " (RVA 0x", std::hex, (foundAddr - base), ")");
         return hook(reinterpret_cast<void*>(foundAddr), detour, original);
     }

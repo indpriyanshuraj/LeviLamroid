@@ -53,4 +53,35 @@ public:
     MenuExitEvent() = default;
 };
 
+class ButtonClickedEvent : public Event {
+private:
+    std::string mButtonName;
+    void* mController;
+    void* mPropertyBag;
+
+public:
+    ButtonClickedEvent(std::string name, void* controller, void* propBag)
+        : mButtonName(std::move(name)), mController(controller), mPropertyBag(propBag) {}
+
+    const std::string& getButtonName() const { return mButtonName; }
+    void* getController() const { return mController; }
+    void* getPropertyBag() const { return mPropertyBag; }
+};
+
+class PauseMenuOpenEvent : public Event {
+private:
+    void* mController;
+public:
+    explicit PauseMenuOpenEvent(void* controller = nullptr) : mController(controller) {}
+    void* getController() const { return mController; }
+};
+
+class PauseMenuCloseEvent : public Event {
+private:
+    void* mController;
+public:
+    explicit PauseMenuCloseEvent(void* controller = nullptr) : mController(controller) {}
+    void* getController() const { return mController; }
+};
+
 } // namespace ll::event

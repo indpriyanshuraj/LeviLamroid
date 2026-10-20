@@ -1,8 +1,10 @@
 #include "ll/api/resource/ResourceManager.h"
 #include "levilamroid/api/Logger.h"
+#include "AddonIngestion.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <unordered_set>
 #include <nlohmann/json.hpp>
 
 namespace ll::resource {
@@ -45,6 +47,9 @@ void ResourceManager::mountDirectory(const std::filesystem::path& dir) {
             ll::Logger::getInstance().debug("ResourceManager: Indexed raw asset: ", rel);
         }
     }
+
+    // Ingest unified BP-in-RP JSON files (items, blocks, recipes)
+    ::levilamroid::addon::ingestAddonDirectory(dir);
 }
 
 bool ResourceManager::hasAsset(std::string_view relativePath) const {
@@ -113,8 +118,61 @@ bool ResourceManager::getAsset(std::string_view relativePath, std::string& outBu
 
     outBuffer.resize(size);
     file.read(outBuffer.data(), size);
-    ll::Logger::getInstance().info("ResourceManager: Served asset: ", cleanPath, " (", size, " bytes)");
+    ll::Logger::getInstance().debug("ResourceManager: Served asset: ", cleanPath, " (", size, " bytes)");
     return true;
+}
+
+static std::string stripJsonComments(const std::string& input) {
+    std::string result;
+    result.reserve(input.size());
+    bool inString = false;
+    bool inSingleLineComment = false;
+    bool inMultiLineComment = false;
+
+    for (size_t i = 0; i < input.size(); ++i) {
+        char c = input[i];
+        char next = (i + 1 < input.size()) ? input[i + 1] : '\0';
+
+        if (inSingleLineComment) {
+            if (c == '\n' || c == '\r') {
+                inSingleLineComment = false;
+                result += c;
+            }
+            continue;
+        }
+
+        if (inMultiLineComment) {
+            if (c == '*' && next == '/') {
+                inMultiLineComment = false;
+                ++i; // skip '/'
+            }
+            continue;
+        }
+
+        if (inString) {
+            result += c;
+            if (c == '\\' && i + 1 < input.size()) {
+                result += input[++i]; // skip escaped char
+            } else if (c == '"') {
+                inString = false;
+            }
+            continue;
+        }
+
+        if (c == '"') {
+            inString = true;
+            result += c;
+        } else if (c == '/' && next == '/') {
+            inSingleLineComment = true;
+            ++i; // skip '/'
+        } else if (c == '/' && next == '*') {
+            inMultiLineComment = true;
+            ++i; // skip '*'
+        } else {
+            result += c;
+        }
+    }
+    return result;
 }
 
 bool ResourceManager::patchItemTextureJson(std::string& inOutJson) const {
@@ -126,7 +184,14 @@ bool ResourceManager::patchItemTextureJson(std::string& inOutJson) const {
             root["texture_name"] = "atlas.items";
             root["texture_data"] = nlohmann::json::object();
         } else {
-            root = nlohmann::json::parse(inOutJson);
+            std::string clean = stripJsonComments(inOutJson);
+            root = nlohmann::json::parse(clean, nullptr, false, true);
+            if (root.is_discarded()) {
+                root = nlohmann::json::object();
+                root["resource_pack_name"] = "vanilla";
+                root["texture_name"] = "atlas.items";
+                root["texture_data"] = nlohmann::json::object();
+            }
         }
 
         root["resource_pack_name"] = "vanilla";
@@ -144,11 +209,12 @@ bool ResourceManager::patchItemTextureJson(std::string& inOutJson) const {
                 std::ifstream f(path);
                 if (f.is_open()) {
                     try {
-                        auto customJson = nlohmann::json::parse(f);
-                        if (customJson.contains("texture_data") && customJson["texture_data"].is_object()) {
+                        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+                        auto customJson = nlohmann::json::parse(stripJsonComments(content), nullptr, false, true);
+                        if (!customJson.is_discarded() && customJson.contains("texture_data") && customJson["texture_data"].is_object()) {
                             for (auto& [key, val] : customJson["texture_data"].items()) {
                                 root["texture_data"][key] = val;
-                                ll::Logger::getInstance().info("ResourceManager: Merged custom item_texture entry: ", key);
+                                ll::Logger::getInstance().debug("ResourceManager: Merged custom item_texture entry: ", key);
                             }
                         }
                     } catch (...) {}
@@ -167,11 +233,24 @@ bool ResourceManager::patchItemTextureJson(std::string& inOutJson) const {
                 if (!root["texture_data"].contains(stem)) {
                     root["texture_data"][stem] = texEntry;
                 }
-                std::string namespaced = "levitest:" + stem;
-                if (!root["texture_data"].contains(namespaced)) {
-                    root["texture_data"][namespaced] = texEntry;
-                }
                 ll::Logger::getInstance().info("ResourceManager: Injected custom texture into atlas: ", stem, " -> ", texPath);
+            }
+        }
+
+        // 3. Fallback textures for blocks so 2D UI renderers always find them
+        for (const auto& [rel, path] : mAssetCache) {
+            if (rel.rfind("textures/blocks/", 0) == 0 && rel.size() > 20) {
+                std::string stem = std::filesystem::path(rel).stem().string();
+                std::string texPath = "textures/blocks/" + stem;
+
+                nlohmann::json texEntry;
+                texEntry["textures"] = texPath;
+                if (!root["texture_data"].contains(stem)) {
+                    root["texture_data"][stem] = texEntry;
+                }
+                if (!root["texture_data"].contains("levitest:" + stem)) {
+                    root["texture_data"]["levitest:" + stem] = texEntry;
+                }
             }
         }
 
@@ -194,7 +273,16 @@ bool ResourceManager::patchTerrainTextureJson(std::string& inOutJson) const {
             root["num_mip_levels"] = 4;
             root["texture_data"] = nlohmann::json::object();
         } else {
-            root = nlohmann::json::parse(inOutJson);
+            std::string clean = stripJsonComments(inOutJson);
+            root = nlohmann::json::parse(clean, nullptr, false, true);
+            if (root.is_discarded()) {
+                root = nlohmann::json::object();
+                root["resource_pack_name"] = "vanilla";
+                root["texture_name"] = "atlas.terrain";
+                root["padding"] = 8;
+                root["num_mip_levels"] = 4;
+                root["texture_data"] = nlohmann::json::object();
+            }
         }
 
         root["resource_pack_name"] = "vanilla";
@@ -212,11 +300,12 @@ bool ResourceManager::patchTerrainTextureJson(std::string& inOutJson) const {
                 std::ifstream f(path);
                 if (f.is_open()) {
                     try {
-                        auto customJson = nlohmann::json::parse(f);
-                        if (customJson.contains("texture_data") && customJson["texture_data"].is_object()) {
+                        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+                        auto customJson = nlohmann::json::parse(stripJsonComments(content), nullptr, false, true);
+                        if (!customJson.is_discarded() && customJson.contains("texture_data") && customJson["texture_data"].is_object()) {
                             for (auto& [key, val] : customJson["texture_data"].items()) {
                                 root["texture_data"][key] = val;
-                                ll::Logger::getInstance().info("ResourceManager: Merged custom terrain_texture entry: ", key);
+                                ll::Logger::getInstance().debug("ResourceManager: Merged custom terrain_texture entry: ", key);
                             }
                         }
                     } catch (...) {}
@@ -235,9 +324,8 @@ bool ResourceManager::patchTerrainTextureJson(std::string& inOutJson) const {
                 if (!root["texture_data"].contains(stem)) {
                     root["texture_data"][stem] = texEntry;
                 }
-                std::string namespaced = "levitest:" + stem;
-                if (!root["texture_data"].contains(namespaced)) {
-                    root["texture_data"][namespaced] = texEntry;
+                if (!root["texture_data"].contains("levitest:" + stem)) {
+                    root["texture_data"]["levitest:" + stem] = texEntry;
                 }
                 ll::Logger::getInstance().info("ResourceManager: Injected custom block texture into atlas: ", stem, " -> ", texPath);
             }
@@ -258,7 +346,13 @@ bool ResourceManager::patchBlocksJson(std::string& inOutJson) const {
             root = nlohmann::json::object();
             root["format_version"] = nlohmann::json::array({1, 1, 0});
         } else {
-            root = nlohmann::json::parse(inOutJson);
+            std::string clean = stripJsonComments(inOutJson);
+            root = nlohmann::json::parse(clean, nullptr, false, true);
+            if (root.is_discarded()) {
+                ll::Logger::getInstance().warn("ResourceManager: blocks.json parse discarded after stripping comments; initializing fresh object");
+                root = nlohmann::json::object();
+                root["format_version"] = nlohmann::json::array({1, 1, 0});
+            }
         }
 
         if (!root.contains("format_version")) {
@@ -273,11 +367,14 @@ bool ResourceManager::patchBlocksJson(std::string& inOutJson) const {
                 std::ifstream f(path);
                 if (f.is_open()) {
                     try {
-                        auto customJson = nlohmann::json::parse(f);
-                        for (auto& [key, val] : customJson.items()) {
-                            if (key != "format_version") {
-                                root[key] = val;
-                                ll::Logger::getInstance().info("ResourceManager: Merged custom blocks.json entry: ", key);
+                        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+                        auto customJson = nlohmann::json::parse(stripJsonComments(content), nullptr, false, true);
+                        if (!customJson.is_discarded()) {
+                            for (auto& [key, val] : customJson.items()) {
+                                if (key != "format_version" && key != "minecraft:stone" && key != "stone") {
+                                    root[key] = val;
+                                    ll::Logger::getInstance().debug("ResourceManager: Merged custom blocks.json entry: ", key);
+                                }
                             }
                         }
                     } catch (...) {}
@@ -291,20 +388,20 @@ bool ResourceManager::patchBlocksJson(std::string& inOutJson) const {
                 std::string stem = std::filesystem::path(rel).stem().string();
                 nlohmann::json blockEntry;
                 blockEntry["textures"] = stem;
-                blockEntry["sound"] = "stone";
+                blockEntry["sound"] = (stem.find("table") != std::string::npos || stem.find("wood") != std::string::npos) ? "wood" : "stone";
 
                 if (!root.contains(stem)) {
                     root[stem] = blockEntry;
                 }
-                std::string namespaced = "levitest:" + stem;
-                if (!root.contains(namespaced)) {
-                    root[namespaced] = blockEntry;
+                if (!root.contains("levitest:" + stem)) {
+                    root["levitest:" + stem] = blockEntry;
                 }
                 ll::Logger::getInstance().info("ResourceManager: Injected custom block into blocks.json: ", stem);
             }
         }
 
         inOutJson = root.dump(2);
+        ll::Logger::getInstance().info("ResourceManager: Successfully patched blocks.json with custom blocks!");
         return true;
     } catch (const std::exception& e) {
         ll::Logger::getInstance().error("ResourceManager: Failed to patch blocks.json: ", e.what());
@@ -315,6 +412,31 @@ bool ResourceManager::patchBlocksJson(std::string& inOutJson) const {
 bool ResourceManager::patchLangFile(std::string& inOutLang) const {
     std::lock_guard<std::mutex> lock(mMutex);
     bool added = false;
+    std::error_code ec;
+
+    // Scan all mounted directories for every .lang file to ensure all mod translations are merged
+    for (const auto& dir : mMountedDirectories) {
+        if (!std::filesystem::exists(dir, ec)) continue;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(dir, ec)) {
+            if (entry.is_regular_file(ec) && entry.path().extension().string() == ".lang") {
+                std::ifstream f(entry.path());
+                if (f.is_open()) {
+                    std::string line;
+                    if (!inOutLang.empty() && inOutLang.back() != '\n') {
+                        inOutLang.push_back('\n');
+                    }
+                    while (std::getline(f, line)) {
+                        if (!line.empty() && line[0] != '#') {
+                            inOutLang += line + "\n";
+                            added = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Also scan mAssetCache for any registered .lang files
     for (const auto& [rel, path] : mAssetCache) {
         if (rel.find(".lang") != std::string::npos) {
             std::ifstream f(path);
@@ -335,6 +457,81 @@ bool ResourceManager::patchLangFile(std::string& inOutLang) const {
     return added;
 }
 
+bool ResourceManager::patchUiDefsJson(std::string& inOutJson) const {
+    try {
+        nlohmann::json root;
+        if (inOutJson.empty()) {
+            root = nlohmann::json::object();
+            root["ui_defs"] = nlohmann::json::array();
+        } else {
+            std::string clean = stripJsonComments(inOutJson);
+            root = nlohmann::json::parse(clean, nullptr, false, true);
+            if (root.is_discarded() || !root.contains("ui_defs") || !root["ui_defs"].is_array()) {
+                root = nlohmann::json::object();
+                root["ui_defs"] = nlohmann::json::array();
+            }
+        }
+
+        std::lock_guard<std::mutex> lock(mMutex);
+        std::unordered_set<std::string> existingDefs;
+        for (const auto& el : root["ui_defs"]) {
+            if (el.is_string()) {
+                existingDefs.insert(el.get<std::string>());
+            }
+        }
+
+        std::error_code ec;
+        // 1. Discover custom _ui_defs.json files from all mounted directories
+        for (const auto& dir : mMountedDirectories) {
+            if (!std::filesystem::exists(dir, ec)) continue;
+            for (const auto& entry : std::filesystem::recursive_directory_iterator(dir, ec)) {
+                if (entry.is_regular_file(ec)) {
+                    std::string fn = entry.path().filename().string();
+                    if (fn == "_ui_defs.json") {
+                        std::ifstream f(entry.path());
+                        if (f.is_open()) {
+                            try {
+                                std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+                                auto customJson = nlohmann::json::parse(stripJsonComments(content), nullptr, false, true);
+                                if (!customJson.is_discarded() && customJson.contains("ui_defs") && customJson["ui_defs"].is_array()) {
+                                    for (const auto& defPath : customJson["ui_defs"]) {
+                                        if (defPath.is_string()) {
+                                            std::string defStr = defPath.get<std::string>();
+                                            if (existingDefs.find(defStr) == existingDefs.end()) {
+                                                root["ui_defs"].push_back(defStr);
+                                                existingDefs.insert(defStr);
+                                                ll::Logger::getInstance().info("ResourceManager: Injected custom UI def from _ui_defs.json: ", defStr);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (...) {}
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Discover and register individual screen json files under ui/
+        for (const auto& [rel, path] : mAssetCache) {
+            if (rel.rfind("ui/", 0) == 0 && rel.size() > 8 && rel.find("_ui_defs") == std::string::npos &&
+                rel.substr(rel.size() - 5) == ".json") {
+                if (existingDefs.find(rel) == existingDefs.end()) {
+                    root["ui_defs"].push_back(rel);
+                    existingDefs.insert(rel);
+                    ll::Logger::getInstance().info("ResourceManager: Auto-injected mounted UI screen into ui_defs: ", rel);
+                }
+            }
+        }
+
+        inOutJson = root.dump(2);
+        return true;
+    } catch (const std::exception& e) {
+        ll::Logger::getInstance().error("ResourceManager: Failed to patch _ui_defs.json: ", e.what());
+        return false;
+    }
+}
+
 void ResourceManager::registerAsset(const std::string& relativePath, const std::filesystem::path& diskPath) {
     std::lock_guard<std::mutex> lock(mMutex);
     std::string clean = relativePath;
@@ -345,6 +542,20 @@ void ResourceManager::registerAsset(const std::string& relativePath, const std::
 std::vector<std::filesystem::path> ResourceManager::getMountedDirectories() const {
     std::lock_guard<std::mutex> lock(mMutex);
     return mMountedDirectories;
+}
+
+void ResourceManager::forEachAssetMatching(std::string_view prefix, const std::function<void(const std::string& relPath)>& callback) const {
+    if (!callback) return;
+    std::lock_guard<std::mutex> lock(mMutex);
+    std::string p(prefix);
+    if (!p.empty() && (p[0] == '/' || p[0] == '\\')) p = p.substr(1);
+    while (!p.empty() && (p.back() == '/' || p.back() == '\\')) p.pop_back();
+
+    for (const auto& [rel, diskPath] : mAssetCache) {
+        if (rel.rfind(p, 0) == 0) {
+            callback(rel);
+        }
+    }
 }
 
 } // namespace ll::resource

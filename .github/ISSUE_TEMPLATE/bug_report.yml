@@ -1,0 +1,53 @@
+name: 🐛 Bug Report
+description: Report a broken hook, unexpected crash, unmapped signature, or issue in LeviLamroid.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please provide as much detail as possible so we can reproduce and fix it.
+  - type: input
+    id: mc-version
+    attributes:
+      label: Minecraft Version
+      description: Which version of Minecraft Bedrock are you running?
+      placeholder: "e.g., 1.26.52.3, 1.26.45.1"
+    validations:
+      required: true
+  - type: input
+    id: device-info
+    attributes:
+      label: Device & OS
+      description: Device model and Android version
+      placeholder: "e.g., Xiaomi 13 (HyperOS / Android 14), Samsung Galaxy S23"
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what went wrong.
+      placeholder: "e.g., Game crashes when holding custom item or entering pause menu..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the issue.
+      placeholder: |
+        1. Launch game with LeviLauncher
+        2. Enable LeviLamroid and mod X
+        3. Tap button Y
+        4. See crash / error
+    validations:
+      required: true
+  - type: textarea
+    id: logcat
+    attributes:
+      label: Logcat / Tombstone Output
+      description: Paste any crash logs (`adb logcat`, `/data/tombstones/`, or console output) here.
+      render: shell
+    validations:
+      required: false

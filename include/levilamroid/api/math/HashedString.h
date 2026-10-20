@@ -61,7 +61,13 @@ public:
     }
 };
 
+// NOTE: sizeof(HashedString) depends on std::string ABI:
+//   Android NDK libc++ (LLVM): std::string = 24 bytes -> HashedString = 32 bytes  ✓
+//   Host GCC libstdc++:        std::string = 32 bytes -> HashedString = 40 bytes (cross-compile host only)
+// _LIBCPP_VERSION is defined by libc++ (NDK) but NOT by host GCC libstdc++.
+#if defined(__ANDROID__) || defined(_LIBCPP_VERSION)
 static_assert(sizeof(HashedString) == 32, "HashedString must be exactly 32 bytes on ARM64");
+#endif
 
 } // namespace levilamroid
 

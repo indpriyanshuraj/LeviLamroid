@@ -1,0 +1,40 @@
+name: 💡 Feature Request / Suggestion
+description: Suggest an idea, feature, new engine hook, API addition, or enhancement for LeviLamroid.
+title: "[Suggestion]: "
+labels: ["enhancement", "suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve **LeviLamroid**! Please describe your suggestion or idea below.
+        You can also discuss ideas with the community in [GitHub Discussions](https://github.com/spygamingog/LeviLamroid/discussions/categories/ideas).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your suggestion related to a specific problem or use case?
+      description: A clear and concise description of what problem you're trying to solve or what modding feature you need.
+      placeholder: "e.g., I'm trying to make a custom UI mod and I need an event when the inventory screen opens..."
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the feature or solution you'd like
+      description: A clear and concise description of what you want to happen, proposed API functions, or new hooks.
+      placeholder: "e.g., Add an event ll::event::InventoryScreenOpenEvent or an API function ll_ui_on_inventory_open()..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: Any alternative solutions or features you've considered, or how other mod loaders (like LeviLamina on Windows) do it.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, code snippets, or mockups here.
+    validations:
+      required: false

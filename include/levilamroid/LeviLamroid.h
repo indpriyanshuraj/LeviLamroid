@@ -2,8 +2,8 @@
 
 #define LEVILAMROID_VERSION_MAJOR 1
 #define LEVILAMROID_VERSION_MINOR 0
-#define LEVILAMROID_VERSION_PATCH 2
-#define LEVILAMROID_VERSION_STRING "1.0.2-beta"
+#define LEVILAMROID_VERSION_PATCH 3
+#define LEVILAMROID_VERSION_STRING "1.0.3-beta"
 
 // LeviLamina Windows Parity Headers
 #include "ll/api/Logger.h"

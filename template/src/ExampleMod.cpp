@@ -175,7 +175,36 @@ void ExampleMod::registerEventListeners() {
         ll::Logger::getInstance("ExampleMod").info("StartMenu opened event intercepted by ExampleMod!");
     });
 
-    // 2. Listen for GPU Render Clear Event
+    // 2. 3D In-Game Level Render Pass (ESP, Tracers, 3D Markers, Block Geometry)
+    // Hooked to InGamePlayScreen::_renderLevel (0x09ACD4C8)
+    ll::event::EventBus::getInstance().subscribe<ll::event::RenderLevelEvent>([this](ll::event::RenderLevelEvent& ev) {
+        if (!mCustomFeatureActive || !mEspEnabled) return;
+        mFrameCounter++;
+        // Every 300 frames (~5 seconds at 60 FPS), log render heartbeat
+        if (mFrameCounter % 300 == 0) {
+            getLogger().info("[ESP 3D] RenderLevel pass active: Frame={}, ScreenContext={:p}, FrameObj={:p}",
+                             mFrameCounter, ev.getScreenContext(), ev.getFrameRenderObject());
+        }
+        // In-world 3D drawing: mods can project entity world coordinates into screen space
+        // and draw bounding boxes, wireframes, or distance markers here.
+    });
+
+    // 3. 2D In-Game HUD & UI Render Pass (Armor Status, Keystrokes, Coords Overlay, Mini-Map)
+    // Hooked to InGamePlayScreen::render (0x09ACC828) & flushImages (0x0B251D70)
+    ll::event::EventBus::getInstance().subscribe<ll::event::UIRenderEvent>([this]([[maybe_unused]] ll::event::UIRenderEvent& ev) {
+        if (!mCustomFeatureActive || !mHudEnabled) return;
+        // In-game 2D HUD overlay drawing: mods render custom status widgets, text overlays,
+        // and crosshairs using MinecraftUIRenderContext.
+    });
+
+    // 4. Render Frame Preparation Pass (Matrix Transforms, Camera Updates)
+    // Hooked to GameRenderer::_prepareFrame (0x0B2EB50C)
+    ll::event::EventBus::getInstance().subscribe<ll::event::RenderFramePrepareEvent>([this]([[maybe_unused]] ll::event::RenderFramePrepareEvent& ev) {
+        if (!mCustomFeatureActive) return;
+        // Matrix calculations, viewport setup, and camera frustum updates
+    });
+
+    // 5. GPU Render Clear Event
     ll::event::EventBus::getInstance().subscribe<ll::event::GlClearEvent>([](auto&) {
         // Can be used to hook OpenGL ES 3.0 render passes before UI is drawn
     });

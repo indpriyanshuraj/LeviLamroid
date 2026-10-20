@@ -7,9 +7,10 @@
 namespace levilamroid::item {
 
 struct BedrockControlBlock {
-    Item*    mItem{nullptr};     // +0x00
-    uint32_t mWeakRef{1};        // +0x08
-    uint32_t mStrongRef{1};      // +0x0C
+    Item*    mItem{nullptr};         // +0x00: Item* pointer (dereferenced as x22)
+    void*    mControlBlock{nullptr}; // +0x08: libc++ __shared_weak_count* (must be nullptr so cbz x20 skips atomic refcounting!)
+    uint32_t mStrongRef{1};          // +0x10: strong ref count
+    uint32_t mWeakRef{1};            // +0x14: weak ref count
 };
 
 class LL_API ItemStack {

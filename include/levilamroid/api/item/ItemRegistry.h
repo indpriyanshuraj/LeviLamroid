@@ -15,10 +15,10 @@ namespace levilamroid::item {
 using CreativeCategory = CreativeItemCategory;
 
 struct CustomItemDefinition {
-    std::string identifier;                            // e.g. "levitest:cosmic_blade"
+    std::string identifier;                            // e.g. "custom:ruby_sword"
     short id{0};                                       // e.g. 10500
-    std::string descriptionId;                         // e.g. "item.levitest:cosmic_blade"
-    std::string iconName;                              // e.g. "cosmic_blade"
+    std::string descriptionId;                         // e.g. "item.custom:ruby_sword.name"
+    std::string iconName;                              // e.g. "ruby_sword"
     int iconFrame{0};                                  // e.g. 0
     int category{static_cast<int>(CreativeItemCategory::Items)}; // Equipment=3, Items=4
     std::string creativeGroup;                         // e.g. "itemGroup.name.sword"
@@ -27,9 +27,23 @@ struct CustomItemDefinition {
     uint8_t maxStackSize{64};                          // 1 for weapons, 64 for materials
     bool isBlock{false};                               // True for blocks (uses BlockItem vtable & atlas.terrain)
     bool isHandEquipped{false};
+    bool isFood{false};
     short maxDamage{0};
+
+    // ── Phase 1: Food / Tool / Weapon properties ──
+    int nutrition{0};                                  // Hunger points restored (0 = not food)
+    float saturationModifier{0.6f};                    // Saturation modifier (0.6 = normal food)
+    int useAnimation{0};                               // 0=none, 1=eat, 2=bow, 3=spear, 4=crossbow, 5=spyglass
+    int useDuration{0};                                // Use duration in ticks (32=food, 72000=bow)
+    float attackDamage{0.0f};                          // Bonus attack damage for weapons/tools
+    int enchantSlot{0};                                // Enchantment slot bitmask
+    float miningSpeed{1.0f};                           // Mining speed multiplier
+    // ── End Phase 1 ──
+
     void* nativeItemPtr{nullptr};
     void* nativeControlBlock{nullptr};
+    void* nativeBlockPermutation{nullptr};
+    std::string baseBlock{""};
 };
 
 LL_API bool registerCustomItem(const CustomItemDefinition& def);
@@ -37,6 +51,9 @@ LL_API Item* getNativeItem(const std::string& identifier);
 LL_API Item* getNativeItem(short id);
 LL_API bool giveItemToPlayer(void* player, const std::string& identifier, int count = 1, int slot = -1);
 LL_API void forEachRegisteredItem(void (*callback)(const CustomItemDefinition& def, void* udata), void* udata);
+LL_API void* getBlockPermutationForDef(CustomItemDefinition& def);
+LL_API std::vector<CustomItemDefinition>& getAllCustomItems();
+LL_API void refreshCustomBlockBindings();
 
 class LL_API ItemRegistry {
 public:
@@ -74,6 +91,16 @@ extern "C" {
 LL_API bool ll_item_register(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, int category, bool allowOffhand);
 LL_API bool ll_item_register_ex(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, int category, bool allowOffhand, uint8_t maxStackSize);
 LL_API bool ll_item_register_full(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, int category, const char* creativeGroup, bool allowOffhand, uint8_t maxStackSize);
+
+// ── Phase 1: Food / Tool / Weapon registration helpers ──
+// Register a food item. Sets useAnimation=EAT, useDuration=32, maxStackSize=64 automatically.
+LL_API bool ll_item_register_food(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, int nutrition, float saturationModifier, int category, const char* creativeGroup);
+// Register a tool item. Sets isHandEquipped=true, maxStackSize=1 automatically.
+LL_API bool ll_item_register_tool(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, float attackDamage, short durability, float miningSpeed, int category, const char* creativeGroup);
+// Register a weapon item. Sets isHandEquipped=true, maxStackSize=1, useAnimation=none automatically.
+LL_API bool ll_item_register_weapon(const char* identifier, short id, const char* descriptionId, const char* iconName, int iconFrame, float attackDamage, short durability, int category, const char* creativeGroup);
+// ── End Phase 1 ──
+
 LL_API void* ll_item_get_native(const char* identifier);
 LL_API void* ll_item_get_by_id(short id);
 LL_API bool ll_item_give_player(void* player, const char* identifier, int count, int slot);
