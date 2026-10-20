@@ -1,6 +1,6 @@
 # LeviLamroid Functions & API Master Reference
 
-> **LeviLamroid Version**: `1.0.3-beta` (Beta Testing Release)  
+> **LeviLamroid Version**: `1.0.4-beta` (Beta Testing Release)  
 > **Target Platform**: Minecraft Bedrock Edition (Android ARM64) on LeviLauncher  
 > **Maintainer**: **SpyGamingOG** (`spygamingog`)  
 > **Architecture**: Native C++ Mod Loader Runtime (Windows LeviLamina Source Parity + Android PreLoader Extensions)  
@@ -315,6 +315,110 @@ LeviLamroid probes the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to mat
 // Scene Factory Abstract Creation RVAs
 .sceneFactoryCreateUIScene          = 0x09AE87E8,
 .sceneFactoryCreateScreenAbstract   = 0x09AEB298
+```
+
+### 5.4 Verified Golden RVAs for 1.26.45.1 (Android ARM64)
+
+```cpp
+// UI Screen Tech Stack & Screen Controllers
+.getTechStackForScreen    = 0x0938B714,
+.startMenuOnOpen          = 0x09EBD95C,
+.startMenuTick            = 0x09EC05D8,
+
+// Menu Button Direct RVAs
+.playButton               = 0x09EF3D64,
+.settingsButton           = 0x09EF72C0,
+.realmsButton             = 0x09EF75F0,
+.dressingRoomButton       = 0x09EF8270,
+.marketplaceButton        = 0x09EF88A4,
+.menuExit                 = 0x0A15248C,
+
+// RenderDragon Graphics Pipeline
+.inGamePlayScreenRender              = 0x0974066C,
+.inGamePlayScreenRenderLevel         = 0x0974097C,
+.inGamePlayScreenRenderLevelPrep     = 0x0973E864,
+.gameRendererPrepareFrame            = 0x0ADD98DC,
+.levelRendererPlayerPreRenderUpdate  = 0x0AE27C64,
+.whiskerDisplayRender                = 0x0AE70680,
+.clientNetworkHandlerHandle          = 0x09ADC770,
+.loopbackPacketSenderSend            = 0x0C2E26EC,
+.loopbackPacketSenderSendToServer    = 0x0C2E26FC,
+.glClearGotRva                       = 0x124C9688,
+
+// 2D UI Drawing Methods
+.uiDrawImage              = 0x0AD845F0,
+.uiFlushImages            = 0x0AD859C4,
+.uiFillRectangle          = 0x0AD85F80,
+.uiDrawRectangle          = 0x0AD87350,
+.uiDrawText               = 0x0AD84430,
+.uiFlushText              = 0x0AD84530,
+.uiDrawNineslice          = 0x0AD855E0,
+.uiGetScreenContext       = 0x0AD87E3C,
+
+// Player & Gameplay
+.playerNormalTick         = 0x0F0B1680,
+.gameModeUseItem          = 0x0EF75F40,
+.gameModeUseItemOn        = 0x0EF72684,
+.clientInstanceUpdate     = 0x0943EC54,
+.localPlayerApplyTurnDelta = 0x0A6430D8,
+.tessellatorBegin         = 0x0A76E780,
+.blockSourceGetBlock      = 0x0F253C8C,
+.blockSourceGetBrightness = 0x0F253ECC,
+.commandAutocomplete     = 0x0E536964,
+
+// Audio Engine RVAs
+.soundEnginePlay          = 0x0B2848E0,
+.soundEnginePlayUI        = 0x0B284A5C,
+.soundEnginePlayAt        = 0x0B284EC4,
+.soundEngineStop          = 0x0B285000,
+
+// Item & Block Subsystems (Verified Entry RVAs)
+.itemRegistryRegisterItem               = 0x0F2AC5DC,
+.itemRegistryGetItem                    = 0x0F27CE28,
+.itemRegistryPostInitHook               = 0x0F2B41D8,
+.itemConstructor                        = 0x0F65A2D4,
+.itemSetIconInfo                        = 0x0F65D824,
+.itemVtable                             = 0x122E1F18,
+.itemStackVtable                        = 0x122DE850,
+.itemInstanceVtable                     = 0x122DB0F8,
+.itemStackCopyCtor                      = 0x0F63AB48,
+.vanillaItemsServerInitCreativeCallback = 0x0F6370A4,
+.vanillaItemsApplyHardcodedLegacyIcons  = 0x0F62065C,
+.creativeItemRegistryReset              = 0x0F2BF7BC,
+.creativeItemInitializerCtor            = 0x0F6D93AC,
+.creativeItemInitializerAddCreativeServer = 0x0F6D9374,
+.playerGetSelectedItem                  = 0x0F0C67A8,
+.containerGetItem                       = 0x0EF7AA90,
+.containerSetItem                       = 0x0EF7A3F4,
+.blockItemConstructor                   = 0x0F6E4D0C,
+.blockItemVtable                        = 0x122F10F0, // _ZTV9BlockItem
+.blockItemUseOn                         = 0x0F6E645C, // BlockItem::_useOn
+.blockSourceSetBlock                    = 0x0F25B948,
+.blockTypeRegistryGetInstance           = 0x0FB149D8,
+.blockTypeRegistryLookupByName          = 0x0FB33684,
+.blockTypeRegistryLookupByNameImpl      = 0x0FB337B0,
+.blockTypeRegistryGetDirectAccessBlocks = 0x0FB33BDC,
+.blockDefinitionGroupInitBlockTypeFromDefinition = 0x0FB13E64,
+.blockDefinitionGroupInitBlockFromDefinition     = 0x0FB1429C,
+.registerItemAndBlockDefinitions        = 0x0F2BF9F0,
+
+// ScreenController Property & Event Registration RVAs
+.screenControllerRegisterButtonEventHandler = 0x096D9D38,
+.screenControllerBindString             = 0x096DED60,
+.screenControllerBindStringForAnyCollection = 0x096DEF90,
+
+// VTable Slots
+.clientInstanceLocalPlayerSlot      = 32,
+.clientInstanceIsShowingMenuSlot    = 150,
+.levelGetBlockDefinitionGroupSlot   = 28,  // +0xE0
+.clientInstanceSceneFactorySlot     = 224,
+.clientInstanceSceneStackSlot       = 235,
+.sceneStackPushScreenSlot           = 26,  // +0xD0
+.sceneStackSchedulePopSlot          = 27,  // +0xD8
+
+// Scene Factory Abstract Creation RVAs
+.sceneFactoryCreateUIScene          = 0x0975E3B0,
+.sceneFactoryCreateScreenAbstract   = 0x097609CC
 ```
 
 ---

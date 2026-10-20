@@ -4,6 +4,72 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.4-beta] - 2026-10-20
+
+### Reverse Engineering & Multi-Version Golden RVAs (Bedrock 1.26.45.1 Android ARM64)
+- **100% Proven Mathematical Resolution via Itanium ABI RTTI & Relocations (`.rela.dyn`)**:
+  - Successfully mapped all 1.26.45.1 engine RVAs and vtable slots in `kOffsets_1_26_45_1` (`src/mcpe/Offsets.cpp` and `FUNCTIONS.md`):
+    - **RenderDragon & Graphics Pipeline**:
+      - `inGamePlayScreenRender`: `0x0974066C`
+      - `inGamePlayScreenRenderLevel`: `0x0974097C`
+      - `inGamePlayScreenRenderLevelPrep`: `0x0973E864`
+      - `gameRendererPrepareFrame`: `0x0ADD98DC`
+      - `levelRendererPlayerPreRenderUpdate`: `0x0AE27C64`
+      - `whiskerDisplayRender`: `0x0AE70680`
+      - `clientNetworkHandlerHandle`: `0x09ADC770`
+      - `loopbackPacketSenderSend`: `0x0C2E26EC`
+      - `loopbackPacketSenderSendToServer`: `0x0C2E26FC`
+      - `tessellatorBegin`: `0x0A76E780`
+    - **Client, Player & Gameplay Engine**:
+      - `clientInstanceUpdate`: `0x0943EC54` (Slot 25 in `ClientInstance` vtable)
+      - `clientInstanceRequestLeaveGame`: `0x0943C430`
+      - `localPlayerApplyTurnDelta`: `0x0A6430D8`
+      - `playerGetSelectedItem`: `0x0F0C67A8`
+      - `containerGetItem`: `0x0EF7AA90` (Slot 8 in `FillingContainer` vtable)
+      - `containerSetItem`: `0x0EF7A3F4` (Slot 13 in `FillingContainer` vtable)
+      - `gameModeUseItem`: `0x0EF75F40`
+      - `gameModeUseItemOn`: `0x0EF72684`
+      - `commandAutocomplete`: `0x0E536964`
+    - **World & Block Subsystems**:
+      - `blockSourceGetBlock`: `0x0F253C8C` (Slot 2 in `BlockSource` vtable `0x122B5FE0`)
+      - `blockSourceGetBrightness`: `0x0F253ECC` (Slot 5 in `BlockSource` vtable)
+      - `blockSourceSetBlock`: `0x0F25B948` (Slot 9 in `BlockSource` vtable)
+      - `blockTypeRegistryGetInstance`: `0x0FB149D8`
+      - `blockTypeRegistryLookupByName`: `0x0FB33684`
+      - `blockTypeRegistryLookupByNameImpl`: `0x0FB337B0`
+      - `blockTypeRegistryGetDirectAccessBlocks`: `0x0FB33BDC`
+      - `blockDefinitionGroupInitBlockTypeFromDefinition`: `0x0FB13E64`
+      - `blockDefinitionGroupInitBlockFromDefinition`: `0x0FB1429C`
+    - **Item & Creative Registry Subsystems**:
+      - `itemRegistryRegisterItem`: `0x0F2AC5DC`
+      - `itemRegistryGetItem`: `0x0F27CE28`
+      - `itemRegistryPostInitHook`: `0x0F2B41D8`
+      - `itemConstructor`: `0x0F65A2D4`
+      - `itemVtable`: `0x122E1F18` (`_ZTV4Item`)
+      - `itemStackVtable`: `0x122DE850` (`_ZTV9ItemStack`)
+      - `itemInstanceVtable`: `0x122DB0F8` (`_ZTV12ItemInstance`)
+      - `itemStackCopyCtor`: `0x0F63AB48`
+      - `vanillaItemsServerInitCreativeCallback`: `0x0F6370A4`
+      - `vanillaItemsApplyHardcodedLegacyIcons`: `0x0F62065C`
+      - `creativeItemRegistryReset`: `0x0F2BF7BC`
+      - `creativeItemInitializerCtor`: `0x0F6D93AC`
+      - `creativeItemInitializerAddCreativeServer`: `0x0F6D9374`
+      - `blockItemConstructor`: `0x0F6E4D0C`
+      - `blockItemVtable`: `0x122F10F0` (`_ZTV9BlockItem`)
+      - `blockItemUseOn`: `0x0F6E645C` (Slot 130 in `_ZTV9BlockItem`)
+      - `registerItemAndBlockDefinitions`: `0x0F2BF9F0`
+    - **Screen Controller & Scene Factory Subsystems**:
+      - `screenControllerRegisterButtonEventHandler`: `0x096D9D38`
+      - `screenControllerBindString`: `0x096DED60`
+      - `screenControllerBindStringForAnyCollection`: `0x096DEF90`
+      - `sceneFactoryCreateUIScene`: `0x0975E3B0`
+      - `sceneFactoryCreateScreenAbstract`: `0x097609CC`
+      - `clientInstanceSceneFactorySlot`: 224
+      - `clientInstanceSceneStackSlot`: 235
+      - `clientInstanceIsShowingMenuSlot`: 150
+      - `sceneStackPushScreenSlot`: 26
+      - `sceneStackSchedulePopSlot`: 27
+
 ## [1.0.3-beta] - 2026-10-20
 
 > **Reverse Engineering Status Notice**: Native C++ item & block component graphs (`FoodItemComponent`, `SpawnEggItem`, `BlockDefinitionGroup` state permutation schemas) are **NOT completely discovered** in Bedrock 1.26.x ARM64 and remain under active reverse engineering. Beta 1.0.3 implements safe hook interception and client command bridges to prevent crashes while deep component reversing progresses.
