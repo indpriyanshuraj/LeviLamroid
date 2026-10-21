@@ -167,6 +167,7 @@ struct EngineOffsets {
     uintptr_t itemStackVtable;
     uintptr_t itemInstanceVtable;
     uintptr_t itemStackCopyCtor;
+    uintptr_t vanillaItemsRegisterItems;
     uintptr_t vanillaItemsServerInitCreativeCallback;
     uintptr_t vanillaItemsApplyHardcodedLegacyIcons;
     uintptr_t creativeItemRegistryReset;

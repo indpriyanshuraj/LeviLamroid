@@ -239,6 +239,39 @@ static void registerSingleItem(void* registry, CustomItemDefinition& def) {
                  " §7(ID: ", def.id, ", Category: ", (int)category, ", MaxStack: ", (int)maxStack, ")");
 }
 
+static void* sOrigVanillaItemsRegisterItems = nullptr;
+
+static void hooked_vanillaItemsRegisterItems(
+    void* ctx,
+    void* itemRegistryRef,
+    void* baseGameVersion,
+    void* experiments
+) {
+    if (sOrigVanillaItemsRegisterItems) {
+        reinterpret_cast<void(*)(void*, void*, void*, void*)>(sOrigVanillaItemsRegisterItems)(
+            ctx, itemRegistryRef, baseGameVersion, experiments
+        );
+    }
+
+    auto& logger = ll::Logger::getInstance();
+    logger.info("§6[LeviLamroid] §aVanillaItems::registerItems hook fired! itemRegistryRef: ", itemRegistryRef);
+
+    if (itemRegistryRef && isPointerReadable(itemRegistryRef, sizeof(void*))) {
+        void* registry = *reinterpret_cast<void**>(itemRegistryRef);
+        if (registry && isPointerReadable(registry, 16)) {
+            std::lock_guard<std::mutex> lock(sItemMutex);
+            sItemRegistryInstance = registry;
+            if (std::find(sKnownRegistries.begin(), sKnownRegistries.end(), registry) == sKnownRegistries.end()) {
+                sKnownRegistries.push_back(registry);
+            }
+            logger.info("§6[LeviLamroid] §eRegistering ", sCustomItems.size(), " custom items during VanillaItems::registerItems window...");
+            for (auto& def : sCustomItems) {
+                registerSingleItem(registry, def);
+            }
+        }
+    }
+}
+
 static void hooked_itemRegistryPostInit(void* registry, void* a2) {
     if (sOrigItemRegistryPostInit) {
         reinterpret_cast<void(*)(void*, void*)>(sOrigItemRegistryPostInit)(registry, a2);
@@ -547,6 +580,12 @@ bool installItemHooks() {
     auto& logger = ll::Logger::getInstance();
     const auto& off = ::levilamroid::mcpe::getOffsets();
 
+    if (off.vanillaItemsRegisterItems) {
+        if (ll::memory::hookRva(off.vanillaItemsRegisterItems, (void*)&hooked_vanillaItemsRegisterItems, &sOrigVanillaItemsRegisterItems)) {
+            logger.info("Hooked VanillaItems::registerItems [RVA: 0x", std::hex, off.vanillaItemsRegisterItems, "]");
+        }
+    }
+
     if (off.itemRegistryPostInitHook) {
         if (ll::memory::hookRva(off.itemRegistryPostInitHook, (void*)&hooked_itemRegistryPostInit, &sOrigItemRegistryPostInit)) {
             logger.info("Hooked ItemRegistry Post-Init [RVA: 0x", std::hex, off.itemRegistryPostInitHook, "]");
@@ -716,6 +755,21 @@ LL_API bool ll_item_register_weapon(const char* identifier, short id, const char
     def.maxDamage = durability;
     def.attackDamage = attackDamage;
     return levilamroid::item::registerCustomItem(def);
+}
+
+LL_API void* ll_item_registry_get() {
+    return levilamroid::item::sItemRegistryInstance;
+}
+
+LL_API bool ll_item_register_shared(void* sharedItemPtr) {
+    if (!sharedItemPtr || !levilamroid::item::sItemRegistryInstance) return false;
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+    uintptr_t mcBase = levilamroid::item::getMcBase();
+    if (!mcBase || !off.itemRegistryRegisterItem) return false;
+    using RegItemFn = void (*)(void*, void*);
+    auto regItemFn = reinterpret_cast<RegItemFn>(mcBase + off.itemRegistryRegisterItem);
+    regItemFn(levilamroid::item::sItemRegistryInstance, sharedItemPtr);
+    return true;
 }
 
 // ── End Phase 1 ──
