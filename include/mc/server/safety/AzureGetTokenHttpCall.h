@@ -1,0 +1,78 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/threading/Async.h"
+
+// auto generated forward declare list
+// clang-format off
+class TaskGroup;
+namespace Bedrock::Services { struct AzureGetTokenHttpResponse; }
+namespace Bedrock::Services { struct AzureIdentityConfig; }
+namespace Bedrock::Services { struct ClientAssertion; }
+// clang-format on
+
+namespace Bedrock::Services {
+
+class AzureGetTokenHttpCall {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnkf4b0ce;
+    ::ll::UntypedStorage<8, 32> mUnkaca72c;
+    ::ll::UntypedStorage<8, 32> mUnk8b6eb9;
+    ::ll::UntypedStorage<8, 32> mUnked5c9b;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    AzureGetTokenHttpCall& operator=(AzureGetTokenHttpCall const&);
+    AzureGetTokenHttpCall(AzureGetTokenHttpCall const&);
+    AzureGetTokenHttpCall();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    virtual ~AzureGetTokenHttpCall();
+#else // LL_PLAT_C
+    virtual ~AzureGetTokenHttpCall() = default;
+#endif
+
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCNAPI AzureGetTokenHttpCall(
+        ::Bedrock::Services::AzureIdentityConfig const& config,
+        ::Bedrock::Services::ClientAssertion            clientAssertionAuth
+    );
+
+    MCNAPI ::Bedrock::Threading::Async<::Bedrock::Services::AzureGetTokenHttpResponse> send(::TaskGroup& taskGroup);
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCNAPI void* $ctor(
+        ::Bedrock::Services::AzureIdentityConfig const& config,
+        ::Bedrock::Services::ClientAssertion            clientAssertionAuth
+    );
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};
+
+} // namespace Bedrock::Services

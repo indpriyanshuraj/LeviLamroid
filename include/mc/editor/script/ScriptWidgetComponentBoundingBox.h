@@ -1,0 +1,125 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/WidgetComponentType.h"
+#include "mc/deps/script_core/runtime/scripting/Result.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/script/ScriptWidgetComponentBase.h"
+
+// auto generated forward declare list
+// clang-format off
+class Vec3;
+namespace Editor::Network { class WidgetComponentStateChangePayload; }
+namespace Editor::ScriptModule { class ScriptWidgetComponentErrorInvalidComponent; }
+namespace ScriptModuleMinecraft { class ScriptRGBA; }
+namespace Scripting { struct ClassBinding; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidgetComponentBoundingBox : public ::Editor::ScriptModule::ScriptWidgetComponentBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24>  mUnkbedf59;
+    ::ll::UntypedStorage<8, 24>  mUnk465970;
+    ::ll::UntypedStorage<1, 1>   mUnk528215;
+    ::ll::UntypedStorage<1, 1>   mUnkc088ec;
+    ::ll::UntypedStorage<1, 1>   mUnk9d6c75;
+    ::ll::UntypedStorage<4, 12>  mUnk7bd12f;
+    ::ll::UntypedStorage<4, 12>  mUnked29f8;
+    ::ll::UntypedStorage<4, 12>  mUnkf59555;
+    ::ll::UntypedStorage<8, 32>  mUnke160c5;
+    ::ll::UntypedStorage<8, 112> mUnke648d7;
+    ::ll::UntypedStorage<1, 1>   mUnk3f23b7;
+    ::ll::UntypedStorage<4, 4>   mUnk3c1e79;
+    ::ll::UntypedStorage<4, 32>  mUnk5df0be;
+    ::ll::UntypedStorage<4, 4>   mUnkdbb029;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptWidgetComponentBoundingBox& operator=(ScriptWidgetComponentBoundingBox const&);
+    ScriptWidgetComponentBoundingBox(ScriptWidgetComponentBoundingBox const&);
+    ScriptWidgetComponentBoundingBox();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ScriptWidgetComponentBoundingBox() /*override*/ = default;
+
+    virtual ::Editor::Widgets::WidgetComponentType const getComponentType() const /*override*/;
+
+    virtual void
+    _handleWidgetComponentStateChange(::Editor::Network::WidgetComponentStateChangePayload const& payload) /*override*/;
+
+    virtual void _onOwnerPositionUpdate() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void _calculateOrientationTransformations();
+
+    MCNAPI ::Scripting::
+        Result<::ScriptModuleMinecraft::ScriptRGBA, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+        _getHullColor() const;
+
+    MCNAPI ::Scripting::Result<::Vec3, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _getNormalizedOrigin() const;
+
+    MCNAPI ::Scripting::Result<::Vec3, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _getOffset() const;
+
+    MCNAPI ::Scripting::
+        Result<::ScriptModuleMinecraft::ScriptRGBA, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+        _getOutlineColor() const;
+
+    MCNAPI ::Scripting::Result<bool, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _getShowTerminator() const;
+
+    MCNAPI ::Scripting::Result<::Vec3, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _getSize() const;
+
+    MCNAPI ::Scripting::Result<bool, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _getVisibleHull() const;
+
+    MCNAPI ::Scripting::Result<void, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _setHullColor(::ScriptModuleMinecraft::ScriptRGBA const& color);
+
+    MCNAPI ::Scripting::Result_deprecated<void> _setOffset(::Vec3 const& offset);
+
+    MCNAPI ::Scripting::Result<void, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _setOutlineColor(::ScriptModuleMinecraft::ScriptRGBA const& color);
+
+    MCNAPI ::Scripting::Result<void, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _setShowTerminator(bool showTerminator);
+
+    MCNAPI ::Scripting::Result_deprecated<void> _setSize(::Vec3 const& size);
+
+    MCNAPI ::Scripting::Result<void, ::Editor::ScriptModule::ScriptWidgetComponentErrorInvalidComponent>
+    _setVisibleHull(bool visible);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::ClassBinding bindScript();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::Editor::Widgets::WidgetComponentType const $getComponentType() const;
+
+    MCNAPI void $_handleWidgetComponentStateChange(::Editor::Network::WidgetComponentStateChangePayload const& payload);
+
+    MCNAPI void $_onOwnerPositionUpdate();
+
+
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

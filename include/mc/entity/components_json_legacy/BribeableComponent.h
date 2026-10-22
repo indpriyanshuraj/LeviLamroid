@@ -1,0 +1,37 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BribeableDefinition;
+class CompoundTag;
+class DataLoadHelper;
+class Interaction;
+class ItemStack;
+class Player;
+// clang-format on
+
+class BribeableComponent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::BribeableDefinition const*> mStaticData;
+    ::ll::TypedStorage<4, 4, int>                          mBribeTimer;
+    ::ll::TypedStorage<4, 4, int>                          mBribeCooldown;
+    ::ll::TypedStorage<4, 4, int>                          mBribeCooldownTime;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI bool _canBribe(::ItemStack const& item);
+
+    MCAPI bool clientBribeCheck(::Actor& owner);
+
+    MCAPI ::Interaction getInteraction(::Actor& owner, ::Player& player);
+
+    MCAPI void readAdditionalSaveData(::Actor& owner, ::CompoundTag const& tag, ::DataLoadHelper& dataLoadHelper);
+    // NOLINTEND
+};

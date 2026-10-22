@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/inventory/simulation/ContainerScreenValidation.h"
+
+// auto generated forward declare list
+// clang-format off
+struct ContainerValidationResult;
+// clang-format on
+
+class ContainerScreenValidationActivate : public ::ContainerScreenValidation {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::ContainerValidationResult tryActivate() /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::ContainerValidationResult $tryActivate();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

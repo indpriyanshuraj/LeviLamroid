@@ -12,7 +12,9 @@ public:
     ll::Logger  mLogger{"Mod"};
 
     NativeMod() = default;
-    explicit NativeMod(std::string name) : mName(std::move(name)), mLogger(mName) {}
+    explicit NativeMod(const char* name) : mName(name ? name : ""), mLogger(mName) {}
+    explicit NativeMod(std::string_view name) : mName(name), mLogger(mName) {}
+    explicit NativeMod(const std::string& name) : mName(name), mLogger(mName) {}
     virtual ~NativeMod() = default;
 
     [[nodiscard]] ll::Logger& getLogger() noexcept { return mLogger; }

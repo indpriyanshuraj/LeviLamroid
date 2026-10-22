@@ -1,0 +1,53 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/platform/threading/LockGuard.h"
+
+// auto generated forward declare list
+// clang-format off
+class LevelStorageEventing;
+// clang-format on
+
+class DBStoragePerformanceTelemetry {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 80> mUnk98c37d;
+    ::ll::UntypedStorage<8, 80> mUnke9822b;
+    ::ll::UntypedStorage<8, 8>  mUnk932436;
+    ::ll::UntypedStorage<8, 24> mUnkeb0085;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DBStoragePerformanceTelemetry& operator=(DBStoragePerformanceTelemetry const&);
+    DBStoragePerformanceTelemetry(DBStoragePerformanceTelemetry const&);
+    DBStoragePerformanceTelemetry();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit DBStoragePerformanceTelemetry(::Bedrock::NonOwnerPointer<::LevelStorageEventing> eventing);
+
+    MCNAPI void _fireEventLevelDBPerformanceData(::Bedrock::Threading::LockGuard<::std::mutex>&, bool force);
+
+    MCNAPI void fireEventLevelDBPerformanceData(bool force);
+
+    MCNAPI void recordDeleteData();
+
+    MCNAPI void recordLookUpData(::std::chrono::nanoseconds lookUpTime);
+
+    MCNAPI void recordReadData(bool successfulRead, uint64 bytesRead, ::std::chrono::nanoseconds readTime);
+
+    MCNAPI void recordWriteData(uint64 numWrites, uint64 bytesWritten, ::std::chrono::nanoseconds writeTime);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Bedrock::NonOwnerPointer<::LevelStorageEventing> eventing);
+    // NOLINTEND
+};

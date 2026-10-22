@@ -1,0 +1,90 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/PathBuffer.h"
+#include "mc/deps/core/threading/Async.h"
+
+// auto generated forward declare list
+// clang-format off
+class Scheduler;
+namespace Bedrock { class SessionInfo; }
+namespace Bedrock { class WorkerPoolHandleInterface; }
+// clang-format on
+
+namespace Bedrock {
+
+class CrashFileProcessor {
+public:
+    // CrashFileProcessor inner types declare
+    // clang-format off
+    class CrashHandler;
+    // clang-format on
+
+    // CrashFileProcessor inner types define
+    enum class ProcessMode : int {
+        Synchronous  = 0,
+        Asynchronous = 1,
+    };
+
+    class CrashHandler {
+    public:
+        // CrashHandler inner types declare
+        // clang-format off
+        struct StatusUpdate;
+        // clang-format on
+
+        // CrashHandler inner types define
+        struct StatusUpdate {
+        public:
+            // member variables
+            // NOLINTBEGIN
+            ::ll::UntypedStorage<8, 32> mUnk70a7bc;
+            ::ll::UntypedStorage<8, 32> mUnka1d85a;
+            ::ll::UntypedStorage<8, 32> mUnk5990f6;
+            // NOLINTEND
+
+        public:
+            // prevent constructor by default
+            StatusUpdate& operator=(StatusUpdate const&);
+            StatusUpdate(StatusUpdate const&);
+            StatusUpdate();
+        };
+
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual ~CrashHandler() = default;
+
+        virtual ::std::shared_ptr<::Bedrock::SessionInfo>
+        findCrashedSessionInfo(::std::string_view sessionId) const = 0;
+
+        virtual void
+        notifyCrashUploadStatus(::Bedrock::CrashFileProcessor::CrashHandler::StatusUpdate const& status) = 0;
+
+        virtual void notifyDoneWithSession(::std::string_view sessionId) = 0;
+        // NOLINTEND
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~CrashFileProcessor() = default;
+
+    virtual bool
+    getSessionIDFromFile(::std::string& outSessionID, ::Core::PathBuffer<::std::string> const& filePath) const = 0;
+
+    virtual ::Bedrock::CrashFileProcessor::ProcessMode
+    beginCrashProcessing(uint64, ::std::shared_ptr<::Bedrock::WorkerPoolHandleInterface>, ::Scheduler&) = 0;
+
+    virtual ::Bedrock::Threading::Async<bool> processCrash(
+        ::gsl::not_null<::std::shared_ptr<::Bedrock::CrashFileProcessor::CrashHandler>> const& handler,
+        ::Core::PathBuffer<::std::string> const&                                               filePath
+    ) = 0;
+
+    virtual void doneCrashProcessing() = 0;
+    // NOLINTEND
+};
+
+} // namespace Bedrock

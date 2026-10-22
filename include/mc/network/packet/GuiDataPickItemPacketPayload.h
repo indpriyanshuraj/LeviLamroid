@@ -1,0 +1,13 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct GuiDataPickItemPacketPayload {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 32, ::std::string> mItemName;
+    ::ll::TypedStorage<8, 32, ::std::string> mItemEffectName;
+    ::ll::TypedStorage<4, 4, int>            mSlot;
+    // NOLINTEND
+};

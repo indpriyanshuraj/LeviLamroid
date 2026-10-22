@@ -1,0 +1,62 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class HashedString;
+class RenderControllerInfo;
+class ResourceLoadManager;
+class ResourcePackManager;
+// clang-format on
+
+class RenderControllerGroup : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnkb8423f;
+    ::ll::UntypedStorage<8, 64> mUnkfbd6c7;
+    ::ll::UntypedStorage<8, 80> mUnk4cb30e;
+    ::ll::UntypedStorage<8, 24> mUnk5d2735;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RenderControllerGroup& operator=(RenderControllerGroup const&);
+    RenderControllerGroup(RenderControllerGroup const&);
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~RenderControllerGroup() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI RenderControllerGroup();
+
+    MCNAPI ::std::shared_ptr<::RenderControllerInfo> getRenderControllerInfo(::HashedString const& name);
+
+    MCNAPI void loadRenderControllers(
+        ::ResourcePackManager&                               resourcePackManager,
+        ::Bedrock::NotNullNonOwnerPtr<::ResourceLoadManager> resourceLoadManager
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

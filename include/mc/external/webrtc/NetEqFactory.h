@@ -1,0 +1,32 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/NetEq.h"
+#include "mc/external/webrtc/scoped_refptr.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class AudioDecoderFactory; }
+namespace webrtc { class Environment; }
+namespace webrtc { class NetEq; }
+// clang-format on
+
+namespace webrtc {
+
+class NetEqFactory {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~NetEqFactory() = default;
+
+    virtual ::std::unique_ptr<::webrtc::NetEq> Create(
+        ::webrtc::Environment const&,
+        ::webrtc::NetEq::Config const&,
+        ::webrtc::scoped_refptr<::webrtc::AudioDecoderFactory>
+    ) const = 0;
+    // NOLINTEND
+};
+
+} // namespace webrtc

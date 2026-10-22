@@ -1,0 +1,84 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Container;
+class ContainerScreenContext;
+class ItemStackBase;
+// clang-format on
+
+class ContainerValidationBase {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ContainerValidationBase() = default;
+
+    virtual bool isValidSlotForContainer(
+        ::ContainerScreenContext const& screenContext,
+        ::Container const&              container,
+        int const                       slot
+    ) const;
+
+    virtual bool isItemAllowedInSlot(
+        ::ContainerScreenContext const& screenContext,
+        int const                       slot,
+        ::ItemStackBase const&          item,
+        int const                       amount,
+        bool
+    ) const;
+
+    virtual int getAvailableSetCount(int const slot, ::ItemStackBase const& item) const;
+
+    virtual int
+    getAllowedAddCount(::ContainerScreenContext const& screenContext, ::ItemStackBase const& itemInSlot) const;
+
+    virtual bool
+    isItemAllowedToRemove(::ContainerScreenContext const& screenContext, ::ItemStackBase const& item) const;
+
+    virtual bool canItemMoveToContainer(::ItemStackBase const& item) const;
+
+    virtual bool canDestroy(::ContainerScreenContext const& screenContext) const;
+
+    virtual int getContainerOffset(::ContainerScreenContext const& screenContext) const;
+
+    virtual int getContainerSize(::ContainerScreenContext const& screenContext, ::Container const& container) const;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $isValidSlotForContainer(
+        ::ContainerScreenContext const& screenContext,
+        ::Container const&              container,
+        int const                       slot
+    ) const;
+
+    MCFOLD bool $isItemAllowedInSlot(
+        ::ContainerScreenContext const& screenContext,
+        int const                       slot,
+        ::ItemStackBase const&          item,
+        int const                       amount,
+        bool
+    ) const;
+
+    MCAPI int $getAvailableSetCount(int const slot, ::ItemStackBase const& item) const;
+
+    MCAPI int
+    $getAllowedAddCount(::ContainerScreenContext const& screenContext, ::ItemStackBase const& itemInSlot) const;
+
+    MCFOLD bool
+    $isItemAllowedToRemove(::ContainerScreenContext const& screenContext, ::ItemStackBase const& item) const;
+
+    MCAPI bool $canItemMoveToContainer(::ItemStackBase const& item) const;
+
+    MCAPI bool $canDestroy(::ContainerScreenContext const& screenContext) const;
+
+    MCFOLD int $getContainerOffset(::ContainerScreenContext const& screenContext) const;
+
+    MCFOLD int $getContainerSize(::ContainerScreenContext const& screenContext, ::Container const& container) const;
+
+
+    // NOLINTEND
+};

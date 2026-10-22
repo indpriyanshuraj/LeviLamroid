@@ -1,0 +1,45 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/scripting/modules/minecraft/components/GenericScriptActorComponentFactory.h"
+
+// auto generated forward declare list
+// clang-format off
+class WeakEntityRef;
+namespace ScriptModuleMinecraft { class ScriptActorComponent; }
+namespace ScriptModuleMinecraft { class ScriptRidingComponent; }
+namespace Scripting { class WeakLifetimeScope; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+class ScriptRidingComponentFactory
+: public ::ScriptModuleMinecraft::GenericScriptActorComponentFactory<::ScriptModuleMinecraft::ScriptRidingComponent> {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptActorComponent> createComponent(
+        ::WeakEntityRef                       entity,
+        ::Scripting::WeakLifetimeScope const& scope,
+        ::std::string const&                  id
+    ) /*override*/;
+
+    virtual bool hasComponent(::WeakEntityRef entity) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptActorComponent>
+    $createComponent(::WeakEntityRef entity, ::Scripting::WeakLifetimeScope const& scope, ::std::string const& id);
+
+    MCAPI bool $hasComponent(::WeakEntityRef entity) const;
+
+
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

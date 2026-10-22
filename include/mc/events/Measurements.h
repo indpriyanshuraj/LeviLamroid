@@ -1,0 +1,21 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Social::Events {
+
+class Measurements {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnke4ba1d;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    Measurements& operator=(Measurements const&);
+    Measurements(Measurements const&);
+    Measurements();
+};
+
+} // namespace Social::Events

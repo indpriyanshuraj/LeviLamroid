@@ -1,0 +1,35 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/CopperBlock.h"
+#include "mc/world/level/block/LightningRodBlock.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class BlockSource;
+// clang-format on
+
+class CopperLightningRodBlock : public ::CopperBlock<::LightningRodBlock> {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void onLightningHit(::BlockSource& region, ::BlockPos const& pos) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $onLightningHit(::BlockSource& region, ::BlockPos const& pos) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

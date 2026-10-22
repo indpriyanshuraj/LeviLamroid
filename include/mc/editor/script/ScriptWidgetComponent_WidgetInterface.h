@@ -1,0 +1,23 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor::Network { class WidgetComponentStateChangePayload; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidgetComponent_WidgetInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void
+    _handleWidgetComponentStateChange(::Editor::Network::WidgetComponentStateChangePayload const& payload) = 0;
+
+    virtual void _onOwnerPositionUpdate() = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

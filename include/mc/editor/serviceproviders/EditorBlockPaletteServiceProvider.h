@@ -1,0 +1,77 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockType;
+class HashedString;
+namespace Bedrock::PubSub { class Subscription; }
+namespace Editor { struct EditorBlockPalette; }
+namespace Editor { struct EditorBlockPaletteEventActivePaletteChanged; }
+namespace Editor { struct EditorBlockPaletteEventItemUpdated; }
+namespace Editor { struct EditorBlockPaletteEventPaletteRemoved; }
+namespace Editor { struct EditorBlockPaletteEventPaletteUpdated; }
+namespace Editor { struct EditorBlockPaletteEventSelectedItemIndexChanged; }
+namespace Editor { struct ProbabilityBlockPaletteItem; }
+namespace Editor { struct SimpleBlockPaletteItem; }
+// clang-format on
+
+namespace Editor::Services {
+
+class EditorBlockPaletteServiceProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorBlockPaletteServiceProvider() = default;
+
+    virtual ::std::vector<::std::shared_ptr<::Editor::EditorBlockPalette>> const& getPaletteList() const = 0;
+
+    virtual ::Editor::EditorBlockPalette const& getActivePalette() const = 0;
+
+    virtual void addOrReplacePalette(::Editor::EditorBlockPalette const& palette) = 0;
+
+    virtual ::Scripting::Result_deprecated<void> removePalette(::HashedString const& paletteId) = 0;
+
+    virtual ::Scripting::Result_deprecated<void> setActivePalette(::HashedString const& paletteId) = 0;
+
+    virtual ::Scripting::Result_deprecated<void> setSelectedPaletteItemIndex(int index) = 0;
+
+    virtual int getSelectedPaletteItemIndex() const = 0;
+
+    virtual ::Scripting::Result_deprecated<void> setPaletteItem(
+        ::HashedString const&                                                                          paletteId,
+        int                                                                                            index,
+        ::std::variant<::Editor::SimpleBlockPaletteItem, ::Editor::ProbabilityBlockPaletteItem> const& item
+    ) = 0;
+
+    virtual ::Scripting::Result_deprecated<void> pickBlock(::Block const& pickedBlock) = 0;
+
+    virtual ::Scripting::Result_deprecated<::BlockType const*> getSelectedBlockType() const = 0;
+
+    virtual ::std::vector<::std::string> getPaletteIdList() const = 0;
+
+    virtual ::std::optional<::Editor::EditorBlockPalette> getPalette(::HashedString const& paletteId) const = 0;
+
+    virtual ::Scripting::Result_deprecated<
+        ::std::variant<::Editor::SimpleBlockPaletteItem, ::Editor::ProbabilityBlockPaletteItem>>
+    getPaletteItem(::HashedString const& paletteId, int index) const = 0;
+
+    virtual void forEachBlockType(::std::function<void(::BlockType const&, bool)> callback) const = 0;
+
+    virtual ::Bedrock::PubSub::Subscription registerEventListener(
+        ::std::function<void(::std::variant<
+                             ::Editor::EditorBlockPaletteEventItemUpdated,
+                             ::Editor::EditorBlockPaletteEventSelectedItemIndexChanged,
+                             ::Editor::EditorBlockPaletteEventActivePaletteChanged,
+                             ::Editor::EditorBlockPaletteEventPaletteUpdated,
+                             ::Editor::EditorBlockPaletteEventPaletteRemoved> const&)> callback
+    ) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

@@ -1,0 +1,99 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/MediaType.h"
+#include "mc/external/webrtc/RtpSenderBase.h"
+#include "mc/external/webrtc/scoped_refptr.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class DtmfSenderInterface; }
+namespace webrtc { class Environment; }
+namespace webrtc { class RTCError; }
+namespace webrtc { class Thread; }
+// clang-format on
+
+namespace webrtc {
+
+class VideoRtpSender : public ::webrtc::RtpSenderBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4> mUnk18b2f8;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    VideoRtpSender& operator=(VideoRtpSender const&);
+    VideoRtpSender(VideoRtpSender const&);
+    VideoRtpSender();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~VideoRtpSender() /*override*/ = default;
+
+    virtual void OnChanged() /*override*/;
+
+    virtual ::webrtc::MediaType media_type() const /*override*/;
+
+    virtual ::std::string track_kind() const /*override*/;
+
+    virtual ::webrtc::scoped_refptr<::webrtc::DtmfSenderInterface> GetDtmfSender() const /*override*/;
+
+    virtual ::webrtc::RTCError GenerateKeyFrame(::std::vector<::std::string> const& rids) /*override*/;
+
+    virtual void SetSend() /*override*/;
+
+    virtual void ClearSend() /*override*/;
+
+    virtual void AttachTrack() /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::webrtc::scoped_refptr<::webrtc::VideoRtpSender> Create(
+        ::webrtc::Environment const&                 env,
+        ::webrtc::Thread*                            worker_thread,
+        ::std::string const&                         id,
+        ::webrtc::RtpSenderBase::SetStreamsObserver* set_streams_observer
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $OnChanged();
+
+    MCNAPI ::webrtc::MediaType $media_type() const;
+
+    MCNAPI ::std::string $track_kind() const;
+
+    MCNAPI ::webrtc::scoped_refptr<::webrtc::DtmfSenderInterface> $GetDtmfSender() const;
+
+    MCNAPI ::webrtc::RTCError $GenerateKeyFrame(::std::vector<::std::string> const& rids);
+
+    MCNAPI void $SetSend();
+
+    MCNAPI void $ClearSend();
+
+    MCNAPI void $AttachTrack();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftableForFrameTransformerHost();
+
+    MCNAPI static void** $vftableForRefCountInterface();
+
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace webrtc

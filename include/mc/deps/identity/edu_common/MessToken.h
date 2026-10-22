@@ -1,0 +1,59 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class WebToken;
+namespace Json { class Value; }
+// clang-format on
+
+struct MessToken {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk325db6;
+    ::ll::UntypedStorage<8, 32> mUnkcdb8ea;
+    ::ll::UntypedStorage<8, 32> mUnkcc6428;
+    ::ll::UntypedStorage<8, 32> mUnk7a5ce8;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    MessToken& operator=(MessToken const&);
+    MessToken();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI MessToken(::MessToken const&);
+
+    MCNAPI ::MessToken& operator=(::MessToken&&);
+
+    MCNAPI ::std::string toString() const;
+
+    MCNAPI ~MessToken();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::std::optional<::MessToken>
+    fromString(::std::string const& tokenString, ::std::vector<::std::string> const& messPublicKeys);
+
+    MCNAPI static ::std::optional<::std::pair<::Json::Value, ::MessToken>>
+    unpackChainIfTrusted(::WebToken const& selfSignedToken, ::std::vector<::std::string> const& messPublicKeys);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::MessToken const&);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};

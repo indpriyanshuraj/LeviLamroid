@@ -1,0 +1,18 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct PackStorage {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnk5dcf1f;
+    ::ll::UntypedStorage<8, 8>  mUnk9cc675;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackStorage& operator=(PackStorage const&);
+    PackStorage(PackStorage const&);
+    PackStorage();
+};

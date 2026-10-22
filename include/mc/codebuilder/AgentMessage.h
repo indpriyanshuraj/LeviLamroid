@@ -1,0 +1,23 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace CodeBuilder {
+
+struct AgentMessage {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>  mUnk5dde42;
+    ::ll::UntypedStorage<8, 32> mUnkbbe0fa;
+    ::ll::UntypedStorage<8, 16> mUnkb32a4b;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    AgentMessage& operator=(AgentMessage const&);
+    AgentMessage(AgentMessage const&);
+    AgentMessage();
+};
+
+} // namespace CodeBuilder

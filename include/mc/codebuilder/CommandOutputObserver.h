@@ -1,0 +1,26 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/Observer.h"
+
+// auto generated forward declare list
+// clang-format off
+class CommandOrigin;
+class CommandOutput;
+namespace Core { class SingleThreadedLock; }
+// clang-format on
+
+namespace CodeBuilder {
+
+class CommandOutputObserver
+: public ::Core::Observer<::CodeBuilder::CommandOutputObserver, ::Core::SingleThreadedLock> {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void onCommand(::CommandOrigin const& origin, ::CommandOutput const& output) = 0;
+    // NOLINTEND
+};
+
+} // namespace CodeBuilder

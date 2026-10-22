@@ -1,0 +1,79 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/AudioDeviceModule.h"
+#include "mc/external/webrtc/Call.h"
+#include "mc/external/webrtc/DataChannelInterface.h"
+#include "mc/external/webrtc/PeerConnectionInterface.h"
+#include "mc/external/webrtc/PeerConnectionSdpMethods.h"
+#include "mc/external/webrtc/RtpTransceiverProxyWithInternal.h"
+#include "mc/external/webrtc/SSLRole.h"
+#include "mc/external/webrtc/scoped_refptr.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class CandidateStats; }
+namespace webrtc { class RTCCertificate; }
+namespace webrtc { class RtpTransceiver; }
+namespace webrtc { class SSLCertChain; }
+namespace webrtc { class Thread; }
+namespace webrtc { struct DataChannelStats; }
+namespace webrtc { struct TransportStats; }
+// clang-format on
+
+namespace webrtc {
+
+class PeerConnectionInternal : public ::webrtc::PeerConnectionInterface, public ::webrtc::PeerConnectionSdpMethods {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::webrtc::Thread* network_thread() const = 0;
+
+    virtual ::webrtc::Thread* worker_thread() const = 0;
+
+    virtual bool initial_offerer() const = 0;
+
+    virtual ::std::vector<::webrtc::scoped_refptr<::webrtc::RtpTransceiverProxyWithInternal<::webrtc::RtpTransceiver>>>
+    GetTransceiversInternal() const = 0;
+
+    virtual ::std::vector<::webrtc::DataChannelStats> GetDataChannelStats() const;
+
+    virtual ::std::optional<::std::string> sctp_transport_name() const = 0;
+
+    virtual ::std::vector<::webrtc::CandidateStats> GetPooledCandidateStats() const = 0;
+
+    virtual ::std::map<::std::string, ::webrtc::TransportStats>
+    GetTransportStatsByNames(::std::set<::std::string> const& transport_names) = 0;
+
+    virtual ::webrtc::Call::Stats GetCallStats() = 0;
+
+    virtual ::std::optional<::webrtc::AudioDeviceModule::Stats> GetAudioDeviceStats() = 0;
+
+    virtual bool GetLocalCertificate(
+        ::std::string const&                               transport_name,
+        ::webrtc::scoped_refptr<::webrtc::RTCCertificate>* certificate
+    ) = 0;
+
+    virtual ::std::unique_ptr<::webrtc::SSLCertChain> GetRemoteSSLCertChain(::std::string const& transport_name) = 0;
+
+    virtual bool IceRestartPending(::std::string const& content_name) const = 0;
+
+    virtual bool GetSslRole(::std::string const& content_name, ::webrtc::SSLRole* role) = 0;
+
+    virtual void NoteDataAddedEvent();
+
+    virtual void OnSctpDataChannelStateChanged(int channel_id, ::webrtc::DataChannelInterface::DataState state);
+
+    virtual ~PeerConnectionInternal() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace webrtc

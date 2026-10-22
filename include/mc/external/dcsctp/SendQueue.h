@@ -1,0 +1,102 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/StrongAlias.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace dcsctp { class OutgoingMessageIdTag; }
+namespace dcsctp { class StreamIDTag; }
+namespace dcsctp { struct Data; }
+namespace webrtc { class Timestamp; }
+// clang-format on
+
+namespace dcsctp {
+
+class SendQueue {
+public:
+    // SendQueue inner types declare
+    // clang-format off
+    struct DataToSend;
+    // clang-format on
+
+    // SendQueue inner types define
+    struct DataToSend {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4>  mUnk9d97ac;
+        ::ll::UntypedStorage<8, 48> mUnkced954;
+        ::ll::UntypedStorage<2, 2>  mUnkf9616a;
+        ::ll::UntypedStorage<8, 8>  mUnk3cd7e5;
+        ::ll::UntypedStorage<8, 8>  mUnkec05f7;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        DataToSend& operator=(DataToSend const&);
+        DataToSend(DataToSend const&);
+        DataToSend();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI DataToSend(::webrtc::StrongAlias<::dcsctp::OutgoingMessageIdTag, uint> message_id, ::dcsctp::Data data);
+
+        MCNAPI ~DataToSend();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCNAPI void* $ctor(::webrtc::StrongAlias<::dcsctp::OutgoingMessageIdTag, uint> message_id, ::dcsctp::Data data);
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~SendQueue() = default;
+
+    virtual ::std::optional<::dcsctp::SendQueue::DataToSend> Produce(::webrtc::Timestamp now, uint64 max_size) = 0;
+
+    virtual bool Discard(
+        ::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort>        stream_id,
+        ::webrtc::StrongAlias<::dcsctp::OutgoingMessageIdTag, uint> message_id
+    ) = 0;
+
+    virtual void PrepareResetStream(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id) = 0;
+
+    virtual bool HasStreamsReadyToBeReset() const = 0;
+
+    virtual ::std::vector<::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort>> GetStreamsReadyToBeReset() = 0;
+
+    virtual void CommitResetStreams() = 0;
+
+    virtual void RollbackResetStreams() = 0;
+
+    virtual void Reset() = 0;
+
+    virtual uint64 buffered_amount(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id) const = 0;
+
+    virtual uint64 total_buffered_amount() const = 0;
+
+    virtual uint64
+    buffered_amount_low_threshold(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id) const = 0;
+
+    virtual void
+    SetBufferedAmountLowThreshold(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id, uint64 bytes) = 0;
+
+    virtual void EnableMessageInterleaving(bool enabled) = 0;
+    // NOLINTEND
+};
+
+} // namespace dcsctp

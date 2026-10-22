@@ -29,13 +29,15 @@ void ResourceManager::mountDirectory(const std::filesystem::path& dir) {
             mAssetCache[rel] = entry.path();
 
             // Also index stripped relative paths for resource pack subfolders
-            auto texPos = rel.find("textures/");
-            if (texPos != std::string::npos && texPos > 0) {
-                mAssetCache[rel.substr(texPos)] = entry.path();
-            }
-            auto langPos = rel.find("texts/");
-            if (langPos != std::string::npos && langPos > 0) {
-                mAssetCache[rel.substr(langPos)] = entry.path();
+            static const char* sPrefixes[] = {
+                "textures/", "texts/", "models/", "ui/", "materials/", "particles/",
+                "sounds/", "animations/", "render_controllers/", "attachables/", "entity/", "font/"
+            };
+            for (const char* pfx : sPrefixes) {
+                auto pos = rel.find(pfx);
+                if (pos != std::string::npos && pos > 0) {
+                    mAssetCache[rel.substr(pos)] = entry.path();
+                }
             }
 
             auto filename = entry.path().filename().string();
@@ -248,6 +250,9 @@ bool ResourceManager::patchItemTextureJson(std::string& inOutJson) const {
                 if (!root["texture_data"].contains(stem)) {
                     root["texture_data"][stem] = texEntry;
                 }
+                if (!root["texture_data"].contains("farmersdelight:" + stem)) {
+                    root["texture_data"]["farmersdelight:" + stem] = texEntry;
+                }
                 if (!root["texture_data"].contains("levitest:" + stem)) {
                     root["texture_data"]["levitest:" + stem] = texEntry;
                 }
@@ -324,6 +329,9 @@ bool ResourceManager::patchTerrainTextureJson(std::string& inOutJson) const {
                 if (!root["texture_data"].contains(stem)) {
                     root["texture_data"][stem] = texEntry;
                 }
+                if (!root["texture_data"].contains("farmersdelight:" + stem)) {
+                    root["texture_data"]["farmersdelight:" + stem] = texEntry;
+                }
                 if (!root["texture_data"].contains("levitest:" + stem)) {
                     root["texture_data"]["levitest:" + stem] = texEntry;
                 }
@@ -392,6 +400,9 @@ bool ResourceManager::patchBlocksJson(std::string& inOutJson) const {
 
                 if (!root.contains(stem)) {
                     root[stem] = blockEntry;
+                }
+                if (!root.contains("farmersdelight:" + stem)) {
+                    root["farmersdelight:" + stem] = blockEntry;
                 }
                 if (!root.contains("levitest:" + stem)) {
                     root["levitest:" + stem] = blockEntry;

@@ -1,0 +1,28 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace mce { class ConstantBufferContainer; }
+// clang-format on
+
+namespace mce {
+
+class ConstantBufferConstantsBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::mce::ConstantBufferContainer*> constantBuffer;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ConstantBufferConstantsBase() = default;
+
+    virtual void init() = 0;
+    // NOLINTEND
+};
+
+} // namespace mce

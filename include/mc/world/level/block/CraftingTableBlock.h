@@ -1,0 +1,44 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/BlockType.h"
+
+// auto generated forward declare list
+// clang-format off
+class Experiments;
+namespace BlockEvents { class BlockPlayerInteractEvent; }
+// clang-format on
+
+class CraftingTableBlock : public ::BlockType {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool isCraftingBlock() const /*override*/;
+
+    virtual void _addHardCodedBlockComponents(::Experiments const& experiments) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void use(::BlockEvents::BlockPlayerInteractEvent& eventData) const;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $isCraftingBlock() const;
+
+    MCFOLD void $_addHardCodedBlockComponents(::Experiments const& experiments);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

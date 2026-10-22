@@ -1,0 +1,46 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ActorDamageSource.h"
+#include "mc/world/level/BlockPos.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Block;
+// clang-format on
+
+class ActorDamageByBlockSource : public ::ActorDamageSource {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Block const*>    mBlock;
+    ::ll::TypedStorage<4, 12, ::BlockPos const> mBlockPos;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool isBlockSource() const /*override*/;
+
+    virtual ::std::unique_ptr<::ActorDamageSource> clone() const /*override*/;
+
+    virtual ::std::pair<::std::string, ::std::vector<::std::string>>
+    _getDeathMessageInternal(::std::string const& deadName, ::Actor* dead) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $isBlockSource() const;
+
+    MCAPI ::std::unique_ptr<::ActorDamageSource> $clone() const;
+
+    MCAPI ::std::pair<::std::string, ::std::vector<::std::string>>
+    $_getDeathMessageInternal(::std::string const& deadName, ::Actor* dead) const;
+
+
+    // NOLINTEND
+};

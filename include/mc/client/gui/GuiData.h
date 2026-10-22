@@ -1,0 +1,362 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/util/HudElement.h"
+
+// auto generated inclusion list
+#include "mc/client/game/CoordinateCaptureType.h"
+#include "mc/client/game/IConfigListener.h"
+#include "mc/client/gui/GuiMessage.h"
+#include "mc/client/gui/ScreenSizeData.h"
+#include "mc/client/gui/SoundDirection.h"
+#include "mc/client/gui/TitleMessage.h"
+#include "mc/client/gui/screens/MenuPointer.h"
+#include "mc/client/gui/screens/controllers/ModalScreenData.h"
+#include "mc/deps/application/AppPlatformListener.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/deps/core/utility/pub_sub/Publisher.h"
+#include "mc/deps/core_graphics/math/Rect.h"
+#include "mc/deps/input/RectangleArea.h"
+#include "mc/deps/minecraft_renderer/renderer/MaterialPtr.h"
+#include "mc/deps/minecraft_renderer/renderer/Mesh.h"
+#include "mc/util/HudVisibility.h"
+#include "mc/util/ProfanityFilterContext.h"
+#include "mc/world/ContainerID.h"
+#include "mc/world/actor/player/PlayerInventorySlotData.h"
+
+// auto generated forward declare list
+// clang-format off
+class Config;
+class DevConsoleLogger;
+class GuiMessage;
+class IClientInstance;
+class ItemStackBase;
+class TextObjectRoot;
+class Vec2;
+struct ContentLogMessage;
+namespace Bedrock::PubSub::ThreadModel { struct MultiThreaded; }
+// clang-format on
+
+class GuiData : public ::IConfigListener, public ::AppPlatformListener, public ::Bedrock::EnableNonOwnerReferences {
+public:
+    LLAPI void setHudVisibilityState(::std::vector<::HudElement> const& elements, ::HudVisibility visibility);
+
+    LLNDAPI bool isHudElementVisible(::HudElement element) const;
+
+public:
+    // GuiData inner types declare
+    // clang-format off
+    struct MessageConfig;
+    // clang-format on
+
+    // GuiData inner types define
+    struct MessageConfig {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<4, 4, ::GuiMessage::MessageType>       messageType;
+        ::ll::TypedStorage<8, 32, ::std::string>                  username;
+        ::ll::TypedStorage<8, 32, ::std::string>                  message;
+        ::ll::TypedStorage<8, 40, ::std::optional<::std::string>> filteredMessage;
+        ::ll::TypedStorage<8, 32, ::std::string>                  ttsMessage;
+        ::ll::TypedStorage<4, 4, float>                           lifeTime;
+        ::ll::TypedStorage<1, 1, bool>                            forceVisible;
+        ::ll::TypedStorage<1, 1, bool>                            ttsRequired;
+        ::ll::TypedStorage<8, 32, ::std::string>                  xuid;
+        ::ll::TypedStorage<8, 32, ::std::string const>            platformId;
+        ::ll::TypedStorage<1, 1, bool>                            enableEmoticonify;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        MessageConfig& operator=(MessageConfig const&);
+        MessageConfig();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCAPI MessageConfig(::GuiData::MessageConfig const&);
+
+        MCAPI MessageConfig(
+            ::GuiMessage::MessageType             _messageType,
+            ::std::string const&                  _username,
+            ::std::string const&                  _message,
+            ::std::optional<::std::string> const& _filteredMessage,
+            ::std::string const&                  _ttsMessage,
+            float                                 _lifeTime,
+            bool                                  _forceVisible,
+            bool                                  _ttsRequired,
+            ::std::string const&                  _xuid,
+            ::std::string const&                  _platformId
+        );
+
+        MCAPI ~MessageConfig();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCAPI void* $ctor(::GuiData::MessageConfig const&);
+
+        MCAPI void* $ctor(
+            ::GuiMessage::MessageType             _messageType,
+            ::std::string const&                  _username,
+            ::std::string const&                  _message,
+            ::std::optional<::std::string> const& _filteredMessage,
+            ::std::string const&                  _ttsMessage,
+            float                                 _lifeTime,
+            bool                                  _forceVisible,
+            bool                                  _ttsRequired,
+            ::std::string const&                  _xuid,
+            ::std::string const&                  _platformId
+        );
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 24, ::ScreenSizeData>                                       mScreenSizeData;
+    ::ll::TypedStorage<1, 1, bool>                                                    mScreenSizeDataValid;
+    ::ll::TypedStorage<4, 4, float>                                                   mGuiScale;
+    ::ll::TypedStorage<4, 4, float>                                                   mInvGuiScale;
+    ::ll::TypedStorage<1, 1, bool>                                                    mOverlappingControlsExist;
+    ::ll::TypedStorage<1, 1, bool>                                                    mIsCurrentlyActive;
+    ::ll::TypedStorage<8, 16, ::std::set<int>>                                        mPostedErrors;
+    ::ll::TypedStorage<1, 1, ::MenuPointer>                                           mMenuPointer;
+    ::ll::TypedStorage<2, 2, short>                                                   mPointerX;
+    ::ll::TypedStorage<2, 2, short>                                                   mPointerY;
+    ::ll::TypedStorage<1, 1, bool>                                                    mHasShowPreexistingMessages;
+    ::ll::TypedStorage<1, 1, bool>                                                    mToolbarWasRendered;
+    ::ll::TypedStorage<4, 4, int>                                                     mPrevSelectedSlot;
+    ::ll::TypedStorage<1, 1, ::ContainerID>                                           mPrevSelectedInventoryContainer;
+    ::ll::TypedStorage<4, 4, int>                                                     mFlashSlotId;
+    ::ll::TypedStorage<8, 8, double>                                                  mFlashSlotStartTime;
+    ::ll::TypedStorage<8, 8, ::IClientInstance&>                                      mClient;
+    ::ll::TypedStorage<4, 16, ::RectangleArea>                                        mToolbarArea;
+    ::ll::TypedStorage<4, 16, ::RectangleArea>                                        mToolbarAreaContainer;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mLastPopupText;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mLastPopupSubtitleText;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mLastJukeboxPopupText;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mLastJukeboxPopupSubtitleText;
+    ::ll::TypedStorage<4, 4, int>                                                     mTickCount;
+    ::ll::TypedStorage<4, 4, float>                                                   mItemNameOverlayTime;
+    ::ll::TypedStorage<4, 4, float>                                                   mJukeboxNameOverlayTime;
+    ::ll::TypedStorage<1, 1, bool>                                                    mPopupNoticeDirty;
+    ::ll::TypedStorage<1, 1, bool>                                                    mJukeboxPopupNoticeDirty;
+    ::ll::TypedStorage<8, 24, ::std::vector<::GuiMessage>>                            mGuiMessages;
+    ::ll::TypedStorage<8, 24, ::std::vector<::GuiMessage>>                            mSubtitleMessages;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                           mDevConsoleMessages;
+    ::ll::TypedStorage<4, 4, int>                                                     mMaxDevConsoleMessages;
+    ::ll::TypedStorage<8, 24, ::std::vector<::ContentLogMessage>>                     mContentLogMessages;
+    ::ll::TypedStorage<8, 8, uint64>                                                  mContentLogErrorCount;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                           mPerfTurtleMessages;
+    ::ll::TypedStorage<8, 376, ::std::optional<::ModalScreenData>>                    mModalScreenData;
+    ::ll::TypedStorage<8, 232, ::TitleMessage>                                        mTitleMessage;
+    ::ll::TypedStorage<4, 52, ::std::array<::HudVisibility, 13>>                      mHudVisibilityState;
+    ::ll::TypedStorage<4, 4, uint>                                                    mServerSettingsId;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mServerSettings;
+    ::ll::TypedStorage<1, 1, bool>                                                    mMuteChat;
+    ::ll::TypedStorage<4, 4, float>                                                   mCurrentDropTicks;
+    ::ll::TypedStorage<4, 8, ::PlayerInventorySlotData>                               mCurrentDropSlot;
+    ::ll::TypedStorage<4, 8, ::PlayerInventorySlotData>                               mLastSelectedSlot;
+    ::ll::TypedStorage<1, 1, bool>                                                    mShowProgress;
+    ::ll::TypedStorage<8, 32, ::std::string>                                          mTipMessage;
+    ::ll::TypedStorage<4, 4, float>                                                   mTipMessageLength;
+    ::ll::TypedStorage<8, 632, ::mce::Mesh>                                           mRcFeedbackOuter;
+    ::ll::TypedStorage<8, 632, ::mce::Mesh>                                           mRcFeedbackInner;
+    ::ll::TypedStorage<8, 632, ::mce::Mesh>                                           mVignette;
+    ::ll::TypedStorage<8, 16, ::mce::MaterialPtr>                                     mInvFillMat;
+    ::ll::TypedStorage<8, 16, ::mce::MaterialPtr>                                     mCursorMat;
+    ::ll::TypedStorage<8, 24, ::Bedrock::NotNullNonOwnerPtr<::DevConsoleLogger>>      mDevConsoleLogger;
+    ::ll::TypedStorage<8, 8, ::std::chrono::steady_clock::time_point>                 mLastTickTime;
+    ::ll::TypedStorage<8, 16, ::std::map<::std::string, ::std::vector<::GuiMessage>>> mDelayedMessages;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                           mQueuedDevConsoleMessages;
+    ::ll::TypedStorage<8, 80, ::std::mutex>                                           mQueuedDevMessagesMutex;
+    ::ll::TypedStorage<1, 1, bool>                                                    mUseEditorGuiScale;
+    ::ll::TypedStorage<4, 16, ::RectangleArea>                                        mHUDHotbarRectangle;
+    ::ll::TypedStorage<1, 1, ::CoordinateCaptureType>                                 mCoordinateCaptureType;
+    ::ll::TypedStorage<8, 128, ::Bedrock::PubSub::Publisher<void(), ::Bedrock::PubSub::ThreadModel::MultiThreaded, 0>>
+        mOnGuiScaleUpdatedPublisher;
+    ::ll::TypedStorage<8, 128, ::Bedrock::PubSub::Publisher<void(), ::Bedrock::PubSub::ThreadModel::MultiThreaded, 0>>
+        mServerFormDataAvailable;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    GuiData& operator=(GuiData const&);
+    GuiData(GuiData const&);
+    GuiData();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void onConfigChanged(::Config const& c) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI explicit GuiData(::IClientInstance& client);
+
+    MCAPI void _addMessage(::GuiData::MessageConfig messageConfig, ::ProfanityFilterContext profanityFilterContext);
+
+    MCAPI void _setSubtitleInternal(::std::string const& subtitle, ::std::optional<::std::string> filteredSubtitle);
+
+    MCAPI void _setTitleInternal(::std::string const& title, ::std::optional<::std::string> filteredTitle);
+
+    MCAPI void addSubtitle(::std::string const& message, ::SoundDirection direction, bool isLocalPlayer);
+
+    MCAPI float calculateGuiScale(
+        ::Vec2 const&                  totalScreenSize,
+        ::Vec2 const&                  safeZone,
+        ::cg::math::Rect<float> const& clientViewportModifiers
+    );
+
+    MCAPI int calculateMaxGuiScaleIndex(::Vec2 const& screenSize) const;
+
+    MCAPI int calculateOptimalGuiScaleIndex(::Vec2 const& safezoneClientScreenSize) const;
+
+    MCAPI void clearPlayerMessages();
+
+    MCAPI void clearSessionState();
+
+    MCAPI void displayAnnouncementMessage(
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        ::std::string const&                  xuid,
+        ::std::string const&                  platformId
+    );
+
+    MCAPI void displayChatMessage(
+        ::std::string const&                  author,
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        ::std::string const&                  xuid,
+        ::std::string const&                  platformId
+    );
+
+    MCAPI void displayClientMessage(
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        bool                                  ttsRequired
+    );
+
+    MCAPI void displayDevConsoleMessage(::std::string const& messages);
+
+    MCAPI void displayLocalizableMessage(
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        ::std::vector<::std::string> const&   params
+    );
+
+    MCAPI void
+    displayLocalizedMessage(::std::string const& message, ::std::optional<::std::string> const& filteredMessage);
+
+    MCAPI void displaySystemMessage(
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        ::std::string const&                  ttsMessage,
+        ::ProfanityFilterContext              profanityFilterContext
+    );
+
+    MCAPI void displayTextObjectMessage(
+        ::TextObjectRoot const& textObject,
+        ::std::string const&    xuid,
+        ::std::string const&    platformId
+    );
+
+    MCAPI void displayTextObjectWhisperMessage(
+        ::std::string const& message,
+        ::std::string const& xuid,
+        ::std::string const& platformId
+    );
+
+    MCAPI void displayTextObjectWhisperMessage(
+        ::TextObjectRoot const& textObject,
+        ::std::string const&    xuid,
+        ::std::string const&    platformId
+    );
+
+    MCAPI void displayWhisperMessage(
+        ::std::string const&                  author,
+        ::std::string const&                  message,
+        ::std::optional<::std::string> const& filteredMessage,
+        ::std::string const&                  xuid,
+        ::std::string const&                  platformId
+    );
+
+    MCAPI void flushQueuedDevConsoleMessages();
+
+    MCAPI int getClampedGuiScaleOffset() const;
+
+    MCAPI float getGuiScale() const;
+
+    MCAPI ::std::string const getLastFilteredChatMessage();
+
+    MCAPI ::RectangleArea getLayoutCustomizationMainPanelRectangle() const;
+
+    MCAPI bool getNewJukeboxPopupNotice(::std::string& message, ::std::string& subtitle);
+
+    MCAPI bool getNewPopupNotice(::std::string& message, ::std::string& subtitle);
+
+    MCAPI ::RectangleArea getSafeScreenZoneArea() const;
+
+    MCAPI ::RectangleArea getWYSIWYGBottomHudReservedArea() const;
+
+    MCAPI ::RectangleArea getWYSIWYGTopReservedArea() const;
+
+    MCAPI bool handleClick();
+
+    MCAPI void postError(int errCode);
+
+    MCAPI ::RectangleArea const& recomputeHUDHotbarRectangle(float scale);
+
+    MCAPI void setActionBarMessage(::std::string const& message, ::std::optional<::std::string> const& filteredMessage);
+
+    MCAPI void setScreenSizeData(::ScreenSizeData const& screenSizeData);
+
+    MCAPI void setSubtitle(::std::string const& subtitle, ::std::optional<::std::string> filteredSubtitle);
+
+    MCAPI void setTextToSpeechEnabled(bool enabled);
+
+    MCAPI void setTitle(::std::string const& title, ::std::optional<::std::string> filteredTitle);
+
+    MCAPI ::RectangleArea setTouchToolbarArea(::RectangleArea const& toolbarArea);
+
+    MCAPI void showJukeboxPopupNotice(::std::string const& message, ::std::string const& subtitle);
+
+    MCAPI void showPopupNotice(::ItemStackBase const& item);
+
+    MCAPI void showPopupNotice(::std::string const& message, ::std::string const& subtitle);
+
+    MCAPI void showTipMessage(::std::string const& message);
+
+    MCAPI void tick();
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::array<float, 8> const& GUI_SCALE_VALUES();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::IClientInstance& client);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $onConfigChanged(::Config const& c);
+    // NOLINTEND
+};

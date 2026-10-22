@@ -1,0 +1,37 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/game_refs/WeakRef.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor { class ProjectRegion; }
+namespace Editor { struct ProjectRegionConfig; }
+namespace Editor { struct ProjectRegionGlobalMetrics; }
+namespace mce { class UUID; }
+// clang-format on
+
+namespace Editor::Services {
+
+class EditorProjectRegionPlayerServiceProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorProjectRegionPlayerServiceProvider() = default;
+
+    virtual ::WeakRef<::Editor::ProjectRegion> createRegion(::Editor::ProjectRegionConfig const& config) = 0;
+
+    virtual ::std::vector<::WeakRef<::Editor::ProjectRegion>> getAllRegions() const = 0;
+
+    virtual ::Scripting::Result_deprecated<void> destroyRegion(::mce::UUID const& id) = 0;
+
+    virtual ::WeakRef<::Editor::ProjectRegion> getRegion(::mce::UUID const& id) const = 0;
+
+    virtual ::Editor::ProjectRegionGlobalMetrics collectMetrics() const = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

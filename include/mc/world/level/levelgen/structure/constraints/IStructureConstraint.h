@@ -1,0 +1,27 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/Rotation.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class IBlockWorldGenAPI;
+// clang-format on
+
+class IStructureConstraint {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IStructureConstraint() = default;
+
+    virtual bool isSatisfied(
+        ::IBlockWorldGenAPI const& target,
+        ::BlockPos const&          structurePos,
+        ::Rotation const&          structureRot,
+        ::BlockPos const&          centeringOffset
+    ) const = 0;
+    // NOLINTEND
+};

@@ -1,0 +1,101 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/DirtyFlag.h"
+#include "mc/client/gui/GameEventNotification.h"
+#include "mc/client/gui/SceneType.h"
+#include "mc/client/gui/screens/controllers/ClientInstanceScreenController.h"
+#include "mc/deps/core/threading/TaskGroup.h"
+
+// auto generated forward declare list
+// clang-format off
+class ClientInstanceScreenModel;
+class ImmersiveReaderObserver;
+class ImmersiveReaderToken;
+// clang-format on
+
+class ImmersiveReaderScreenController : public ::ClientInstanceScreenController {
+public:
+    // ImmersiveReaderScreenController inner types define
+    enum class ImmersiveReaderErrorType : schar {
+        WebviewFailure  = 0,
+        IdentityFailure = 1,
+    };
+
+    enum class ImmersiveReaderStatusCodes : schar {
+        StatusError   = -1,
+        LaunchFailure = 0,
+        RetryFailure  = 1,
+        Launched      = 2,
+        Loaded        = 3,
+    };
+
+    enum class ImmersiveReaderStage : schar {
+        SendUrl       = 0,
+        AddListener   = 1,
+        LaunchReader  = 2,
+        RefreshScreen = 3,
+        Running       = 4,
+        Error         = 5,
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 32, ::std::string>                                              mReaderText;
+    ::ll::TypedStorage<1, 1, ::ImmersiveReaderScreenController::ImmersiveReaderErrorType> mErrorType;
+    ::ll::TypedStorage<1, 1, bool>                                                        mErrorCausedRefresh;
+    ::ll::TypedStorage<8, 336, ::TaskGroup>                                               mTaskGroup;
+    ::ll::TypedStorage<1, 1, ::ImmersiveReaderScreenController::ImmersiveReaderStage>     mImmersiveReaderStage;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::ImmersiveReaderObserver>>                mObserver;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ImmersiveReaderScreenController();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ImmersiveReaderScreenController() /*override*/ = default;
+
+    virtual ::ui::DirtyFlag handleGameEventNotification(::ui::GameEventNotification notification) /*override*/;
+
+    virtual ::ui::DirtyFlag tick() /*override*/;
+
+    virtual ::ui::SceneType getSceneType() const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI
+    ImmersiveReaderScreenController(::std::shared_ptr<::ClientInstanceScreenModel> model, ::std::string readerText);
+
+    MCAPI void _launchReader();
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::unique_ptr<::ImmersiveReaderToken>& mReaderToken();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::std::shared_ptr<::ClientInstanceScreenModel> model, ::std::string readerText);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::ui::DirtyFlag $handleGameEventNotification(::ui::GameEventNotification notification);
+
+    MCAPI ::ui::DirtyFlag $tick();
+
+    MCFOLD ::ui::SceneType $getSceneType() const;
+    // NOLINTEND
+};

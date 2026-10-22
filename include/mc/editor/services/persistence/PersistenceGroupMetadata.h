@@ -1,0 +1,76 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/PersistenceScope.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+namespace Editor::Services {
+
+struct PersistenceGroupMetadata {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnkf0496d;
+    ::ll::UntypedStorage<8, 32> mUnkd77ace;
+    ::ll::UntypedStorage<4, 4>  mUnkddf34d;
+    ::ll::UntypedStorage<1, 1>  mUnk59537f;
+    ::ll::UntypedStorage<8, 24> mUnk4b864f;
+    ::ll::UntypedStorage<8, 32> mUnkdc5718;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PersistenceGroupMetadata();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PersistenceGroupMetadata(::Editor::Services::PersistenceGroupMetadata const&);
+
+    MCNAPI PersistenceGroupMetadata(
+        ::std::string const&                 groupNamespace,
+        ::std::string const&                 name,
+        ::Editor::Services::PersistenceScope scope,
+        ::std::vector<int>                   versions
+    );
+
+    MCNAPI ::Editor::Services::PersistenceGroupMetadata& operator=(::Editor::Services::PersistenceGroupMetadata&&);
+
+    MCNAPI ::Editor::Services::PersistenceGroupMetadata& operator=(::Editor::Services::PersistenceGroupMetadata const&);
+
+    MCNAPI ~PersistenceGroupMetadata();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void bindTypes(::cereal::ReflectionCtx& ctx);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Editor::Services::PersistenceGroupMetadata const&);
+
+    MCNAPI void* $ctor(
+        ::std::string const&                 groupNamespace,
+        ::std::string const&                 name,
+        ::Editor::Services::PersistenceScope scope,
+        ::std::vector<int>                   versions
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

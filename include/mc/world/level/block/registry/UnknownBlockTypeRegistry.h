@@ -1,0 +1,42 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/registry/IUnknownBlockTypeRegistry.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockType;
+class CompoundTag;
+// clang-format on
+
+class UnknownBlockTypeRegistry : public ::IUnknownBlockTypeRegistry {
+public:
+    // UnknownBlockTypeRegistry inner types define
+    using UnknownBlockLookupMap = ::std::map<uint64, ::std::unique_ptr<::BlockType>>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 80, ::std::mutex>                                       mMutex;
+    ::ll::TypedStorage<8, 16, ::std::map<uint64, ::std::unique_ptr<::BlockType>>> mUnknownBlockLookupMap;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~UnknownBlockTypeRegistry() /*override*/ = default;
+
+    virtual ::Block const& getUnknownBlock(::CompoundTag const& serId) /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::Block const& $getUnknownBlock(::CompoundTag const& serId);
+
+
+    // NOLINTEND
+};

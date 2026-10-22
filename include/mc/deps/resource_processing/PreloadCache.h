@@ -1,0 +1,141 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/resource_processing/PreloadState.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::Resources { class PreloadedPathHandle; }
+namespace Bedrock::Resources::Archive { class Reader; }
+namespace Bedrock::Resources::Archive { class TOCReader; }
+namespace Core { class Path; }
+// clang-format on
+
+namespace Bedrock::Resources {
+
+class PreloadCache : public ::std::enable_shared_from_this<::Bedrock::Resources::PreloadCache> {
+public:
+    // PreloadCache inner types declare
+    // clang-format off
+    struct InFlightTocBuild;
+    struct InFlightTocBuilds;
+    struct PreloadedContentMaps;
+    struct SharedOnlyConstructionTag;
+    // clang-format on
+
+    // PreloadCache inner types define
+    struct InFlightTocBuild {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 80> mUnk766e39;
+        ::ll::UntypedStorage<8, 72> mUnk4655ba;
+        ::ll::UntypedStorage<1, 1>  mUnkb8d676;
+        ::ll::UntypedStorage<8, 16> mUnk262761;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        InFlightTocBuild& operator=(InFlightTocBuild const&);
+        InFlightTocBuild(InFlightTocBuild const&);
+        InFlightTocBuild();
+    };
+
+    struct InFlightTocBuilds {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 80> mUnk3660a2;
+        ::ll::UntypedStorage<8, 64> mUnkff858f;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        InFlightTocBuilds& operator=(InFlightTocBuilds const&);
+        InFlightTocBuilds(InFlightTocBuilds const&);
+        InFlightTocBuilds();
+    };
+
+    struct PreloadedContentMaps {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 64> mUnkea2f7b;
+        ::ll::UntypedStorage<8, 64> mUnk31b19a;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PreloadedContentMaps& operator=(PreloadedContentMaps const&);
+        PreloadedContentMaps(PreloadedContentMaps const&);
+        PreloadedContentMaps();
+    };
+
+    struct SharedOnlyConstructionTag {};
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 136> mUnk3091c8;
+    ::ll::UntypedStorage<8, 16>  mUnk407c1f;
+    ::ll::UntypedStorage<8, 8>   mUnk693ed0;
+    ::ll::UntypedStorage<8, 16>  mUnka4641f;
+    ::ll::UntypedStorage<8, 72>  mUnkba8bc7;
+    ::ll::UntypedStorage<1, 1>   mUnke2c1f0;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PreloadCache& operator=(PreloadCache const&);
+    PreloadCache(PreloadCache const&);
+    PreloadCache();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::shared_ptr<::Bedrock::Resources::Archive::TOCReader>
+    _cacheTOCReaderSingleFlight(::Core::Path const& archivePath) const;
+
+    MCNAPI ::Bedrock::Resources::PreloadedPathHandle _findPreloadedPath(
+        ::Bedrock::Resources::PreloadCache::PreloadedContentMaps const& contentMaps,
+        ::Core::Path const&                                             cleanPath
+    ) const;
+
+    MCNAPI ::Bedrock::Resources::PreloadState _getAsset(
+        ::Bedrock::Resources::PreloadCache::PreloadedContentMaps const& contentMaps,
+        ::Core::Path const&                                             path,
+        ::std::string*                                                  assetData
+    ) const;
+
+    MCNAPI bool _isNegativelyCached(::Core::Path const& archivePath) const;
+
+    MCNAPI ::Bedrock::Resources::PreloadedPathHandle
+    addPreloadedPath(::Core::Path const& path, ::std::unique_ptr<::Bedrock::Resources::Archive::Reader> archiveReader);
+
+    MCNAPI ::Bedrock::Resources::PreloadedPathHandle findPreloadedPath(::Core::Path const& path) const;
+
+    MCNAPI ::Bedrock::Resources::PreloadState
+    getAsset(::Core::Path const& path, ::Core::Path const& archivePath, ::std::string& contents) const;
+
+    MCNAPI ::Bedrock::Resources::PreloadState
+    hasAssetFallback(::Core::Path const& path, ::Core::Path const& archivePath) const;
+
+#ifdef LL_PLAT_C
+    MCNAPI void invalidate();
+#endif
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void _preloadedPathDeleter(
+        ::std::weak_ptr<::Bedrock::Resources::PreloadCache> weakThis,
+        ::Core::Path const&                                 path,
+        ::Bedrock::Resources::Archive::Reader*              reader
+    );
+    // NOLINTEND
+};
+
+} // namespace Bedrock::Resources

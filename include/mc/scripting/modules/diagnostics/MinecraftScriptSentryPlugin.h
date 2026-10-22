@@ -1,0 +1,63 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/scripting/modules/diagnostics/IScriptSentryPlugin.h"
+
+// auto generated forward declare list
+// clang-format off
+class ScriptPlugin;
+class ScriptSentryLogger;
+// clang-format on
+
+namespace ScriptModuleDiagnostics {
+
+class MinecraftScriptSentryPlugin : public ::ScriptModuleDiagnostics::IScriptSentryPlugin {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnk8c3ac7;
+    ::ll::UntypedStorage<8, 32> mUnk23c0ab;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    MinecraftScriptSentryPlugin& operator=(MinecraftScriptSentryPlugin const&);
+    MinecraftScriptSentryPlugin(MinecraftScriptSentryPlugin const&);
+    MinecraftScriptSentryPlugin();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~MinecraftScriptSentryPlugin() /*override*/ = default;
+
+    virtual void setSentryLogger(::std::unique_ptr<::ScriptSentryLogger> sentryLogger) /*override*/;
+
+    virtual ::std::string const& getPlatformName() const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit MinecraftScriptSentryPlugin(::ScriptPlugin& plugin);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::ScriptPlugin& plugin);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $setSentryLogger(::std::unique_ptr<::ScriptSentryLogger> sentryLogger);
+
+    MCNAPI ::std::string const& $getPlatformName() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleDiagnostics

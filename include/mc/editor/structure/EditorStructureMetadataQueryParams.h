@@ -1,0 +1,58 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+namespace Editor {
+
+struct EditorStructureMetadataQueryParams {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 40> mUnk613d58;
+    ::ll::UntypedStorage<8, 32> mUnkc55301;
+    ::ll::UntypedStorage<8, 40> mUnk4a0153;
+    ::ll::UntypedStorage<8, 40> mUnkc13d96;
+    ::ll::UntypedStorage<8, 40> mUnkc1cfbd;
+    ::ll::UntypedStorage<4, 8>  mUnkefbac6;
+    ::ll::UntypedStorage<1, 2>  mUnk194cee;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EditorStructureMetadataQueryParams();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI EditorStructureMetadataQueryParams(::Editor::EditorStructureMetadataQueryParams const&);
+
+    MCNAPI ::Editor::EditorStructureMetadataQueryParams& operator=(::Editor::EditorStructureMetadataQueryParams const&);
+
+    MCNAPI ~EditorStructureMetadataQueryParams();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void bindTypes(::cereal::ReflectionCtx& ctx);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Editor::EditorStructureMetadataQueryParams const&);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor

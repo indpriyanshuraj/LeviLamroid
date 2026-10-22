@@ -1,0 +1,25 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor::ScriptModule { class ScriptWidget; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidgetGroup_WidgetInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Scripting::Result_deprecated<void>
+    _deleteWidget(::Scripting::StrongTypedObjectHandle<::Editor::ScriptModule::ScriptWidget> widgetToDelete) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

@@ -1,0 +1,148 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/Vec2.h"
+#include "mc/deps/core/math/Vec3.h"
+#include "mc/deps/shared_types/legacy/LevelSoundEvent.h"
+#include "mc/deps/shared_types/shared_types/FloatRange.h"
+#include "mc/legacy/ActorUniqueID.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+#include "mc/world/level/Tick.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorDefinitionTrigger;
+class Mob;
+class Path;
+struct GoalId;
+namespace RamAttackGoalUtils { class RamGoalItemDropperInterface; }
+// clang-format on
+
+class RamAttackGoal : public ::BaseGoal {
+public:
+    // RamAttackGoal inner types declare
+    // clang-format off
+    struct AttackPos;
+    // clang-format on
+
+    // RamAttackGoal inner types define
+    enum class Direction : int {
+        North = 0,
+        South = 1,
+        West  = 2,
+        East  = 3,
+    };
+
+    enum class State : int {
+        TakeAttackPos               = 0,
+        TurnToTarget                = 1,
+        VerifyTargetStillInPosition = 2,
+        WaitOneSec                  = 3,
+        Charge                      = 4,
+        KnockAfterCharge            = 5,
+        Done                        = 6,
+    };
+
+    struct AttackPos {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<4, 12, ::Vec3>                    mPosition;
+        ::ll::TypedStorage<4, 4, float>                      mDistance;
+        ::ll::TypedStorage<1, 1, bool>                       mCheckX;
+        ::ll::TypedStorage<4, 4, ::RamAttackGoal::Direction> mDirection;
+        ::ll::TypedStorage<1, 1, bool>                       mHasChargePos;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>                                     mMob;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::Path>>                  mPath;
+    ::ll::TypedStorage<4, 12, ::Vec3>                                    mPrepareChargePos;
+    ::ll::TypedStorage<4, 12, ::Vec3>                                    mTargetPos;
+    ::ll::TypedStorage<4, 8, ::Vec2>                                     mRamDirection;
+    ::ll::TypedStorage<8, 8, ::Tick>                                     mWaitBeforeChargeTimer;
+    ::ll::TypedStorage<8, 8, ::Tick>                                     mChargeTimeoutTimer;
+    ::ll::TypedStorage<8, 8, ::Tick>                                     mKnockAfterChargeTimeoutTimer;
+    ::ll::TypedStorage<8, 8, ::Tick>                                     mRamRetryTimeout;
+    ::ll::TypedStorage<4, 4, ::RamAttackGoal::State>                     mState;
+    ::ll::TypedStorage<8, 24, ::std::vector<::RamAttackGoal::AttackPos>> mAttackPosVector;
+    ::ll::TypedStorage<4, 4, int>                                        mRamDistance;
+    ::ll::TypedStorage<4, 4, int>                                        mMinRamDistance;
+    ::ll::TypedStorage<4, 4, float>                                      mKnockbackForce;
+    ::ll::TypedStorage<4, 4, float>                                      mKnockbackHeight;
+    ::ll::TypedStorage<4, 4, float>                                      mBabyKnockbackModifier;
+    ::ll::TypedStorage<4, 4, float>                                      mRunSpeed;
+    ::ll::TypedStorage<4, 4, float>                                      mRamSpeed;
+    ::ll::TypedStorage<8, 24, ::std::vector<::ActorDefinitionTrigger>>   mOnStartTriggers;
+    ::ll::TypedStorage<4, 4, ::SharedTypes::Legacy::LevelSoundEvent>     mPreRamSound;
+    ::ll::TypedStorage<4, 4, ::SharedTypes::Legacy::LevelSoundEvent>     mRamImpactSound;
+    ::ll::TypedStorage<4, 8, ::SharedTypes::FloatRange>                  mCooldownTime;
+    ::ll::TypedStorage<8, 8, ::ActorUniqueID>                            mTargetId;
+    ::ll::TypedStorage<1, 1, bool>                                       mHasKnockbacked;
+    ::ll::TypedStorage<8, 8, ::Tick>                                     mCooldownTimeout;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::RamAttackGoalUtils::RamGoalItemDropperInterface>> mRamGoalItemDropper;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RamAttackGoal& operator=(RamAttackGoal const&);
+    RamAttackGoal(RamAttackGoal const&);
+    RamAttackGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual bool canUse() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI RamAttackGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+
+    MCAPI void _findTreeBehindTarget();
+
+    MCAPI bool _initiateRamAttack();
+
+    MCAPI void _tryKnockbackTarget();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $start();
+
+    MCAPI void $stop();
+
+    MCAPI bool $canUse();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+};

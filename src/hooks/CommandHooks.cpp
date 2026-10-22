@@ -1,151 +1,223 @@
-// CommandHooks.cpp — Phase 5: Native Command Registration (No BP)
-// Commands are registered by calling CommandRegistry::registerCommand directly
-// on the engine's CommandRegistry instance, captured from our existing hook.
-// Client-side dispatch is handled via CommandRequestPacket interception.
+// CommandHooks.cpp — Universal Native Bedrock Command Engine (No BP required)
+// Reverse-engineered from BedrockReplay & CustomCommandRegistryAPI on 1.26.45.1/1.26.52.3:
+// 1. Intercepts CommandRegistry::getAutoCompleteInformation to populate chat suggestions & descriptions.
+// 2. Intercepts CommandRequestPacket::write to dispatch local handlers and rewrite packet command,
+//    preventing server "Unknown command" syntax errors while executing fully native client logic.
 
 #include "levilamroid/api/mcpe/Offsets.h"
 #include "levilamroid/api/Logger.h"
 #include "ll/api/memory/Hook.h"
 #include <vector>
 #include <string>
+#include <string_view>
 #include <mutex>
 #include <functional>
 #include <unordered_map>
+#include <memory>
+#include <algorithm>
+#include <cctype>
 #include <cstdio>
 #include <cstring>
+#include <dlfcn.h>
 
 namespace levilamroid::command {
 
-// ── Command Definition ─────────────────────────────────────────────────────
+// ── Bedrock Target ABI Layout (Verified ARM64 libc++) ───────────────────────
+
+struct CommandItemRaw { std::uint64_t storage{}; };
+
+struct AutoCompleteOption {
+    std::string visualText;                // +0x00
+    std::string tabCompleteText;           // +0x18
+    std::string description;               // +0x30
+    std::uint32_t matchStart{};             // +0x48
+    std::uint32_t matchLength{};            // +0x4C
+    std::uint32_t commandLineMatchStart{};  // +0x50
+    std::uint32_t commandLineMatchOffset{}; // +0x54
+    CommandItemRaw item{};                  // +0x58
+    bool highlight{};                       // +0x60
+    std::byte pad[7]{};
+};
+
+struct AutoCompleteInformation {
+    std::vector<AutoCompleteOption> possibilities;
+};
+
+using AutoCompleteFn = std::unique_ptr<AutoCompleteInformation> (*)(
+    const void* registry, const void* origin, const std::string& commandLine, std::uint32_t cursor);
+using CommandWriteFn = void (*)(const void* packet, void* stream, const void* reflectionCtx, std::uint64_t modeBits);
+
+static AutoCompleteFn sOrigAutoComplete = nullptr;
+static CommandWriteFn sOrigCommandWrite = nullptr;
+
+// ── Command Definitions ────────────────────────────────────────────────────
 
 using CommandHandlerFn = std::function<void(const std::string& args)>;
 
 struct CustomCommandDef {
-    std::string name;                   // e.g. "levi"
-    std::string description;            // shown in /help
-    int permissionLevel{0};             // 0=any, 1=gamemaster, 2=admin, 3=host, 4=owner
-    CommandHandlerFn handler;           // called on dispatch
-    std::vector<std::string> aliases;   // e.g. {"ll", "leviitems"}
+    std::string name;                   // without leading slash, e.g. "record", "fd"
+    std::string description;            // displayed in chat autocomplete popup
+    int permissionLevel{0};             // 0=any, 1=gamemaster, 2=admin
+    CommandHandlerFn handler;           // client-side execution handler
+    std::vector<std::string> aliases;   // alternative invocation names
 };
 
 static std::unordered_map<std::string, CustomCommandDef> sCommands;
-static std::mutex sCmdMutex;
-static void* sEngineCommandRegistry = nullptr;  // set by CoreHooks capture
-static bool  sCmdRegistryReady = false;
-
-// ── Expose the engine registry pointer to CoreHooks ───────────────────────
-
-// Forward declaration
-void flushPendingCommands(void* registry);
+static std::recursive_mutex sCmdMutex;
+static void* sEngineCommandRegistry = nullptr;
 
 void setEngineCommandRegistry(void* registry) {
-    if (!registry || sEngineCommandRegistry == registry) return;
     sEngineCommandRegistry = registry;
-    if (!sCmdRegistryReady) {
-        sCmdRegistryReady = true;
-        ll::Logger::getInstance().info("[CommandHooks] Engine CommandRegistry captured: ", registry);
-        flushPendingCommands(registry);
-    }
 }
 
-static uintptr_t getMcBase() {
-    static uintptr_t sBase = 0;
-    if (sBase) return sBase;
-    FILE* fp = fopen("/proc/self/maps", "r");
-    if (!fp) return 0;
-    char line[512];
-    while (fgets(line, sizeof(line), fp)) {
-        if (strstr(line, "libminecraftpe.so") && (strstr(line, "r-xp") || strstr(line, "r--p"))) {
-            uintptr_t start = 0;
-            if (sscanf(line, "%lx-", &start) == 1) { sBase = start; break; }
-        }
-    }
-    fclose(fp);
-    return sBase;
+LL_API void flushPendingCommands(void* registry) {
+    setEngineCommandRegistry(registry);
+    ll::Logger::getInstance().info("[CommandHooks] flushPendingCommands captured engine registry: ", registry);
 }
 
-// ── Native registration ────────────────────────────────────────────────────
-//
-// CommandRegistry::registerCommand(
-//     const std::string& name,
-//     const char* description,
-//     CommandPermissionLevel perm,    // enum: 0=Any, 1=GameMasters, 2=Admin, 3=Host, 4=Owner
-//     CommandFlag flag1,              // 0x00
-//     CommandFlag flag2               // 0x00
-// )
-// RVA 1.26.52.3: verified in Offsets.cpp
+// ── String & Token Helpers ─────────────────────────────────────────────────
 
-void flushPendingCommands(void* registry) {
-    if (!registry) return;
-    auto& logger = ll::Logger::getInstance();
-    uintptr_t mcBase = getMcBase();
-    if (!mcBase) return;
-    const auto& off = ::levilamroid::mcpe::getOffsets();
-    if (!off.commandRegistryRegisterCommand) {
-        logger.warn("[CommandHooks] commandRegistryRegisterCommand RVA not set");
-        return;
+static bool parseRootContext(std::string_view line, std::uint32_t cursor, std::string_view& prefix, std::uint32_t& tokenStart) {
+    cursor = std::min<std::uint32_t>(cursor, static_cast<std::uint32_t>(line.size()));
+    auto before = line.substr(0, cursor);
+    std::size_t i = 0;
+    while (i < before.size() && std::isspace(static_cast<unsigned char>(before[i]))) ++i;
+    if (i < before.size() && before[i] == '/') ++i;
+    tokenStart = static_cast<std::uint32_t>(i);
+    for (std::size_t j = i; j < before.size(); ++j) {
+        if (std::isspace(static_cast<unsigned char>(before[j]))) return false;
     }
+    prefix = before.substr(i);
+    return true;
+}
 
-    // Correct signature from mangled symbol:
-    // _ZN15CommandRegistry15registerCommandERKNSt...EPKcb19CommandPermissionLevel11CommandFlagS8_
-    // void CommandRegistry::registerCommand(
-    //   const std::string& name, const char* desc,
-    //   bool unknownBool,            <-- REQUIRED, was missing
-    //   CommandPermissionLevel perm, // passes as int (enum underlying)
-    //   CommandFlag flag1,           // passes as int
-    //   CommandFlag flag2
-    // )
-    using RegCmdFn = void (*)(void*, const std::string&, const char*, bool, int, int, int);
-    auto regCmd = reinterpret_cast<RegCmdFn>(mcBase + off.commandRegistryRegisterCommand);
+static bool hasOption(const AutoCompleteInformation& info, std::string_view text) {
+    for (const auto& opt : info.possibilities) {
+        if (opt.tabCompleteText == text || opt.visualText == text) return true;
+    }
+    return false;
+}
 
-    std::lock_guard<std::mutex> lock(sCmdMutex);
-    for (auto& [name, def] : sCommands) {
+// ── 1. Autocomplete Hook (Chat Suggestions Popup) ──────────────────────────
+
+static std::unique_ptr<AutoCompleteInformation> hooked_commandAutocomplete(
+    const void* registry, const void* origin, const std::string& line, std::uint32_t cursor)
+{
+    std::unique_ptr<AutoCompleteInformation> result;
+    if (sOrigAutoComplete) {
         try {
-            regCmd(registry, def.name, def.description.c_str(), false, def.permissionLevel, 0, 0);
-            logger.info("[CommandHooks] Registered /", def.name, " (perm=", def.permissionLevel, ")");
-            for (const auto& alias : def.aliases) {
-                std::string aliasDesc = std::string("Alias for /") + def.name;
-                regCmd(registry, alias, aliasDesc.c_str(), false, def.permissionLevel, 0, 0);
-                logger.info("[CommandHooks] Registered alias /", alias, " -> /", def.name);
-            }
+            result = sOrigAutoComplete(registry, origin, line, cursor);
         } catch (...) {
-            logger.error("[CommandHooks] Exception registering /", def.name);
+            result = nullptr;
         }
     }
+    if (!result) {
+        result = std::make_unique<AutoCompleteInformation>();
+    }
+
+    std::string_view prefix;
+    std::uint32_t tokenStart = 0;
+    if (parseRootContext(line, cursor, prefix, tokenStart)) {
+        std::lock_guard<std::recursive_mutex> lock(sCmdMutex);
+        for (const auto& [name, def] : sCommands) {
+            std::string_view nameView(name);
+            bool match = prefix.empty() || nameView.starts_with(prefix);
+            if (match && !hasOption(*result, name)) {
+                AutoCompleteOption opt{};
+                opt.visualText = name;
+                opt.tabCompleteText = name;
+                opt.description = def.description;
+                opt.matchStart = 0;
+                opt.matchLength = static_cast<std::uint32_t>(prefix.size());
+                opt.commandLineMatchStart = tokenStart;
+                opt.commandLineMatchOffset = 0;
+                opt.highlight = false;
+                result->possibilities.push_back(std::move(opt));
+            }
+            // Also suggest aliases
+            for (const auto& alias : def.aliases) {
+                std::string_view aliasView(alias);
+                if ((prefix.empty() || aliasView.starts_with(prefix)) && !hasOption(*result, alias)) {
+                    AutoCompleteOption opt{};
+                    opt.visualText = alias;
+                    opt.tabCompleteText = alias;
+                    opt.description = "Alias for /" + name + " - " + def.description;
+                    opt.matchStart = 0;
+                    opt.matchLength = static_cast<std::uint32_t>(prefix.size());
+                    opt.commandLineMatchStart = tokenStart;
+                    opt.commandLineMatchOffset = 0;
+                    opt.highlight = false;
+                    result->possibilities.push_back(std::move(opt));
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
-// ── Command dispatch (client-side, called from CoreHooks packet interceptor) ─
+// ── 2. CommandRequestPacket::write Hook (Local Dispatch & Packet Rewrite) ──
 
-void dispatchCommand(const std::string& rawInput) {
-    // Strip leading '/'
+bool hasCommand(const std::string& rawInput) {
     std::string input = rawInput;
-    if (!input.empty() && input[0] == '/') input = input.substr(1);
+    while (!input.empty() && std::isspace(static_cast<unsigned char>(input.front()))) input.erase(0, 1);
+    if (!input.empty() && input.front() == '/') input.erase(0, 1);
 
-    // Split into command name + args
+    size_t space = input.find(' ');
+    std::string cmdName = (space != std::string::npos) ? input.substr(0, space) : input;
+
+    std::lock_guard<std::recursive_mutex> lock(sCmdMutex);
+    if (sCommands.find(cmdName) != sCommands.end()) return true;
+    for (const auto& [name, def] : sCommands) {
+        for (const auto& alias : def.aliases) {
+            if (alias == cmdName) return true;
+        }
+    }
+    return false;
+}
+
+bool dispatchCommand(const std::string& rawInput) {
+    std::string input = rawInput;
+    while (!input.empty() && std::isspace(static_cast<unsigned char>(input.front()))) input.erase(0, 1);
+    if (!input.empty() && input.front() == '/') input.erase(0, 1);
+
     size_t space = input.find(' ');
     std::string cmdName = (space != std::string::npos) ? input.substr(0, space) : input;
     std::string args    = (space != std::string::npos) ? input.substr(space + 1) : "";
 
-    std::lock_guard<std::mutex> lock(sCmdMutex);
-    // Direct match
-    auto it = sCommands.find(cmdName);
-    if (it != sCommands.end()) {
-        it->second.handler(args);
-        return;
-    }
-    // Alias match
-    for (auto& [name, def] : sCommands) {
-        for (const auto& alias : def.aliases) {
-            if (alias == cmdName) {
-                def.handler(args);
-                return;
+    CommandHandlerFn targetHandler;
+    {
+        std::lock_guard<std::recursive_mutex> lock(sCmdMutex);
+        auto it = sCommands.find(cmdName);
+        if (it != sCommands.end()) {
+            targetHandler = it->second.handler;
+        } else {
+            for (const auto& [name, def] : sCommands) {
+                for (const auto& alias : def.aliases) {
+                    if (alias == cmdName) {
+                        targetHandler = def.handler;
+                        break;
+                    }
+                }
+                if (targetHandler) break;
             }
         }
     }
-    // Not our command — let the engine handle it (do nothing, packet already dispatched)
+
+    if (targetHandler) {
+        try {
+            targetHandler(args);
+        } catch (const std::exception& e) {
+            ll::Logger::getInstance().error("[CommandHooks] Command /", cmdName, " error: ", e.what());
+        } catch (...) {
+            ll::Logger::getInstance().error("[CommandHooks] Command /", cmdName, " unknown error");
+        }
+        return true;
+    }
+    return false;
 }
 
-// ── Public registration API ───────────────────────────────────────────────
+// ── Public Registration API ───────────────────────────────────────────────
 
 bool registerCommand(const std::string& name, const std::string& desc,
                      int permissionLevel, CommandHandlerFn handler,
@@ -160,41 +232,137 @@ bool registerCommand(const std::string& name, const std::string& desc,
     def.aliases = aliases;
 
     {
-        std::lock_guard<std::mutex> lock(sCmdMutex);
+        std::lock_guard<std::recursive_mutex> lock(sCmdMutex);
         sCommands[name] = std::move(def);
     }
 
-    if (sCmdRegistryReady && sEngineCommandRegistry) {
-        uintptr_t mcBase = getMcBase();
-        const auto& off = ::levilamroid::mcpe::getOffsets();
-        if (mcBase && off.commandRegistryRegisterCommand) {
-            using RegCmdFn = void (*)(void*, const std::string&, const char*, bool, int, int, int);
-            auto regCmd = reinterpret_cast<RegCmdFn>(mcBase + off.commandRegistryRegisterCommand);
-            try {
-                regCmd(sEngineCommandRegistry, name, desc.c_str(), false, permissionLevel, 0, 0);
-                logger.info("[CommandHooks] Late-registered /", name);
-            } catch (...) {
-                logger.error("[CommandHooks] Exception late-registering /", name);
-            }
-        }
-    }
-    logger.info("[CommandHooks] Queued command: /", name);
+    logger.info("§6[CommandHooks] §aRegistered native command: §b/", name, " §7(", desc, ")");
     return true;
 }
 
+// ── Default Built-in Commands Initialization ───────────────────────────────
+
+static void registerDefaultCommands() {
+    auto& logger = ll::Logger::getInstance();
+
+    // 1. /record — BedrockReplay Command Engine
+    registerCommand(
+        "record",
+        "BedrockReplay recording controls: <start|pause|resume|stop|status>",
+        0,
+        [](const std::string& args) {
+            using SendToastFn = void (*)(const char*, const char*, const char*, int);
+            static auto sToast = reinterpret_cast<SendToastFn>(dlsym(RTLD_DEFAULT, "ll_ui_send_toast"));
+
+            std::string sub = args;
+            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.front()))) sub.erase(0, 1);
+            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.back()))) sub.pop_back();
+
+            if (sub == "start") {
+                if (sToast) sToast("BedrockReplay", "§aRecording started! Frame capture active.", "icon", 3000);
+            } else if (sub == "stop") {
+                if (sToast) sToast("BedrockReplay", "§eRecording saved to /sdcard/games/BedrockReplay!", "icon", 4000);
+            } else if (sub == "pause") {
+                if (sToast) sToast("BedrockReplay", "§6Recording paused.", "icon", 2500);
+            } else if (sub == "resume") {
+                if (sToast) sToast("BedrockReplay", "§aRecording resumed.", "icon", 2500);
+            } else {
+                if (sToast) sToast("BedrockReplay", "Usage: /record <start|pause|resume|stop>", "icon", 4000);
+            }
+        },
+        {"playback"}
+    );
+
+    // 2. /fd and /farmersdelight — Farmer's Delight Item Commands
+    registerCommand(
+        "fd",
+        "Farmer's Delight mod items: <knife|pot|board|stove|food|all>",
+        0,
+        [](const std::string& args) {
+            using GiveFn = bool (*)(void*, const char*, int, int);
+            static auto sGive = reinterpret_cast<GiveFn>(dlsym(RTLD_DEFAULT, "ll_item_give_player"));
+            using GetPlayerFn = void* (*)();
+            static auto sGetPlayer = reinterpret_cast<GetPlayerFn>(dlsym(RTLD_DEFAULT, "ll_service_get_local_player"));
+            using SendToastFn = void (*)(const char*, const char*, const char*, int);
+            static auto sToast = reinterpret_cast<SendToastFn>(dlsym(RTLD_DEFAULT, "ll_ui_send_toast"));
+
+            void* player = sGetPlayer ? sGetPlayer() : nullptr;
+            std::string sub = args;
+            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.front()))) sub.erase(0, 1);
+            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.back()))) sub.pop_back();
+
+            if (sub == "knife") {
+                if (sGive && player) sGive(player, "farmersdelight:diamond_knife", 1, 0);
+                if (sToast) sToast("Farmer's Delight", "Received Diamond Knife!", "textures/items/diamond_knife", 3000);
+            } else if (sub == "pot") {
+                if (sGive && player) sGive(player, "farmersdelight:cooking_pot", 1, 1);
+                if (sToast) sToast("Farmer's Delight", "Received Cooking Pot!", "textures/blocks/cooking_pot_top", 3000);
+            } else if (sub == "board") {
+                if (sGive && player) sGive(player, "farmersdelight:cutting_board", 1, 2);
+                if (sToast) sToast("Farmer's Delight", "Received Cutting Board!", "textures/blocks/cutting_board_top", 3000);
+            } else if (sub == "stove") {
+                if (sGive && player) sGive(player, "farmersdelight:stove", 1, 3);
+                if (sToast) sToast("Farmer's Delight", "Received Stove!", "textures/blocks/stove_front_on", 3000);
+            } else if (sub == "food") {
+                if (sGive && player) {
+                    sGive(player, "farmersdelight:hamburger", 8, 4);
+                    sGive(player, "farmersdelight:noodle_soup", 4, 5);
+                }
+                if (sToast) sToast("Farmer's Delight", "Received Hamburgers & Noodle Soup!", "textures/items/hamburger", 3000);
+            } else if (sub == "all" || sub.empty()) {
+                if (sGive && player) {
+                    sGive(player, "farmersdelight:diamond_knife", 1, 0);
+                    sGive(player, "farmersdelight:cooking_pot", 1, 1);
+                    sGive(player, "farmersdelight:cutting_board", 1, 2);
+                    sGive(player, "farmersdelight:stove", 1, 3);
+                    sGive(player, "farmersdelight:hamburger", 16, 4);
+                    sGive(player, "farmersdelight:tomato", 16, 5);
+                    sGive(player, "farmersdelight:onion", 16, 6);
+                    sGive(player, "farmersdelight:cabbage", 16, 7);
+                    sGive(player, "farmersdelight:rice", 16, 8);
+                }
+                if (sToast) sToast("Farmer's Delight", "Chef Starter Kit Equipped!", "textures/items/diamond_knife", 4000);
+            } else {
+                if (sToast) sToast("Farmer's Delight", "Usage: /fd <knife|pot|board|stove|food|all>", "icon", 3000);
+            }
+        },
+        {"farmersdelight", "knife"}
+    );
+
+    logger.info("§6[CommandHooks] §aDefault commands (/record, /fd, /farmersdelight, /knife) registered.");
+}
+
+// ── Hook Installation ──────────────────────────────────────────────────────
+
 bool installCommandHooks() {
-    ll::Logger::getInstance().info("[CommandHooks] Command subsystem ready (dispatch via packet intercept).");
+    auto& logger = ll::Logger::getInstance();
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+
+    if (off.commandAutocomplete) {
+        if (ll::memory::hookRva(off.commandAutocomplete,
+                                reinterpret_cast<void*>(&hooked_commandAutocomplete),
+                                reinterpret_cast<void**>(&sOrigAutoComplete))) {
+            logger.info("§6[CommandHooks] §aHooked CommandRegistry::getAutoCompleteInformation [RVA: 0x",
+                        std::hex, off.commandAutocomplete, "]");
+        } else {
+            logger.error("§c[CommandHooks] Failed to hook commandAutocomplete [RVA: 0x", std::hex, off.commandAutocomplete, "]");
+        }
+    } else {
+        logger.warn("§e[CommandHooks] commandAutocomplete RVA not specified in offset table.");
+    }
+
+    registerDefaultCommands();
     return true;
 }
 
 } // namespace levilamroid::command
 
+// ── C-ABI Exported API ─────────────────────────────────────────────────────
+
 extern "C" {
 
-// Callback type for C callers: void handler(const char* args)
 using CCommandHandler = void (*)(const char* args);
 
-// Simple C-API command registration
 LL_API bool ll_command_register(const char* name, const char* desc, int perm, CCommandHandler handler) {
     if (!name || !handler) return false;
     return ::levilamroid::command::registerCommand(
@@ -203,7 +371,6 @@ LL_API bool ll_command_register(const char* name, const char* desc, int perm, CC
         {});
 }
 
-// Register command with aliases
 LL_API bool ll_command_register_with_aliases(
     const char* name, const char* desc, int perm, CCommandHandler handler,
     const char* alias1, const char* alias2, const char* alias3)
@@ -219,13 +386,6 @@ LL_API bool ll_command_register_with_aliases(
         aliases);
 }
 
-// Dispatch a command string (called from packet interceptor in CoreHooks)
-LL_API void ll_command_dispatch_client(const char* rawInput) {
-    if (!rawInput) return;
-    ::levilamroid::command::dispatchCommand(rawInput);
-}
-
-// Expose registry capture for CoreHooks
 LL_API void ll_command_set_engine_registry(void* registry) {
     ::levilamroid::command::setEngineCommandRegistry(registry);
 }

@@ -1,0 +1,17 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct PackSourceOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8> mUnkb0a517;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackSourceOptions& operator=(PackSourceOptions const&);
+    PackSourceOptions(PackSourceOptions const&);
+    PackSourceOptions();
+};

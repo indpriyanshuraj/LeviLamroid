@@ -1,0 +1,41 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Editor {
+
+struct LogContent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 72> mUnkc5c790;
+    ::ll::UntypedStorage<8, 80> mUnk4062c3;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LogContent& operator=(LogContent const&);
+    LogContent();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI LogContent(::Editor::LogContent const&);
+
+    MCNAPI ~LogContent();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Editor::LogContent const&);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor

@@ -1,0 +1,181 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/threading/Async.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/platform/brstd/move_only_function.h"
+#include "mc/resources/ResourceLoadType.h"
+
+// auto generated forward declare list
+// clang-format off
+class TaskResult;
+struct ResourceLoadManagerOptions;
+namespace Bedrock::Profiler::details { struct PredeclaredAnnotation; }
+// clang-format on
+
+class ResourceLoadManager : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // ResourceLoadManager inner types declare
+    // clang-format off
+    struct LoadOrder;
+    class TaskGroupState;
+    class ResourceLoadTaskGroup;
+    // clang-format on
+
+    // ResourceLoadManager inner types define
+    struct LoadOrder {};
+
+    class TaskGroupState {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1> mUnkfc3423;
+        ::ll::UntypedStorage<8, 8> mUnkeadda9;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        TaskGroupState& operator=(TaskGroupState const&);
+        TaskGroupState(TaskGroupState const&);
+        TaskGroupState();
+    };
+
+    class ResourceLoadTaskGroup {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8>  mUnk448294;
+        ::ll::UntypedStorage<4, 4>  mUnkfb510f;
+        ::ll::UntypedStorage<8, 8>  mUnk6c2afd;
+        ::ll::UntypedStorage<8, 24> mUnk43122d;
+        ::ll::UntypedStorage<8, 16> mUnkac15ed;
+        ::ll::UntypedStorage<1, 1>  mUnkd78565;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        ResourceLoadTaskGroup& operator=(ResourceLoadTaskGroup const&);
+        ResourceLoadTaskGroup(ResourceLoadTaskGroup const&);
+        ResourceLoadTaskGroup();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI ::Bedrock::Threading::Async<void> queue(
+            ::brstd::move_only_function<::TaskResult()> threadedCallback,
+            ::std::function<void()>                     mainThreadCallback,
+            uint                                        taskPriority
+        );
+
+#ifdef LL_PLAT_C
+        MCNAPI ::Bedrock::Threading::Async<void>
+        queueAsync(::brstd::move_only_function<::TaskResult()> callback, uint taskPriority);
+
+        MCNAPI ::Bedrock::Threading::Async<void>
+        queueSync(::brstd::move_only_function<::TaskResult()> callback, uint taskPriority);
+#endif
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>  mUnk641f6f;
+    ::ll::UntypedStorage<8, 8>  mUnkbc3f4e;
+    ::ll::UntypedStorage<8, 8>  mUnk833b4d;
+    ::ll::UntypedStorage<8, 16> mUnk2466a3;
+    ::ll::UntypedStorage<8, 8>  mUnkb77267;
+    ::ll::UntypedStorage<1, 1>  mUnk8953d0;
+    ::ll::UntypedStorage<8, 32> mUnkc455ca;
+    ::ll::UntypedStorage<8, 8>  mUnkddb755;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ResourceLoadManager& operator=(ResourceLoadManager const&);
+    ResourceLoadManager(ResourceLoadManager const&);
+    ResourceLoadManager();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ResourceLoadManager() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit ResourceLoadManager(::ResourceLoadManagerOptions&& ops);
+
+#ifdef LL_PLAT_C
+    MCNAPI bool areDependenciesLoaded(::ResourceLoadType resourceLoadType) const;
+#endif
+
+    MCNAPI bool isComplete() const;
+
+#ifdef LL_PLAT_C
+    MCNAPI bool isComplete(::ResourceLoadType resourceLoadType) const;
+
+    MCNAPI void printRunningTasks();
+#endif
+
+    MCNAPI ::Bedrock::Threading::Async<void> queue(
+        ::ResourceLoadType                          resourceLoadType,
+        ::brstd::move_only_function<::TaskResult()> threadedCallback,
+        ::std::function<void()>                     mainThreadCallback,
+        uint                                        taskPriority
+    );
+
+#ifdef LL_PLAT_C
+    MCNAPI ::Bedrock::Threading::Async<void> queueAsync(
+        ::ResourceLoadType                          resourceLoadType,
+        ::brstd::move_only_function<::TaskResult()> callback,
+        uint                                        taskPriority
+    );
+
+    MCNAPI ::Bedrock::Threading::Async<void> queueSync(
+        ::ResourceLoadType                          resourceLoadType,
+        ::brstd::move_only_function<::TaskResult()> callback,
+        uint                                        taskPriority
+    );
+#endif
+
+    MCNAPI void registerResourceLoadTaskGroup(
+        ::std::string_view                                    groupName,
+        ::Bedrock::Profiler::details::PredeclaredAnnotation&& annotation,
+        ::ResourceLoadType                                    resourceLoadType,
+        ::std::vector<::ResourceLoadType>                     dependencies
+    );
+
+#ifdef LL_PLAT_C
+    MCNAPI void setAppSuspended(bool suspended);
+
+    MCNAPI void sync(::ResourceLoadType resourceLoadType);
+#endif
+
+    MCNAPI void update();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::std::function<void()> _wrapMainThreadCallback(
+        ::ResourceLoadManager::ResourceLoadTaskGroup& resourceLoadTaskGroup,
+        ::std::function<void()>&&                     mainThreadCallback
+    );
+
+    MCNAPI static void queueChild(
+        ::brstd::move_only_function<::TaskResult()> threadedCallback,
+        ::std::function<void()>                     mainThreadCallback,
+        uint                                        taskPriority
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::ResourceLoadManagerOptions&& ops);
+    // NOLINTEND
+};

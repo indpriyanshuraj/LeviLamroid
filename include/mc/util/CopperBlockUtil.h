@@ -1,0 +1,42 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BlockPos;
+class BlockSource;
+class Player;
+class Vec3;
+struct CopperBehavior;
+namespace mce { class Color; }
+// clang-format on
+
+namespace CopperBlockUtil {
+// functions
+// NOLINTBEGIN
+#ifdef LL_PLAT_C
+MCNAPI void emitScrapeParticlesAroundPosition(::BlockSource& region, ::Vec3 const& pos);
+
+MCNAPI void emitWaxParticlesAroundPosition(::BlockSource& region, ::Vec3 const& pos, ::mce::Color const& color);
+#endif
+
+#ifdef LL_PLAT_S
+MCNAPI bool shouldUseInteractableBlockAsCopper(::Actor const& actor);
+#endif
+
+MCNAPI bool tryIncrementAge(
+    ::BlockSource&          region,
+    ::BlockPos const&       pos,
+    float                   dailyChance,
+    float                   oxidizeChance,
+    ::CopperBehavior const& behavior
+);
+
+MCNAPI bool tryLightningHitBlock(::BlockSource& region, ::BlockPos const& pos, ::CopperBehavior const& behavior);
+
+MCNAPI bool tryUseBlock(::Player& player, ::BlockPos const& pos, bool consumeTool, ::CopperBehavior const& behavior);
+// NOLINTEND
+
+} // namespace CopperBlockUtil

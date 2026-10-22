@@ -4,7 +4,42 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.0.5-beta] - 2026-10-20
+## [1.0.5-beta] - 2026-10-22
+
+### Critical World Join & Item Registration Crash Fix
+- **ItemRegistry Reference Unwrapping**:
+  - Identified and fixed critical SIGSEGV crash during world join in `VanillaItems::registerItems` (`0x0F2AC634` / `0xF2C1ED0` on 1.26.45.1 and `0x0FA05B18` on 1.26.52.3).
+  - In Bedrock ARM64 ABI, `VanillaItems::registerItems` passes `const Bedrock::NotNullNonOwnerPtr<ItemRegistry>&` as a pointer on the caller's stack to `{ ItemRegistry* ptr, ControlBlock* ctrl }`.
+  - Implemented `unwrapItemRegistry()` to dereference the stack reference and resolve the authentic heap `ItemRegistry*` object before calling `ItemRegistry::registerItem`.
+  - Prevented corrupt stack memory access at offset `+0x50` (`mIdToItemMap`) and `+0x80` (`mNameToItemMap`).
+- **Control Block & Memory Parity**:
+  - Corrected `BedrockControlBlock` memory layout to 16 bytes: `Item* mItem` (8B), `uint32_t mStrongRef` (4B, 1000000), `uint32_t mWeakRef` (4B, 1000000), eliminating 8-byte pointer misalignment.
+  - Added dedicated `BedrockBlockControlBlock` for `BlockItem` at offset `+312` (`0x138`) storing `BlockLegacy*` with independent refcounts.
+  - Reused existing `def.nativeItemPtr` and `def.nativeControlBlock` allocations across multiple registry initialization passes to prevent duplicate allocations.
+
+### Deadlock-Free Inventory & Container Operations
+- **Direct Container Slot Writing**:
+  - Resolved main thread starvation in `giveItemToPlayer` / `ll_item_give_player`.
+  - Directly writes the 152-byte `ItemStack` into `slotsBegin + (slot * 152)` and notifies container listeners via virtual slot 35 (`Container::containerContentChanged(slot)`).
+  - Corrected 1.26.45.1 `.containerSetItem` offset to `0x0EF7A404`.
+
+### Expanded Engine C & C++ APIs
+- **World & BlockSource Inspection**:
+  - `ll_block_source_get_block(void* blockSource, int x, int y, int z)`: Inspect block permutation at coordinate.
+  - `ll_block_source_set_block(void* blockSource, int x, int y, int z, void* permutation, int flags)`: Set block permutation with update flags.
+  - `ll_block_source_get_brightness(void* blockSource, int x, int y, int z)`: Query region light levels.
+- **ItemStack Inspection & Mutation**:
+  - `ll_item_stack_get_count(const void* itemStack)`: Query stack count.
+  - `ll_item_stack_set_count(void* itemStack, uint8_t count)`: Modify stack count and validity.
+  - `ll_item_stack_get_aux(const void* itemStack)`: Query metadata aux value.
+  - `ll_item_stack_is_valid(const void* itemStack)`: Check item validity flag.
+  - `ll_item_stack_get_item(const void* itemStack)`: Retrieve native `Item*` from control block.
+
+### Clean Deployment & Pure Zero-RP Enforcement
+- **Stale File Purge & Pack Hygiene**:
+  - Wiped legacy test definitions (`astral_block*`, `astral_crafting_table*`) from all profile directories.
+  - Hardened `package.sh` in `LeviLamroid`, `LeviItems`, and `LeviAdvancements` to completely wipe target `resources/` and `data/` directories prior to copying, preventing stale JSON ingestion.
+  - Verified pure Zero-RP and Zero-BP mode: `global_resource_packs.json` and `world_resource_packs.json` remain pristine with 0 mod entries; all assets and UI are dynamically mounted in-memory via `ResourceManager`.
 
 ### Full Engine Parity & Cross-Version Harmonization (1.26.52.3 & 1.26.45.1)
 - **100% Mathematical RVA Reconciliation**:
@@ -23,7 +58,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
     - `loopbackPacketSenderSend`: 1.26.52.3: `0x0C68FAC4`, 1.26.45.1: `0x0C2E26EC`
     - `serverNetworkHandlerHandle`: 1.26.52.3: `0x0C58394C`, 1.26.45.1: `0x0C1E5B4C`
 
-### Dynamic Multi-Version UI Engine & Crash Prevention
+### Dynamic Multi-Version UI Engine
 - **Eliminated Hardcoded Screen Offsets in `src/hooks/UIHooks.cpp`**:
   - Replaced hardcoded vtable slot constants (`0x710/8`, `0x760/8`, `0x758/8`, `0xD0/8`, `0xD8/8`) and RVAs with dynamic `EngineOffsets` fields:
     - `off.clientInstanceSceneFactorySlot` (1.26.52.3: 226, 1.26.45.1: 224)
@@ -32,7 +67,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
     - `off.sceneFactoryCreateScreenAbstract` (1.26.52.3: `0x09AEB298`, 1.26.45.1: `0x097609CC`)
     - `off.sceneStackPushScreenSlot` (Slot 26 across all versions)
     - `off.sceneStackSchedulePopSlot` (Slot 27 across all versions)
-  - Completely fixes crashes when opening or popping screens (`ll_ui_open_screen`, `ll_ui_close_screen`) on 1.26.45.1 and earlier profiles.
 
 ### Fabric-API Lifecycle Event Subsystem
 - **New Core Events (`ll::event`)**:

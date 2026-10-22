@@ -1,0 +1,78 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/control/Control.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+class MoveControlComponent;
+class Vec3;
+struct MoveControlDescription;
+// clang-format on
+
+class MoveControl : public ::Control {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~MoveControl() /*override*/ = default;
+
+    virtual void initializeInternal(::Mob& mob, ::MoveControlDescription const* description);
+
+    virtual void tick(::MoveControlComponent& parent, ::Mob& mob);
+
+    virtual void setWantedPosition(::MoveControlComponent& parent, ::Mob& mob, ::Vec3 const& pos, float speed);
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI float
+    calculateMoveSpeed(::MoveControlComponent const& parent, ::Mob& mob, ::Vec3 const& endPosition, float maxMoveSpeed);
+
+#ifdef LL_PLAT_S
+    MCAPI float calculateYRotation(
+        ::MoveControlComponent const& parent,
+        ::Mob const&                  mob,
+        ::Vec3 const&                 positionDifference,
+        float                         maxMoveSpeed
+    );
+#endif
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI static float calculateYRotation(
+        ::MoveControlComponent const& parent,
+        ::Mob const&                  mob,
+        ::Vec3 const&                 positionDifference,
+        float const                   maxMoveSpeed
+    );
+#endif
+
+    MCAPI static bool
+    shouldSlowSpeed(::MoveControlComponent const& parent, ::Mob const& mob, float const endDistanceSqr);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD void $initializeInternal(::Mob& mob, ::MoveControlDescription const* description);
+
+    MCAPI void $tick(::MoveControlComponent& parent, ::Mob& mob);
+
+    MCAPI void $setWantedPosition(::MoveControlComponent& parent, ::Mob& mob, ::Vec3 const& pos, float speed);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

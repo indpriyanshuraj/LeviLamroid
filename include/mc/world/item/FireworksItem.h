@@ -1,0 +1,109 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/item/HandSlot.h"
+#include "mc/world/item/Item.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BlockPos;
+class BlockSource;
+class Container;
+class InteractionResult;
+class ItemInstance;
+class ItemStack;
+class ItemStackBase;
+class Level;
+class Player;
+class Vec3;
+namespace Bedrock::Safety { class RedactableString; }
+// clang-format on
+
+class FireworksItem : public ::Item {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::InteractionResult _useOn(
+        ::ItemStack&  instance,
+        ::Actor&      entity,
+        ::BlockPos    pos,
+        uchar         face,
+        ::HandSlot    handSlot,
+        ::Vec3 const& clickPos
+    ) const /*override*/;
+
+    virtual ::ItemStack& use(::ItemStack& item, ::Player& player, ::HandSlot handSlot) const /*override*/;
+
+    virtual bool dispense(::BlockSource& region, ::Container& container, int slot, ::Vec3 const& pos, uchar face) const
+        /*override*/;
+
+    virtual void appendFormattedHovertext(
+        ::ItemStackBase const&               stack,
+        ::Level&                             level,
+        ::Bedrock::Safety::RedactableString& hovertext,
+        bool const                           advancedToolTips
+    ) const /*override*/;
+
+    virtual bool isDestructive(int) const /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::ItemInstance const& initFireworksRocketItem(
+        ::ItemInstance&                      itemInstance,
+        ::std::vector<::ItemInstance> const& charges,
+        int                                  sulphurCount
+    );
+
+    MCAPI static ::ItemStack const&
+    initFireworksRocketItem(::ItemStack& item, ::std::vector<::ItemStack> const& charges, int sulphurCount);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::string const& TAG_EXPLOSIONS();
+
+    MCAPI static ::std::string const& TAG_E_FLIGHT();
+
+    MCAPI static ::std::string const& TAG_FIREWORKS();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::InteractionResult $_useOn(
+        ::ItemStack&  instance,
+        ::Actor&      entity,
+        ::BlockPos    pos,
+        uchar         face,
+        ::HandSlot    handSlot,
+        ::Vec3 const& clickPos
+    ) const;
+
+    MCAPI ::ItemStack& $use(::ItemStack& item, ::Player& player, ::HandSlot handSlot) const;
+
+    MCAPI bool $dispense(::BlockSource& region, ::Container& container, int slot, ::Vec3 const& pos, uchar face) const;
+
+    MCAPI void $appendFormattedHovertext(
+        ::ItemStackBase const&               stack,
+        ::Level&                             level,
+        ::Bedrock::Safety::RedactableString& hovertext,
+        bool const                           advancedToolTips
+    ) const;
+
+    MCFOLD bool $isDestructive(int) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

@@ -1,0 +1,67 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/legacy/actor/ActorDamageCause.h"
+#include "mc/deps/shared_types/legacy/actor/DealsDamage.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class ActorDamageSource;
+class BlockPos;
+struct DamageSensorTrigger;
+struct VariantParameterList;
+// clang-format on
+
+class DamageSensorComponent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, int>                                   mDamageAmount;
+    ::ll::TypedStorage<1, 1, bool>                                  mDamageIsFatal;
+    ::ll::TypedStorage<4, 4, int>                                   mDamageCause;
+    ::ll::TypedStorage<8, 24, ::std::vector<::DamageSensorTrigger>> mTriggers;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::SharedTypes::Legacy::DealsDamage _recordDamageAndCheckIfDealt(
+        ::Actor&                                       owner,
+        ::Actor*                                       sender,
+        ::SharedTypes::Legacy::ActorDamageCause const& cause,
+        ::Actor*                                       damager,
+        float                                          amount,
+        float                                          preDamageHealth,
+        ::VariantParameterList                         parameters,
+        bool                                           willTrigger
+    );
+
+    MCAPI float getAdjustedDamage(::Actor& owner, ::ActorDamageSource const& source, float amount) const;
+
+    MCAPI ::SharedTypes::Legacy::DealsDamage recordBlockDamageAndCheckIfDealt(
+        ::Actor&                                owner,
+        ::SharedTypes::Legacy::ActorDamageCause cause,
+        float                                   amount,
+        ::BlockPos                              standingOnPos
+    );
+
+    MCAPI ::SharedTypes::Legacy::DealsDamage recordGenericDamageAndCheckIfDealt(
+        ::Actor&                   owner,
+        ::ActorDamageSource const& source,
+        float                      amount,
+        float                      preDamageHealth,
+        ::VariantParameterList     parameters,
+        bool                       willTrigger
+    );
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void
+    _fillParameters(::VariantParameterList& inOutParameters, ::Actor& owner, ::Actor* sender, ::Actor* damager);
+    // NOLINTEND
+};

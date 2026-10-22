@@ -1,0 +1,90 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/script/ScriptWidgetComponentBaseOptions.h"
+
+// auto generated forward declare list
+// clang-format off
+class AABB;
+class Vec3;
+namespace ScriptModuleMinecraft { class ScriptRGBA; }
+namespace Scripting { struct InterfaceBinding; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidgetComponentVolumeOutlineOptions : public ::Editor::ScriptModule::ScriptWidgetComponentBaseOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk337e61;
+    ::ll::UntypedStorage<8, 32> mUnk9f8bb6;
+    ::ll::UntypedStorage<8, 32> mUnk1fa68a;
+    ::ll::UntypedStorage<8, 32> mUnk29cd7c;
+    ::ll::UntypedStorage<1, 2>  mUnk6f9f4f;
+    ::ll::UntypedStorage<1, 2>  mUnkc49051;
+    ::ll::UntypedStorage<1, 2>  mUnkb1ac46;
+    ::ll::UntypedStorage<1, 2>  mUnkf7bd52;
+    ::ll::UntypedStorage<4, 16> mUnkf0201b;
+    ::ll::UntypedStorage<4, 16> mUnk808108;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptWidgetComponentVolumeOutlineOptions& operator=(ScriptWidgetComponentVolumeOutlineOptions const&);
+    ScriptWidgetComponentVolumeOutlineOptions(ScriptWidgetComponentVolumeOutlineOptions const&);
+    ScriptWidgetComponentVolumeOutlineOptions();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Scripting::Result_deprecated<void>
+    validate(::AABB const& absoluteWorldBounds, ::Vec3 const& rootPosition, ::Vec3 const& size) const /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::InterfaceBinding bindScript();
+
+    MCNAPI static ::Scripting::Result_deprecated<void> validateOffsetValues(::Vec3 const& offset);
+
+    MCNAPI static ::Scripting::Result_deprecated<void> validateOriginValues(::Vec3 const& origin);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::ScriptModuleMinecraft::ScriptRGBA const& DEFAULT_HIGHLIGHT_HULL_COLOR();
+
+    MCNAPI static ::ScriptModuleMinecraft::ScriptRGBA const& DEFAULT_HIGHLIGHT_OUTLINE_COLOR();
+
+    MCNAPI static ::ScriptModuleMinecraft::ScriptRGBA const& DEFAULT_HULL_COLOR();
+
+    MCNAPI static ::Vec3 const& DEFAULT_NORMALIZED_ORIGIN();
+
+    MCNAPI static ::Vec3 const& DEFAULT_OFFSET();
+
+    MCNAPI static ::ScriptModuleMinecraft::ScriptRGBA const& DEFAULT_OUTLINE_COLOR();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result_deprecated<void>
+    $validate(::AABB const& absoluteWorldBounds, ::Vec3 const& rootPosition, ::Vec3 const& size) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

@@ -1,0 +1,27 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/scoped_refptr.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class IceTransportInit; }
+namespace webrtc { class IceTransportInterface; }
+// clang-format on
+
+namespace webrtc {
+
+class IceTransportFactory {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IceTransportFactory() = default;
+
+    virtual ::webrtc::scoped_refptr<::webrtc::IceTransportInterface>
+    CreateIceTransport(::std::string const& transport_name, int component, ::webrtc::IceTransportInit init) = 0;
+    // NOLINTEND
+};
+
+} // namespace webrtc

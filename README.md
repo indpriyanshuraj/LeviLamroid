@@ -11,13 +11,13 @@ A next-generation native C++ mod loader runtime and reverse-engineering hook hub
 Developed and maintained by **[SpyGamingOG](https://github.com/spygamingog)**.  
 Inspired by the architecture of Windows [LeviLamina](https://github.com/LiteLDev/LeviLamina), redesigned from the ground up for Android ARM64 Linux kernels and **LeviLauncher (LeviLaunchroid)**.
 
-> [!WARNING]
-> ### ⚠️ Under Active Development — Public Beta Release (`v1.0.5-beta`)
-> **LeviLamroid is currently in active public beta testing.**
-> - **Reverse Engineering Status**: Core hooking, UI screen navigation, RenderDragon graphics passes, and audio are verified and stable. **Internal Item & Block C++ Component Graphs (`FoodItemComponent`, `SpawnEggItem`, `BlockDefinitionGroup` state permutation schemas) are NOT completely discovered** and are undergoing active reverse engineering.
-> - **Crash Mitigation**: LeviLamroid safely intercepts `GameMode::useItem` and `GameMode::useItemOn` to handle consumption and placement via command bridges and stack decrementing, preventing engine crashes while component schemas continue to be mapped.
-> - **Multi-Version Coverage**: Native verified support across Bedrock 1.26.44.3, 1.26.45.1, 1.26.51.1, and 1.26.52.3 on LeviLauncher.
-> - **Bug Reports Welcome**: If you encounter an unmapped signature, a broken hook, or an unexpected crash, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
+> [!NOTE]
+> ### 🚀 Public Beta Release (`v1.0.5-beta`)
+> **LeviLamroid is in active public beta testing across Minecraft Bedrock 1.26.44.3, 1.26.45.1, 1.26.51.1, and 1.26.52.3 on LeviLauncher.**
+> - **World Join Crash Resolved**: Fully fixed the `ItemRegistry` reference unwrapping and `BedrockControlBlock` 16-byte memory alignment, allowing 200+ custom items and blocks to register cleanly during world initialization without SIGSEGV.
+> - **Pure Zero-RP & Zero-BP**: Textures, sounds, and JsonUI files are served dynamically in-memory via `ResourceManager` without physical `.mcpack` files on disk, ensuring 0 pack collisions and leaving Xbox achievements uninhibited.
+> - **Direct Container Slot Operations**: Safe, deadlock-free inventory manipulation directly writing to container slots with virtual method listener notification.
+> - **Bug Reports Welcome**: If you encounter an unmapped signature or unexpected behavior, please capture a logcat (`adb logcat`) and open an issue on the [GitHub Issue Tracker](https://github.com/spygamingog/LeviLamroid/issues).
 
 ---
 

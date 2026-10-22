@@ -1,0 +1,43 @@
+#include "mc/world/scores/Scoreboard.h"
+#include "mc/world/scores/Objective.h"
+#include "mc/world/scores/ScoreboardIdentityRef.h"
+
+int Scoreboard::modifyPlayerScore(
+    ScoreboardOperationResult& result,
+    ScoreboardId const&        id,
+    Objective&                 objective,
+    int                        scoreValue,
+    PlayerScoreSetFunction     action
+) {
+    if (auto it = mIdentityRefs->find(id); it != mIdentityRefs->end()) {
+        int newScore = 0;
+        result       = it->second.modifyScoreInObjective(newScore, objective, scoreValue, action);
+        if (result == ScoreboardOperationResult::Success) {
+            onScoreChanged(id, objective);
+        }
+        return newScore;
+    }
+    result = ScoreboardOperationResult::UnknownId;
+    return 0;
+}
+
+ScoreboardId Scoreboard::getId(PlayerScoreboardId const& playerId) const {
+    auto& dict  = mIdentityDict->mPlayers;
+    auto  found = dict->find(playerId);
+    if (found != dict->end()) {
+        return found->second;
+    }
+    return ScoreboardId::INVALID();
+}
+
+bool Scoreboard::resetPlayerScore(::ScoreboardId const& id, ::Objective& objective) {
+    if (objective.mScores->find(id) == objective.mScores->end()) {
+        return false;
+    }
+    auto it = mIdentityRefs->find(id);
+    if (it == mIdentityRefs->end()) {
+        return false;
+    }
+    onPlayerScoreRemoved(id, objective);
+    return it->second.removeFromObjective(*this, objective);
+}

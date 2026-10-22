@@ -1,0 +1,40 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace gif {
+
+struct Gif {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>  mUnk18ce5e;
+    ::ll::UntypedStorage<4, 4>  mUnkd10a17;
+    ::ll::UntypedStorage<8, 24> mUnk7e1a0d;
+    ::ll::UntypedStorage<8, 24> mUnke7d274;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    Gif& operator=(Gif const&);
+    Gif(Gif const&);
+    Gif();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ~Gif();
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};
+
+} // namespace gif

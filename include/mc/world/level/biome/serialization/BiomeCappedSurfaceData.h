@@ -1,0 +1,50 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/Result.h"
+
+// auto generated forward declare list
+// clang-format off
+class BinaryStream;
+class ReadOnlyBinaryStream;
+// clang-format on
+
+struct BiomeCappedSurfaceData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<uint>>  mFloorBlocks;
+    ::ll::TypedStorage<8, 24, ::std::vector<uint>>  mCeilingBlocks;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>> mSeaBlock;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>> mFoundationBlock;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>> mBeachBlock;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BiomeCappedSurfaceData& operator=(BiomeCappedSurfaceData const&);
+    BiomeCappedSurfaceData(BiomeCappedSurfaceData const&);
+    BiomeCappedSurfaceData();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::BiomeCappedSurfaceData& operator=(::BiomeCappedSurfaceData&&);
+
+    MCAPI bool operator==(::BiomeCappedSurfaceData const& other) const;
+
+#ifdef LL_PLAT_S
+    MCAPI void write(::BinaryStream& stream) const;
+#endif
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCAPI static ::Bedrock::Result<::BiomeCappedSurfaceData> read(::ReadOnlyBinaryStream& stream);
+#endif
+    // NOLINTEND
+};

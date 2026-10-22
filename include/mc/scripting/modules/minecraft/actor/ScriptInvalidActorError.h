@@ -1,0 +1,105 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/BaseError.h"
+#include "mc/scripting/modules/minecraft/ErrorMemberType.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace ScriptModuleMinecraft { class ScriptActor; }
+namespace ScriptModuleMinecraft { struct ScriptActorData; }
+namespace Scripting { struct ErrorBinding; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+struct ScriptInvalidActorError : public ::Scripting::BaseError {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 32, ::std::string> mId;
+    ::ll::TypedStorage<8, 32, ::std::string> mType;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptInvalidActorError& operator=(ScriptInvalidActorError const&);
+    ScriptInvalidActorError();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ScriptInvalidActorError(::ScriptModuleMinecraft::ScriptInvalidActorError const&);
+
+    MCAPI ScriptInvalidActorError(
+        ::ScriptModuleMinecraft::ErrorMemberType    memberType,
+        ::ScriptModuleMinecraft::ScriptActor const& invalidActor,
+        ::std::string_view                          functionName,
+        ::std::string_view                          entityName
+    );
+
+    MCAPI ScriptInvalidActorError(
+        ::ScriptModuleMinecraft::ErrorMemberType        memberType,
+        ::ScriptModuleMinecraft::ScriptActorData const& invalidActorData,
+        ::std::string_view                              functionName,
+        ::std::string_view                              entityName
+    );
+
+    MCAPI ScriptInvalidActorError(
+        ::ScriptModuleMinecraft::ErrorMemberType memberType,
+        ::std::string_view                       typeId,
+        ::std::string_view                       id,
+        ::std::string_view                       functionName,
+        ::std::string_view                       entityName
+    );
+
+    MCAPI ::ScriptModuleMinecraft::ScriptInvalidActorError&
+    operator=(::ScriptModuleMinecraft::ScriptInvalidActorError&&);
+
+    MCAPI ~ScriptInvalidActorError();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::Scripting::ErrorBinding bind();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::ScriptModuleMinecraft::ScriptInvalidActorError const&);
+
+    MCAPI void* $ctor(
+        ::ScriptModuleMinecraft::ErrorMemberType    memberType,
+        ::ScriptModuleMinecraft::ScriptActor const& invalidActor,
+        ::std::string_view                          functionName,
+        ::std::string_view                          entityName
+    );
+
+    MCAPI void* $ctor(
+        ::ScriptModuleMinecraft::ErrorMemberType        memberType,
+        ::ScriptModuleMinecraft::ScriptActorData const& invalidActorData,
+        ::std::string_view                              functionName,
+        ::std::string_view                              entityName
+    );
+
+    MCAPI void* $ctor(
+        ::ScriptModuleMinecraft::ErrorMemberType memberType,
+        ::std::string_view                       typeId,
+        ::std::string_view                       id,
+        ::std::string_view                       functionName,
+        ::std::string_view                       entityName
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

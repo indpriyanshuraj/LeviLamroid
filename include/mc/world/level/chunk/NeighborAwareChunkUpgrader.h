@@ -1,0 +1,54 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/chunk/INeighborAwareChunkUpgrader.h"
+#include "mc/world/level/chunk/NeighborAwareBlockUpdateType.h"
+#include "mc/world/level/chunk/NeighborAwareBlockUpgradeVersionType.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockPos;
+class BlockSource;
+// clang-format on
+
+class NeighborAwareChunkUpgrader : public ::INeighborAwareChunkUpgrader {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::NeighborAwareBlockUpdateType
+    getUpdateType(::Block const& block, ::NeighborAwareBlockUpgradeVersionType neighborAwareUpgradeVersion) const
+        /*override*/;
+
+    virtual bool doLevelChunkNeighborAwareUpgrade(
+        ::NeighborAwareBlockUpdateType updateType,
+        ::BlockSource&                 region,
+        ::Block const&                 block,
+        ::BlockPos const&              blockPos
+    ) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::NeighborAwareBlockUpdateType
+    $getUpdateType(::Block const& block, ::NeighborAwareBlockUpgradeVersionType neighborAwareUpgradeVersion) const;
+
+    MCAPI bool $doLevelChunkNeighborAwareUpgrade(
+        ::NeighborAwareBlockUpdateType updateType,
+        ::BlockSource&                 region,
+        ::Block const&                 block,
+        ::BlockPos const&              blockPos
+    ) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

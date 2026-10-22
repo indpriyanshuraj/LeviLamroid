@@ -1,0 +1,28 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { struct DataBuffer; }
+// clang-format on
+
+namespace webrtc {
+
+class DataChannelObserver {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void OnStateChange() = 0;
+
+    virtual void OnMessage(::webrtc::DataBuffer const& buffer) = 0;
+
+    virtual void OnBufferedAmountChange(uint64 sent_data_size);
+
+    virtual bool IsOkToCallOnTheNetworkThread();
+
+    virtual ~DataChannelObserver() = default;
+    // NOLINTEND
+};
+
+} // namespace webrtc

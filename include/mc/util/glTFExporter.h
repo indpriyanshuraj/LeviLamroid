@@ -1,0 +1,124 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class Path; }
+namespace Json { class Value; }
+namespace glTF { struct Accessor; }
+namespace glTF { struct Buffer; }
+namespace glTF { struct BufferView; }
+namespace glTF { struct Image; }
+namespace glTF { struct Material; }
+namespace glTF { struct Mesh; }
+namespace glTF { struct Node; }
+namespace glTF { struct Sampler; }
+namespace glTF { struct Scene; }
+namespace glTF { struct Texture; }
+// clang-format on
+
+class glTFExporter {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32>  mUnk6b2b52;
+    ::ll::UntypedStorage<8, 32>  mUnk8c608f;
+    ::ll::UntypedStorage<8, 32>  mUnk8616b2;
+    ::ll::UntypedStorage<8, 32>  mUnk120142;
+    ::ll::UntypedStorage<8, 32>  mUnk9bc0ba;
+    ::ll::UntypedStorage<1, 1>   mUnkfc1c68;
+    ::ll::UntypedStorage<8, 24>  mUnk4999c3;
+    ::ll::UntypedStorage<8, 24>  mUnkf19852;
+    ::ll::UntypedStorage<8, 160> mUnkf04c76;
+    ::ll::UntypedStorage<8, 24>  mUnk3cbc3b;
+    ::ll::UntypedStorage<8, 24>  mUnk8e959c;
+    ::ll::UntypedStorage<8, 24>  mUnk81fc79;
+    ::ll::UntypedStorage<8, 24>  mUnk455823;
+    ::ll::UntypedStorage<8, 24>  mUnkc5fffb;
+    ::ll::UntypedStorage<8, 24>  mUnk9a4c47;
+    ::ll::UntypedStorage<8, 24>  mUnk179a42;
+    ::ll::UntypedStorage<8, 24>  mUnka25cfc;
+    ::ll::UntypedStorage<8, 24>  mUnk7de0c4;
+    ::ll::UntypedStorage<8, 24>  mUnkb05d1a;
+    ::ll::UntypedStorage<8, 24>  mUnka8255b;
+    ::ll::UntypedStorage<4, 4>   mUnk398e4e;
+    ::ll::UntypedStorage<8, 24>  mUnk35d773;
+    ::ll::UntypedStorage<8, 80>  mUnk3f9679;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    glTFExporter& operator=(glTFExporter const&);
+    glTFExporter(glTFExporter const&);
+    glTFExporter();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    virtual ~glTFExporter() = default;
+#else // LL_PLAT_C
+    virtual ~glTFExporter();
+#endif
+
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI bool _hasMaterial(::std::string const& materialName);
+
+    MCNAPI void _serialize(::Json::Value& root);
+
+    MCNAPI int addAccessor(::glTF::Accessor& accessor);
+
+    MCNAPI uint64 addBinaryBuffer(::Core::Path const& filePath, uchar const* data, uint64 size);
+
+    MCNAPI int addBuffer(::glTF::Buffer& buffer);
+
+    MCNAPI int addBufferView(::glTF::BufferView& bufferView);
+
+    MCNAPI void addExtension(::std::string const& extension);
+
+    MCNAPI int addImage(::glTF::Image& image);
+
+    MCNAPI int addMaterial(::glTF::Material& material);
+
+    MCNAPI int addMesh(::glTF::Mesh& mesh);
+
+    MCNAPI int addNode(::glTF::Node& node);
+
+    MCNAPI void addNodeChild(int nodeID, int childNodeID);
+
+    MCNAPI int addSampler(::glTF::Sampler& sampler);
+
+    MCNAPI int addScene(::glTF::Scene& scene);
+
+    MCNAPI int addTexture(::glTF::Texture& texture);
+
+    MCNAPI int getMaterialID(::std::string const& materialName);
+
+    MCNAPI glTFExporter(::Core::Path const& folderPath, ::std::string const& modelName);
+
+    MCNAPI void serialize();
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void* $ctor(::Core::Path const& folderPath, ::std::string const& modelName);
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};

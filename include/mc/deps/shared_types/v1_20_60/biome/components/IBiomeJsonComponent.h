@@ -1,0 +1,15 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace SharedTypes::v1_20_60 {
+
+struct IBiomeJsonComponent {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IBiomeJsonComponent() = default;
+    // NOLINTEND
+};
+
+} // namespace SharedTypes::v1_20_60

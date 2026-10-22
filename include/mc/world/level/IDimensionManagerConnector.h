@@ -1,0 +1,23 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/pub_sub/Connector.h"
+
+// auto generated forward declare list
+// clang-format off
+class Dimension;
+class DimensionManager;
+// clang-format on
+
+class IDimensionManagerConnector {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Bedrock::PubSub::Connector<void(::Dimension&)>& getOnNewDimensionCreatedConnector() = 0;
+
+    virtual ::Bedrock::PubSub::Connector<void(::DimensionManager&)>&
+    getOnReadyForCustomDimensionRegistrationConnector() = 0;
+    // NOLINTEND
+};

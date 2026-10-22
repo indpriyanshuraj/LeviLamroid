@@ -1,0 +1,22 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContentIdentity;
+// clang-format on
+
+namespace ResourcePackCopyUtils {
+
+class IEntitlementCheck {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IEntitlementCheck() = default;
+
+    virtual bool isValid(::ContentIdentity const& identity) const = 0;
+    // NOLINTEND
+};
+
+} // namespace ResourcePackCopyUtils

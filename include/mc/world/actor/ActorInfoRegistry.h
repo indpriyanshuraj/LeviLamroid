@@ -1,0 +1,38 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+struct ActorInfo;
+// clang-format on
+
+class ActorInfoRegistry {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<uint64, uint>>      mActorInfoNameMap;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<uint, ::ActorInfo>> mActorInfoMap;
+    ::ll::TypedStorage<4, 4, uint>                                     mLastId;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void digestInfoFromServer(::std::vector<::ActorInfo> const& infoList);
+#endif
+
+    MCAPI ::ActorInfo const& getActorInfo(uint infoRuntimeId) const;
+
+    MCAPI uint getActorInfoId(::std::string const& name) const;
+
+    MCAPI ::std::vector<::ActorInfo> getActorInfoList() const;
+
+    MCAPI bool isSpawnEggAvailable(::std::string identifier);
+
+    MCAPI void registerActorInfo(::ActorInfo const& info);
+
+    MCAPI void setSpawnEggAvailable(::std::string identifier, bool val);
+    // NOLINTEND
+};

@@ -1,0 +1,190 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/v1_26_20/block/MaterialType.h"
+#include "mc/world/actor/spawn_category/Type.h"
+#include "mc/world/level/SpawnBlockRequirements.h"
+#include "mc/world/level/chunk/LevelChunk.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class ActorSpawnRuleGroup;
+class Biome;
+class BlockPos;
+class BlockSource;
+class ChunkPos;
+class IRandom;
+class IWorldRegistriesProvider;
+class ItemActor;
+class ItemStack;
+class LevelChunk;
+class LevelChunkVolumeData;
+class Mob;
+class MobSpawnRules;
+class Random;
+class ResourcePackManager;
+class SpawnConditions;
+class SpawnGroupRegistry;
+class Vec3;
+struct ActorDefinitionIdentifier;
+struct ActorUniqueID;
+struct SpawnSettings;
+namespace br::spawn { class EntityTypeCache; }
+namespace br::spawn { class SpawnPlacements; }
+namespace br::spawn { struct State; }
+// clang-format on
+
+class Spawner {
+public:
+    // Spawner inner types define
+    using AncientCityPredicate = ::std::function<bool(::BlockSource const&, ::BlockPos)>;
+
+    using GetSpawningAreasCallback =
+        ::std::function<::gsl::span<::LevelChunk::SpawningArea const>(::LevelChunk const&)>;
+
+    using MobSpawnedCallback = ::std::function<void(::Mob&)>;
+
+    using SpawnMobClusterCallback = ::std::function<void(::BlockPos const&, ::SpawnConditions&)>;
+
+    using SpawnStructureMobCallback =
+        ::std::function<void(::BlockPos const&, ::LevelChunk::SpawningArea const&, ::SpawnConditions const&)>;
+
+    using SpawnTickCallback = ::std::function<void(::BlockPos, ::SpawnConditions)>;
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~Spawner() = default;
+
+    virtual void initializeServerSide(::ResourcePackManager& rpm, ::IWorldRegistriesProvider& registries) = 0;
+
+    virtual ::SpawnSettings const& getSpawnSettings() const = 0;
+
+    virtual void setSpawnSettings(::SpawnSettings const& spawnSettings) = 0;
+
+    virtual ::ActorSpawnRuleGroup const* getSpawnRules() const = 0;
+
+    virtual ::ActorSpawnRuleGroup* getSpawnRulesMutable() const = 0;
+
+    virtual ::SpawnGroupRegistry const* getSpawnGroupRegistry() const = 0;
+
+    virtual ::br::spawn::EntityTypeCache* getEntityTypeCache() const = 0;
+
+    virtual ::Mob* spawnMob(
+        ::BlockSource&                     region,
+        ::ActorDefinitionIdentifier const& id,
+        ::Actor*                           spawner,
+        ::Vec3 const&                      pos,
+        bool                               naturalSpawn,
+        bool                               surface,
+        bool                               fromSpawner
+    );
+
+    virtual ::ItemActor*
+    spawnItem(::BlockSource& region, ::ItemStack const& inst, ::Actor* spawner, ::Vec3 const& pos, int throwTime);
+
+    virtual ::Actor* spawnProjectile(
+        ::BlockSource&                     region,
+        ::ActorDefinitionIdentifier const& id,
+        ::Actor*                           spawner,
+        ::Vec3 const&                      position,
+        ::Vec3 const&                      direction
+    );
+
+    virtual void postProcessSpawnMobs(::BlockSource& region, int xo, int zo, ::Random& random) = 0;
+
+    virtual void
+    tick(::BlockSource& region, ::LevelChunkVolumeData const& levelChunkVolumeData, ::ChunkPos const chunkPos) = 0;
+
+    virtual void tickMobCount() = 0;
+
+    virtual void incrementSpawnableTickedMob() = 0;
+
+    virtual uint getSpawnableTickedMobCountPrevious() const = 0;
+
+    virtual ::std::unordered_set<::ActorUniqueID> spawnMobGroup(
+        ::BlockSource&                  region,
+        ::std::string const&            spawnGroupId,
+        ::Vec3 const&                   pos,
+        bool                            doScatter,
+        bool                            validateDistToPlayer,
+        ::std::function<void(::Mob&)>&& spawnedCallback
+    ) = 0;
+
+    virtual ::br::spawn::SpawnPlacements& getSpawnPlacements() = 0;
+
+    virtual ::std::tuple<::std::array<::SpawnCategory::Type, 8>, uint64>
+    filteredSpawningCategories(::br::spawn::State const&, bool, bool, bool) const;
+
+    virtual void spawnForChunk(
+        ::BlockSource&,
+        ::LevelChunkVolumeData const&,
+        ::br::spawn::State&,
+        ::gsl::span<::SpawnCategory::Type>,
+        ::IRandom&
+    ) const;
+
+    virtual void spawnMobsForChunkGeneration(::BlockSource&, ::Biome const&, ::ChunkPos, ::IRandom&) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static bool findNextSpawnBlockUnder(
+        ::BlockSource const&                                   region,
+        ::BlockPos&                                            pos,
+        ::std::optional<::SharedTypes::v1_26_20::MaterialType> materialToSpawnIn,
+        ::SpawnBlockRequirements                               spawnBlockRequirements
+    );
+
+    MCAPI static bool isSpawnPositionOk(
+        ::MobSpawnRules const& rules,
+        ::BlockSource&         region,
+        ::BlockPos const&      pos,
+        bool                   validateDistToPlayer
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::Mob* $spawnMob(
+        ::BlockSource&                     region,
+        ::ActorDefinitionIdentifier const& id,
+        ::Actor*                           spawner,
+        ::Vec3 const&                      pos,
+        bool                               naturalSpawn,
+        bool                               surface,
+        bool                               fromSpawner
+    );
+
+    MCAPI ::ItemActor*
+    $spawnItem(::BlockSource& region, ::ItemStack const& inst, ::Actor* spawner, ::Vec3 const& pos, int throwTime);
+
+    MCAPI ::Actor* $spawnProjectile(
+        ::BlockSource&                     region,
+        ::ActorDefinitionIdentifier const& id,
+        ::Actor*                           spawner,
+        ::Vec3 const&                      position,
+        ::Vec3 const&                      direction
+    );
+
+    MCAPI ::std::tuple<::std::array<::SpawnCategory::Type, 8>, uint64>
+    $filteredSpawningCategories(::br::spawn::State const&, bool, bool, bool) const;
+
+    MCFOLD void $spawnForChunk(
+        ::BlockSource&,
+        ::LevelChunkVolumeData const&,
+        ::br::spawn::State&,
+        ::gsl::span<::SpawnCategory::Type>,
+        ::IRandom&
+    ) const;
+
+    MCFOLD void $spawnMobsForChunkGeneration(::BlockSource&, ::Biome const&, ::ChunkPos, ::IRandom&) const;
+
+
+    // NOLINTEND
+};

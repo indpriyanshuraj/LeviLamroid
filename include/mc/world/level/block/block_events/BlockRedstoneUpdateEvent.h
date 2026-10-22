@@ -1,0 +1,66 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/block_events/BlockEventBase.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockSource;
+// clang-format on
+
+namespace BlockEvents {
+
+class BlockRedstoneUpdateEvent : public ::BlockEvents::BlockEventBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::BlockSource&> mRegion;
+    ::ll::TypedStorage<2, 2, short>          mSignalLevel;
+    ::ll::TypedStorage<2, 2, short>          mPreviousSignalLevel;
+    ::ll::TypedStorage<1, 1, bool>           mIsFirstTime;
+    // NOLINTEND
+
+public:
+    BlockRedstoneUpdateEvent(
+        BlockPos const& pos,
+        BlockSource&    blockSource,
+        short           signalLevel,
+        short           previousSignalLevel,
+        bool            isFirstTime
+    )
+    : BlockEvents::BlockEventBase(pos),
+      mRegion(blockSource),
+      mSignalLevel(signalLevel),
+      mPreviousSignalLevel(previousSignalLevel),
+      mIsFirstTime(isFirstTime) {}
+
+public:
+    // prevent constructor by default
+    BlockRedstoneUpdateEvent& operator=(BlockRedstoneUpdateEvent const&);
+    BlockRedstoneUpdateEvent(BlockRedstoneUpdateEvent const&);
+    BlockRedstoneUpdateEvent();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::BlockSource const& getBlockSource() const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::BlockSource const& $getBlockSource() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace BlockEvents

@@ -1,0 +1,99 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/Vec3.h"
+#include "mc/world/actor/animal/Animal.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorDefinitionGroup;
+class BlockPos;
+class EntityContext;
+class Player;
+struct ActorDefinitionIdentifier;
+// clang-format on
+
+class Strider : public ::Animal {
+public:
+    // Strider inner types declare
+    // clang-format off
+    class PlayerRideInLavaInOverworldAchievementTracker;
+    // clang-format on
+
+    // Strider inner types define
+    class PlayerRideInLavaInOverworldAchievementTracker {
+    public:
+        // PlayerRideInLavaInOverworldAchievementTracker inner types define
+        enum class VehicleState : uchar {
+            Riding = 0,
+            Done   = 1,
+        };
+
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<1, 1, ::Strider::PlayerRideInLavaInOverworldAchievementTracker::VehicleState> mState;
+        ::ll::TypedStorage<1, 1, bool>      mHasSentAchievement;
+        ::ll::TypedStorage<1, 1, bool>      mInLavaWithPlayer;
+        ::ll::TypedStorage<4, 12, ::Vec3>   mStartPosInLava;
+        ::ll::TypedStorage<8, 8, ::Player*> mPlayer;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::Strider::PlayerRideInLavaInOverworldAchievementTracker>
+        mPlayerRideInLavaInOverworldAchievementTracker;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    Strider();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual float _getWalkTargetValue(::BlockPos const& pos) /*override*/;
+
+    virtual void normalTick() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI Strider(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI float $_getWalkTargetValue(::BlockPos const& pos);
+
+    MCAPI void $normalTick();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

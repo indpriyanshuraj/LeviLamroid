@@ -1,0 +1,11 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Settings {
+
+enum class SettingsActionType : int {
+    ExternalLink = 0,
+};
+
+}

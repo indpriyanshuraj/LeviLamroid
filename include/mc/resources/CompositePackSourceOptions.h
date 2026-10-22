@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct CompositePackSourceOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnk224253;
+    ::ll::UntypedStorage<8, 24> mUnkb7af4e;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    CompositePackSourceOptions& operator=(CompositePackSourceOptions const&);
+    CompositePackSourceOptions(CompositePackSourceOptions const&);
+    CompositePackSourceOptions();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ~CompositePackSourceOptions();
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};

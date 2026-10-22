@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class ISceneStack;
+class SceneFactory;
+namespace OreUI { class RouteMatcher; }
+// clang-format on
+
+namespace OreUI {
+
+class IEntryPoint {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IEntryPoint() = default;
+
+    virtual bool shouldAddToConfiguration() const = 0;
+
+    virtual void addToMatcher(
+        ::OreUI::RouteMatcher&                              routeMatcher,
+        ::SceneFactory&                                     sceneFactory,
+        ::Bedrock::NotNullNonOwnerPtr<::ISceneStack> const& sceneStack
+    ) const = 0;
+    // NOLINTEND
+};
+
+} // namespace OreUI

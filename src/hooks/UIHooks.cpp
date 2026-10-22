@@ -1,5 +1,6 @@
 #include "levilamroid/api/Logger.h"
 #include "levilamroid/api/mcpe/Offsets.h"
+#include "levilamroid/api/math/HashedString.h"
 #include "ll/api/memory/Hook.h"
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ui/UIEvents.h"
@@ -12,28 +13,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-static bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
-    if (!ptr || reinterpret_cast<uintptr_t>(ptr) < 0x10000 || size == 0) return false;
-    static int sPipe[2] = {-1, -1};
-    static std::once_flag sPipeOnce;
-    std::call_once(sPipeOnce, []() {
-        if (pipe(sPipe) == 0) {
-            fcntl(sPipe[0], F_SETFL, O_NONBLOCK);
-            fcntl(sPipe[1], F_SETFL, O_NONBLOCK);
-        }
-    });
-    if (sPipe[1] < 0) return false;
-    ssize_t written = write(sPipe[1], ptr, size);
-    if (written > 0) {
-        char dummy[128];
-        while (written > 0) {
-            ssize_t r = read(sPipe[0], dummy, std::min<size_t>(written, sizeof(dummy)));
-            if (r <= 0) break;
-            written -= r;
-        }
-        return true;
-    }
-    return false;
+static inline bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
+    if (!ptr || size == 0) return false;
+    uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
+    if (v < 0x10000 || v > 0x7fffffffff) return false;
+    if (v + size < v) return false;
+    return true;
 }
 
 extern "C" LL_API void* ll_service_get_client_instance();
@@ -285,23 +270,24 @@ static int hooked_screenControllerHandleEvent(void* self, void* screenEvent) {
                 }
             }
 
-            // 2. Fallback to hash lookups (b8, b4, b0)
+            // 2. Hash lookups across event fields (b8 is canonical Bedrock button id)
             if (callbacks.empty()) {
-                auto it8 = sCustomButtonHashHandlers.find(b8);
-                if (it8 != sCustomButtonHashHandlers.end()) {
-                    callbacks = it8->second;
-                    matchedButton = std::to_string(b8);
-                } else {
-                    auto it4 = sCustomButtonHashHandlers.find(b4);
-                    if (it4 != sCustomButtonHashHandlers.end()) {
-                        callbacks = it4->second;
-                        matchedButton = std::to_string(b4);
-                    } else {
-                        auto it0 = sCustomButtonHashHandlers.find(b0);
-                        if (it0 != sCustomButtonHashHandlers.end()) {
-                            callbacks = it0->second;
-                            matchedButton = std::to_string(b0);
-                        }
+                uint32_t candidates[] = {
+                    b8, b4, b0,
+                    isPointerReadable(evBytes + 12, 4) ? *reinterpret_cast<uint32_t*>(evBytes + 12) : 0u,
+                    isPointerReadable(evBytes + 16, 4) ? *reinterpret_cast<uint32_t*>(evBytes + 16) : 0u,
+                    isPointerReadable(evBytes + 20, 4) ? *reinterpret_cast<uint32_t*>(evBytes + 20) : 0u,
+                    isPointerReadable(evBytes + 24, 4) ? *reinterpret_cast<uint32_t*>(evBytes + 24) : 0u
+                };
+                for (uint32_t h : candidates) {
+                    if (h == 0) continue;
+                    auto it = sCustomButtonHashHandlers.find(h);
+                    if (it != sCustomButtonHashHandlers.end()) {
+                        callbacks = it->second;
+                        char hexBuf[32];
+                        std::snprintf(hexBuf, sizeof(hexBuf), "0x%08X", h);
+                        matchedButton = hexBuf;
+                        break;
                     }
                 }
             }
@@ -389,24 +375,71 @@ LL_API bool ll_ui_is_forced_json_ui(const char* name) {
 LL_API void ll_ui_register_button(const char* buttonName, void (*handler)(void* controller, void* propertyBag)) {
     if (!buttonName || !handler) return;
     std::string bName = buttonName;
-    uint32_t hash = ::levilamroid::hooks::fnv1a_32(bName);
+    uint32_t fnv = ::levilamroid::hooks::fnv1a_32(bName);
+    uint64_t h64 = ::levilamroid::HashedString::computeHash(bName);
+    uint32_t h32_low = static_cast<uint32_t>(h64 & 0xFFFFFFFF);
+    uint32_t h32_hi = static_cast<uint32_t>(h64 >> 32);
+
     std::lock_guard<std::mutex> lock(::levilamroid::hooks::sButtonHandlerMutex);
     ::levilamroid::hooks::sCustomButtonHandlers[bName].push_back(handler);
-    ::levilamroid::hooks::sCustomButtonHashHandlers[hash].push_back(handler);
+    ::levilamroid::hooks::sCustomButtonHashHandlers[fnv].push_back(handler);
+    ::levilamroid::hooks::sCustomButtonHashHandlers[h32_low].push_back(handler);
+    ::levilamroid::hooks::sCustomButtonHashHandlers[h32_hi].push_back(handler);
+
+    // Also register alternate form: with/without "button." prefix
+    if (bName.rfind("button.", 0) == 0) {
+        std::string stripped = bName.substr(7);
+        uint32_t s_fnv = ::levilamroid::hooks::fnv1a_32(stripped);
+        uint64_t s_h64 = ::levilamroid::HashedString::computeHash(stripped);
+        ::levilamroid::hooks::sCustomButtonHandlers[stripped].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[s_fnv].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[static_cast<uint32_t>(s_h64 & 0xFFFFFFFF)].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[static_cast<uint32_t>(s_h64 >> 32)].push_back(handler);
+    } else {
+        std::string prefixed = "button." + bName;
+        uint32_t p_fnv = ::levilamroid::hooks::fnv1a_32(prefixed);
+        uint64_t p_h64 = ::levilamroid::HashedString::computeHash(prefixed);
+        ::levilamroid::hooks::sCustomButtonHandlers[prefixed].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[p_fnv].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[static_cast<uint32_t>(p_h64 & 0xFFFFFFFF)].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[static_cast<uint32_t>(p_h64 >> 32)].push_back(handler);
+    }
+
+    // Specific precomputed hashes for advancements button across Bedrock revisions
+    if (bName == "button.advancements_open" || bName == "advancements_open") {
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0xC312F1AF].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0x668F6DA3].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0x80D844EB].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0x7883CF23].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0x327BD7EB].push_back(handler);
+        ::levilamroid::hooks::sCustomButtonHashHandlers[0x80974FEB].push_back(handler);
+    }
+
     ll::Logger::getInstance().info("§6[LeviLamroid] §aRegistered custom JSON UI button listener: §b", bName,
-                                " §7(Hash: 0x", std::hex, hash, ")");
+                                " §7(HashedString: 0x", std::hex, h32_low, " | FNV32: 0x", fnv, ")");
 }
 
 LL_API bool ll_ui_dispatch_button(const char* buttonName, void* controller, void* propertyBag) {
     if (!buttonName) return false;
     std::string bName = buttonName;
-    uint32_t hash = ::levilamroid::hooks::fnv1a_32(bName);
+    uint32_t fnv = ::levilamroid::hooks::fnv1a_32(bName);
+    uint32_t h32 = static_cast<uint32_t>(::levilamroid::HashedString::computeHash(bName) & 0xFFFFFFFF);
     std::vector<void (*)(void*, void*)> callbacks;
     {
         std::lock_guard<std::mutex> lock(::levilamroid::hooks::sButtonHandlerMutex);
-        auto it = ::levilamroid::hooks::sCustomButtonHashHandlers.find(hash);
-        if (it != ::levilamroid::hooks::sCustomButtonHashHandlers.end()) {
-            callbacks = it->second;
+        auto itH = ::levilamroid::hooks::sCustomButtonHashHandlers.find(h32);
+        if (itH != ::levilamroid::hooks::sCustomButtonHashHandlers.end()) {
+            callbacks = itH->second;
+        } else {
+            auto itF = ::levilamroid::hooks::sCustomButtonHashHandlers.find(fnv);
+            if (itF != ::levilamroid::hooks::sCustomButtonHashHandlers.end()) {
+                callbacks = itF->second;
+            } else {
+                auto itN = ::levilamroid::hooks::sCustomButtonHandlers.find(bName);
+                if (itN != ::levilamroid::hooks::sCustomButtonHandlers.end()) {
+                    callbacks = itN->second;
+                }
+            }
         }
     }
     for (auto cb : callbacks) {
@@ -436,6 +469,7 @@ LL_API bool ll_ui_open_screen(const char* screenName) {
     ::levilamroid::hooks::sLastScreenName = screenName;
     if (std::string_view(screenName).find("advancement") != std::string_view::npos) {
         sAdvScreenVisible.store(true);
+        ll::Logger::getInstance().info("§6[LeviLamroid] §aAdvancements UI toggled VISIBLE, pushing advancements_screen to SceneStack...");
     }
     ll::Logger::getInstance().info("§6[LeviLamroid] §aOpening screen: §e", screenName);
 
@@ -614,10 +648,20 @@ LL_API const char* ll_ui_get_current_screen() {
     return ::levilamroid::hooks::sLastScreenName.c_str();
 }
 
+extern "C" LL_API void ll_command_dispatch_client(const char* rawInput);
+
 LL_API void ll_ui_send_toast(const char* title, const char* message, const char* iconItem, int /*durationMs*/) {
     if (!title) return;
     ll::Logger::getInstance().info("§6[LeviLamroid Toast] §e", title, "§7: ", (message ? message : ""),
                                    " §b[Icon: ", (iconItem ? iconItem : "default"), "§b]");
+
+    static thread_local bool sInToast = false;
+    if (sInToast) return;
+    sInToast = true;
+    std::string text = "§6§l[" + std::string(title) + "§r§6§l] §e" + (message ? std::string(message) : "");
+    std::string cmd = "/title @s actionbar " + text;
+    ll_command_dispatch_client(cmd.c_str());
+    sInToast = false;
 }
 
 LL_API void ll_ui_on_start_menu_open(void (*cb)()) {

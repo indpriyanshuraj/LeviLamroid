@@ -1,0 +1,52 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/LogChannel.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/logging/LogLevel.h"
+
+// auto generated forward declare list
+// clang-format off
+class HashedString;
+class Player;
+namespace Bedrock::PubSub { class Subscription; }
+namespace Editor { class LogMessage; }
+namespace Editor { struct LogContent; }
+// clang-format on
+
+namespace Editor::Services {
+
+class LoggingServiceProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~LoggingServiceProvider() = default;
+
+#ifdef LL_PLAT_S
+    virtual void
+    log(::Editor::LogContent            content,
+        ::Player*                       player,
+        ::Editor::LogLevel              level,
+        ::std::vector<::HashedString>&& areaTags,
+        ::Editor::LogChannel            logChannelMask) = 0;
+#else // LL_PLAT_C
+    virtual void
+    log(::Editor::LogContent            content,
+        ::Player*                       player,
+        ::Editor::LogLevel              level,
+        ::std::vector<::HashedString>&& areaTags,
+        ::Editor::LogChannel            logChannel) = 0;
+#endif
+
+    virtual void flush() = 0;
+
+    virtual ::std::vector<::Editor::LogMessage> const& getMessages() const = 0;
+
+    virtual ::Scripting::Result_deprecated<::Bedrock::PubSub::Subscription>
+    listenForLogMessage(::std::function<void(::Editor::LogMessage const&)> func) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

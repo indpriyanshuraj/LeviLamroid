@@ -1,0 +1,117 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/network/TransportLayer.h"
+#include "mc/network/connection/DisconnectFailReason.h"
+
+// auto generated forward declare list
+// clang-format off
+class NetworkIdentifier;
+class NetworkPeer;
+namespace Json { class Value; }
+namespace Social { class GameConnectionInfo; }
+namespace Social { struct ResolvedExperienceInfo; }
+// clang-format on
+
+class Connector {
+public:
+    // Connector inner types declare
+    // clang-format off
+    struct ConnectionCallbacks;
+    // clang-format on
+
+    // Connector inner types define
+    struct ConnectionCallbacks {
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual ~ConnectionCallbacks() = default;
+
+        virtual bool
+        onNewIncomingConnection(::NetworkIdentifier const& id, ::std::shared_ptr<::NetworkPeer>&& peer) = 0;
+
+        virtual bool
+        onNewOutgoingConnection(::NetworkIdentifier const& id, ::std::shared_ptr<::NetworkPeer>&& peer) = 0;
+
+        virtual void onConnectionClosed(
+            ::NetworkIdentifier const&               id,
+            ::Connection::DisconnectFailReason const discoReason,
+            ::std::string const&                     messageFromServer,
+            ::std::string const&                     messageBodyOverride,
+            bool                                     skipDisconnectMessage,
+            ::Json::Value const&                     sessionSummary
+        ) = 0;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Connector::ConnectionCallbacks&> mCallbacks;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    Connector& operator=(Connector const&);
+    Connector(Connector const&);
+    Connector();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~Connector() = default;
+
+    virtual ::std::string getLocalIp();
+
+    virtual ushort getPort() const;
+
+    virtual ::Social::GameConnectionInfo const& getConnectedGameInfo() const;
+
+    virtual void
+    setConnectedResolvedExperienceInfo(::std::optional<::Social::ResolvedExperienceInfo> const& resolvedExperienceInfo);
+
+    virtual bool isIPv4Supported() const;
+
+    virtual bool isIPv6Supported() const;
+
+    virtual ushort getIPv4Port() const;
+
+    virtual ushort getIPv6Port() const;
+
+    virtual ::TransportLayer getNetworkType() const;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::std::string $getLocalIp();
+
+    MCFOLD ushort $getPort() const;
+
+    MCFOLD ::Social::GameConnectionInfo const& $getConnectedGameInfo() const;
+
+    MCFOLD void $setConnectedResolvedExperienceInfo(
+        ::std::optional<::Social::ResolvedExperienceInfo> const& resolvedExperienceInfo
+    );
+
+    MCFOLD bool $isIPv4Supported() const;
+
+    MCFOLD bool $isIPv6Supported() const;
+
+    MCFOLD ushort $getIPv4Port() const;
+
+    MCFOLD ushort $getIPv6Port() const;
+
+    MCFOLD ::TransportLayer $getNetworkType() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

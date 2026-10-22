@@ -1,0 +1,110 @@
+#include "ll/api/event/player/PlayerPlaceBlockEvent.h"
+#include "ll/api/base/ScopedValue.h"
+#include "ll/api/event/Emitter.h"
+#include "ll/api/event/EventRefObjSerializer.h"
+#include "ll/api/memory/Hook.h"
+
+#include "mc/deps/nbt/CompoundTag.h"
+#include "mc/scripting/event_handlers/ScriptBlockGameplayHandler.h"
+#include "mc/world/gamemode/GameMode.h"
+#include "mc/world/gamemode/InteractionResult.h"
+#include "mc/world/level/BlockSource.h"
+
+
+namespace ll::event::inline player {
+void PlayerPlaceBlockEvent::serialize(CompoundTag& nbt) const {
+    PlayerEvent::serialize(nbt);
+    nbt["pos"] = ListTag{pos().x, pos().y, pos().z};
+}
+void PlayerPlacingBlockEvent::serialize(CompoundTag& nbt) const {
+    Cancellable::serialize(nbt);
+    nbt["face"] = face();
+}
+void PlayerPlacedBlockEvent::serialize(CompoundTag& nbt) const {
+    PlayerPlaceBlockEvent::serialize(nbt);
+    nbt["placedBlock"] = serializeRefObj(placedBlock());
+}
+
+BlockPos const& PlayerPlaceBlockEvent::pos() const { return mPos; }
+uchar const&    PlayerPlacingBlockEvent::face() const { return mFace; }
+Block const&    PlayerPlacedBlockEvent::placedBlock() const { return mPlacedBlock; }
+
+static thread_local bool isUsingItem = false;
+
+LL_TYPE_INSTANCE_HOOK(
+    PlayerPlacingBlockEventCallerHook,
+    HookPriority::High,
+    GameMode,
+    &GameMode::$useItemOn,
+    InteractionResult,
+    ItemStack&        item,
+    ::BlockPos const& at,
+    uchar             face,
+    ::Vec3 const&     hit,
+    ::HandSlot        handSlot,
+    ::Block const*    targetBlock,
+    bool              isFirstEvent
+) {
+    ScopedValue scope{isUsingItem, true};
+    auto        result = origin(item, at, face, hit, handSlot, targetBlock, isFirstEvent);
+    return result;
+}
+
+LL_TYPE_INSTANCE_HOOK(
+    PlayerPlacingBlockEventHook,
+    HookPriority::Normal,
+    BlockSource,
+    &BlockSource::$checkBlockPermissions,
+    bool,
+    Actor&               actor,
+    BlockPos const&      blockpos,
+    uchar                face,
+    ItemStackBase const& item,
+    bool                 genParticle
+) {
+    if (isUsingItem && actor.getEntityTypeId() == ActorType::Player) {
+        auto event = PlayerPlacingBlockEvent{static_cast<Player&>(actor), blockpos, face};
+        EventBus::getInstance().publish(event);
+        if (event.isCancelled()) {
+            return false;
+        }
+    }
+    return origin(actor, blockpos, face, item, genParticle);
+}
+
+LL_TYPE_INSTANCE_HOOK(
+    PlayerPlacedBlockEventHook,
+    HookPriority::Normal,
+    ScriptBlockGameplayHandler,
+    &ScriptBlockGameplayHandler::$handleEvent,
+    GameplayHandlerResult<::CoordinatorResult>,
+    BlockTryPlaceByPlayerEvent const& eventData
+) {
+    auto actor = eventData.mPlayer->tryUnwrap();
+    if (!actor) {
+        return origin(eventData);
+    }
+    auto& player = static_cast<Player&>(actor.value());
+    auto  event  = PlayerPlacedBlockEvent{player, eventData.mPos, eventData.mPermutationToPlace};
+    EventBus::getInstance().publish(event);
+    return origin(eventData);
+}
+
+
+static std::unique_ptr<EmitterBase> placingEmitterFactory();
+class PlayerPlacingBlockEventEmitter : public Emitter<placingEmitterFactory, PlayerPlacingBlockEvent> {
+    memory::HookRegistrar<PlayerPlacingBlockEventHook, PlayerPlacingBlockEventCallerHook> hook;
+};
+
+static std::unique_ptr<EmitterBase> placingEmitterFactory() {
+    return std::make_unique<PlayerPlacingBlockEventEmitter>();
+}
+
+static std::unique_ptr<EmitterBase> placedEmitterFactory();
+class PlayerPlacedBlockEventEmitter : public Emitter<placedEmitterFactory, PlayerPlacedBlockEvent> {
+    memory::HookRegistrar<PlayerPlacedBlockEventHook> hook;
+};
+
+static std::unique_ptr<EmitterBase> placedEmitterFactory() { return std::make_unique<PlayerPlacedBlockEventEmitter>(); }
+
+} // namespace ll::event::inline player

@@ -1,0 +1,30 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/ecs/ViewT.h"
+#include "mc/deps/ecs/strict/EntityModifier.h"
+
+// auto generated forward declare list
+// clang-format off
+class RideableComponent;
+class StrictEntityContext;
+struct AABBShapeComponent;
+struct PassengerComponent;
+struct StopRidingRequestComponent;
+// clang-format on
+
+class RemovePassengersTooLargeForVehicleSystem {
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void _removePassengersTooLargeForVehicle(
+        ::StrictEntityContext&                                           strictEntityContext,
+        ::PassengerComponent const&                                      passengerComponent,
+        ::AABBShapeComponent const&                                      aabbShapeComponent,
+        ::ViewT<::StrictEntityContext, ::RideableComponent const> const& vehicleView,
+        ::EntityModifier<::StopRidingRequestComponent>&                  modifier
+    );
+    // NOLINTEND
+};

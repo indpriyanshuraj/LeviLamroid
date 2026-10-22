@@ -1,0 +1,146 @@
+#include "ll/api/Expected.h"
+#include "ll/api/i18n/I18n.h"
+#include "ll/api/io/Logger.h"
+#include "ll/api/utils/ErrorUtils.h"
+#include "ll/api/utils/StringUtils.h"
+
+#include "mc/server/commands/CommandOutput.h"
+
+#ifdef LL_DEBUG
+#include "ll/api/utils/StacktraceUtils.h"
+#endif
+
+namespace ll {
+#if defined(LL_DEBUG)
+struct ErrorInfoBase::Impl {
+    Stacktrace stacktrace;
+};
+ErrorInfoBase::ErrorInfoBase() noexcept : impl(std::make_unique<Impl>(Stacktrace::current(1))) {}
+std::string Error::message(std::string_view locale) const noexcept try {
+    if (!mInfo) {
+        return "success"_trl(locale);
+    }
+    auto res  = mInfo->message(locale);
+    res      += "\nexpected stacktrace:\n";
+    res      += stacktrace_utils::toString(mInfo->impl->stacktrace);
+    return res;
+} catch (...) {
+    return "unknown"_trl(locale);
+}
+
+struct ExceptionError : ErrorInfoBase {
+    std::exception_ptr exc;
+    Stacktrace         stacktrace;
+    ExceptionError(std::exception_ptr const& exc) noexcept
+    : exc(exc),
+      stacktrace(error_utils::stacktraceFromCurrentException()) {}
+    [[nodiscard]] std::string message(std::string_view) const noexcept override {
+        auto res = error_utils::makeExceptionString(exc);
+        if (!stacktrace.empty()) {
+            res += "\nexception stacktrace:\n";
+            res += stacktrace_utils::toString(stacktrace);
+        }
+        return res;
+    }
+};
+#else
+struct ErrorInfoBase::Impl {};
+ErrorInfoBase::ErrorInfoBase() noexcept {}
+
+std::string Error::message(std::string_view locale) const noexcept try {
+    if (!mInfo) {
+        return "success"_trl(locale);
+    }
+    return mInfo->message(locale);
+} catch (...) {
+    return "unknown"_trl(locale);
+}
+
+struct ExceptionError : ErrorInfoBase {
+    std::exception_ptr exc;
+    ExceptionError(std::exception_ptr const& exc) noexcept : exc(exc) {}
+    std::string message(std::string_view) const noexcept override { return error_utils::makeExceptionString(exc); }
+};
+#endif
+
+std::string Error::message() const noexcept { return message({}); }
+
+ErrorInfoBase::~ErrorInfoBase() = default;
+
+Unexpected makeExceptionError(std::exception_ptr const& exc) noexcept {
+    auto err = error_utils::AnyExceptionRef(exc).tryGet<nonstd::bad_expected_access<Error>>();
+    if (err) {
+        return forwardError(err->error());
+    }
+    return makeError<ExceptionError>(exc);
+}
+
+struct ErrorList : ErrorInfoBase {
+    std::vector<std::shared_ptr<ErrorInfoBase>> errors;
+    ErrorList() noexcept = default;
+    [[nodiscard]] std::string message(std::string_view locale) const noexcept override {
+        std::string result;
+
+        for (size_t i = 0; i < errors.size(); i++) {
+            result += errors[i]->message(locale);
+            if (i + 1 < errors.size()) {
+                result += '\n';
+            }
+        }
+        return result;
+    }
+};
+
+Error& Error::join(Error err) noexcept {
+    if (!err) {
+        return *this;
+    }
+    if (!*this) {
+        mInfo = std::move(err.mInfo);
+        return *this;
+    }
+    if (isA<ErrorList>()) {
+        if (err.isA<ErrorList>()) {
+            auto& src = err.as<ErrorList>().errors;
+            auto& dst = as<ErrorList>().errors;
+            dst.insert(dst.end(), std::make_move_iterator(src.begin()), std::make_move_iterator(src.end()));
+        } else {
+            as<ErrorList>().errors.emplace_back(std::move(err.mInfo));
+        }
+    } else {
+        if (err.isA<ErrorList>()) {
+            auto& list = err.as<ErrorList>();
+            list.errors.insert(list.errors.begin(), std::move(mInfo));
+            mInfo = std::move(err.mInfo);
+        } else {
+            auto list = std::make_unique<ErrorList>();
+            list->errors.emplace_back(std::move(mInfo));
+            list->errors.emplace_back(std::move(err.mInfo));
+            mInfo = std::move(list);
+        }
+    }
+    return *this;
+}
+Error const& Error::log(io::Logger& l, io::LogLevel level) const noexcept { return log(l, {}, level); }
+Error const& Error::log(io::Logger& l, std::string_view locale, io::LogLevel level) const noexcept {
+    return log([&](std::string_view msg) { l.log(level, msg); }, locale);
+}
+Error const& Error::log(CommandOutput& stream, CommandOutputMessageType type) const noexcept {
+    return log(stream, {}, type);
+}
+Error const& Error::log(CommandOutput& stream, std::string_view locale, CommandOutputMessageType type) const noexcept {
+    return log([&](std::string_view msg) { stream.addMessage(msg, {}, type); }, locale);
+}
+Error const& Error::log(brstd::function_ref<void(std::string_view msg)> out, std::string_view locale) const noexcept {
+    for (std::string_view sv : string_utils::splitByPattern(message(locale), "\n")) {
+        if (sv.ends_with('\r')) {
+            sv.remove_suffix(1);
+        }
+        if (sv.starts_with('\r')) {
+            sv.remove_prefix(1);
+        }
+        out(sv);
+    }
+    return *this;
+}
+} // namespace ll

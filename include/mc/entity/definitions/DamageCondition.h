@@ -1,0 +1,19 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct DamageCondition {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 64> mUnk64b566;
+    ::ll::UntypedStorage<8, 32> mUnka71efd;
+    ::ll::UntypedStorage<4, 4>  mUnkc8edee;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DamageCondition& operator=(DamageCondition const&);
+    DamageCondition(DamageCondition const&);
+    DamageCondition();
+};

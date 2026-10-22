@@ -1,0 +1,21 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace renoir {
+
+class IStreamReader {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IStreamReader() = default;
+
+    virtual uint GetSize() = 0;
+
+    virtual uint Read(uint offset, uchar* buffer, uint count) = 0;
+
+    virtual void Close() = 0;
+    // NOLINTEND
+};
+
+} // namespace renoir

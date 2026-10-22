@@ -1,0 +1,28 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/BlockType.h"
+
+class ReinforcedDeepslateBlock : public ::BlockType {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canBeOriginalSurface(bool) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $canBeOriginalSurface(bool) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

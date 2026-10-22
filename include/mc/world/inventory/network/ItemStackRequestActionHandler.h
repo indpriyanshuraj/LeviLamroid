@@ -1,0 +1,245 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/world/actor/player/Player.h"
+
+// auto generated inclusion list
+#include "mc/deps/game_refs/WeakRef.h"
+#include "mc/world/TypedRuntimeId.h"
+#include "mc/world/containers/ContainerEnumName.h"
+#include "mc/world/inventory/network/ItemStackNetResult.h"
+#include "mc/world/inventory/network/TypedClientNetId.h"
+#include "mc/world/inventory/network/TypedServerNetId.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContainerScreenContext;
+class ContainerScreenValidation;
+class EntityContext;
+class ItemInstance;
+class ItemStack;
+class ItemStackNetManagerScreen;
+class ItemStackNetManagerServer;
+class ItemStackRequestAction;
+class ItemStackRequestActionCraftHandler;
+class ItemStackRequestActionDestroy;
+class ItemStackRequestActionDrop;
+class ItemStackRequestActionTransferBase;
+class Player;
+class ScreenHandlerBase;
+class SimpleSparseContainer;
+struct ContainerRuntimeIdTag;
+struct ContainerValidationCraftInputs;
+struct FullContainerName;
+struct ItemStackLegacyRequestIdTag;
+struct ItemStackNetIdTag;
+struct ItemStackRequestHandlerSlotInfo;
+struct ItemStackRequestIdTag;
+struct ItemStackRequestSlotInfo;
+struct ItemStackResponseContainerInfo;
+// clang-format on
+
+class ItemStackRequestActionHandler {
+public:
+    // ItemStackRequestActionHandler inner types declare
+    // clang-format off
+    struct PlayerLegacyRequestSlotIdAssignment;
+    struct RequestSlotIdAssignment;
+    struct RequestIdAssignments;
+    struct ScreenData;
+    // clang-format on
+
+    // ItemStackRequestActionHandler inner types define
+    enum class RemoveType : int {
+        Drop         = 0,
+        DropRandomly = 1,
+        Destroy      = 2,
+        Consume      = 3,
+    };
+
+    struct PlayerLegacyRequestSlotIdAssignment {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<1, 1, ::ContainerEnumName const>  mContainerName;
+        ::ll::TypedStorage<4, 4, ::ContainerRuntimeId const> mContainerRuntimeId;
+        ::ll::TypedStorage<8, 24, ::std::vector<::std::pair<::ItemStackLegacyRequestId, ::ItemStackNetId>>> mSlots;
+        // NOLINTEND
+    };
+
+    struct RequestSlotIdAssignment {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<1, 1, uchar>            mSlot;
+        ::ll::TypedStorage<4, 4, ::ItemStackNetId> mServerNetId;
+        // NOLINTEND
+    };
+
+    struct RequestIdAssignments {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 8, ::std::chrono::steady_clock::time_point> mExpireTime;
+        ::ll::TypedStorage<
+            8,
+            64,
+            ::std::unordered_map<
+                ::ContainerRuntimeId,
+                ::std::unordered_map<uchar, ::ItemStackRequestActionHandler::RequestSlotIdAssignment>>>
+            mContainers;
+        // NOLINTEND
+    };
+
+    struct ScreenData {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 8, ::std::unique_ptr<::ItemStackRequestActionCraftHandler>> mCraftRequestHandler;
+        ::ll::TypedStorage<8, 8, ::std::unique_ptr<::ScreenHandlerBase>>                  mScreenHandler;
+        ::ll::
+            TypedStorage<8, 64, ::std::unordered_map<::ContainerRuntimeId, ::std::shared_ptr<::SimpleSparseContainer>>>
+                mRuntimeIdSparseContainerMap;
+        ::ll::TypedStorage<
+            8,
+            64,
+            ::std::unordered_map<::ItemStackRequestId, ::ItemStackRequestActionHandler::RequestIdAssignments>>
+            mRecentRequests;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Player&>                    mPlayer;
+    ::ll::TypedStorage<8, 8, ::ItemStackNetManagerServer&> mItemStackNetManager;
+    ::ll::TypedStorage<4, 4, ::ContainerRuntimeId const>   mPlayerArmorContainerRuntimeId;
+    ::ll::TypedStorage<4, 4, ::ContainerRuntimeId const>   mPlayerHandContainerRuntimeId;
+    ::ll::TypedStorage<4, 4, ::ContainerRuntimeId const>   mPlayerUIContainerRuntimeId;
+    ::ll::TypedStorage<8, 96, ::std::array<::ItemStackRequestActionHandler::PlayerLegacyRequestSlotIdAssignment, 3>>
+                                                                                       mPlayerLegacyRequests;
+    ::ll::TypedStorage<8, 8, ::std::chrono::steady_clock::time_point>                  mLastTime;
+    ::ll::TypedStorage<8, 24, ::WeakRef<::EntityContext>>                              mCurrentRequestScreen;
+    ::ll::TypedStorage<8, 16, ::ItemStackRequestId>                                    mClientRequestId;
+    ::ll::TypedStorage<8, 24, ::std::vector<::ItemStackResponseContainerInfo>>         mResponseContainerInfos;
+    ::ll::TypedStorage<8, 16, ::std::map<::std::string, ::std::vector<::std::string>>> mFilteredStrings;
+    ::ll::TypedStorage<8, 16, ::std::map<::std::string, ::std::vector<::std::string>>> mStrings;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::ContainerScreenValidation>>           mScreenValidation;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ItemStackRequestActionHandler& operator=(ItemStackRequestActionHandler const&);
+    ItemStackRequestActionHandler(ItemStackRequestActionHandler const&);
+    ItemStackRequestActionHandler();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ItemStackRequestActionHandler(::ItemStackNetManagerServer& itemStackNetManager, ::Player& player);
+
+    MCAPI void _addResponseSlotInfo(::ItemStackRequestHandlerSlotInfo const& slotInfo, ::ItemStack const& item);
+
+#ifdef LL_PLAT_S
+    MCAPI void _cacheLegacySlotIdAssignment(
+        ::ContainerEnumName               containerName,
+        uchar                             slot,
+        ::ItemStackLegacyRequestId const& legacyClientRequestId,
+        ::ItemStackNetId const&           serverNetId
+    );
+#endif
+
+    MCAPI void _cacheSlotIdAssigment(
+        ::ContainerRuntimeId const& containerRuntimeId,
+        uchar                       requestSlot,
+        uchar                       slot,
+        ::ItemStackNetId const&     serverNetId
+    );
+
+    MCAPI ::std::shared_ptr<::SimpleSparseContainer>
+    _getOrInitSparseContainer(::FullContainerName const& openContainerId);
+
+#ifdef LL_PLAT_S
+    MCAPI ::ItemStackNetResult _handleDestroy(::ItemStackRequestActionDestroy const& requestAction);
+
+    MCAPI ::ItemStackNetResult _handleDrop(::ItemStackRequestActionDrop const& requestAction);
+#endif
+
+    MCAPI ::ItemStackNetResult _handleRemove(
+        ::ItemStackRequestActionTransferBase const& requestAction,
+        ::ItemStack&                                removedItem,
+        ::ItemStackRequestActionHandler::RemoveType removeType
+    );
+
+#ifdef LL_PLAT_S
+    MCAPI ::ItemStackNetResult _handleTransfer(
+        ::ItemStackRequestActionTransferBase const& requestAction,
+        bool                                        isSrcHintSlot,
+        bool                                        isDstHintSlot,
+        bool                                        isSwap
+    );
+#endif
+
+#ifdef LL_PLAT_C
+    MCAPI ::ItemStackNetResult _handleTransfer(
+        ::ItemStackRequestActionTransferBase const& requestAction,
+        bool const                                  isSrcHintSlot,
+        bool const                                  isDstHintSlot,
+        bool const                                  isSwap
+    );
+#endif
+
+#ifdef LL_PLAT_S
+    MCAPI void _initScreen(::ItemStackNetManagerScreen& screen);
+#endif
+
+    MCAPI ::ItemStackRequestActionHandler::ScreenData* _tryGetCurrentScreenData() const;
+
+    MCAPI ::ItemStackRequestHandlerSlotInfo
+    _validateRequestSlot(::ItemStackRequestSlotInfo const& requestSlotInfo, bool isItemRequired, bool isHintSlot);
+
+#ifdef LL_PLAT_S
+    MCAPI void addFilteredStrings(::ItemStackRequestId requestId, ::std::vector<::std::string> filteredStrings);
+#endif
+
+    MCAPI void addStrings(::ItemStackRequestId requestId, ::std::vector<::std::string> strings);
+
+#ifdef LL_PLAT_S
+    MCAPI void beginRequest(::ItemStackRequestId const& clientRequestId, ::ItemStackNetManagerScreen& screen);
+
+    MCAPI ::std::tuple<::ItemStackNetResult, ::std::vector<::ItemStackResponseContainerInfo>>
+    endRequest(::ItemStackNetResult currentResult);
+
+    MCAPI ::std::vector<::std::string> const& getFilteredStrings(::ItemStackRequestId requestId) const;
+#endif
+
+    MCAPI ::ContainerScreenContext const& getScreenContext() const;
+
+#ifdef LL_PLAT_S
+    MCAPI ::std::vector<::std::string> const& getStrings(::ItemStackRequestId requestId) const;
+
+    MCAPI ::ItemStackNetResult handleRequestAction(::ItemStackRequestAction const& requestAction);
+
+    MCAPI bool hasFilteredStrings(::ItemStackRequestId requestId) const;
+#endif
+
+    MCAPI void normalTick();
+
+    MCAPI ::std::vector<::ItemInstance>
+    tryCraft(::std::unique_ptr<::ContainerValidationCraftInputs> craftInputs, uchar numCrafts);
+
+    MCAPI ~ItemStackRequestActionHandler();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::ItemStackNetManagerServer& itemStackNetManager, ::Player& player);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};

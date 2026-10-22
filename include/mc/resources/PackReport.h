@@ -1,0 +1,79 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/resource/PackIdVersion.h"
+#include "mc/deps/core/resource/PackOrigin.h"
+#include "mc/deps/core/resource/PackType.h"
+#include "mc/deps/core/resource/ResourceLocation.h"
+#include "mc/deps/core/sem_ver/SemVersion.h"
+
+// auto generated forward declare list
+// clang-format off
+class PackError;
+// clang-format on
+
+class PackReport {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 56, ::ResourceLocation>                            mLocation;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::shared_ptr<::PackError>>> mErrors;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::shared_ptr<::PackError>>> mWarnings;
+    ::ll::TypedStorage<8, 24, ::SemVersion>                                  mRequiredBaseGameVersion;
+    ::ll::TypedStorage<8, 32, ::std::string>                                 mOriginalName;
+    ::ll::TypedStorage<8, 32, ::std::string>                                 mOriginalVersion;
+    ::ll::TypedStorage<8, 48, ::PackIdVersion>                               mIdentity;
+    ::ll::TypedStorage<1, 1, ::PackType>                                     mPackType;
+    ::ll::TypedStorage<1, 1, ::PackOrigin>                                   mPackOrigin;
+    ::ll::TypedStorage<1, 1, bool>                                           mWasUpgraded;
+    ::ll::TypedStorage<1, 1, bool>                                           mAttemptedUpgrade;
+    // NOLINTEND
+
+#ifdef LL_PLAT_S
+public:
+    // prevent constructor by default
+    PackReport& operator=(PackReport const&);
+    PackReport();
+
+#else // LL_PLAT_C
+public:
+    // prevent constructor by default
+    PackReport();
+
+#endif
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PackReport(::PackReport&&);
+
+    MCNAPI PackReport(::PackReport const&);
+
+#ifdef LL_PLAT_C
+    MCNAPI void merge(::PackReport&& other);
+#endif
+
+    MCNAPI ::PackReport& operator=(::PackReport&&);
+
+#ifdef LL_PLAT_C
+    MCNAPI ::PackReport& operator=(::PackReport const&);
+#endif
+
+    MCNAPI ~PackReport();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::PackReport&&);
+
+    MCNAPI void* $ctor(::PackReport const&);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};

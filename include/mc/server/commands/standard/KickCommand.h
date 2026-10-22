@@ -1,0 +1,64 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/server/commands/CommandMessage.h"
+#include "mc/server/commands/CommandSelector.h"
+#include "mc/server/commands/ServerCommand.h"
+
+// auto generated forward declare list
+// clang-format off
+class CommandOrigin;
+class CommandOutput;
+class CommandRegistry;
+class Level;
+class Minecraft;
+class Player;
+// clang-format on
+
+class KickCommand : public ::ServerCommand {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 200, ::CommandSelector<::Player>> mPlayers;
+    ::ll::TypedStorage<8, 32, ::CommandMessage>             mMessage;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void execute(::CommandOrigin const& origin, ::CommandOutput& output) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI bool
+    _canKickPlayerOrGenerateFailureOutput(::Player const& player, ::CommandOutput& output, ::Level* level) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void
+    _generateSuccessOutput(::CommandOutput& output, ::std::string const& playerNameTag, ::std::string const& reason);
+
+    MCAPI static void _kickPlayer(
+        ::Minecraft*                   game,
+        ::Player const&                matchingPlayer,
+        ::std::string const&           message,
+        ::std::optional<::std::string> filteredMessage
+    );
+
+    MCAPI static void setup(::CommandRegistry& registry);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $execute(::CommandOrigin const& origin, ::CommandOutput& output) const;
+
+
+    // NOLINTEND
+};

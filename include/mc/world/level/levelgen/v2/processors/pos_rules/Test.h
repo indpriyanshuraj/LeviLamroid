@@ -1,0 +1,64 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/levelgen/v2/processors/pos_rules/AlwaysTrue.h"
+#include "mc/world/level/levelgen/v2/processors/pos_rules/AxisAlignedLinear.h"
+#include "mc/world/level/levelgen/v2/processors/pos_rules/TestType.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class IRandom;
+namespace Util { class XXHash; }
+// clang-format on
+
+namespace br::worldgen::processors::PosRules {
+
+struct Test : public ::br::worldgen::processors::PosRules::TestType {
+public:
+    // Test inner types define
+    using Type = ::std::variant<
+        ::br::worldgen::processors::PosRules::AlwaysTrue,
+        ::br::worldgen::processors::PosRules::AxisAlignedLinear>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        40,
+        ::std::variant<
+            ::br::worldgen::processors::PosRules::AlwaysTrue,
+            ::br::worldgen::processors::PosRules::AxisAlignedLinear>>
+        mData;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool test(::BlockPos inTemplatePos, ::BlockPos worldPos, ::BlockPos worldReference, ::IRandom& random) const
+        /*override*/;
+
+    virtual void appendMetadataKey(::Util::XXHash& hash) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $test(::BlockPos inTemplatePos, ::BlockPos worldPos, ::BlockPos worldReference, ::IRandom& random) const;
+
+    MCAPI void $appendMetadataKey(::Util::XXHash& hash) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace br::worldgen::processors::PosRules

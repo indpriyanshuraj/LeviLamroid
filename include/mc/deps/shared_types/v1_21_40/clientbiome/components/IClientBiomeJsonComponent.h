@@ -1,0 +1,20 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/v1_21_40/clientbiome/components/ClientBiomeComponentVersion.h"
+
+namespace SharedTypes::v1_21_40 {
+
+struct IClientBiomeJsonComponent {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IClientBiomeJsonComponent() = default;
+
+    virtual ::ClientBiomeComponentVersion getType() const = 0;
+    // NOLINTEND
+};
+
+} // namespace SharedTypes::v1_21_40

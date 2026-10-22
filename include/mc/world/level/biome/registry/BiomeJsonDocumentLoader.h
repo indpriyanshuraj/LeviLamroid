@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/deps/shared_types/beta/biome/BiomeJsonDocument.h"
+#include "mc/deps/shared_types/v1_26_30/biome/BiomeJsonDocument.h"
+
+// auto generated forward declare list
+// clang-format off
+class BedrockLoadContext;
+class BiomeRegistry;
+class Experiments;
+class LinkedAssetValidator;
+struct BiomeJsonDocumentGlue;
+struct BiomeJsonDocumentGlueResolvedBiomeData;
+namespace Core { class Path; }
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+class BiomeJsonDocumentLoader {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        264,
+        ::Puv::SlicedLoader<
+            ::SharedTypes::v1_26_30::BiomeJsonDocument::BiomeJsonObject,
+            ::BedrockLoadContext,
+            nullptr_t,
+            nullptr_t,
+            ::SharedTypes::Beta::BiomeJsonDocument::BiomeJsonObject>>
+        mPuvBiomeLoader;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BiomeJsonDocumentLoader();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI BiomeJsonDocumentLoader(
+        ::cereal::ReflectionCtx&                           ctx,
+        ::Bedrock::NonOwnerPointer<::LinkedAssetValidator> linkedAssetValidator,
+        ::BiomeJsonDocumentGlue&                           biomeJsonDocumentGlue,
+        ::BiomeRegistry const&                             biomeRegistry,
+        ::Core::Path const&                                resourceName,
+        bool                                               isBaseGamePack,
+        ::std::unordered_map<::std::string, ::std::unique_ptr<::BiomeJsonDocumentGlueResolvedBiomeData>>&
+                             biomeIdToResolvedData,
+        ::Experiments const& activeExperiments
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::cereal::ReflectionCtx&                           ctx,
+        ::Bedrock::NonOwnerPointer<::LinkedAssetValidator> linkedAssetValidator,
+        ::BiomeJsonDocumentGlue&                           biomeJsonDocumentGlue,
+        ::BiomeRegistry const&                             biomeRegistry,
+        ::Core::Path const&                                resourceName,
+        bool                                               isBaseGamePack,
+        ::std::unordered_map<::std::string, ::std::unique_ptr<::BiomeJsonDocumentGlueResolvedBiomeData>>&
+                             biomeIdToResolvedData,
+        ::Experiments const& activeExperiments
+    );
+    // NOLINTEND
+};

@@ -1,0 +1,35 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class AABB;
+namespace Editor::Network { class WidgetComponentStateChangePayload; }
+namespace Editor::Network { class WidgetStateChangePayload; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidget_GroupInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void _performDeleteWidget(bool suppressClientMessage) = 0;
+
+    virtual void _setValid(bool valid) = 0;
+
+    virtual void _handleWidgetStateChangePayload(::Editor::Network::WidgetStateChangePayload const& payload) = 0;
+
+    virtual void
+    _handleWidgetComponentStateChangePayload(::Editor::Network::WidgetComponentStateChangePayload const& payload) = 0;
+
+    virtual void _servicePendingStateChanges() = 0;
+
+    virtual void _setSelectedNoBroadcast(bool selected) = 0;
+
+    virtual ::AABB const& _getWorldBounds() const = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

@@ -1,0 +1,36 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/traits/block_trait/PlacementCallbackOrder.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Block;
+class BlockPos;
+class Vec3;
+// clang-format on
+
+namespace BlockTrait {
+
+class IGetPlacementBlockCallback {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IGetPlacementBlockCallback() = default;
+
+    virtual ::gsl::not_null<::Block const*> getPlacementBlock(
+        ::gsl::not_null<::Block const*>,
+        ::Actor const&,
+        ::BlockPos const&,
+        uchar,
+        ::Vec3 const&
+    ) const = 0;
+
+    virtual ::BlockTrait::PlacementCallbackOrder getCallbackOrder() const = 0;
+    // NOLINTEND
+};
+
+} // namespace BlockTrait

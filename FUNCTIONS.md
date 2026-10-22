@@ -619,21 +619,28 @@ LeviLamroid natively parses Behavior Pack JSON files (`items/*.json`, `blocks/*.
 ### 12.2 Programmatic Item Registration API
 Header: `#include "levilamroid/api/item/ItemRegistry.h"`
 
-```cpp
 extern "C" {
     bool ll_item_register_full(const char* id, const char* name, const char* icon, int cat, const char* grp, int stack, bool offhand, bool handEq, short maxDmg);
     bool ll_item_give_player(void* playerPtr, const char* identifier, int count, int aux);
     void* ll_item_get_native(const char* identifier);
+    int   ll_item_stack_get_count(const void* itemStack);
+    bool  ll_item_stack_set_count(void* itemStack, uint8_t count);
+    short ll_item_stack_get_aux(const void* itemStack);
+    bool  ll_item_stack_is_valid(const void* itemStack);
+    void* ll_item_stack_get_item(const void* itemStack);
 }
 ```
 
-### 12.3 Programmatic Block Registration API
+### 12.3 Programmatic Block Registration & Inspection API
 Header: `#include "levilamroid/api/block/BlockTypeRegistry.h"`
 
 ```cpp
 extern "C" {
-    bool ll_block_register(const char* identifier, const char* displayName, const char* textureName, int category, const char* creativeGroup, float destroyTime, float explosionResistance, uint8_t lightEmission);
-    bool ll_block_register_with_base(const char* identifier, const char* displayName, const char* textureName, int category, const char* creativeGroup, float destroyTime, float explosionResistance, uint8_t lightEmission, const char* baseBlock);
+    bool  ll_block_register(const char* identifier, const char* displayName, const char* textureName, int category, const char* creativeGroup, float destroyTime, float explosionResistance, uint8_t lightEmission);
+    bool  ll_block_register_with_base(const char* identifier, const char* displayName, const char* textureName, int category, const char* creativeGroup, float destroyTime, float explosionResistance, uint8_t lightEmission, const char* baseBlock);
+    void* ll_block_source_get_block(void* blockSource, int x, int y, int z);
+    bool  ll_block_source_set_block(void* blockSource, int x, int y, int z, void* permutation, int updateFlags);
+    int   ll_block_source_get_brightness(void* blockSource, int x, int y, int z);
 }
 ```
 

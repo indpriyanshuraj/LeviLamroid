@@ -1,0 +1,98 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/ecs/WeakEntityRef.h"
+#include "mc/world/actor/ActorInitializationMethod.h"
+#include "mc/world/actor/Mob.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorDamageSource;
+class ActorDefinitionGroup;
+class ActorHurtResult;
+class EntityContext;
+class Interaction;
+class Player;
+class Vec3;
+struct ActorDefinitionIdentifier;
+struct HurtParameters;
+struct VariantParameterList;
+// clang-format on
+
+class TripodCamera : public ::Mob {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::WeakEntityRef> mPlayer;
+    ::ll::TypedStorage<1, 1, bool>             mActivated;
+    ::ll::TypedStorage<4, 4, int>              mCountdown;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    TripodCamera();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void reloadHardcoded(::ActorInitializationMethod method, ::VariantParameterList const& params) /*override*/;
+
+    virtual float getShadowRadius() const /*override*/;
+
+    virtual bool isTargetable() const /*override*/;
+
+    virtual bool canExistWhenDisallowMob() const /*override*/;
+
+    virtual void remove() /*override*/;
+
+    virtual ::Interaction getInteraction(::Player& player, ::Vec3 const& location) /*override*/;
+
+    virtual ::ActorHurtResult
+    _hurt(::ActorDamageSource const& source, float damage, ::HurtParameters const& hurtParameters) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI TripodCamera(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+
+    MCAPI void startTakingPicture(::Player& player);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD void $reloadHardcoded(::ActorInitializationMethod method, ::VariantParameterList const& params);
+
+    MCFOLD float $getShadowRadius() const;
+
+    MCFOLD bool $isTargetable() const;
+
+    MCFOLD bool $canExistWhenDisallowMob() const;
+
+    MCAPI void $remove();
+
+    MCAPI ::Interaction $getInteraction(::Player& player, ::Vec3 const& location);
+
+    MCAPI ::ActorHurtResult
+    $_hurt(::ActorDamageSource const& source, float damage, ::HurtParameters const& hurtParameters);
+
+
+    // NOLINTEND
+};

@@ -1,0 +1,71 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/legacy/ActorUniqueID.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BreedableDefinition;
+class CompoundTag;
+class DataLoadHelper;
+class Interaction;
+class Player;
+class WeakEntityRef;
+// clang-format on
+
+class BreedableComponent {
+public:
+    // BreedableComponent inner types declare
+    // clang-format off
+    struct LoveCauses;
+    // clang-format on
+
+    // BreedableComponent inner types define
+    struct LoveCauses {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 8, ::Player const*> mPrimary;
+        ::ll::TypedStorage<8, 8, ::Player const*> mSecondary;
+        // NOLINTEND
+    };
+
+    using MatingResult = ::std::vector<::WeakEntityRef>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::BreedableDefinition const*> mStaticData;
+    ::ll::TypedStorage<4, 4, int>                          mLoveTimer;
+    ::ll::TypedStorage<4, 4, int>                          mBreedCooldown;
+    ::ll::TypedStorage<4, 4, int>                          mBreedCooldownTime;
+    ::ll::TypedStorage<8, 8, ::ActorUniqueID>              mLoveCause;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void addAdditionalSaveData(::CompoundTag& tag) const;
+
+    MCAPI bool canMate(::Actor const& owner, ::Actor const& partner) const;
+
+    MCAPI ::Interaction getInteraction(::Actor& owner, ::Player& player);
+
+    MCAPI ::std::vector<::WeakEntityRef> mate(::Actor& owner, ::Actor& partner);
+
+    MCAPI void readAdditionalSaveData(::Actor&, ::CompoundTag const& tag, ::DataLoadHelper&);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void _spawnExperienceOrbs(::Actor& owner);
+
+    MCAPI static void _spawnLoveParticles(::Actor& owner);
+
+    MCAPI static bool meetsSittingRequirements(::Actor const& actor);
+    // NOLINTEND
+};

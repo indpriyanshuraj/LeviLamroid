@@ -1,0 +1,114 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/goal/MeleeAttackBaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BaseGameVersion;
+class Mob;
+class Vec3;
+struct GoalId;
+// clang-format on
+
+class MeleeAttackGoal : public ::MeleeAttackBaseGoal {
+public:
+    // MeleeAttackGoal inner types define
+    using AttackReachEvaluator =
+        bool (*)(::Mob const&, ::Vec3 const&, float const, float const, float const, float const, int const);
+
+    using LineOfSightEvaluator = bool (*)(::Mob const&, ::Actor const&);
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        8,
+        bool (*)(::Mob const&, ::Vec3 const&, float const, float const, float const, float const, int const)>
+                                                                     mReachEvaluator;
+    ::ll::TypedStorage<8, 8, bool (*)(::Mob const&, ::Actor const&)> mLineOfSightEvaluator;
+    ::ll::TypedStorage<4, 4, float>                                  mReachMultiplier;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    MeleeAttackGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~MeleeAttackGoal() /*override*/ = default;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI MeleeAttackGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static bool _canReachTarget(
+        ::Mob const&  mob,
+        ::Vec3 const& targetPosition,
+        float         attackReachSq,
+        float         targetMinY,
+        float         targetMaxY,
+        float         targetXZDistanceSqr,
+        int           attackTicks
+    );
+
+    MCAPI static bool _canReachTargetLegacy(
+        ::Mob const& mob,
+        ::Vec3 const&,
+        float attackReachSq,
+        float targetMinY,
+        float targetMaxY,
+        float targetXZDistanceSqr,
+        int   attackTicks
+    );
+
+    MCAPI static bool _isTargetInLineOfSight(::Mob const& mob, ::Actor const& target);
+
+    MCAPI static bool _isTargetInLineOfSightLegacy(::Mob const& mob, ::Actor const& target);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::BaseGameVersion const& MIN_3D_ATTACK_VERSION();
+
+    MCAPI static ::BaseGameVersion const& MIN_HIT_THROUGH_WALL_FIX_VERSION();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

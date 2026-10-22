@@ -1,0 +1,76 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class I18n;
+namespace Json { class Value; }
+// clang-format on
+
+class JsonValidator {
+public:
+    // JsonValidator inner types declare
+    // clang-format off
+    class Property;
+    // clang-format on
+
+    // JsonValidator inner types define
+    class Property {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 24> mUnk693a69;
+        ::ll::UntypedStorage<1, 1>  mUnk7ec7d1;
+        ::ll::UntypedStorage<1, 1>  mUnk88cb04;
+        ::ll::UntypedStorage<8, 32> mUnk3f6a10;
+        ::ll::UntypedStorage<8, 16> mUnk255cfa;
+        ::ll::UntypedStorage<8, 24> mUnk1d2869;
+        ::ll::UntypedStorage<8, 24> mUnk87cb33;
+        ::ll::UntypedStorage<8, 64> mUnk1a4adc;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        Property& operator=(Property const&);
+        Property();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI Property(::JsonValidator::Property const&);
+
+        MCNAPI ::JsonValidator::Property& addChildProperty(::JsonValidator::Property const& prop);
+
+        MCNAPI ::JsonValidator::Property&
+        addConditionalProperty(::Json::Value const& value, ::JsonValidator::Property const& prop);
+
+        MCNAPI ::JsonValidator::Property& operator[](::std::string const& propName);
+
+        MCNAPI ~Property();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCNAPI void* $ctor(::JsonValidator::Property const&);
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static bool validate(
+        ::I18n&                          loc,
+        ::JsonValidator::Property const& rootProp,
+        ::Json::Value const&             rootData,
+        ::std::vector<::std::string>*    errors
+    );
+    // NOLINTEND
+};

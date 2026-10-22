@@ -1,0 +1,84 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/SculkBehavior.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockPos;
+class BlockSource;
+class IBlockWorldGenAPI;
+class Random;
+class SculkSpreader;
+// clang-format on
+
+class SculkBlockBehavior : public ::SculkBehavior {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual int updateDecayDelay(int const) const /*override*/;
+
+    virtual int updateFacingData(int const, ::Block const&) const /*override*/;
+
+    virtual bool canChangeBlockOnSpread() const /*override*/;
+
+    virtual bool attemptSpreadVeins(
+        ::IBlockWorldGenAPI& target,
+        ::BlockPos const&    pos,
+        ::Block const&       block,
+        int,
+        ::SculkSpreader&
+    ) const /*override*/;
+
+    virtual int attemptUseCharge(
+        ::IBlockWorldGenAPI& target,
+        ::BlockSource*       region,
+        ::BlockPos const&    originPos,
+        ::BlockPos const&    pos,
+        int                  charge,
+        int,
+        ::Random&        random,
+        ::SculkSpreader& spreader,
+        bool const
+    ) const /*override*/;
+
+    virtual void onDischarged(::IBlockWorldGenAPI&, ::BlockSource*, ::BlockPos const&) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD int $updateDecayDelay(int const) const;
+
+    MCAPI int $updateFacingData(int const, ::Block const&) const;
+
+    MCFOLD bool $canChangeBlockOnSpread() const;
+
+    MCAPI bool $attemptSpreadVeins(
+        ::IBlockWorldGenAPI& target,
+        ::BlockPos const&    pos,
+        ::Block const&       block,
+        int,
+        ::SculkSpreader&
+    ) const;
+
+    MCAPI int $attemptUseCharge(
+        ::IBlockWorldGenAPI& target,
+        ::BlockSource*       region,
+        ::BlockPos const&    originPos,
+        ::BlockPos const&    pos,
+        int                  charge,
+        int,
+        ::Random&        random,
+        ::SculkSpreader& spreader,
+        bool const
+    ) const;
+
+    MCFOLD void $onDischarged(::IBlockWorldGenAPI&, ::BlockSource*, ::BlockPos const&) const;
+
+
+    // NOLINTEND
+};

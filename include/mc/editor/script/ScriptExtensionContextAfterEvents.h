@@ -1,0 +1,151 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/ThemeSettingsColorKey.h"
+#include "mc/deps/script_core/lifetime_registry/scripting/WeakHandleFromThis.h"
+#include "mc/editor/Mode.h"
+#include "mc/scripting/modules/minecraft/events/IScriptScriptDeferredEventListener.h"
+
+// auto generated forward declare list
+// clang-format off
+class ScriptDeferredFlushTracker;
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor { struct EditorBlockPaletteEventActivePaletteChanged; }
+namespace Editor { struct EditorBlockPaletteEventItemUpdated; }
+namespace Editor { struct EditorBlockPaletteEventPaletteRemoved; }
+namespace Editor { struct EditorBlockPaletteEventPaletteUpdated; }
+namespace Editor { struct EditorBlockPaletteEventSelectedItemIndexChanged; }
+namespace Editor::Cursor { class ServerCursorServiceProvider; }
+namespace Editor::Cursor { struct CursorState; }
+namespace Editor::Cursor { struct Position; }
+namespace Editor::Selection { struct SelectionVolumeEvent; }
+namespace Editor::Services { class EditorBlockPaletteServiceProvider; }
+namespace Editor::Services { class EditorSettingsServiceProvider; }
+namespace Json { class Value; }
+namespace ScriptModuleMinecraft { struct ScriptAfterEventMetadata; }
+namespace Scripting { class ModuleBindingBuilder; }
+namespace Scripting { struct ModuleDescriptor; }
+namespace mce { class Color; }
+namespace mce { class UUID; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptExtensionContextAfterEvents
+: public ::Scripting::WeakHandleFromThis<::Editor::ScriptModule::ScriptExtensionContextAfterEvents> {
+public:
+    // ScriptExtensionContextAfterEvents inner types declare
+    // clang-format off
+    class ScriptExtensionContextAfterEventsDeferredEventListener;
+    // clang-format on
+
+    // ScriptExtensionContextAfterEvents inner types define
+    class ScriptExtensionContextAfterEventsDeferredEventListener
+    : public ::ScriptModuleMinecraft::IScriptScriptDeferredEventListener<
+          ::Editor::ScriptModule::ScriptExtensionContextAfterEvents> {
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual void
+        onFlushEditorExtensionContextAfterEvents(::ScriptDeferredFlushTracker& deferredTracker) /*override*/;
+        // NOLINTEND
+
+    public:
+        // virtual function thunks
+        // NOLINTBEGIN
+        MCNAPI void $onFlushEditorExtensionContextAfterEvents(::ScriptDeferredFlushTracker& deferredTracker);
+
+
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnkf45d6d;
+    ::ll::UntypedStorage<8, 16> mUnk86589b;
+    ::ll::UntypedStorage<8, 8>  mUnk586770;
+    ::ll::UntypedStorage<8, 24> mUnk21fe84;
+    ::ll::UntypedStorage<8, 8>  mUnkd307a2;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptExtensionContextAfterEvents& operator=(ScriptExtensionContextAfterEvents const&);
+    ScriptExtensionContextAfterEvents(ScriptExtensionContextAfterEvents const&);
+    ScriptExtensionContextAfterEvents();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void _handleBlockPaletteChanged(
+        ::Editor::Services::EditorBlockPaletteServiceProvider const* paletteService,
+        ::std::variant<
+            ::Editor::EditorBlockPaletteEventItemUpdated,
+            ::Editor::EditorBlockPaletteEventSelectedItemIndexChanged,
+            ::Editor::EditorBlockPaletteEventActivePaletteChanged,
+            ::Editor::EditorBlockPaletteEventPaletteUpdated,
+            ::Editor::EditorBlockPaletteEventPaletteRemoved> const& blockPaletteEvent
+    );
+
+    MCNAPI void _handleClipboardItemChangeEvent(::mce::UUID const& itemId, bool isPrimary);
+
+    MCNAPI void _handleCurrentThemeChanged(
+        ::Editor::Services::EditorSettingsServiceProvider* settingsServiceProvider,
+        ::std::string const&                               themeId
+    );
+
+    MCNAPI void _handleCursorPositionChanged(
+        ::Editor::Cursor::ServerCursorServiceProvider*     cursorService,
+        ::std::optional<::Editor::Cursor::Position> const& newPosition,
+        ::Editor::Cursor::CursorState const&               cursorState
+    );
+
+    MCNAPI void _handleCursorStateChanged(
+        ::Editor::Cursor::ServerCursorServiceProvider* cursorService,
+        ::Editor::Cursor::CursorState const&           from,
+        ::Editor::Cursor::CursorState const&           to
+    );
+
+    MCNAPI void _handleModeChanged(::Editor::Mode from, ::Editor::Mode to);
+
+    MCNAPI void _handleSelectionVolumeEvent(::Editor::Selection::SelectionVolumeEvent const& selectionEvent);
+
+    MCNAPI void _handleThemeColorUpdated(
+        ::Editor::Services::EditorSettingsServiceProvider* settingsServiceProvider,
+        ::std::string const&                               themeId,
+        ::Editor::Settings::ThemeSettingsColorKey          colorKey,
+        ::mce::Color const&                                color
+    );
+
+    MCNAPI ::Editor::ScriptModule::ScriptExtensionContextAfterEvents&
+    operator=(::Editor::ScriptModule::ScriptExtensionContextAfterEvents&& rhs);
+
+    MCNAPI void registerListeners(::Editor::ServiceProviderCollection& serviceProviders);
+
+    MCNAPI ~ScriptExtensionContextAfterEvents();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void bind(::Scripting::ModuleBindingBuilder& moduleBuilder);
+
+    MCNAPI static void generateOrderDocumentationForVersion(
+        ::Scripting::ModuleDescriptor const& moduleToDocumentFor,
+        ::Json::Value&                       eventOrderArray
+    );
+
+    MCNAPI static ::ScriptModuleMinecraft::ScriptAfterEventMetadata const& getMetadata();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

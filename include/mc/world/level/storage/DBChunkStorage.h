@@ -1,0 +1,288 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/BaseGameVersion.h"
+#include "mc/world/level/ChunkPos.h"
+#include "mc/world/level/chunk/ChunkSource.h"
+#include "mc/world/level/chunk/LevelChunk.h"
+#include "mc/world/level/storage/DBChunkStorageKey.h"
+
+// auto generated forward declare list
+// clang-format off
+class BaseGameVersion;
+class BlendingData;
+class BlendingDataProvider;
+class ChunkKey;
+class ChunkViewSource;
+class DBStorage;
+class IDataInput;
+class LevelChunk;
+class LevelChunkMetaDataDictionary;
+class LevelStorageWriteBatch;
+class TaskGroup;
+struct ActorUnloadedChunkTransferEntry;
+struct ChunkDeletionMetadata;
+struct DimensionType;
+struct LevelChunkFinalDeleter;
+struct PersistentBlendData;
+namespace br::worldgen { class StructureInstance; }
+namespace br::worldgen { struct Structure; }
+// clang-format on
+
+class DBChunkStorage : public ::ChunkSource {
+public:
+    // DBChunkStorage inner types declare
+    // clang-format off
+    struct PreCavesAndCliffsMetaData;
+    // clang-format on
+
+    // DBChunkStorage inner types define
+    enum class ChunkCacheStatus : int {
+        Missing   = 0,
+        Available = 1,
+        DontCache = 2,
+    };
+
+    struct PreCavesAndCliffsMetaData {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1> mUnk5cb409;
+        ::ll::UntypedStorage<4, 4> mUnk75181d;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PreCavesAndCliffsMetaData& operator=(PreCavesAndCliffsMetaData const&);
+        PreCavesAndCliffsMetaData(PreCavesAndCliffsMetaData const&);
+        PreCavesAndCliffsMetaData();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::DBChunkStorageKey, ::DBChunkStorage::ChunkCacheStatus>>
+                                                  mHasChunkCache;
+    ::ll::TypedStorage<8, 8, ::std::shared_mutex> mHasChunkCacheSharedMutex;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::ChunkPos, ::std::pair<bool, ::std::shared_ptr<::BlendingData>>>>
+                                                                                          mChunkBlendingDataCache;
+    ::ll::TypedStorage<8, 8, ::std::shared_mutex>                                         mChunkBlendingDataSharedMutex;
+    ::ll::TypedStorage<8, 8, ::std::shared_mutex>                                         mAttenuatorSharedMutex;
+    ::ll::TypedStorage<8, 8, ::DBStorage&>                                                mStorage;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::shared_ptr<::LevelStorageWriteBatch>>> mBufferPool;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::unique_ptr<::LevelChunk, ::LevelChunkFinalDeleter>>> mDiscardBatch;
+    ::ll::TypedStorage<8, 64, ::std::unordered_set<::ChunkPos>> mLiveChunksBeingSaved;
+    ::ll::
+        TypedStorage<8, 64, ::std::unordered_map<::ChunkPos, ::std::unique_ptr<::LevelChunk, ::LevelChunkFinalDeleter>>>
+                                                             mDiscardedWhileLiveSaved;
+    ::ll::TypedStorage<1, 1, bool>                           mBatch;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::TaskGroup>> mIOTaskGroup;
+    ::ll::TypedStorage<8, 32, ::BaseGameVersion>             mCurrentLevelVersion;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DBChunkStorage& operator=(DBChunkStorage const&);
+    DBChunkStorage(DBChunkStorage const&);
+    DBChunkStorage();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~DBChunkStorage() /*override*/ = default;
+
+    virtual void shutdown() /*override*/;
+
+    virtual bool isShutdownDone() /*override*/;
+
+    virtual void loadChunk(::LevelChunk& lc, bool forceImmediateReplacementDataLoad) /*override*/;
+
+    virtual bool isChunkKnown(::ChunkPos const& chunkPos) /*override*/;
+
+    virtual bool isChunkSaved(::ChunkPos const& chunkPos) /*override*/;
+
+    virtual bool structurePostProcessChunk(::ChunkViewSource& neighborhood) /*override*/;
+
+    virtual bool decorationPostProcessChunk(::ChunkViewSource& neighborhood) /*override*/;
+
+    virtual void checkAndReplaceChunk(::ChunkViewSource& neighborhood, ::LevelChunk& lc) /*override*/;
+
+    virtual bool verifyChunkNeedsNeighborAwareUpgrade(::LevelChunk& lc) /*override*/;
+
+    virtual void neighborAwareChunkUpgrade(::LevelChunk& levelChunk, ::ChunkViewSource& neighborhood) /*override*/;
+
+    virtual void deleteAllChunkData(
+        ::std::unordered_set<::ChunkPos>           excludedChunks,
+        ::std::function<void()>                    completionCallback,
+        ::std::shared_ptr<::ChunkDeletionMetadata> metadata
+    ) /*override*/;
+
+    virtual void deleteStoredChunkData(
+        ::std::unordered_set<::ChunkPos>           chunksToDelete,
+        ::std::function<void()>                    completionCallback,
+        ::std::shared_ptr<::ChunkDeletionMetadata> metadata
+    ) /*override*/;
+
+    virtual bool saveLiveChunk(::LevelChunk& lc) /*override*/;
+
+    virtual void writeEntityChunkTransfer(::LevelChunk& lc) /*override*/;
+
+    virtual void writeEntityChunkTransfersToUnloadedChunk(
+        ::ChunkKey const&                                       chunkKey,
+        ::std::vector<::ActorUnloadedChunkTransferEntry> const& transfers
+    ) /*override*/;
+
+    virtual void acquireDiscarded(::std::unique_ptr<::LevelChunk, ::LevelChunkFinalDeleter> ptr) /*override*/;
+
+    virtual void hintDiscardBatchBegin() /*override*/;
+
+    virtual void hintDiscardBatchEnd() /*override*/;
+
+    virtual void flushPendingDiscardedChunkWrites() /*override*/;
+
+    virtual void flushThreadBatch() /*override*/;
+
+    virtual ::std::unique_ptr<::BlendingDataProvider> tryGetBlendingDataProvider() /*override*/;
+
+    virtual ::std::shared_ptr<::LevelChunkMetaDataDictionary> loadLevelChunkMetaDataDictionary() /*override*/;
+
+    virtual void deserializeActorStorageToLevelChunk(::LevelChunk& levelChunk) /*override*/;
+
+    virtual bool chunkPosNeedsBlending(::ChunkPos const& cp) /*override*/;
+
+    virtual ::std::shared_ptr<::br::worldgen::StructureInstance>
+    _tryGetOrLoadStructureInstanceAt(::ChunkPos const& cp, ::br::worldgen::Structure const& structure) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::std::pair<bool, ::std::shared_ptr<::BlendingData>> _cacheSeamlessChunkBlendingData(
+        ::ChunkPos                        chunkPos,
+        bool                              isCompleted,
+        ::std::shared_ptr<::BlendingData> blendingData
+    );
+
+    MCAPI void _deleteChunkEntityData(::DBChunkStorageKey const& key, ::LevelStorageWriteBatch& batch);
+
+    MCAPI void _deserializeIndependentActorStorage(::LevelChunk& lc, ::std::string const& storageKeyDigestBuffer);
+
+    MCAPI ::LevelChunk::Neighbors _getChunkNeighbors(::ChunkPos lc, ::DimensionType dimensionType);
+
+    MCAPI bool _hasChunk(::DBChunkStorageKey const& key);
+
+    MCAPI bool _hasChunkUncached(::DBChunkStorageKey const& key);
+
+    MCAPI bool _loadChunkFromDB(::LevelChunk& lc, ::LevelChunk& generatedChunk, ::ChunkViewSource& neighborhood);
+
+    MCAPI void _saveBlendData(
+        ::LevelStorageWriteBatch& batch,
+        ::std::string_view        prefix,
+        ::std::string&            buffer,
+        ::PersistentBlendData     data
+    ) const;
+
+    MCAPI void
+    _serializeChunk(::LevelChunk& lc, ::LevelStorageWriteBatch& batch, bool const markEntitiesProcesedOnChunkDiscard);
+
+    MCAPI void _serializeEntities(
+        ::LevelChunk&             lc,
+        ::LevelStorageWriteBatch& batch,
+        ::std::string&            buffer,
+        bool                      markEntitiesProcesedOnChunkDiscard
+    );
+
+    MCAPI ::std::string _upgradeActorStorage(::ChunkKey chunkKey, ::std::string_view& legacyActorData);
+
+    MCAPI void _writeDiscardChunksBatch();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::std::vector<::std::string> _deserializeChunkActorStorageKeys(::IDataInput& digestStream);
+
+    MCAPI static void
+    _writeActorDigest(::LevelStorageWriteBatch& batch, ::ChunkKey const& chunkKey, ::std::string const& digestBuffer);
+
+    MCAPI static ::std::string deserializeActorStorageToString(
+        bool                                                      hasActorDigestVersionTag,
+        ::std::string const&                                      storageKeyDigestBuffer,
+        ::std::function<bool(::std::string_view, ::std::string&)> loadDataCallback
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCFOLD void $shutdown();
+#else // LL_PLAT_C
+    MCAPI void $shutdown();
+#endif
+
+    MCAPI bool $isShutdownDone();
+
+    MCAPI void $loadChunk(::LevelChunk& lc, bool forceImmediateReplacementDataLoad);
+
+    MCAPI bool $isChunkKnown(::ChunkPos const& chunkPos);
+
+    MCAPI bool $isChunkSaved(::ChunkPos const& chunkPos);
+
+    MCAPI bool $structurePostProcessChunk(::ChunkViewSource& neighborhood);
+
+    MCAPI bool $decorationPostProcessChunk(::ChunkViewSource& neighborhood);
+
+    MCAPI void $checkAndReplaceChunk(::ChunkViewSource& neighborhood, ::LevelChunk& lc);
+
+    MCAPI bool $verifyChunkNeedsNeighborAwareUpgrade(::LevelChunk& lc);
+
+    MCAPI void $neighborAwareChunkUpgrade(::LevelChunk& levelChunk, ::ChunkViewSource& neighborhood);
+
+    MCAPI void $deleteAllChunkData(
+        ::std::unordered_set<::ChunkPos>           excludedChunks,
+        ::std::function<void()>                    completionCallback,
+        ::std::shared_ptr<::ChunkDeletionMetadata> metadata
+    );
+
+    MCAPI void $deleteStoredChunkData(
+        ::std::unordered_set<::ChunkPos>           chunksToDelete,
+        ::std::function<void()>                    completionCallback,
+        ::std::shared_ptr<::ChunkDeletionMetadata> metadata
+    );
+
+    MCAPI bool $saveLiveChunk(::LevelChunk& lc);
+
+    MCAPI void $writeEntityChunkTransfer(::LevelChunk& lc);
+
+    MCAPI void $writeEntityChunkTransfersToUnloadedChunk(
+        ::ChunkKey const&                                       chunkKey,
+        ::std::vector<::ActorUnloadedChunkTransferEntry> const& transfers
+    );
+
+    MCAPI void $acquireDiscarded(::std::unique_ptr<::LevelChunk, ::LevelChunkFinalDeleter> ptr);
+
+    MCAPI void $hintDiscardBatchBegin();
+
+    MCAPI void $hintDiscardBatchEnd();
+
+    MCAPI void $flushPendingDiscardedChunkWrites();
+
+    MCAPI void $flushThreadBatch();
+
+    MCAPI ::std::unique_ptr<::BlendingDataProvider> $tryGetBlendingDataProvider();
+
+    MCAPI ::std::shared_ptr<::LevelChunkMetaDataDictionary> $loadLevelChunkMetaDataDictionary();
+
+    MCAPI void $deserializeActorStorageToLevelChunk(::LevelChunk& levelChunk);
+
+    MCAPI bool $chunkPosNeedsBlending(::ChunkPos const& cp);
+
+    MCAPI ::std::shared_ptr<::br::worldgen::StructureInstance>
+    $_tryGetOrLoadStructureInstanceAt(::ChunkPos const& cp, ::br::worldgen::Structure const& structure);
+
+
+    // NOLINTEND
+};

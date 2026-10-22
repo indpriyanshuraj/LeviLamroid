@@ -1,0 +1,76 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace RepositoryLoading {
+
+struct PackModifications {
+public:
+    // PackModifications inner types declare
+    // clang-format off
+    struct CurrentWorldTemplatePacks;
+    struct DependencyError;
+    struct ReportError;
+    // clang-format on
+
+    // PackModifications inner types define
+    struct CurrentWorldTemplatePacks {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 16> mUnkc30c03;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        CurrentWorldTemplatePacks& operator=(CurrentWorldTemplatePacks const&);
+        CurrentWorldTemplatePacks(CurrentWorldTemplatePacks const&);
+        CurrentWorldTemplatePacks();
+    };
+
+    struct DependencyError {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 16> mUnkd36637;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        DependencyError& operator=(DependencyError const&);
+        DependencyError(DependencyError const&);
+        DependencyError();
+    };
+
+    struct ReportError {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 56> mUnk4a5203;
+        ::ll::UntypedStorage<1, 1>  mUnkfadfc9;
+        ::ll::UntypedStorage<1, 1>  mUnk55c5e7;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        ReportError& operator=(ReportError const&);
+        ReportError(ReportError const&);
+        ReportError();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnk9498b1;
+    ::ll::UntypedStorage<8, 24> mUnkec13f5;
+    ::ll::UntypedStorage<8, 24> mUnk4c6bf6;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackModifications& operator=(PackModifications const&);
+    PackModifications(PackModifications const&);
+    PackModifications();
+};
+
+} // namespace RepositoryLoading

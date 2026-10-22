@@ -1,0 +1,66 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class BaseGameVersion;
+class IResourcePackRepository;
+class ResourcePackStack;
+namespace mce { class UUID; }
+// clang-format on
+
+class BaseGamePackSlices {
+public:
+    // BaseGamePackSlices inner types declare
+    // clang-format off
+    struct BaseGameVersionPack;
+    // clang-format on
+
+    // BaseGamePackSlices inner types define
+    struct BaseGameVersionPack {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 32> mUnk745cd0;
+        ::ll::UntypedStorage<8, 16> mUnkb82ad5;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        BaseGameVersionPack& operator=(BaseGameVersionPack const&);
+        BaseGameVersionPack(BaseGameVersionPack const&);
+        BaseGameVersionPack();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnkbc0bb2;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BaseGamePackSlices& operator=(BaseGamePackSlices const&);
+    BaseGamePackSlices(BaseGamePackSlices const&);
+    BaseGamePackSlices();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void addFromVersions(
+        ::std::vector<::BaseGameVersion> const&                               baseGameVersions,
+        ::Bedrock::NotNullNonOwnerPtr<::IResourcePackRepository const> const& resourcePackRepository,
+        ::mce::UUID const&                                                    packId
+    );
+
+    MCNAPI void applyPackSlices(
+        ::BaseGameVersion const&                                              baseGameVersion,
+        ::Bedrock::NotNullNonOwnerPtr<::IResourcePackRepository const> const& resourcePackRepository,
+        ::ResourcePackStack&                                                  packStack
+    ) const;
+    // NOLINTEND
+};

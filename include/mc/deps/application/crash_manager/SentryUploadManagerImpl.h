@@ -1,0 +1,47 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/application/crash_manager/SentryUploadManager.h"
+#include "mc/deps/core/threading/Async.h"
+#include "mc/platform/Result.h"
+
+// auto generated forward declare list
+// clang-format off
+class TaskGroup;
+namespace Bedrock { class SessionInfo; }
+namespace Bedrock { struct PlatformRuntimeInfo; }
+namespace Core { class Path; }
+// clang-format on
+
+namespace Bedrock {
+
+class SentryUploadManagerImpl : public ::Bedrock::SentryUploadManager {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk7943f1;
+    ::ll::UntypedStorage<8, 32> mUnke384dd;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    SentryUploadManagerImpl& operator=(SentryUploadManagerImpl const&);
+    SentryUploadManagerImpl(SentryUploadManagerImpl const&);
+    SentryUploadManagerImpl();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::string getParameters(::Bedrock::SessionInfo const&, ::Bedrock::PlatformRuntimeInfo const*) const
+        /*override*/;
+
+    virtual ::Bedrock::Threading::Async<::Bedrock::Result<void>>
+    uploadMinidump(::TaskGroup&, ::Core::Path const&, ::std::string const&) const /*override*/;
+
+    virtual ::std::string const& getMinidumpUploadUri() const /*override*/;
+    // NOLINTEND
+};
+
+} // namespace Bedrock

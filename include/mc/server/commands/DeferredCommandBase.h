@@ -1,0 +1,18 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class MinecraftCommands;
+// clang-format on
+
+class DeferredCommandBase {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~DeferredCommandBase() = default;
+
+    virtual void execute(::MinecraftCommands& commands) = 0;
+    // NOLINTEND
+};

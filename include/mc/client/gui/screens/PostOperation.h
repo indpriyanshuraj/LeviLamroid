@@ -1,0 +1,22 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/screens/VariableRef.h"
+
+// auto generated forward declare list
+// clang-format off
+class LayoutComponent;
+// clang-format on
+
+struct PostOperation {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::LayoutComponent*>        mLayout;
+    ::ll::TypedStorage<8, 40, ::VariableRef>            mVariableRef;
+    ::ll::TypedStorage<8, 64, ::std::function<float()>> mOperation;
+    ::ll::TypedStorage<4, 4, float>                     postOpValue;
+    // NOLINTEND
+};

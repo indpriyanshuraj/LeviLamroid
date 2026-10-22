@@ -1,0 +1,21 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+struct IReplayStatePolicy;
+struct ReplayStateConfig;
+// clang-format on
+
+namespace ReplayStatePolicy {
+// functions
+// NOLINTBEGIN
+#ifdef LL_PLAT_C
+MCAPI ::std::unique_ptr<::IReplayStatePolicy> createClientContext(::ReplayStateConfig const& config);
+#endif
+
+MCAPI ::std::unique_ptr<::IReplayStatePolicy> createServerContext(::ReplayStateConfig const& config);
+// NOLINTEND
+
+} // namespace ReplayStatePolicy

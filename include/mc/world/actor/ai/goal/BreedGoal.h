@@ -1,0 +1,85 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/ecs/WeakEntityRef.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+class Vec2;
+class Vec3;
+struct GoalId;
+// clang-format on
+
+class BreedGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>           mOwner;
+    ::ll::TypedStorage<8, 24, ::WeakEntityRef> mPartner;
+    ::ll::TypedStorage<4, 4, int>              mLoveTime;
+    ::ll::TypedStorage<4, 4, float>            mSpeed;
+    ::ll::TypedStorage<1, 1, bool const>       mStopNavigationOnStop;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BreedGoal& operator=(BreedGoal const&);
+    BreedGoal(BreedGoal const&);
+    BreedGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI BreedGoal(::Mob& animal, ::std::string name, ::GoalId const& goalId);
+
+    MCAPI bool _isCloseEnoughToBreed(::Vec3 pos1, ::Vec2 size1, ::Vec3 pos2, ::Vec2 size2) const;
+
+    MCAPI ::Mob* _moveToFreePartner() const;
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& animal, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

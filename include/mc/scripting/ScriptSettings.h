@@ -1,0 +1,50 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/deps/script_core/runtime/watchdog/scripting/WatchdogSettings.h"
+#include "mc/scripting/ScriptPackConfigurationManager.h"
+#include "mc/scripting/debugger/ScriptDebuggerSettings.h"
+#include "mc/util/BaseGameVersion.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cereal { struct ReflectionCtx; }
+namespace mce { class UUID; }
+class IScriptDedicatedServerUtils;
+// clang-format on
+
+struct ScriptSettings {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::Bedrock::NotNullNonOwnerPtr<::cereal::ReflectionCtx const>> mCerealContext;
+    ::ll::TypedStorage<8, 480, ::ScriptPackConfigurationManager>                            mPackConfigurationManager;
+    ::ll::TypedStorage<1, 1, bool>                                                          mEnabled;
+    ::ll::TypedStorage<1, 1, bool>                                                          mEnableEditorModules;
+    ::ll::TypedStorage<8, 32, ::BaseGameVersion>                                            mBaseGameVersion;
+    ::ll::TypedStorage<8, 144, ::ScriptDebuggerSettings>                                    mDebuggerSettings;
+    ::ll::TypedStorage<8, 24, ::std::vector<::mce::UUID>>                                   mExcludedScriptModules;
+    ::ll::TypedStorage<4, 36, ::std::optional<::Scripting::WatchdogSettings>>               mWatchdogSettings;
+    ::ll::TypedStorage<1, 1, bool>                                                          mDiagnosticsAutoStart;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>>                                         mMaxDiagnosticsCaptureFiles;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>>                    mMaxDiagnosticsCaptureFileSize;
+    ::ll::TypedStorage<4, 8, ::std::optional<uint>>                    mMaxEventsPerWindow;
+    ::ll::TypedStorage<8, 16, ::std::optional<::std::chrono::seconds>> mRateLimitWindow;
+    ::ll::TypedStorage<8, 8, ::IScriptDedicatedServerUtils*>           mDedicatedServerUtils;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ~ScriptSettings();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};

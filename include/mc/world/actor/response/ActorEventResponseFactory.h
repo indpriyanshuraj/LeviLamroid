@@ -1,0 +1,48 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/resources/IPackLoadScoped.h"
+#include "mc/util/Factory.h"
+#include "mc/util/json_util/JsonSchemaObjectNode.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorEventResponse;
+class PackLoadContext;
+struct ActorEventResponseCollection;
+namespace JsonUtil { class EmptyClass; }
+// clang-format on
+
+class ActorEventResponseFactory : public ::IPackLoadScoped, public ::Factory<::ActorEventResponse> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        16,
+        ::std::shared_ptr<::JsonUtil::JsonSchemaObjectNode<::JsonUtil::EmptyClass, ::ActorEventResponseCollection>>>
+        mSchema;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ActorEventResponseFactory() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void initSchema();
+
+    MCAPI void initializeFactory(::PackLoadContext const& packLoadContext);
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

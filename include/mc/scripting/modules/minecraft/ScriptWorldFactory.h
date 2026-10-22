@@ -1,0 +1,37 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+
+// auto generated forward declare list
+// clang-format off
+class ServerLevel;
+namespace ScriptModuleMinecraft { class ScriptWorld; }
+namespace Scripting { class DependencyLocator; }
+namespace Scripting { class WeakLifetimeScope; }
+namespace Scripting { struct ContextConfig; }
+namespace Scripting { struct Version; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+class ScriptWorldFactory {
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptWorld>>
+    findHandle(::Scripting::WeakLifetimeScope& scope, ::ServerLevel& level);
+
+    MCAPI static ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptWorld> getHandle(
+        ::Scripting::WeakLifetimeScope&   scope,
+        ::ServerLevel&                    level,
+        ::Scripting::DependencyLocator&   locator,
+        ::Scripting::ContextConfig const& config,
+        ::Scripting::Version              serverModuleVersion
+    );
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

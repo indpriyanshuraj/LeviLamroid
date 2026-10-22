@@ -1,0 +1,176 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/PathBuffer.h"
+#include "mc/deps/core/string/BasicStackString.h"
+#include "mc/platform/Result.h"
+#include "mc/resources/PackAccessAssetGenerationResult.h"
+#include "mc/resources/PackAccessStrategyType.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContentIdentity;
+class PackAssetSet;
+class ResourceLocation;
+struct StreamableAssetSource;
+namespace Bedrock::Resources { class PreloadedPathHandle; }
+namespace Bedrock::Resources::Archive { class Reader; }
+namespace Core { class FileHandlePool; }
+namespace Core { class Path; }
+namespace Core { class PathView; }
+// clang-format on
+
+class PackAccessStrategy {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 16> mUnk962cf5;
+    ::ll::UntypedStorage<8, 16> mUnk2ff3dc;
+    ::ll::UntypedStorage<8, 16> mUnkb0ada6;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackAccessStrategy& operator=(PackAccessStrategy const&);
+    PackAccessStrategy(PackAccessStrategy const&);
+    PackAccessStrategy();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~PackAccessStrategy();
+
+    virtual uint64 getPackSize() const = 0;
+
+    virtual ::ResourceLocation const& getPackLocation() const = 0;
+
+    virtual ::std::string const& getPackName() const = 0;
+
+    virtual bool isWritable() const = 0;
+
+    virtual bool isTrusted() const = 0;
+
+    virtual bool hasAsset(::Core::Path const& packRelativePath, bool trustedContentOnly, bool caseSensative) const = 0;
+
+    virtual bool hasFolder(::Core::Path const& packRelativePath) const = 0;
+
+    virtual bool
+    getAsset(::Core::Path const& packRelativePath, ::std::string& result, bool trustedContentOnly) const = 0;
+
+    virtual void forEachIn(
+        ::Core::Path const&                        packRelativePath,
+        ::std::function<void(::Core::Path const&)> callback,
+        bool                                       recurseAnyways
+    ) const = 0;
+
+    virtual void
+    forEachInAssetSet(::Core::Path const& packRelativePath, ::std::function<void(::Core::Path const&)> callback) const;
+
+    virtual ::PackAccessStrategyType getStrategyType() const = 0;
+
+    virtual ::Core::PathBuffer<::std::string> const& getSubPath() const;
+
+    virtual bool supportsSignatureVerification() const;
+
+    virtual ::std::unique_ptr<::PackAccessStrategy> createSubPack(::Core::Path const& subPath) const = 0;
+
+    virtual ::PackAccessAssetGenerationResult generateAssetSet();
+
+    virtual ::PackAccessAssetGenerationResult regenerateAssetSet();
+
+    virtual bool canRecurse() const;
+
+    virtual void unload() = 0;
+
+    virtual ::ContentIdentity readContentIdentity() const;
+
+    virtual bool isAssetExtractionViable() const;
+
+    virtual ::Bedrock::Result<::StreamableAssetSource> getStreamableSource(
+        ::Core::Path const&               packRelativePath,
+        ::std::optional<::Core::PathView> tempDirectory
+    ) const = 0;
+
+    virtual ::std::unique_ptr<::Bedrock::Resources::Archive::Reader>
+    _loadArchive(::Core::Path const& packRelativePath) const;
+
+    virtual ::std::vector<::Bedrock::Resources::PreloadedPathHandle>
+    _preloadSubFolders(::Core::Path const& packRelativePath) const;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PackAccessStrategy(
+        ::std::unique_ptr<::PackAssetSet>&&                        assetSet,
+        ::gsl::not_null<::std::shared_ptr<::Core::FileHandlePool>> handlePool
+    );
+
+    MCNAPI ::Bedrock::Resources::PreloadedPathHandle preloadArchive(::Core::Path const& packRelativePath) const;
+
+    MCNAPI ::std::vector<::Bedrock::Resources::PreloadedPathHandle>
+    preloadPath(::Core::Path const& packRelativePath) const;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::Core::PathBuffer<::Core::BasicStackString<char, 1024>> const& ARCHIVE_EXTENSION();
+
+    MCNAPI static ::Core::PathBuffer<::Core::BasicStackString<char, 1024>> const& ARCHIVE_FOLDER();
+
+    MCNAPI static ::Core::PathBuffer<::std::string> const& PACK_IMPORT_LOCK_FILE();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(
+        ::std::unique_ptr<::PackAssetSet>&&                        assetSet,
+        ::gsl::not_null<::std::shared_ptr<::Core::FileHandlePool>> handlePool
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void
+    $forEachInAssetSet(::Core::Path const& packRelativePath, ::std::function<void(::Core::Path const&)> callback) const;
+
+    MCNAPI ::Core::PathBuffer<::std::string> const& $getSubPath() const;
+
+    MCNAPI bool $supportsSignatureVerification() const;
+
+    MCNAPI ::PackAccessAssetGenerationResult $generateAssetSet();
+
+    MCNAPI ::PackAccessAssetGenerationResult $regenerateAssetSet();
+
+    MCNAPI bool $canRecurse() const;
+
+    MCNAPI ::ContentIdentity $readContentIdentity() const;
+
+    MCNAPI bool $isAssetExtractionViable() const;
+
+    MCNAPI ::std::unique_ptr<::Bedrock::Resources::Archive::Reader>
+    $_loadArchive(::Core::Path const& packRelativePath) const;
+
+    MCNAPI ::std::vector<::Bedrock::Resources::PreloadedPathHandle>
+    $_preloadSubFolders(::Core::Path const& packRelativePath) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

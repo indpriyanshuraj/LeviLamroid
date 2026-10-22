@@ -1,0 +1,37 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class ChunkPos;
+class Vec3;
+// clang-format on
+
+class ChunkBuildOrderPolicyBase {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ChunkBuildOrderPolicyBase() = default;
+
+    virtual int getChunkRebuildPriority(::ChunkPos const& cp) const = 0;
+
+    virtual uint registerForUpdates();
+
+    virtual void unregisterForUpdates(uint handle) = 0;
+
+    virtual void
+    setPlayerInfluence(uint handle, ::ChunkPos const& playerPosition, ::Vec3 const& playerMovementDirection) = 0;
+
+    virtual void setTickingAreaInfluence(
+        uint              handle,
+        ::ChunkPos const& tickingAreaPosition,
+        int               sizeX,
+        int               sizeZ,
+        bool              isCircle,
+        bool              preload
+    ) = 0;
+
+    virtual void updateInfluences() = 0;
+    // NOLINTEND
+};

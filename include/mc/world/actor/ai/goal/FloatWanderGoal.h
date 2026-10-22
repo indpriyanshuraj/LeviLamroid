@@ -1,0 +1,87 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/Vec3.h"
+#include "mc/util/FloatRange.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+class Random;
+struct GoalId;
+// clang-format on
+
+class FloatWanderGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>       mMob;
+    ::ll::TypedStorage<4, 12, ::Vec3>      mTargetPos;
+    ::ll::TypedStorage<4, 4, int>          mFloatDuration;
+    ::ll::TypedStorage<4, 4, float>        mTargetXZDist;
+    ::ll::TypedStorage<4, 4, float>        mTargetYDist;
+    ::ll::TypedStorage<4, 4, float>        mSurfaceXZDist;
+    ::ll::TypedStorage<4, 4, float>        mSurfaceYDist;
+    ::ll::TypedStorage<4, 4, float>        mYOffset;
+    ::ll::TypedStorage<1, 1, bool>         mMustReach;
+    ::ll::TypedStorage<1, 1, bool>         mRandomReselect;
+    ::ll::TypedStorage<1, 1, bool>         mUseHomePositionRestriction;
+    ::ll::TypedStorage<1, 1, bool>         mAdditionalCollisionBuffer;
+    ::ll::TypedStorage<1, 1, bool>         mAllowNavigatingThroughLiquids;
+    ::ll::TypedStorage<1, 1, bool>         mNavigateAroundSurface;
+    ::ll::TypedStorage<4, 8, ::FloatRange> mFloatDurationRange;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FloatWanderGoal& operator=(FloatWanderGoal const&);
+    FloatWanderGoal(FloatWanderGoal const&);
+    FloatWanderGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI FloatWanderGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+
+    MCAPI bool _canReach(::Vec3 const& targetPos, float dist) const;
+
+    MCAPI ::Vec3 _chooseRandomPosition(::Vec3 const& mobPos, ::Random& random);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

@@ -1,0 +1,36 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Identity { struct AuthToken; }
+// clang-format on
+
+class TenantInfo {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32>  mUnkc4a972;
+    ::ll::UntypedStorage<8, 32>  mUnk89f851;
+    ::ll::UntypedStorage<8, 32>  mUnk5a7d3f;
+    ::ll::UntypedStorage<8, 80>  mUnk506b20;
+    ::ll::UntypedStorage<8, 80>  mUnk5446dd;
+    ::ll::UntypedStorage<4, 4>   mUnk246934;
+    ::ll::UntypedStorage<8, 136> mUnkc6beb3;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    TenantInfo& operator=(TenantInfo const&);
+    TenantInfo(TenantInfo const&);
+    TenantInfo();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void updateEntraToken(::Identity::AuthToken const& entraToken);
+#endif
+    // NOLINTEND
+};

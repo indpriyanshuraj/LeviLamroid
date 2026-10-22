@@ -1,0 +1,54 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/screens/controllers/BundleTooltipLayoutData.h"
+#include "mc/world/containers/SlotData.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContainerManagerController;
+class ItemStackBase;
+// clang-format on
+
+struct ActiveBundleData {
+public:
+    // ActiveBundleData inner types define
+    enum class BundleState : int {
+        Inactive = 0,
+        Active   = 1,
+        Hovered  = 2,
+    };
+
+    enum class TooltipDirection : int {
+        SouthEast = 0,
+        NorthEast = 1,
+        NorthWest = 2,
+        SouthWest = 3,
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool>                                        mMinimizedTooltip;
+    ::ll::TypedStorage<4, 8, ::std::optional<int>>                        mSelectedCollectionIndex;
+    ::ll::TypedStorage<8, 40, ::SlotData>                                 mSlotData;
+    ::ll::TypedStorage<4, 4, ::ActiveBundleData::BundleState>             mBundleState;
+    ::ll::TypedStorage<8, 80, ::std::optional<::BundleTooltipLayoutData>> mCachedBundleTooltipLayoutData;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::BundleTooltipLayoutData const& getBundleTooltipLayoutData(
+        ::ItemStackBase const&        bundleItem,
+        ::ContainerManagerController& containerManagerController
+    ) const;
+
+    MCAPI ::std::pair<::std::string, int> getCollectionNameAndIndex() const;
+
+    MCAPI int
+    getContainerIndexFromCollectionIndex(::BundleTooltipLayoutData const& tooltipLayoutData, int collectionIndex) const;
+    // NOLINTEND
+};

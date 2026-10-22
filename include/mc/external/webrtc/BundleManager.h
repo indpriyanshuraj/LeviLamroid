@@ -1,0 +1,62 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/SdpType.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class ContentGroup; }
+namespace webrtc { class SessionDescription; }
+// clang-format on
+
+namespace webrtc {
+
+class BundleManager {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 1>  mUnkec5072;
+    ::ll::UntypedStorage<4, 4>  mUnkd745be;
+    ::ll::UntypedStorage<8, 24> mUnk3106ac;
+    ::ll::UntypedStorage<8, 24> mUnk7b489b;
+    ::ll::UntypedStorage<8, 16> mUnk236369;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BundleManager& operator=(BundleManager const&);
+    BundleManager(BundleManager const&);
+    BundleManager();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void Commit();
+
+    MCNAPI void DeleteGroup(::webrtc::ContentGroup const* bundle_group);
+
+    MCNAPI void DeleteMid(::webrtc::ContentGroup const* bundle_group, ::std::string const& mid);
+
+    MCNAPI bool IsFirstMidInGroup(::std::string const& mid) const;
+
+    MCNAPI ::webrtc::ContentGroup* LookupGroupByMid(::std::string const& mid);
+
+    MCNAPI void RefreshEstablishedBundleGroupsByMid();
+
+    MCNAPI void Rollback();
+
+    MCNAPI void Update(::webrtc::SessionDescription const* description, ::webrtc::SdpType type);
+
+    MCNAPI ~BundleManager();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace webrtc

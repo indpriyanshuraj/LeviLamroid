@@ -1,6 +1,7 @@
 #include "levilamroid/api/block/BlockTypeRegistry.h"
 #include "levilamroid/api/block/BlockPos.h"
 #include "levilamroid/api/item/ItemRegistry.h"
+#include "levilamroid/api/item/ItemStack.h"
 #include "levilamroid/api/Logger.h"
 #include "levilamroid/api/mcpe/Offsets.h"
 #include "ll/api/memory/Hook.h"
@@ -153,7 +154,8 @@ void* getCustomBlockLegacy(std::string_view identifier) {
     auto& items = ::levilamroid::item::getAllCustomItems();
     for (auto& item : items) {
         if (item.identifier == identifier && item.isBlock && item.nativeItemPtr) {
-            return *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312);
+            auto* blkCtrl = *reinterpret_cast<item::BedrockBlockControlBlock**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312);
+            return blkCtrl ? blkCtrl->mBlockLegacy : nullptr;
         }
     }
     return nullptr;
@@ -167,13 +169,24 @@ static void* sEngineBlockTypeRegistry = nullptr;
 // Provided by CoreHooks
 extern "C" void* ll_service_get_level();
 
-// Hooked into right after vanilla BlockTypeRegistry::init() runs.
-static void hooked_blockTypeRegistryInit(void* self) {
-    // Always call original first so vanilla blocks are all registered
-    if (sOrigBlockTypeRegistryInit) {
-        reinterpret_cast<void(*)(void*)>(sOrigBlockTypeRegistryInit)(self);
+void* getEngineBlockTypeRegistry() {
+    if (sEngineBlockTypeRegistry) return sEngineBlockTypeRegistry;
+    uintptr_t mcBase = getMcBase();
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+    if (mcBase && off.blockTypeRegistryGetInstance) {
+        using GetRegistryFn = void* (*)();
+        auto getRegistry = reinterpret_cast<GetRegistryFn>(mcBase + off.blockTypeRegistryGetInstance);
+        sEngineBlockTypeRegistry = getRegistry();
     }
-    sEngineBlockTypeRegistry = self;
+    return sEngineBlockTypeRegistry;
+}
+
+// Hooked into right after vanilla BlockTypeRegistry::init() runs (if non-zero).
+static void hooked_blockTypeRegistryInit() {
+    if (sOrigBlockTypeRegistryInit) {
+        reinterpret_cast<void(*)()>(sOrigBlockTypeRegistryInit)();
+    }
+    sEngineBlockTypeRegistry = getEngineBlockTypeRegistry();
     ::levilamroid::item::refreshCustomBlockBindings();
 }
 
@@ -183,17 +196,17 @@ bool installBlockHooks() {
     uintptr_t mcBase = getMcBase();
 
     if (mcBase && off.blockTypeRegistryInit) {
-        using HookFn = void(*)(void*);
+        using HookFn = void(*)();
         bool hooked = ll::memory::hookRva(off.blockTypeRegistryInit,
             reinterpret_cast<void*>(static_cast<HookFn>(&hooked_blockTypeRegistryInit)),
             &sOrigBlockTypeRegistryInit);
         if (hooked) {
             logger.info("[BlockHooks] Hooked BlockTypeRegistry::init [RVA: 0x", std::hex, off.blockTypeRegistryInit, "]");
         } else {
-            logger.warn("[BlockHooks] Failed to hook blockTypeRegistryInit — blocks will fall back to stone");
+            logger.warn("[BlockHooks] Failed to hook blockTypeRegistryInit");
         }
     } else {
-        logger.warn("[BlockHooks] blockTypeRegistryInit RVA not set — Phase 2 blocks inactive");
+        logger.info("[BlockHooks] Native block bindings will resolve via blockTypeRegistryGetInstance.");
     }
 
     logger.info("[BlockHooks] Native block subsystem ready.");

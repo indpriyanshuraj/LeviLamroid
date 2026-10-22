@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Biome;
+class BiomeRegistry;
+class Block;
+namespace SharedTypes::v1_20_60 { struct BlockSpecifier; }
+// clang-format on
+
+struct IBiomeComponentGlue {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IBiomeComponentGlue() = default;
+
+    virtual bool
+    resolveAndValidate(::entt::meta_any const& biomeJsonComponent, ::BiomeRegistry const& biomeRegistry) = 0;
+
+    virtual void applyToBiome(::Biome& biome, ::entt::meta_any const& component) const = 0;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::std::vector<::Block const*> _getResolvedBlocks(
+        ::std::string const&                                          fieldName,
+        ::std::vector<::SharedTypes::v1_20_60::BlockSpecifier> const& blockSpecifiers
+    );
+    // NOLINTEND
+};

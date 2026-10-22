@@ -1,0 +1,29 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/Result.h"
+#include "mc/server/commands/CurrentCmdVersion.h"
+
+// auto generated forward declare list
+// clang-format off
+class Player;
+namespace Json { class Value; }
+namespace ScriptModuleMinecraft { struct ScriptRawMessageError; }
+// clang-format on
+
+namespace ScriptModuleMinecraftServerUI {
+
+class IControl {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IControl() = default;
+
+    virtual ::Scripting::Result<::Json::Value, ::ScriptModuleMinecraft::ScriptRawMessageError>
+    buildJson(::Player& forPlayer, ::CurrentCmdVersion commandVersion) const = 0;
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraftServerUI

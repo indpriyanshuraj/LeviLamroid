@@ -1,0 +1,147 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/debug/log/LogArea.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/deps/puv/puv_load_data/LoadResultWithTiming.h"
+#include "mc/world/actor/ActorDefinitionPtr.h"
+#include "mc/world/level/storage/Experiments.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorComponentFactory;
+class ActorDefinition;
+class IMinecraftEventing;
+class Level;
+class LinkedAssetValidator;
+class PackLoadContext;
+class ResourcePackManager;
+class SemVersion;
+namespace Json { class Value; }
+// clang-format on
+
+class ActorDefinitionGroup : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // ActorDefinitionGroup inner types declare
+    // clang-format off
+    struct EDLWrapper;
+    struct LoadActorResult;
+    // clang-format on
+
+    // ActorDefinitionGroup inner types define
+    enum class LoadStatus : int {
+        Success                      = 0,
+        FailedToParseIdentifier      = 1,
+        InvalidNamespaceInIdentifier = 2,
+        DefinitionAlreadyDefined     = 3,
+        FailedToLoadFromJSON         = 4,
+        InvalidIdentifier            = 5,
+    };
+
+    struct EDLWrapper {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 64, ::std::unordered_map<::std::string, ::std::unique_ptr<::ActorDefinition>>> mList;
+        // NOLINTEND
+    };
+
+    struct LoadActorResult {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<4, 4, ::ActorDefinitionGroup::LoadStatus>   mLoadStatus;
+        ::ll::TypedStorage<8, 32, ::std::string>                       mActorId;
+        ::ll::TypedStorage<1, 1, bool>                                 mIsVanillaOverride;
+        ::ll::TypedStorage<8, 32, ::PuvLoadData::LoadResultWithTiming> mLoadTime;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 64, ::std::unordered_set<::ActorDefinitionPtr*>> mRegisteredPtrs;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::std::string, ::std::unique_ptr<::ActorDefinition>>> mDefinitions;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::std::string, ::ActorDefinitionGroup::EDLWrapper>>   mTemplateMap;
+    ::ll::TypedStorage<8, 8, ::ResourcePackManager&>                              mResourcePackManager;
+    ::ll::TypedStorage<8, 24, ::Bedrock::NonOwnerPointer<::LinkedAssetValidator>> mLinkedAssetValidator;
+    ::ll::TypedStorage<8, 80, ::std::mutex>                                       mReferenceMutex;
+    ::ll::TypedStorage<8, 8, ::IMinecraftEventing&>                               mEventing;
+    ::ll::TypedStorage<8, 8, ::ActorComponentFactory*>                            mComponentFactory;
+    ::ll::TypedStorage<8, 72, ::Experiments>                                      mExperiments;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ActorDefinitionGroup& operator=(ActorDefinitionGroup const&);
+    ActorDefinitionGroup(ActorDefinitionGroup const&);
+    ActorDefinitionGroup();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ActorDefinitionGroup() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ActorDefinitionGroup(
+        ::Level&                                           level,
+        ::ResourcePackManager&                             resourcePackManager,
+        ::IMinecraftEventing&                              eventing,
+        ::Experiments const&                               experiments,
+        ::Bedrock::NonOwnerPointer<::LinkedAssetValidator> linkedAssetValidator
+    );
+
+#ifdef LL_PLAT_S
+    MCAPI void _addRef(::ActorDefinitionPtr& ptr);
+#endif
+
+    MCAPI ::ActorDefinitionGroup::LoadActorResult _loadActorDefinition(
+        ::Level&                             level,
+        ::PackLoadContext&                   packLoadContext,
+        ::std::string const&                 relativeResourceFilepath,
+        ::Json::Value&                       root,
+        ::std::unordered_set<::std::string>& definitions,
+        ::LogArea                            logArea
+    );
+
+    MCAPI ::std::vector<::std::string> buildActorEventList() const;
+
+    MCAPI ::ActorDefinitionPtr tryGetDefinition(::std::string const& definitionId);
+
+    MCAPI ::ActorDefinitionPtr tryGetDefinitionGroup(::std::string const& base, ::std::string const& definitionId);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void _setupCommonResourceDefinitionMap(::ActorDefinition& def, ::Level& level);
+
+#ifdef LL_PLAT_C
+    MCAPI static void loadActorDefinitionFormatVersion(::Json::Value& root, ::SemVersion& formatVersion);
+
+    MCAPI static bool loadActorDefinitionIdentifier(
+        ::Json::Value const& root,
+        ::SemVersion const&  formatVersion,
+        ::std::string&       identifier
+    );
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::Level&                                           level,
+        ::ResourcePackManager&                             resourcePackManager,
+        ::IMinecraftEventing&                              eventing,
+        ::Experiments const&                               experiments,
+        ::Bedrock::NonOwnerPointer<::LinkedAssetValidator> linkedAssetValidator
+    );
+    // NOLINTEND
+};

@@ -1,0 +1,35 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace CodeBuilder {
+
+struct EncryptionRequest {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 1>  mUnkfec9d1;
+    ::ll::UntypedStorage<8, 32> mUnkfc44d1;
+    ::ll::UntypedStorage<8, 32> mUnk1975a5;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EncryptionRequest& operator=(EncryptionRequest const&);
+    EncryptionRequest(EncryptionRequest const&);
+    EncryptionRequest();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ~EncryptionRequest();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace CodeBuilder

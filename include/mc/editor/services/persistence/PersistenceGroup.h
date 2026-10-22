@@ -1,0 +1,76 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/game_refs/EnableGetWeakRef.h"
+#include "mc/deps/game_refs/StackRefResult.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor::Services { class PersistenceItem; }
+// clang-format on
+
+namespace Editor::Services {
+
+class PersistenceGroup : public ::EnableGetWeakRef<::Editor::Services::PersistenceGroup>,
+                         public ::std::enable_shared_from_this<::Editor::Services::PersistenceGroup> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>  mUnk9f4a0b;
+    ::ll::UntypedStorage<4, 4>  mUnk941631;
+    ::ll::UntypedStorage<8, 32> mUnkd457f7;
+    ::ll::UntypedStorage<8, 32> mUnka2de9f;
+    ::ll::UntypedStorage<8, 32> mUnkf4a5c8;
+    ::ll::UntypedStorage<4, 4>  mUnk8a3069;
+    ::ll::UntypedStorage<8, 64> mUnkda9bc2;
+    ::ll::UntypedStorage<8, 64> mUnkc896c3;
+    ::ll::UntypedStorage<8, 8>  mUnk5c88f2;
+    ::ll::UntypedStorage<8, 48> mUnkf66f23;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PersistenceGroup& operator=(PersistenceGroup const&);
+    PersistenceGroup(PersistenceGroup const&);
+    PersistenceGroup();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::string _getValidKeyName(::std::string const& key) const;
+
+    MCNAPI bool _hasItem(::std::string const& itemName) const;
+
+    MCNAPI void _notifyItemChanged(::Editor::Services::PersistenceItem const& item);
+
+    MCNAPI ::Scripting::Result_deprecated<::StackRefResult<::Editor::Services::PersistenceItem>>
+    createItem(::std::string const& itemName, ::std::optional<::std::string> defaultJsonValue);
+
+    MCNAPI ::Scripting::Result_deprecated<void> deleteItem(::std::string const& itemName);
+
+    MCNAPI ::Scripting::Result_deprecated<::StackRefResult<::Editor::Services::PersistenceItem>>
+    fetchItem(::std::string const& itemName) const;
+
+    MCNAPI ::std::string getNamespaceVersionedName() const;
+
+    MCNAPI ::Scripting::Result_deprecated<::StackRefResult<::Editor::Services::PersistenceItem>>
+    getOrCreateItem(::std::string const& itemName, ::std::optional<::std::string> defaultJsonValue);
+
+#ifdef LL_PLAT_C
+    MCNAPI bool operator==(::Editor::Services::PersistenceGroup const& other) const;
+#endif
+
+    MCNAPI ~PersistenceGroup();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

@@ -1,0 +1,65 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/item/ChemistryItem.h"
+#include "mc/world/item/HandSlot.h"
+#include "mc/world/item/ItemUseMethod.h"
+
+// auto generated forward declare list
+// clang-format off
+class CompoundTag;
+class Item;
+class ItemDescriptor;
+class ItemStack;
+class ItemStackBase;
+class Level;
+class Player;
+struct ResolvedItemIconInfo;
+// clang-format on
+
+class MedicineItem : public ::ChemistryItem {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::string
+    buildDescriptionId(::ItemDescriptor const& itemDescriptor, ::CompoundTag const* userData) const /*override*/;
+
+    virtual ::ItemStack& use(::ItemStack& item, ::Player& player, ::HandSlot handSlot) const /*override*/;
+
+    virtual ::ItemUseMethod useTimeDepleted(::ItemStack& inoutInstance, ::Level* level, ::Player* player) const
+        /*override*/;
+
+    virtual bool isValidAuxValue(int auxValue) const /*override*/;
+
+    virtual ::Item& setIconInfo(::std::string const& name, int id) /*override*/;
+
+    virtual ::ResolvedItemIconInfo getIconInfo(::ItemStackBase const& item, int, bool) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::std::string
+    $buildDescriptionId(::ItemDescriptor const& itemDescriptor, ::CompoundTag const* userData) const;
+
+    MCAPI ::ItemStack& $use(::ItemStack& item, ::Player& player, ::HandSlot handSlot) const;
+
+    MCAPI ::ItemUseMethod $useTimeDepleted(::ItemStack& inoutInstance, ::Level* level, ::Player* player) const;
+
+    MCAPI bool $isValidAuxValue(int auxValue) const;
+
+    MCFOLD ::Item& $setIconInfo(::std::string const& name, int id);
+
+    MCFOLD ::ResolvedItemIconInfo $getIconInfo(::ItemStackBase const& item, int, bool) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

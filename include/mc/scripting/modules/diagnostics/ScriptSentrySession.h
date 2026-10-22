@@ -1,0 +1,82 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+struct SentryEnvelopePayload;
+struct SentryEnvelopePayloadExceptionMechanism;
+namespace Scripting { struct BaseError; }
+// clang-format on
+
+namespace ScriptModuleDiagnostics {
+
+class ScriptSentrySession {
+public:
+    // ScriptSentrySession inner types declare
+    // clang-format off
+    struct Breadcrumb;
+    // clang-format on
+
+    // ScriptSentrySession inner types define
+    struct Breadcrumb {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4>  mUnkd92796;
+        ::ll::UntypedStorage<8, 40> mUnk91b799;
+        ::ll::UntypedStorage<8, 32> mUnka6b4fc;
+        ::ll::UntypedStorage<8, 8>  mUnk9e17e2;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        Breadcrumb& operator=(Breadcrumb const&);
+        Breadcrumb(Breadcrumb const&);
+        Breadcrumb();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>   mUnk39d824;
+    ::ll::UntypedStorage<8, 224> mUnke6f10e;
+    ::ll::UntypedStorage<8, 32>  mUnkf94cf2;
+    ::ll::UntypedStorage<8, 24>  mUnkfc1ea2;
+    ::ll::UntypedStorage<8, 64>  mUnka0f162;
+    ::ll::UntypedStorage<8, 8>   mUnke07d17;
+    ::ll::UntypedStorage<4, 4>   mUnk6feff8;
+    ::ll::UntypedStorage<1, 1>   mUnk46ce59;
+    ::ll::UntypedStorage<4, 4>   mUnk22726b;
+    ::ll::UntypedStorage<8, 8>   mUnkd02622;
+    ::ll::UntypedStorage<4, 4>   mUnk63e93d;
+    ::ll::UntypedStorage<8, 8>   mUnk101ffe;
+    ::ll::UntypedStorage<4, 8>   mUnke5c723;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptSentrySession& operator=(ScriptSentrySession const&);
+    ScriptSentrySession(ScriptSentrySession const&);
+    ScriptSentrySession();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI bool _checkRateLimits();
+
+    MCNAPI void _fillError(
+        ::SentryEnvelopePayload&                         result,
+        ::Scripting::BaseError const&                    error,
+        ::SentryEnvelopePayloadExceptionMechanism const& exceptionMechanism
+    );
+
+    MCNAPI void _sendEvent(::SentryEnvelopePayload eventPayload);
+
+    MCNAPI void onException(::Scripting::BaseError const& error);
+
+    MCNAPI void onUnhandledPromiseRejection(::Scripting::BaseError const& error);
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleDiagnostics

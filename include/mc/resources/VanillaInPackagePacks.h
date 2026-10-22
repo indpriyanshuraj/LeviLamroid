@@ -1,0 +1,23 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/resource/PackType.h"
+#include "mc/resources/IInPackagePacks.h"
+
+class VanillaInPackagePacks : public ::IInPackagePacks {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::vector<::IInPackagePacks::MetaData> getPacks(::PackType packType) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::std::vector<::IInPackagePacks::MetaData> $getPacks(::PackType packType) const;
+
+
+    // NOLINTEND
+};

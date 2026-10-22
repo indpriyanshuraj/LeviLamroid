@@ -1,0 +1,39 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/biome/glue/IBiomeComponentGlue.h"
+
+// auto generated forward declare list
+// clang-format off
+class Biome;
+class BiomeRegistry;
+// clang-format on
+
+struct ReplaceBiomesBiomeComponentGlue : public ::IBiomeComponentGlue {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::vector<::gsl::not_null<::Biome const*>>>> mTargetBiomes;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool
+    resolveAndValidate(::entt::meta_any const& biomeJsonComponent, ::BiomeRegistry const& registry) /*override*/;
+
+    virtual void applyToBiome(::Biome& biome, ::entt::meta_any const& biomeJsonComponent) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $resolveAndValidate(::entt::meta_any const& biomeJsonComponent, ::BiomeRegistry const& registry);
+
+    MCAPI void $applyToBiome(::Biome& biome, ::entt::meta_any const& biomeJsonComponent) const;
+
+
+    // NOLINTEND
+};

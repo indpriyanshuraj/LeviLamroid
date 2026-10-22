@@ -282,6 +282,7 @@ bool hookSignature(const std::string& pattern, void* detour, void** original, ui
 
 namespace internal {
 
+bool registerHookHelper(const char* name, uintptr_t rva, void* detour, void** original);
 
 bool registerHookHelper(const char* name, const char* symbolOrPattern, void* detour, void** original) {
     if (!symbolOrPattern) return false;

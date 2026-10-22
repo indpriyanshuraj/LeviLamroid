@@ -1,0 +1,89 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/levelgen/v2/StructurePlacement.h"
+
+// auto generated forward declare list
+// clang-format off
+class HashedString;
+namespace br::worldgen { struct Structure; }
+// clang-format on
+
+namespace br::worldgen {
+
+struct StructureSet {
+public:
+    // StructureSet inner types declare
+    // clang-format off
+    struct Entry;
+    // clang-format on
+
+    // StructureSet inner types define
+    struct Entry {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 16, ::std::shared_ptr<::br::worldgen::Structure const>> mStructure;
+        ::ll::TypedStorage<4, 4, int>                                                 mWeight;
+        // NOLINTEND
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCAPI ~Entry();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCFOLD void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::br::worldgen::StructureSet::Entry>> mItems;
+    ::ll::TypedStorage<8, 32, ::br::worldgen::StructurePlacement>                 mPlacement;
+    // NOLINTEND
+
+#ifdef LL_PLAT_S
+public:
+    // prevent constructor by default
+    StructureSet();
+
+#else // LL_PLAT_C
+#endif
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCAPI StructureSet(
+        ::std::vector<::br::worldgen::StructureSet::Entry> entries,
+        ::br::worldgen::StructurePlacement                 placement
+    );
+#endif
+
+    MCAPI bool contains(::HashedString type) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::std::shared_ptr<::br::worldgen::StructureSet>
+    create(::std::shared_ptr<::br::worldgen::Structure const> structure, ::br::worldgen::StructurePlacement placement);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    MCAPI void*
+    $ctor(::std::vector<::br::worldgen::StructureSet::Entry> entries, ::br::worldgen::StructurePlacement placement);
+#endif
+    // NOLINTEND
+};
+
+} // namespace br::worldgen

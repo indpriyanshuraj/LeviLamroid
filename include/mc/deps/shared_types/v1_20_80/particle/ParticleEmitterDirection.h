@@ -1,0 +1,43 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/legacy/ExpressionNode.h"
+#include "mc/deps/shared_types/v1_20_80/particle/DirectionType.h"
+
+namespace SharedTypes::v1_20_80 {
+
+struct ParticleEmitterDirection {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 8, ::std::optional<::SharedTypes::v1_20_80::DirectionType>> mDirectionString;
+    ::ll::TypedStorage<8, 152, ::std::optional<::std::array<::SharedTypes::Legacy::ExpressionNode, 3>>> mDirectionExpr;
+    // NOLINTEND
+
+#ifdef LL_PLAT_S
+#else // LL_PLAT_C
+public:
+    // prevent constructor by default
+    ParticleEmitterDirection();
+
+#endif
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI explicit ParticleEmitterDirection(::std::array<::SharedTypes::Legacy::ExpressionNode, 3> exprArray);
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void* $ctor(::std::array<::SharedTypes::Legacy::ExpressionNode, 3> exprArray);
+#endif
+    // NOLINTEND
+};
+
+} // namespace SharedTypes::v1_20_80

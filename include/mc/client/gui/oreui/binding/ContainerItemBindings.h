@@ -1,0 +1,64 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/gameplay/data/gameplayui/BundleColor.h"
+#include "mc/client/gui/gameplay/data/gameplayui/ContainerItemStatusType.h"
+#include "mc/client/gui/gameplay/data/gameplayui/ContainerItemType.h"
+#include "mc/client/gui/oreui/binding/properties/Property.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace GameplayUI { struct ContainerItem; }
+namespace OreUI::Detail { class IPropertyObject; }
+// clang-format on
+
+namespace OreUI {
+
+struct ContainerItemBindings {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>> name;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>> id;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>> details;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>>                     amount;
+    ::ll::TypedStorage<
+        8,
+        176,
+        ::OreUI::Property<::GameplayUI::ContainerItemStatusType, ::GameplayUI::ContainerItemStatusType>>
+                                                            statusType;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>> statusValue;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>> statusMax;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<::GameplayUI::ContainerItemType, ::GameplayUI::ContainerItemType>>
+                                                                                              containerItemType;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<bool, bool>>                                 isSelectedRecipeSlot;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<::std::optional<int>, ::std::optional<int>>> bundleID;
+    ::ll::TypedStorage<
+        8,
+        176,
+        ::OreUI::Property<::std::optional<::GameplayUI::BundleColor>, ::std::optional<::GameplayUI::BundleColor>>>
+        bundleColor;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ContainerItemBindings();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ContainerItemBindings(::OreUI::Detail::IPropertyObject* parent, ::GameplayUI::ContainerItem item);
+
+    MCAPI void update(::GameplayUI::ContainerItem const& item);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::OreUI::Detail::IPropertyObject* parent, ::GameplayUI::ContainerItem item);
+    // NOLINTEND
+};
+
+} // namespace OreUI

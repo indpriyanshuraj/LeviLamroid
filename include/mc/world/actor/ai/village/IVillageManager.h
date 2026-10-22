@@ -1,0 +1,26 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class Village;
+namespace mce { class UUID; }
+// clang-format on
+
+class IVillageManager : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IVillageManager() /*override*/ = default;
+
+    virtual ::std::weak_ptr<::Village>
+    fetchClosestVillage(::BlockPos const& position, int maxDistFromVillageBounds, uint searchRadius) const = 0;
+
+    virtual ::std::weak_ptr<::Village> getVillageByID(::mce::UUID const& villageID) const = 0;
+    // NOLINTEND
+};

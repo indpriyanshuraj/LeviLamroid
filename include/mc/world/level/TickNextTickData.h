@@ -1,0 +1,32 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/BlockPos.h"
+#include "mc/world/level/Tick.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+// clang-format on
+
+class TickNextTickData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::BlockPos     pos;
+    int            priorityOffset;
+    ::Block const* mBlock;
+    ::Tick         tick;
+
+    // NOLINTEND
+
+public:
+    bool operator>(TickNextTickData const& tnd) const {
+        if (tick != tnd.tick) {
+            return tick > tnd.tick;
+        }
+        return priorityOffset > tnd.priorityOffset;
+    }
+};

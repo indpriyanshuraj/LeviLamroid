@@ -1,0 +1,16 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/persona/SkinHandle.h"
+
+struct CharacterSelectorData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 32, ::std::string> mPreviewImageFilePath;
+    ::ll::TypedStorage<8, 112, ::SkinHandle> mSkinHandle;
+    ::ll::TypedStorage<4, 4, uint>           mDefaultIndex;
+    // NOLINTEND
+};

@@ -1,0 +1,46 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/BlockType.h"
+#include "mc/world/level/block/WoodType.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+// clang-format on
+
+class PlanksBlock : public ::BlockType {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, ::WoodType> mWoodType;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::string buildDescriptionId(::Block const&) const /*override*/;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::array<::std::string, 11> const& WOOD_NAMES();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::std::string $buildDescriptionId(::Block const&) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

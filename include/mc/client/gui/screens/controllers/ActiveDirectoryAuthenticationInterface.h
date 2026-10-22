@@ -1,0 +1,50 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/screens/controllers/AuthenticationUIState.h"
+#include "mc/deps/identity/edu_common/ActiveDirectoryAuthenticationState.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActiveDirectoryPopup;
+class TransactionContext;
+struct EduPurchaseDetails;
+struct Purchase;
+// clang-format on
+
+class ActiveDirectoryAuthenticationInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ActiveDirectoryAuthenticationInterface() = default;
+
+    virtual ::ActiveDirectoryAuthenticationState getAuthenticationState() const = 0;
+
+    virtual ::std::optional<::ActiveDirectoryPopup> getPopup() const = 0;
+
+    virtual ::std::string getTrialPopupId() const = 0;
+
+    virtual ::AuthenticationUIState getSignInUIState() const = 0;
+
+    virtual bool shouldShowPurchaseDialog() const = 0;
+
+    virtual bool shouldAllowExitGame() const = 0;
+
+    virtual bool shouldShowTrialPurchaseLink() const = 0;
+
+    virtual ::AuthenticationUIState initializeActiveDirectorySignIn(bool displaySignIn) = 0;
+
+    virtual void setActiveDirectoryAuthenticationOfferPurchase() = 0;
+
+    virtual bool purchaseEduLicense(::std::unique_ptr<::TransactionContext> context) = 0;
+
+    virtual bool getUnfulfilledEduPurchase(::EduPurchaseDetails& details) const = 0;
+
+    virtual bool
+    fulfillPriorEduPurchase(::std::weak_ptr<::Purchase> purchase, ::std::unique_ptr<::TransactionContext> context) = 0;
+
+    virtual ::AuthenticationUIState doSignIn(::AuthenticationUIState currentState) = 0;
+    // NOLINTEND
+};

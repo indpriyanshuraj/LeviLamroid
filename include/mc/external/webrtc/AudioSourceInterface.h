@@ -1,0 +1,89 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/MediaSourceInterface.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class AudioTrackSinkInterface; }
+namespace webrtc { struct AudioOptions; }
+// clang-format on
+
+namespace webrtc {
+
+class AudioSourceInterface : public ::webrtc::MediaSourceInterface {
+public:
+    // AudioSourceInterface inner types declare
+    // clang-format off
+    class AudioObserver;
+    // clang-format on
+
+    // AudioSourceInterface inner types define
+    class AudioObserver {
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual void OnSetVolume(double volume) = 0;
+
+        virtual ~AudioObserver();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+
+    public:
+        // vftables
+        // NOLINTBEGIN
+        MCNAPI static void** $vftable();
+        // NOLINTEND
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void SetVolume(double volume);
+
+    virtual void RegisterAudioObserver(::webrtc::AudioSourceInterface::AudioObserver* observer);
+
+    virtual void UnregisterAudioObserver(::webrtc::AudioSourceInterface::AudioObserver* observer);
+
+    virtual void AddSink(::webrtc::AudioTrackSinkInterface* sink);
+
+    virtual void RemoveSink(::webrtc::AudioTrackSinkInterface* sink);
+
+    virtual ::webrtc::AudioOptions const options() const;
+
+    virtual ~AudioSourceInterface() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $SetVolume(double volume);
+
+    MCNAPI void $RegisterAudioObserver(::webrtc::AudioSourceInterface::AudioObserver* observer);
+
+    MCNAPI void $UnregisterAudioObserver(::webrtc::AudioSourceInterface::AudioObserver* observer);
+
+    MCNAPI void $AddSink(::webrtc::AudioTrackSinkInterface* sink);
+
+    MCNAPI void $RemoveSink(::webrtc::AudioTrackSinkInterface* sink);
+
+    MCNAPI ::webrtc::AudioOptions const $options() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace webrtc

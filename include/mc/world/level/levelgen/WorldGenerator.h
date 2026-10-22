@@ -1,0 +1,229 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/threading/InstancedThreadLocalValue.h"
+#include "mc/deps/core/utility/buffer_span.h"
+#include "mc/world/level/ChunkPos.h"
+#include "mc/world/level/DividedPos2d.h"
+#include "mc/world/level/chunk/ChunkSource.h"
+#include "mc/world/level/levelgen/v1/IPreliminarySurfaceProvider.h"
+
+// auto generated forward declare list
+// clang-format off
+class Biome;
+class BiomeArea;
+class BiomeSource;
+class BlockPos;
+class BlockSource;
+class BlockVolume;
+class BlockVolumeTarget;
+class BoundingBox;
+class Dimension;
+class HashedString;
+class LevelChunk;
+class Random;
+class StructureFeature;
+class StructureFeatureRegistry;
+namespace br::worldgen { class ChunkAccessor; }
+namespace br::worldgen { class StructureInstance; }
+namespace br::worldgen { struct ChunkStructureAccess; }
+namespace br::worldgen { struct Structure; }
+// clang-format on
+
+class WorldGenerator : public ::ChunkSource, public ::IPreliminarySurfaceProvider {
+public:
+    // WorldGenerator inner types declare
+    // clang-format off
+    struct BlockVolumeDimensions;
+    // clang-format on
+
+    // WorldGenerator inner types define
+    struct BlockVolumeDimensions {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<4, 4, uint> mWidth;
+        ::ll::TypedStorage<4, 4, uint> mDepth;
+        ::ll::TypedStorage<4, 4, uint> mHeight;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::StructureFeatureRegistry>> mStructureFeatureRegistry;
+    ::ll::TypedStorage<8, 80, ::std::mutex>                                 mCreateStructuresAndVisitedPositionsMutex;
+    ::ll::TypedStorage<8, 72, ::std::condition_variable>                    mStructureInstanceWaitVar;
+    ::ll::TypedStorage<4, 4, ::std::atomic<int>>                            mActiveStructureInstanceCreateCount;
+    ::ll::TypedStorage<8, 64, ::std::unordered_set<::ChunkPos>>             mVisitedPositions;
+    ::ll::TypedStorage<4, 4, ::Bedrock::Threading::InstancedThreadLocalValue<::br::worldgen::ChunkAccessor*>>
+        mThreadLocalHeightmapProvider;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    WorldGenerator();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~WorldGenerator() /*override*/;
+
+    virtual ::HashedString findStructureFeatureTypeAt(::BlockPos const& pos);
+
+    virtual bool isStructureFeatureTypeAt(::BlockPos const& pos, ::HashedString type) const;
+
+    virtual bool findNearestStructureFeature(
+        ::HashedString                  feature,
+        ::BlockPos const&               origin,
+        ::BlockPos&                     pos,
+        bool                            mustBeInNewChunks,
+        ::std::optional<::HashedString> biomeTag
+    );
+
+    virtual ::StructureFeature* getStructureFeatureOfType(::HashedString type) const;
+
+    virtual void garbageCollectBlueprints(::buffer_span<::ChunkPos> activeChunks);
+
+    virtual void prepareHeights(
+        ::BlockVolume&        box,
+        ::ChunkPos const&     chunkPos,
+        ::std::vector<short>* ZXheights,
+        bool                  factorInBeardsAndShavers
+    ) = 0;
+
+    virtual ::BiomeArea getBiomeArea(::BoundingBox const& area, uint scale) const = 0;
+
+    virtual ::BiomeSource const& getBiomeSource() const = 0;
+
+    virtual ::WorldGenerator::BlockVolumeDimensions getBlockVolumeDimensions() const = 0;
+
+    virtual ::BlockPos findSpawnPosition() const = 0;
+
+    virtual void
+    postProcessMobsAt(::BlockSource& region, int chunkWestBlock, int chunkNorthBlock, ::Random& random) /*override*/;
+
+    virtual void postProcessMobsAt(::BlockSource& region, ::BoundingBox const& chunkBB) const /*override*/;
+
+    virtual ::std::optional<short> getPreliminarySurfaceLevel(::DividedPos2d<4> worldQuartPos) const /*override*/;
+
+    virtual void debugRender();
+
+    virtual void propagateCombinedChunkSource(::ChunkSource* chunkSource);
+
+    virtual void decorateWorldGenLoadChunk(
+        ::Biome const&       biome,
+        ::LevelChunk&        lc,
+        ::BlockVolumeTarget& target,
+        ::Random&            random,
+        ::ChunkPos const&    pos
+    ) const = 0;
+
+    virtual void decorateWorldGenPostProcess(
+        ::Biome const& biome,
+        ::LevelChunk&  lc,
+        ::BlockSource& source,
+        ::Random&      random
+    ) const = 0;
+
+    virtual ::std::shared_ptr<::br::worldgen::StructureInstance>
+    _tryGetOrLoadStructureInstanceAt(::ChunkPos const& cp, ::br::worldgen::Structure const& structure) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI explicit WorldGenerator(::Dimension& dimension);
+
+    MCAPI
+    WorldGenerator(::Dimension& dimension, ::std::unique_ptr<::StructureFeatureRegistry> structureFeatureRegistry);
+
+    MCAPI bool _tryGenerateStructure(
+        ::br::worldgen::Structure const&      structure,
+        ::ChunkPos const&                     chunkPos,
+        ::br::worldgen::ChunkStructureAccess& structureAccess
+    );
+
+    MCAPI void addHardcodedSpawnAreas(::LevelChunk& lc);
+
+    MCAPI ::std::vector<short> computeChunkHeightMap(::ChunkPos const& pos);
+
+    MCAPI void postProcessStructureFeatures(::BlockSource& region, ::Random& random, uint seed, int chunkX, int chunkZ);
+
+    MCAPI void postProcessStructures(::BlockSource& region, ::Random&, int chunkX, int chunkZ);
+
+    MCAPI void preProcessStructures(::Dimension& dimension, ::ChunkPos const& cp, ::BiomeSource const& biomeSource);
+
+    MCAPI void prepareStructureFeatureBlueprints(
+        ::Dimension&                         dimension,
+        ::ChunkPos const&                    cp,
+        ::BiomeSource const&                 biomeSource,
+        ::IPreliminarySurfaceProvider const& preliminarySurfaceProvider
+    );
+
+#ifdef LL_PLAT_S
+    MCAPI void tick();
+#endif
+
+    MCAPI void waitForStructures();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Dimension& dimension);
+
+    MCAPI void* $ctor(::Dimension& dimension, ::std::unique_ptr<::StructureFeatureRegistry> structureFeatureRegistry);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::HashedString $findStructureFeatureTypeAt(::BlockPos const& pos);
+
+    MCAPI bool $isStructureFeatureTypeAt(::BlockPos const& pos, ::HashedString type) const;
+
+    MCAPI bool $findNearestStructureFeature(
+        ::HashedString                  feature,
+        ::BlockPos const&               origin,
+        ::BlockPos&                     pos,
+        bool                            mustBeInNewChunks,
+        ::std::optional<::HashedString> biomeTag
+    );
+
+    MCAPI ::StructureFeature* $getStructureFeatureOfType(::HashedString type) const;
+
+    MCAPI void $garbageCollectBlueprints(::buffer_span<::ChunkPos> activeChunks);
+
+    MCAPI void $postProcessMobsAt(::BlockSource& region, int chunkWestBlock, int chunkNorthBlock, ::Random& random);
+
+    MCAPI void $postProcessMobsAt(::BlockSource& region, ::BoundingBox const& chunkBB) const;
+
+    MCAPI ::std::optional<short> $getPreliminarySurfaceLevel(::DividedPos2d<4> worldQuartPos) const;
+
+    MCFOLD void $debugRender();
+
+    MCFOLD void $propagateCombinedChunkSource(::ChunkSource* chunkSource);
+
+    MCAPI ::std::shared_ptr<::br::worldgen::StructureInstance>
+    $_tryGetOrLoadStructureInstanceAt(::ChunkPos const& cp, ::br::worldgen::Structure const& structure);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftableForIPreliminarySurfaceProvider();
+
+    MCNAPI static void** $vftableForChunkSource();
+    // NOLINTEND
+};

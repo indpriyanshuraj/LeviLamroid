@@ -1,0 +1,22 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Bedrock::Profiling::Control {
+
+struct ProfilerControlArgs {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk2da4fe;
+    ::ll::UntypedStorage<1, 3>  mUnk76f560;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ProfilerControlArgs& operator=(ProfilerControlArgs const&);
+    ProfilerControlArgs(ProfilerControlArgs const&);
+    ProfilerControlArgs();
+};
+
+} // namespace Bedrock::Profiling::Control

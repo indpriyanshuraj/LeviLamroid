@@ -1,0 +1,397 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/deps/script_core/lifetime_registry/scripting/TypedObjectHandle.h"
+#include "mc/deps/script_core/lifetime_registry/scripting/WeakLifetimeScope.h"
+#include "mc/scripting/modules/minecraft/events/IScriptWorldAfterEvents.h"
+#include "mc/scripting/modules/minecraft/events/IScriptWorldBeforeEvents.h"
+#include "mc/scripting/modules/minecraft/events/ScriptFilteredEventSignal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Level;
+class Player;
+struct ChatEvent;
+struct ItemUseEvent;
+struct ItemUseOnEvent;
+namespace ScriptModuleMinecraft { class ScriptGlobalEventListeners; }
+namespace ScriptModuleMinecraft { struct EmptyFilter; }
+namespace ScriptModuleMinecraft { struct ScriptActorCreateEvent; }
+namespace ScriptModuleMinecraft { struct ScriptActorHitAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptActorHitBlockAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptActorHitEntityAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptActorHurtAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptActorHurtAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptActorRemoveAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptActorSpawnAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptChatSendBeforeEvent; }
+namespace ScriptModuleMinecraft { struct ScriptDataDrivenActorTriggerAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptDataDrivenActorTriggerAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptItemCompleteUseAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemCompleteUseIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptItemReleaseUseAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemReleaseUseIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptItemStartUseAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemStartUseIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptItemStopUseAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemStopUseIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptItemUseBeforeEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemUseOnAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemUseOnBeforeEvent; }
+namespace ScriptModuleMinecraft { struct ScriptItemUseOnIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptPlayerJoinAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptPlayerJoinAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptPlayerLeaveAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptPlayerLeaveAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptTickEvent; }
+namespace ScriptModuleMinecraft { struct ScriptWeatherChangedAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptWeatherChangedAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft { struct ScriptWorldInitializeAfterEvent; }
+namespace ScriptModuleMinecraft { struct ScriptWorldInitializeAfterEventIntermediateData; }
+namespace ScriptModuleMinecraft::EventFilters { struct ScriptActorEventFilter; }
+namespace ScriptModuleMinecraft::EventFilters { struct ScriptDataDrivenActorTriggerEventFilter; }
+namespace Scripting { class ModuleBindingBuilder; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+class ScriptV010Events : public ::ScriptModuleMinecraft::IScriptWorldAfterEvents,
+                         public ::ScriptModuleMinecraft::IScriptWorldBeforeEvents {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 16, ::Scripting::WeakLifetimeScope>                                            mScope;
+    ::ll::TypedStorage<8, 16, ::Scripting::TypedObjectHandle<::ScriptModuleMinecraft::ScriptV010Events>> mHandle;
+    ::ll::TypedStorage<8, 8, ::gsl::not_null<::Level*>>                                                  mLevel;
+    ::ll::TypedStorage<8, 8, ::ScriptModuleMinecraft::ScriptGlobalEventListeners*> mGlobalEventListeners;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptTickEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mTickSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptWeatherChangedAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mWeatherChangeSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptWorldInitializeAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mWorldInitializeSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptPlayerJoinAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mPlayerJoinEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptPlayerLeaveAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mPlayerLeaveEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptChatSendBeforeEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mBeforeChatSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptActorCreateEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mEntityCreateSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptActorHitAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EventFilters::ScriptActorEventFilter>>>
+        mEntityHitSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptDataDrivenActorTriggerAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EventFilters::ScriptDataDrivenActorTriggerEventFilter>>>
+        mDataDrivenEntityEventSend;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptActorHurtAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EventFilters::ScriptActorEventFilter>>>
+        mEntityHurtSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemUseBeforeEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemBeforeUseEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemUseOnBeforeEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemBeforeUseOnEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemUseOnAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemUseOnEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemStartUseAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemStartChargeEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemCompleteUseAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemCompleteChargeEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemReleaseUseAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemReleaseChargeEventSignal;
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptFilteredEventSignal<
+            ::ScriptModuleMinecraft::ScriptItemStopUseAfterEvent,
+            0,
+            ::ScriptModuleMinecraft::EmptyFilter>>>
+        mItemStopChargeEventSignal;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptV010Events& operator=(ScriptV010Events const&);
+    ScriptV010Events(ScriptV010Events const&);
+    ScriptV010Events();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ScriptV010Events() /*override*/;
+
+    virtual ::Level& getLevel() const /*override*/;
+
+    virtual void onWeatherChanged(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptWeatherChangedAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onWorldInitialize(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptWorldInitializeAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onPlayerJoin(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptPlayerJoinAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onPlayerLeave(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptPlayerLeaveAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptChatSendBeforeEvent>>
+    onBeforeChat(::ChatEvent const& chatEvent, ::Player const& player) /*override*/;
+
+    virtual void onActorRemoved(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorRemoveAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onActorHitEntity(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHitEntityAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onActorHitBlock(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHitBlockAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual void onDataDrivenActorEventSend(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptDataDrivenActorTriggerAfterEventIntermediateData>&
+            dataDrivenActorEventSend
+    ) /*override*/;
+
+    virtual void onActorHurt(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHurtAfterEventIntermediateData>& eventData
+    ) /*override*/;
+
+    virtual ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptItemUseBeforeEvent>>
+    onBeforeItemUse(::Player const& player, ::ItemUseEvent const& itemEvent) /*override*/;
+
+    virtual ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptItemUseOnBeforeEvent>>
+    onBeforeItemUseOn(::Player const& player, ::ItemUseOnEvent const& itemEvent) /*override*/;
+
+    virtual void
+    onItemUseOn(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemUseOnIntermediateData>& eventData) /*override*/;
+
+    virtual void onItemStartUse(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemStartUseIntermediateData>& itemEvent
+    ) /*override*/;
+
+    virtual void onItemCompleteUse(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemCompleteUseIntermediateData>& itemEvent
+    ) /*override*/;
+
+    virtual void onItemReleaseUse(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemReleaseUseIntermediateData>& itemEvent
+    ) /*override*/;
+
+    virtual void onItemStopUse(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemStopUseIntermediateData>& itemEvent
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ScriptV010Events(::ScriptModuleMinecraft::ScriptV010Events&&);
+
+    MCAPI ScriptV010Events(::Scripting::WeakLifetimeScope const& scope, ::gsl::not_null<::Level*> level);
+
+    MCAPI void
+    onActorCreated(::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorSpawnAfterEventIntermediateData>& eventData);
+
+    MCAPI ::ScriptModuleMinecraft::ScriptV010Events& operator=(::ScriptModuleMinecraft::ScriptV010Events&&);
+
+    MCAPI void registerListener(
+        ::Scripting::TypedObjectHandle<::ScriptModuleMinecraft::ScriptV010Events> handle,
+        ::ScriptModuleMinecraft::ScriptGlobalEventListeners&                      globalEventListeners
+    );
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void bind(::Scripting::ModuleBindingBuilder& moduleBuilder);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::ScriptModuleMinecraft::ScriptV010Events&&);
+
+    MCAPI void* $ctor(::Scripting::WeakLifetimeScope const& scope, ::gsl::not_null<::Level*> level);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::Level& $getLevel() const;
+
+    MCAPI void $onWeatherChanged(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptWeatherChangedAfterEventIntermediateData>& eventData
+    );
+
+    MCAPI void $onWorldInitialize(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptWorldInitializeAfterEventIntermediateData>& eventData
+    );
+
+    MCAPI void
+    $onPlayerJoin(::std::shared_ptr<::ScriptModuleMinecraft::ScriptPlayerJoinAfterEventIntermediateData>& eventData);
+
+    MCAPI void
+    $onPlayerLeave(::std::shared_ptr<::ScriptModuleMinecraft::ScriptPlayerLeaveAfterEventIntermediateData>& eventData);
+
+    MCAPI ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptChatSendBeforeEvent>>
+    $onBeforeChat(::ChatEvent const& chatEvent, ::Player const& player);
+
+    MCAPI void
+    $onActorRemoved(::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorRemoveAfterEventIntermediateData>& eventData);
+
+    MCAPI void $onActorHitEntity(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHitEntityAfterEventIntermediateData>& eventData
+    );
+
+    MCAPI void $onActorHitBlock(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHitBlockAfterEventIntermediateData>& eventData
+    );
+
+    MCAPI void $onDataDrivenActorEventSend(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptDataDrivenActorTriggerAfterEventIntermediateData>&
+            dataDrivenActorEventSend
+    );
+
+    MCAPI void
+    $onActorHurt(::std::shared_ptr<::ScriptModuleMinecraft::ScriptActorHurtAfterEventIntermediateData>& eventData);
+
+    MCAPI ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptItemUseBeforeEvent>>
+    $onBeforeItemUse(::Player const& player, ::ItemUseEvent const& itemEvent);
+
+    MCAPI ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptItemUseOnBeforeEvent>>
+    $onBeforeItemUseOn(::Player const& player, ::ItemUseOnEvent const& itemEvent);
+
+    MCAPI void $onItemUseOn(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemUseOnIntermediateData>& eventData);
+
+    MCAPI void
+    $onItemStartUse(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemStartUseIntermediateData>& itemEvent);
+
+    MCAPI void
+    $onItemCompleteUse(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemCompleteUseIntermediateData>& itemEvent);
+
+    MCAPI void
+    $onItemReleaseUse(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemReleaseUseIntermediateData>& itemEvent);
+
+    MCAPI void $onItemStopUse(::std::shared_ptr<::ScriptModuleMinecraft::ScriptItemStopUseIntermediateData>& itemEvent);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftableForIScriptWorldAfterEvents();
+
+    MCNAPI static void** $vftableForIScriptWorldBeforeEvents();
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

@@ -1,0 +1,140 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/ChunkPos.h"
+#include "mc/world/level/levelgen/structure/StructureFeature.h"
+
+// auto generated forward declare list
+// clang-format off
+class BiomeSource;
+class BlockPos;
+class Dimension;
+class HashedString;
+class IPreliminarySurfaceProvider;
+class Random;
+class StructureStart;
+class VillageFeature;
+// clang-format on
+
+class StrongholdFeature : public ::StructureFeature {
+public:
+    // StrongholdFeature inner types declare
+    // clang-format off
+    struct StrongholdResult;
+    // clang-format on
+
+    // StrongholdFeature inner types define
+    struct StrongholdResult {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<1, 1, bool>       success;
+        ::ll::TypedStorage<8, 8, ::ChunkPos> location;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool>                       mIsSpotSelected;
+    ::ll::TypedStorage<8, 24, ::std::vector<::ChunkPos>> mSelectedChunks;
+    ::ll::TypedStorage<8, 8, ::VillageFeature*>          mVillages;
+    ::ll::TypedStorage<8, 80, ::std::mutex>              mPositionMutex;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    StrongholdFeature();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool isFeatureChunk(
+        ::BiomeSource const&                 biomeSource,
+        ::Random&                            random,
+        ::ChunkPos const&                    pos,
+        uint                                 levelSeed,
+        ::IPreliminarySurfaceProvider const& preliminarySurfaceLevel,
+        ::Dimension const&                   dimension
+    ) /*override*/;
+
+    virtual bool getNearestGeneratedFeature(
+        ::Dimension&                           dimension,
+        ::BiomeSource const&                   biomeSource,
+        ::BlockPos const&                      origin,
+        ::BlockPos&                            pos,
+        ::IPreliminarySurfaceProvider const&   preliminarySurfaceLevel,
+        bool                                   mustBeInNewChunks,
+        ::std::optional<::HashedString> const& biomeTag
+    ) /*override*/;
+
+    virtual ::std::unique_ptr<::StructureStart> createStructureStart(
+        ::Dimension& generator,
+        ::BiomeSource const&,
+        ::Random&         random,
+        ::ChunkPos const& cp,
+        ::IPreliminarySurfaceProvider const&
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI StrongholdFeature(::VillageFeature* villages, uint seed);
+
+    MCAPI void generatePositions(
+        ::Random&                            random,
+        ::BiomeSource const&                 biomeSource,
+        uint                                 levelSeed,
+        ::IPreliminarySurfaceProvider const& preliminarySurfaceLevel,
+        ::Dimension const&                   dimension
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::VillageFeature* villages, uint seed);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $isFeatureChunk(
+        ::BiomeSource const&                 biomeSource,
+        ::Random&                            random,
+        ::ChunkPos const&                    pos,
+        uint                                 levelSeed,
+        ::IPreliminarySurfaceProvider const& preliminarySurfaceLevel,
+        ::Dimension const&                   dimension
+    );
+
+    MCAPI bool $getNearestGeneratedFeature(
+        ::Dimension&                           dimension,
+        ::BiomeSource const&                   biomeSource,
+        ::BlockPos const&                      origin,
+        ::BlockPos&                            pos,
+        ::IPreliminarySurfaceProvider const&   preliminarySurfaceLevel,
+        bool                                   mustBeInNewChunks,
+        ::std::optional<::HashedString> const& biomeTag
+    );
+
+    MCAPI ::std::unique_ptr<::StructureStart> $createStructureStart(
+        ::Dimension& generator,
+        ::BiomeSource const&,
+        ::Random&         random,
+        ::ChunkPos const& cp,
+        ::IPreliminarySurfaceProvider const&
+    );
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

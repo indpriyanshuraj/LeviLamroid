@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Scripting { struct InterfaceBinding; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+struct ScriptSelectionManifestEntry {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk88c593;
+    ::ll::UntypedStorage<8, 8>  mUnk4cab33;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptSelectionManifestEntry& operator=(ScriptSelectionManifestEntry const&);
+    ScriptSelectionManifestEntry(ScriptSelectionManifestEntry const&);
+    ScriptSelectionManifestEntry();
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::InterfaceBinding bindScript();
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

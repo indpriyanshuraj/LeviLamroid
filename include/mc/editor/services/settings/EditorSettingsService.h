@@ -1,0 +1,265 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/ThemeSettingsColorKey.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/serviceproviders/EditorSettingsServiceProvider.h"
+#include "mc/editor/services/IEditorService.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::PubSub { class Subscription; }
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor::Network { class AudioSettingsChangedPayload; }
+namespace Editor::Network { class GraphicsSettingsChangedPayload; }
+namespace Editor::Network { class SpeedSettingsChangedPayload; }
+namespace Editor::Network { class ThemeSettingsChangedPayload; }
+namespace Editor::Network { class ThemeSettingsCurrentThemeChangedPayload; }
+namespace Editor::Network { class ThemeSettingsNewThemeCreatedPayload; }
+namespace Editor::Network { class ThemeSettingsThemeColorUpdatedPayload; }
+namespace Editor::Network { class ThemeSettingsThemeDeletedPayload; }
+namespace Editor::Settings { class Audio; }
+namespace Editor::Settings { class Graphics; }
+namespace Editor::Settings { class Speed; }
+namespace Editor::Settings { class Theme; }
+namespace Editor::Settings { struct AudioProps; }
+namespace Editor::Settings { struct GraphicsProps; }
+namespace Editor::Settings { struct SpeedProps; }
+namespace Editor::Settings { struct ThemeProps; }
+namespace mce { class Color; }
+// clang-format on
+
+namespace Editor::Services {
+
+class EditorSettingsService : public ::Editor::Services::IEditorService,
+                              public ::Editor::Services::EditorSettingsServiceProvider {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 16> mUnk10c8b1;
+    ::ll::UntypedStorage<8, 48> mUnk416e07;
+    ::ll::UntypedStorage<8, 8>  mUnk48348e;
+    ::ll::UntypedStorage<8, 16> mUnk9c3dd4;
+    ::ll::UntypedStorage<8, 48> mUnke91689;
+    ::ll::UntypedStorage<8, 8>  mUnk5158a7;
+    ::ll::UntypedStorage<8, 16> mUnk5cae67;
+    ::ll::UntypedStorage<8, 48> mUnk9c041c;
+    ::ll::UntypedStorage<8, 8>  mUnkd98819;
+    ::ll::UntypedStorage<8, 16> mUnk5fc265;
+    ::ll::UntypedStorage<8, 48> mUnk2415fc;
+    ::ll::UntypedStorage<8, 16> mUnk1bc51d;
+    ::ll::UntypedStorage<8, 48> mUnk2e82b5;
+    ::ll::UntypedStorage<8, 16> mUnk14b933;
+    ::ll::UntypedStorage<8, 48> mUnkc37163;
+    ::ll::UntypedStorage<8, 16> mUnk7a6024;
+    ::ll::UntypedStorage<8, 48> mUnk17c16f;
+    ::ll::UntypedStorage<8, 16> mUnkc01e6e;
+    ::ll::UntypedStorage<8, 48> mUnkd40d2c;
+    ::ll::UntypedStorage<8, 8>  mUnkfd5c18;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EditorSettingsService& operator=(EditorSettingsService const&);
+    EditorSettingsService(EditorSettingsService const&);
+    EditorSettingsService();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorSettingsService() /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> init() /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> quit() /*override*/;
+
+    virtual ::Editor::Settings::Audio& getAudioSettings() /*override*/;
+
+    virtual ::Editor::Settings::Audio const& getAudioSettings() const /*override*/;
+
+    virtual ::Editor::Settings::Graphics& getGraphicsSettings() /*override*/;
+
+    virtual ::Editor::Settings::Graphics const& getGraphicsSettings() const /*override*/;
+
+    virtual ::Editor::Settings::Speed& getSpeedSettings() /*override*/;
+
+    virtual ::Editor::Settings::Speed const& getSpeedSettings() const /*override*/;
+
+    virtual ::Editor::Settings::Theme& getThemeSettings() /*override*/;
+
+    virtual ::Editor::Settings::Theme const& getThemeSettings() const /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForAudioSettingsChanged(::std::function<void(::Editor::Settings::AudioProps const&)> func) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<::Bedrock::PubSub::Subscription>
+    listenForGraphicsSettingsChanged(::std::function<void(::Editor::Settings::GraphicsProps const&)> func) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForSpeedSettingsChanged(::std::function<void(::Editor::Settings::SpeedProps const&)> func) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForThemeSettingsChanged(::std::function<void(::Editor::Settings::ThemeProps const&)> func) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForCurrentThemeChanged(::std::function<void(::std::string const&)> func) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription listenForNewThemeCreated(
+        ::std::function<
+            void(::std::string const&, ::std::optional<::std::string> const&, ::std::optional<::std::string> const&)>
+            func
+    ) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription listenForThemeColorUpdated(
+        ::std::function<void(::std::string const&, ::Editor::Settings::ThemeSettingsColorKey, ::mce::Color const&)> func
+    ) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForThemeDeleted(::std::function<void(::std::string const&)> func) /*override*/;
+
+#ifdef LL_PLAT_S
+    virtual void _handleAudioSettingsChangedPayload(::Editor::Network::AudioSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    virtual void _handleAudioSettingsChangedPayload(::Editor::Network::AudioSettingsChangedPayload const& props);
+#endif
+
+#ifdef LL_PLAT_S
+    virtual void
+    _handleGraphicsSettingsChangedPayload(::Editor::Network::GraphicsSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    virtual void _handleGraphicsSettingsChangedPayload(::Editor::Network::GraphicsSettingsChangedPayload const& props);
+#endif
+
+#ifdef LL_PLAT_S
+    virtual void _handleSpeedSettingsChangedPayload(::Editor::Network::SpeedSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    virtual void _handleSpeedSettingsChangedPayload(::Editor::Network::SpeedSettingsChangedPayload const& props);
+#endif
+
+    virtual void _handleThemeSettingsChangedPayload(::Editor::Network::ThemeSettingsChangedPayload const& payload);
+
+    virtual void _handleThemeSettingsCurrentThemeChangedPayload(
+        ::Editor::Network::ThemeSettingsCurrentThemeChangedPayload const& payload
+    );
+
+    virtual void
+    _handleThemeSettingsNewThemeCreatedPayload(::Editor::Network::ThemeSettingsNewThemeCreatedPayload const& payload);
+
+    virtual void _handleThemeSettingsThemeColorUpdatedPayload(
+        ::Editor::Network::ThemeSettingsThemeColorUpdatedPayload const& payload
+    );
+
+    virtual void
+    _handleThemeSettingsThemeDeletedPayload(::Editor::Network::ThemeSettingsThemeDeletedPayload const& payload);
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit EditorSettingsService(::Editor::ServiceProviderCollection& providers);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Editor::ServiceProviderCollection& providers);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result_deprecated<void> $init();
+
+    MCNAPI ::Scripting::Result_deprecated<void> $quit();
+
+    MCNAPI ::Editor::Settings::Audio& $getAudioSettings();
+
+    MCNAPI ::Editor::Settings::Audio const& $getAudioSettings() const;
+
+    MCNAPI ::Editor::Settings::Graphics& $getGraphicsSettings();
+
+    MCNAPI ::Editor::Settings::Graphics const& $getGraphicsSettings() const;
+
+    MCNAPI ::Editor::Settings::Speed& $getSpeedSettings();
+
+    MCNAPI ::Editor::Settings::Speed const& $getSpeedSettings() const;
+
+    MCNAPI ::Editor::Settings::Theme& $getThemeSettings();
+
+    MCNAPI ::Editor::Settings::Theme const& $getThemeSettings() const;
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $listenForAudioSettingsChanged(::std::function<void(::Editor::Settings::AudioProps const&)> func);
+
+    MCNAPI ::Scripting::Result_deprecated<::Bedrock::PubSub::Subscription>
+    $listenForGraphicsSettingsChanged(::std::function<void(::Editor::Settings::GraphicsProps const&)> func);
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $listenForSpeedSettingsChanged(::std::function<void(::Editor::Settings::SpeedProps const&)> func);
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $listenForThemeSettingsChanged(::std::function<void(::Editor::Settings::ThemeProps const&)> func);
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $listenForCurrentThemeChanged(::std::function<void(::std::string const&)> func);
+
+    MCNAPI ::Bedrock::PubSub::Subscription $listenForNewThemeCreated(
+        ::std::function<
+            void(::std::string const&, ::std::optional<::std::string> const&, ::std::optional<::std::string> const&)>
+            func
+    );
+
+    MCNAPI ::Bedrock::PubSub::Subscription $listenForThemeColorUpdated(
+        ::std::function<void(::std::string const&, ::Editor::Settings::ThemeSettingsColorKey, ::mce::Color const&)> func
+    );
+
+    MCNAPI ::Bedrock::PubSub::Subscription $listenForThemeDeleted(::std::function<void(::std::string const&)> func);
+
+#ifdef LL_PLAT_S
+    MCNAPI void $_handleAudioSettingsChangedPayload(::Editor::Network::AudioSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    MCNAPI void $_handleAudioSettingsChangedPayload(::Editor::Network::AudioSettingsChangedPayload const& props);
+#endif
+
+#ifdef LL_PLAT_S
+    MCNAPI void
+    $_handleGraphicsSettingsChangedPayload(::Editor::Network::GraphicsSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    MCNAPI void $_handleGraphicsSettingsChangedPayload(::Editor::Network::GraphicsSettingsChangedPayload const& props);
+#endif
+
+#ifdef LL_PLAT_S
+    MCNAPI void $_handleSpeedSettingsChangedPayload(::Editor::Network::SpeedSettingsChangedPayload const& payload);
+#else // LL_PLAT_C
+    MCNAPI void $_handleSpeedSettingsChangedPayload(::Editor::Network::SpeedSettingsChangedPayload const& props);
+#endif
+
+    MCNAPI void $_handleThemeSettingsChangedPayload(::Editor::Network::ThemeSettingsChangedPayload const& payload);
+
+    MCNAPI void $_handleThemeSettingsCurrentThemeChangedPayload(
+        ::Editor::Network::ThemeSettingsCurrentThemeChangedPayload const& payload
+    );
+
+    MCNAPI void
+    $_handleThemeSettingsNewThemeCreatedPayload(::Editor::Network::ThemeSettingsNewThemeCreatedPayload const& payload);
+
+    MCNAPI void $_handleThemeSettingsThemeColorUpdatedPayload(
+        ::Editor::Network::ThemeSettingsThemeColorUpdatedPayload const& payload
+    );
+
+    MCNAPI void
+    $_handleThemeSettingsThemeDeletedPayload(::Editor::Network::ThemeSettingsThemeDeletedPayload const& payload);
+
+
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

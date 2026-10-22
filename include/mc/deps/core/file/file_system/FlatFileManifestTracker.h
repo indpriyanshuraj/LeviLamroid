@@ -1,0 +1,39 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class FlatFileManifest; }
+namespace Core { class PathView; }
+// clang-format on
+
+namespace Core {
+
+class FlatFileManifestTracker {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 80> mUnk6553c3;
+    ::ll::UntypedStorage<8, 64> mUnkbf53ea;
+    ::ll::UntypedStorage<8, 16> mUnk3b8242;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FlatFileManifestTracker& operator=(FlatFileManifestTracker const&);
+    FlatFileManifestTracker(FlatFileManifestTracker const&);
+    FlatFileManifestTracker();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::shared_ptr<::Core::FlatFileManifest const> loadManifest(::Core::PathView manifestPath);
+
+    MCNAPI bool manifestExists(::Core::PathView manifestPath) const;
+
+    MCNAPI bool tryUnloadManifest(::Core::PathView manifestPath);
+    // NOLINTEND
+};
+
+} // namespace Core

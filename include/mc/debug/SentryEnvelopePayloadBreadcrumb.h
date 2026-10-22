@@ -1,0 +1,44 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+struct SentryEnvelopePayloadBreadcrumb {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 8>  mUnkb35040;
+    ::ll::UntypedStorage<8, 40> mUnkc95d01;
+    ::ll::UntypedStorage<8, 40> mUnk49856e;
+    ::ll::UntypedStorage<8, 16> mUnke46afa;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    SentryEnvelopePayloadBreadcrumb(SentryEnvelopePayloadBreadcrumb const&);
+    SentryEnvelopePayloadBreadcrumb();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::SentryEnvelopePayloadBreadcrumb& operator=(::SentryEnvelopePayloadBreadcrumb const&);
+
+    MCNAPI ~SentryEnvelopePayloadBreadcrumb();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void bindType(::cereal::ReflectionCtx& ctx);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};

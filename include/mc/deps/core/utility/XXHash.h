@@ -1,0 +1,56 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Util {
+
+class XXHash {
+public:
+    // XXHash inner types declare
+    // clang-format off
+    struct State;
+    // clang-format on
+
+    // XXHash inner types define
+    struct State {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 88> mUnk1110b4;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        State& operator=(State const&);
+        State(State const&);
+        State();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8> mUnkc97579;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    XXHash& operator=(XXHash const&);
+    XXHash(XXHash const&);
+    XXHash();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void _updateImpl(void const* input, uint64 length);
+
+    MCNAPI uint64 digest();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static uint64 _hash64Impl(void const* input, uint64 len, uint64 seed);
+    // NOLINTEND
+};
+
+} // namespace Util

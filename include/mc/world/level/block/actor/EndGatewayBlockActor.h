@@ -1,0 +1,91 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/BlockPos.h"
+#include "mc/world/level/block/actor/VanillaBlockActor.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockActorDataPacket;
+class BlockSource;
+class BlockVolume;
+class CompoundTag;
+class DataLoadHelper;
+class ILevel;
+class SaveContext;
+class WorldGenerator;
+// clang-format on
+
+class EndGatewayBlockActor : public ::VanillaBlockActor {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, int>         mAge;
+    ::ll::TypedStorage<4, 4, int>         mTeleportCooldown;
+    ::ll::TypedStorage<4, 12, ::BlockPos> mExitPortal;
+    ::ll::TypedStorage<1, 1, bool>        mNeedsExitGeneration;
+    ::ll::TypedStorage<1, 1, bool>        mTeleportTriggered;
+    ::ll::TypedStorage<1, 1, bool>        mNeedsExitPositionVerification;
+    ::ll::TypedStorage<1, 1, bool>        mExitPositionVerified;
+    ::ll::TypedStorage<1, 1, bool>        mEndGatewayBadPosResetRequired;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void load(::ILevel& level, ::CompoundTag const& tag, ::DataLoadHelper& dataLoadHelper) /*override*/;
+
+    virtual bool save(::CompoundTag& tag, ::SaveContext const& saveContext) const /*override*/;
+
+    virtual void tick(::BlockSource& region) /*override*/;
+
+    virtual void onChanged(::BlockSource& region) /*override*/;
+
+    virtual bool hasAlphaLayer() const /*override*/;
+
+    virtual void triggerEvent(int b0, int b1) /*override*/;
+
+    virtual ::std::unique_ptr<::BlockActorDataPacket> _getUpdatePacket(::BlockSource& region) /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static int _getHighestSection(::WorldGenerator& endGenerator, ::BlockVolume& box, ::BlockPos const& pos);
+
+    MCAPI static ::BlockPos findExitPortal(::WorldGenerator& endGenerator, ::BlockPos const& origin);
+
+    MCAPI static ::BlockPos
+    findTallestBlock(::BlockSource& region, ::BlockPos const& around, int dist, bool allowBedrock);
+
+    MCAPI static ::BlockPos findValidSpawnAround(
+        ::BlockSource&    region,
+        ::BlockPos const& around,
+        bool              searchForEndStoneOnly,
+        int               searchRadius,
+        bool              searchAboveBlock
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $load(::ILevel& level, ::CompoundTag const& tag, ::DataLoadHelper& dataLoadHelper);
+
+    MCAPI bool $save(::CompoundTag& tag, ::SaveContext const& saveContext) const;
+
+    MCAPI void $tick(::BlockSource& region);
+
+    MCFOLD void $onChanged(::BlockSource& region);
+
+    MCFOLD bool $hasAlphaLayer() const;
+
+    MCAPI void $triggerEvent(int b0, int b1);
+
+    MCFOLD ::std::unique_ptr<::BlockActorDataPacket> $_getUpdatePacket(::BlockSource& region);
+
+
+    // NOLINTEND
+};

@@ -1,0 +1,25 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class AABB;
+class Matrix;
+// clang-format on
+
+struct BlockShapeComponentData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool>                   mEnabled;
+    ::ll::TypedStorage<8, 24, ::std::vector<::AABB>> mOriginalAABBs;
+    ::ll::TypedStorage<8, 24, ::std::vector<::AABB>> mTransformedAABBs;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void transformAABBs(::BlockShapeComponentData& data, ::Matrix const& transform);
+    // NOLINTEND
+};

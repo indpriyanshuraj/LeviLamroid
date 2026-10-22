@@ -1,0 +1,148 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/brstd/function_ref.h"
+#include "mc/world/actor/ActorDefinitionIdentifier.h"
+#include "mc/world/item/HandSlot.h"
+#include "mc/world/item/Item.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class ActorInfoRegistry;
+class Block;
+class BlockPos;
+class BlockSource;
+class CompoundTag;
+class Container;
+class Experiments;
+class HashedString;
+class InteractionResult;
+class ItemDescriptor;
+class ItemRegistryRef;
+class ItemStack;
+class ItemStackBase;
+class Vec3;
+struct ItemTintStrategy;
+struct ResolvedItemIconInfo;
+// clang-format on
+
+class ActorPlacerItem : public ::Item {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 176, ::ActorDefinitionIdentifier> mActorID;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void tearDown() /*override*/;
+
+    virtual ::ResolvedItemIconInfo getIconInfo(::ItemStackBase const&, int, bool) const /*override*/;
+
+    virtual ::ActorDefinitionIdentifier getActorIdentifier(::ItemStack const&) const /*override*/;
+
+    virtual ::std::string buildDescriptionId(::ItemDescriptor const&, ::CompoundTag const*) const /*override*/;
+
+    virtual bool isLiquidClipItem() const /*override*/;
+
+    virtual bool shouldInteractionWithBlockBypassLiquid(::Block const& block) const /*override*/;
+
+    virtual bool dispense(::BlockSource& region, ::Container& container, int slot, ::Vec3 const& pos, uchar face) const
+        /*override*/;
+
+    virtual bool isValidAuxValue(int auxValue) const /*override*/;
+
+    virtual ::ItemTintStrategy getTintStrategy() const /*override*/;
+
+    virtual bool isActorPlacerItem() const /*override*/;
+
+    virtual ::InteractionResult _useOn(
+        ::ItemStack&  instance,
+        ::Actor&      entity,
+        ::BlockPos    pos,
+        uchar         face,
+        ::HandSlot    handSlot,
+        ::Vec3 const& clickPos
+    ) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::ActorDefinitionIdentifier _getActorID(::BlockSource& region) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void
+    forEachCustomEgg(::ItemRegistryRef itemRegistry, ::brstd::function_ref<void(::Item const&)> callback);
+
+    MCAPI static ::std::string getCustomSpawnEggName(int runtimeId);
+
+#ifdef LL_PLAT_C
+    MCAPI static void initializeIcons(::std::unordered_map<::HashedString, ::ResolvedItemIconInfo> icons);
+#endif
+
+    MCAPI static void registerCustomEggs(
+        ::ItemRegistryRef          itemRegistry,
+        ::ActorInfoRegistry const& registry,
+        ::Experiments const&       experiments
+    );
+
+    MCAPI static ::Actor* spawnOrMoveAgent(::Vec3 const& pos, ::Actor& owner);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::unordered_map<uint, ::std::string>& mCustomSpawnEggs();
+
+    MCAPI static ::std::unordered_map<::HashedString, ::ResolvedItemIconInfo>& mEggTextureInfoMap();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $tearDown();
+
+    MCAPI ::ResolvedItemIconInfo $getIconInfo(::ItemStackBase const&, int, bool) const;
+
+    MCAPI ::ActorDefinitionIdentifier $getActorIdentifier(::ItemStack const&) const;
+
+    MCAPI ::std::string $buildDescriptionId(::ItemDescriptor const&, ::CompoundTag const*) const;
+
+    MCFOLD bool $isLiquidClipItem() const;
+
+    MCAPI bool $shouldInteractionWithBlockBypassLiquid(::Block const& block) const;
+
+    MCAPI bool $dispense(::BlockSource& region, ::Container& container, int slot, ::Vec3 const& pos, uchar face) const;
+
+    MCFOLD bool $isValidAuxValue(int auxValue) const;
+
+    MCAPI ::ItemTintStrategy $getTintStrategy() const;
+
+    MCFOLD bool $isActorPlacerItem() const;
+
+    MCAPI ::InteractionResult $_useOn(
+        ::ItemStack&  instance,
+        ::Actor&      entity,
+        ::BlockPos    pos,
+        uchar         face,
+        ::HandSlot    handSlot,
+        ::Vec3 const& clickPos
+    ) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

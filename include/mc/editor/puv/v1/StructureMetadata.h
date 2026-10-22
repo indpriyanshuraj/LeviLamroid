@@ -1,0 +1,75 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class SemVersionConstant;
+namespace Editor::Structures::PUVLoader::v0 { struct StructureMetadata; }
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+namespace Editor::Structures::PUVLoader::v1 {
+
+struct StructureMetadata {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 48> mUnk9f8764;
+    ::ll::UntypedStorage<8, 32> mUnk1e75ea;
+    ::ll::UntypedStorage<8, 24> mUnk57ba8a;
+    ::ll::UntypedStorage<8, 32> mUnk806811;
+    ::ll::UntypedStorage<8, 32> mUnkb13ec3;
+    ::ll::UntypedStorage<8, 32> mUnkdb1326;
+    ::ll::UntypedStorage<8, 32> mUnkd2f34f;
+    ::ll::UntypedStorage<8, 32> mUnk1f99eb;
+    ::ll::UntypedStorage<1, 1>  mUnk7fbd71;
+    ::ll::UntypedStorage<4, 12> mUnk56c3e8;
+    ::ll::UntypedStorage<4, 12> mUnk21c1e5;
+    ::ll::UntypedStorage<4, 12> mUnkd34611;
+    ::ll::UntypedStorage<4, 16> mUnk12d899;
+    ::ll::UntypedStorage<4, 4>  mUnk303bd9;
+    ::ll::UntypedStorage<1, 1>  mUnk4a932b;
+    ::ll::UntypedStorage<4, 4>  mUnkf7d26d;
+    ::ll::UntypedStorage<4, 4>  mUnkf9ac4d;
+    ::ll::UntypedStorage<4, 4>  mUnk743c0c;
+    ::ll::UntypedStorage<8, 40> mUnkeeca98;
+    ::ll::UntypedStorage<8, 40> mUnk702be7;
+    ::ll::UntypedStorage<8, 40> mUnk3b6545;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    StructureMetadata& operator=(StructureMetadata const&);
+    StructureMetadata(StructureMetadata const&);
+    StructureMetadata();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ~StructureMetadata();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void bindType(::cereal::ReflectionCtx& ctx);
+
+    MCNAPI static ::Editor::Structures::PUVLoader::v1::StructureMetadata
+    upgradeFromV0(::Editor::Structures::PUVLoader::v0::StructureMetadata&& legacy);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::SemVersionConstant const& VERSION();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor::Structures::PUVLoader::v1

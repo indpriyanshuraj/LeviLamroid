@@ -1,0 +1,46 @@
+#include "ll/api/event/player/PlayerAttackEvent.h"
+#include "ll/api/event/Emitter.h"
+#include "ll/api/event/EventRefObjSerializer.h"
+#include "ll/api/memory/Hook.h"
+
+#include "mc/deps/nbt/CompoundTag.h"
+#include "mc/world/actor/ActorHurtResult.h"
+
+namespace ll::event::inline player {
+
+void PlayerAttackEvent::serialize(CompoundTag& nbt) const {
+    Cancellable::serialize(nbt);
+    nbt["target"] = serializeRefObj(target());
+    nbt["cause"]  = magic_enum::enum_name(cause());
+}
+
+Actor&                                         PlayerAttackEvent::target() const { return mTarget; }
+::SharedTypes::Legacy::ActorDamageCause const& PlayerAttackEvent::cause() const { return mCause; }
+
+
+LL_TYPE_INSTANCE_HOOK(
+    PlayerAttackEventHook,
+    HookPriority::Normal,
+    Player,
+    &Player::attack,
+    ActorHurtResult,
+    Actor&                                       ac,
+    SharedTypes::Legacy::ActorDamageCause const& cause,
+    Player::AttackParameters const&              parameters
+) {
+    auto ev = PlayerAttackEvent(*this, ac, cause);
+    EventBus::getInstance().publish(ev);
+    if (ev.isCancelled()) {
+        return {};
+    }
+    return origin(ac, cause, parameters);
+}
+
+static std::unique_ptr<EmitterBase> emitterFactory();
+class PlayerAttackEventEmitter : public Emitter<emitterFactory, PlayerAttackEvent> {
+    memory::HookRegistrar<PlayerAttackEventHook> hook;
+};
+
+static std::unique_ptr<EmitterBase> emitterFactory() { return std::make_unique<PlayerAttackEventEmitter>(); }
+
+} // namespace ll::event::inline player

@@ -1,0 +1,50 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class PathView; }
+// clang-format on
+
+namespace Core {
+
+class FlatFileManifestInfo {
+public:
+    // FlatFileManifestInfo inner types define
+    enum class FlatFileManifestInfoFlags : uchar {
+        File    = 1,
+        Deleted = 128,
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk807445;
+    ::ll::UntypedStorage<8, 8>  mUnkb6e6bf;
+    ::ll::UntypedStorage<8, 8>  mUnka6c43a;
+    ::ll::UntypedStorage<1, 1>  mUnk3b7215;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FlatFileManifestInfo& operator=(FlatFileManifestInfo const&);
+    FlatFileManifestInfo(FlatFileManifestInfo const&);
+    FlatFileManifestInfo();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void setPath(::Core::PathView path);
+
+    MCNAPI ~FlatFileManifestInfo();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Core

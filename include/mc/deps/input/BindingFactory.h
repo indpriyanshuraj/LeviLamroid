@@ -1,0 +1,36 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class RectangleArea;
+// clang-format on
+
+class BindingFactory {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~BindingFactory() = default;
+
+    virtual ::std::function<bool()> getBooleanBinding(uint name) const = 0;
+
+    virtual ::std::function<float()> getFloatBinding(uint name) const = 0;
+
+    virtual ::std::function<::std::string()> getStringBinding(uint name) const = 0;
+
+    virtual ::std::function<::glm::vec2()> getPointBinding(uint name) const = 0;
+
+    virtual ::std::function<::RectangleArea()> getAreaBinding(uint name) const = 0;
+
+    virtual ::std::function<void(::RectangleArea)> getDynamicAreaBinding(uint name) const = 0;
+
+    virtual ::std::function<void(float)> getFloatSetter(uint name) const = 0;
+
+    virtual void setCustomAreaBinding(::std::string const& name, ::RectangleArea area) = 0;
+
+    virtual void removeCustomAreaBinding(::std::string const& name) = 0;
+
+    virtual ::std::vector<uint> getCustomAreaBindingNames() const = 0;
+    // NOLINTEND
+};

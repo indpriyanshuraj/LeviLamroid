@@ -1,0 +1,112 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/Vec3.h"
+#include "mc/deps/shared_types/legacy/LevelSoundEvent.h"
+#include "mc/deps/shared_types/legacy/actor/ActorDamageCause.h"
+#include "mc/util/FloatRange.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+#include "mc/world/level/Tick.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+struct GoalId;
+// clang-format on
+
+class PanicGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>                                                  mMob;
+    ::ll::TypedStorage<8, 8, ::Mob*>                                                  mHurtByMob;
+    ::ll::TypedStorage<8, 24, ::std::vector<::SharedTypes::Legacy::ActorDamageCause>> mDamageCauses;
+    ::ll::TypedStorage<1, 1, bool>                                                    mIgnoreMobDamage;
+    ::ll::TypedStorage<1, 1, bool>                                                    mPanicOnAllCauses;
+    ::ll::TypedStorage<1, 1, bool>                                                    mForceUse;
+    ::ll::TypedStorage<1, 1, bool>                                                    mPreferWater;
+    ::ll::TypedStorage<1, 1, bool>                                                    mCanTeleportToOwner;
+    ::ll::TypedStorage<4, 4, float>                                                   mSpeedMultipler;
+    ::ll::TypedStorage<4, 12, ::Vec3>                                                 mTargetPosition;
+    ::ll::TypedStorage<4, 4, ::SharedTypes::Legacy::LevelSoundEvent>                  mSoundEvent;
+    ::ll::TypedStorage<4, 8, ::FloatRange>                                            mSoundIntervalRange;
+    ::ll::TypedStorage<8, 8, ::Tick>                                                  mNextSoundEventTick;
+    ::ll::TypedStorage<8, 8, ::Tick>                                                  mNextNavigationTick;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PanicGoal& operator=(PanicGoal const&);
+    PanicGoal(PanicGoal const&);
+    PanicGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI PanicGoal(
+        ::Mob&                                                 mob,
+        ::std::string                                          name,
+        ::GoalId const&                                        goalId,
+        float                                                  speedMultiplier,
+        bool                                                   ignoreMobDamage,
+        ::SharedTypes::Legacy::LevelSoundEvent                 sound,
+        ::FloatRange                                           soundIntervalRange,
+        bool                                                   forceUse,
+        bool                                                   preferWater,
+        ::std::vector<::SharedTypes::Legacy::ActorDamageCause> damageCauses
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::Mob&                                                 mob,
+        ::std::string                                          name,
+        ::GoalId const&                                        goalId,
+        float                                                  speedMultiplier,
+        bool                                                   ignoreMobDamage,
+        ::SharedTypes::Legacy::LevelSoundEvent                 sound,
+        ::FloatRange                                           soundIntervalRange,
+        bool                                                   forceUse,
+        bool                                                   preferWater,
+        ::std::vector<::SharedTypes::Legacy::ActorDamageCause> damageCauses
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI void $start();
+
+    MCAPI void $stop();
+
+    MCFOLD bool $canContinueToUse();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+};

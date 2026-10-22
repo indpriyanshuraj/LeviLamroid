@@ -1,0 +1,60 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/screens/realms_screen_utils/RealmsSubscriptionsLoadingState.h"
+#include "mc/client/store/iap/RealmsOfferTier.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class DateManager;
+class IEntitlement;
+class IEntitlementManager;
+class MainMenuScreenModel;
+struct RealmsWorldInfo;
+namespace Realms { class SubscriptionService; }
+namespace Realms { struct SubscriptionInfo; }
+namespace Realms { struct World; }
+namespace RealmsScreenUtils { struct RealmsWorldLoadingDetails; }
+namespace RealmsScreenUtils { struct RealmsWorldLoadingDetailsGroup; }
+// clang-format on
+
+namespace RealmsScreenUtils {
+// functions
+// NOLINTBEGIN
+MCAPI ::std::optional<::std::string_view> getManageSubscriptionsLinkForStore(::std::string_view store);
+
+MCAPI ::std::string const
+getPlayerCountAsString(bool canUserManageSubscription, bool canUserJoinWhenFull, ::RealmsWorldInfo worldInfo);
+
+MCAPI ::Realms::SubscriptionInfo getRealmSubscriptionFromWorld(
+    ::Realms::World const&                                                            realmsWorld,
+    ::std::weak_ptr<::std::vector<::RealmsScreenUtils::RealmsWorldLoadingDetails>>    worldList,
+    ::Bedrock::NotNullNonOwnerPtr<::Realms::SubscriptionService> const&               subscriptionService,
+    ::std::function<void(::RealmsScreenUtils::RealmsSubscriptionsLoadingState, bool)> callback
+);
+
+MCAPI ::IEntitlement const&
+getRealmsPlusEntitlement(::Bedrock::NotNullNonOwnerPtr<::IEntitlementManager> const& entitlementManager);
+
+MCAPI bool isRealmsPlusSubscriptionActive(
+    ::Bedrock::NotNullNonOwnerPtr<::IEntitlementManager> const& entitlementManager,
+    ::Bedrock::NonOwnerPointer<::DateManager const> const&      dateManager
+);
+
+MCAPI void populateRealmsWorldLoadingDetailsGroup(
+    ::std::weak_ptr<::RealmsScreenUtils::RealmsWorldLoadingDetailsGroup> weakGroup,
+    ::std::shared_ptr<::MainMenuScreenModel>                             mainMenuScreenModel,
+    ::std::function<void(bool)>                                          callback,
+    ::std::function<bool(::RealmsWorldInfo&)>                            filter
+);
+// NOLINTEND
+
+// static variables
+// NOLINTBEGIN
+MCAPI ::std::array<::std::pair<::std::string_view, ::std::string_view>, 7> const& STORE_LINKS();
+// NOLINTEND
+
+} // namespace RealmsScreenUtils

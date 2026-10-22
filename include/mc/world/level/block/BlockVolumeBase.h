@@ -1,0 +1,44 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/brstd/function_ref.h"
+
+// auto generated forward declare list
+// clang-format off
+class BaseBlockLocationIterator;
+class BlockPos;
+class BoundingBox;
+class ChunkPos;
+// clang-format on
+
+class BlockVolumeBase {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~BlockVolumeBase() = default;
+
+    virtual ::BoundingBox getBoundingBox() const = 0;
+
+    virtual ::BlockPos getMin() const = 0;
+
+    virtual ::BlockPos getMax() const = 0;
+
+    virtual ::glm::ivec3 getSpan() const = 0;
+
+    virtual int getCapacity() const = 0;
+
+    virtual bool isInside(::BlockPos const& pos) const = 0;
+
+    virtual void translate(::BlockPos const& delta) = 0;
+
+    virtual void forEach(::brstd::function_ref<bool(::BlockPos const&)> callback) const = 0;
+
+    virtual ::std::set<::ChunkPos> getChunks() const = 0;
+
+    virtual ::std::unordered_set<::BlockPos> getFlattenedBlockPositions() const = 0;
+
+    virtual ::std::unique_ptr<::BaseBlockLocationIterator> getIterator() const = 0;
+    // NOLINTEND
+};

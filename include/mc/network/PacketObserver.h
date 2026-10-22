@@ -1,0 +1,82 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/network/IPacketObserver.h"
+
+// auto generated forward declare list
+// clang-format off
+class NetworkIdentifier;
+class Packet;
+// clang-format on
+
+class PacketObserver : public ::IPacketObserver {
+public:
+    // PacketObserver inner types declare
+    // clang-format off
+    struct PacketStats;
+    // clang-format on
+
+    // PacketObserver inner types define
+    struct PacketStats {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4> mUnk8e1033;
+        ::ll::UntypedStorage<4, 4> mUnk1b3300;
+        ::ll::UntypedStorage<4, 4> mUnk5d3915;
+        ::ll::UntypedStorage<4, 4> mUnkc76f5b;
+        ::ll::UntypedStorage<4, 4> mUnkf9db13;
+        ::ll::UntypedStorage<4, 4> mUnkc40279;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PacketStats& operator=(PacketStats const&);
+        PacketStats(PacketStats const&);
+        PacketStats();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 24, ::PacketObserver::PacketStats> mQueuedStatsInfo;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void packetSentTo(::NetworkIdentifier const& target, ::Packet const& packet, uint size) /*override*/;
+
+    virtual void packetReceivedFrom(::NetworkIdentifier const& source, ::Packet const& packet, uint size) /*override*/;
+
+    virtual void dataSentTo(::NetworkIdentifier const& target, ::std::string_view data) /*override*/;
+
+    virtual void dataReceivedFrom(::NetworkIdentifier const& source, ::std::string const& data) /*override*/;
+
+    virtual void reset();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $packetSentTo(::NetworkIdentifier const& target, ::Packet const& packet, uint size);
+
+    MCNAPI void $packetReceivedFrom(::NetworkIdentifier const& source, ::Packet const& packet, uint size);
+
+    MCNAPI void $dataSentTo(::NetworkIdentifier const& target, ::std::string_view data);
+
+    MCNAPI void $dataReceivedFrom(::NetworkIdentifier const& source, ::std::string const& data);
+
+    MCNAPI void $reset();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

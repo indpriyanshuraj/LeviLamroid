@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/ecs/systems/ITickingSystem.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorOwnerComponent;
+class EntityRegistry;
+// clang-format on
+
+class GoalSelectorSystem : public ::ITickingSystem {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void tick(::EntityRegistry& registry) /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void _tickGoalSelectorComponent(::ActorOwnerComponent& actorOwnerComponent);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $tick(::EntityRegistry& registry);
+
+
+    // NOLINTEND
+};

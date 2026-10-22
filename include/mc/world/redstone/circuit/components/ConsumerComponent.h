@@ -1,0 +1,93 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/redstone/circuit/components/BaseCircuitComponent.h"
+#include "mc/world/redstone/circuit/components/CircuitComponentType.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class CircuitSceneGraph;
+class CircuitSystem;
+class CircuitTrackingInfo;
+// clang-format on
+
+class ConsumerComponent : public ::BaseCircuitComponent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::ConsumerComponent*>> mMultiBlockPartConsumers;
+    ::ll::TypedStorage<1, 1, bool>                                 mSecondaryPowered;
+    ::ll::TypedStorage<1, 1, bool>                                 mPropagatePower;
+    ::ll::TypedStorage<1, 1, bool>                                 mPromotedToProducer;
+    ::ll::TypedStorage<1, 1, bool>                                 mAcceptHalfPulse;
+    ::ll::TypedStorage<1, 1, bool>                                 mAcceptSameDirection;
+    ::ll::TypedStorage<1, 1, bool>                                 mUpdatedByOtherConsumer;
+    ::ll::TypedStorage<8, 8, ::CircuitComponentType const>         mCircuitComponentType;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool evaluate(::CircuitSystem& system, ::BlockPos const& pos) /*override*/;
+
+    virtual bool
+    allowConnection(::CircuitSceneGraph& graph, ::CircuitTrackingInfo const& info, bool& bDirectlyPowered) /*override*/;
+
+    virtual bool addSource(
+        ::CircuitSceneGraph&         graph,
+        ::CircuitTrackingInfo const& info,
+        int&                         dampening,
+        bool&                        bDirectlyPowered
+    ) /*override*/;
+
+    virtual bool canConsumerPower() const /*override*/;
+
+    virtual bool isSecondaryPowered() const /*override*/;
+
+    virtual bool needsUpdate() /*override*/;
+
+    virtual ::CircuitComponentType getCircuitComponentType() const /*override*/;
+
+    virtual ~ConsumerComponent() /*override*/;
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $evaluate(::CircuitSystem& system, ::BlockPos const& pos);
+
+    MCAPI bool $allowConnection(::CircuitSceneGraph& graph, ::CircuitTrackingInfo const& info, bool& bDirectlyPowered);
+
+    MCAPI bool
+    $addSource(::CircuitSceneGraph& graph, ::CircuitTrackingInfo const& info, int& dampening, bool& bDirectlyPowered);
+
+    MCFOLD bool $canConsumerPower() const;
+
+#ifdef LL_PLAT_S
+    MCAPI bool $isSecondaryPowered() const;
+#else // LL_PLAT_C
+    MCFOLD bool $isSecondaryPowered() const;
+#endif
+
+    MCAPI bool $needsUpdate();
+
+    MCFOLD ::CircuitComponentType $getCircuitComponentType() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

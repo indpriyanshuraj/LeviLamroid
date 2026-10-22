@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/molang/ExpressionNode.h"
+#include "mc/world/level/block/definition/BlockComponentGroupDescription.h"
+
+struct BlockPermutationDescription {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 16, ::ExpressionNode>                  mCondition;
+    ::ll::TypedStorage<8, 112, ::BlockComponentGroupDescription> mComponents;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BlockPermutationDescription& operator=(BlockPermutationDescription const&);
+    BlockPermutationDescription();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI BlockPermutationDescription(::BlockPermutationDescription const&);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::BlockPermutationDescription const&);
+    // NOLINTEND
+};

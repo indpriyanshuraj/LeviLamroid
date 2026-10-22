@@ -1,0 +1,150 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/editor/structure/EditorStructureTemplate.h"
+#include "mc/world/actor/ActorType.h"
+#include "mc/world/level/BlockPos.h"
+#include "mc/world/level/BlockSource.h"
+#include "mc/world/phys/AABB.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Block;
+class BlockChangeContext;
+class BlockSourceListener;
+class ChunkSource;
+class Dimension;
+class Level;
+struct ActorBlockSyncMessage;
+struct Bounds;
+// clang-format on
+
+class EditorStructureBlockSource : public ::BlockSource {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 24, ::AABB>                             mBounds;
+    ::ll::TypedStorage<8, 440, ::Editor::EditorStructureTemplate> mTemplate;
+    ::ll::TypedStorage<4, 12, ::BlockPos const>                   mOffset;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EditorStructureBlockSource();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorStructureBlockSource() /*override*/ = default;
+
+    virtual void addListener(::BlockSourceListener& l) /*override*/;
+
+    virtual void removeListener(::BlockSourceListener& l) /*override*/;
+
+    virtual ::gsl::span<::gsl::not_null<::Actor*>>
+    fetchEntities(::Actor const* except, ::AABB const& bb, bool useHitbox, bool getDisplayEntities) /*override*/;
+
+    virtual ::gsl::span<::gsl::not_null<::Actor*>> fetchEntities(
+        ::ActorType                     entityTypeId,
+        ::AABB const&                   bb,
+        ::Actor const*                  except,
+        ::std::function<bool(::Actor*)> selector
+    ) /*override*/;
+
+    virtual bool hasChunksAt(::Bounds const& bounds, bool ignoreClientChunk) const /*override*/;
+
+    virtual bool hasChunksAt(::BlockPos const& pos, int r, bool ignoreClientChunk) const /*override*/;
+
+    virtual bool hasChunksAt(::AABB const& bb, bool ignoreClientChunk) const /*override*/;
+
+    virtual bool setBlock(
+        ::BlockPos const&              pos,
+        ::Block const&                 block,
+        int                            updateFlags,
+        ::ActorBlockSyncMessage const* syncMsg,
+        ::BlockChangeContext const&    changeSourceContext
+    ) /*override*/;
+
+    virtual ::Block const& getBlock(::BlockPos const& pos) const /*override*/;
+
+    virtual ::Block const& getBlock(::BlockPos const& pos, uint layer) const /*override*/;
+
+    virtual ::Block const& getExtraBlock(::BlockPos const& pos) const /*override*/;
+
+    virtual ::Block const& getLiquidBlock(::BlockPos const& pos) const /*override*/;
+
+    virtual bool hasBlock(::BlockPos const& pos) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI EditorStructureBlockSource(
+        ::Level&       level,
+        ::Dimension&   dimension,
+        ::ChunkSource& chunkSource,
+        ::AABB const&  bounds,
+        ::BlockPos     offset
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void*
+    $ctor(::Level& level, ::Dimension& dimension, ::ChunkSource& chunkSource, ::AABB const& bounds, ::BlockPos offset);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $addListener(::BlockSourceListener& l);
+
+    MCNAPI void $removeListener(::BlockSourceListener& l);
+
+    MCNAPI ::gsl::span<::gsl::not_null<::Actor*>>
+    $fetchEntities(::Actor const* except, ::AABB const& bb, bool useHitbox, bool getDisplayEntities);
+
+    MCNAPI ::gsl::span<::gsl::not_null<::Actor*>> $fetchEntities(
+        ::ActorType                     entityTypeId,
+        ::AABB const&                   bb,
+        ::Actor const*                  except,
+        ::std::function<bool(::Actor*)> selector
+    );
+
+    MCNAPI bool $hasChunksAt(::Bounds const& bounds, bool ignoreClientChunk) const;
+
+    MCNAPI bool $hasChunksAt(::BlockPos const& pos, int r, bool ignoreClientChunk) const;
+
+    MCNAPI bool $hasChunksAt(::AABB const& bb, bool ignoreClientChunk) const;
+
+    MCNAPI bool $setBlock(
+        ::BlockPos const&              pos,
+        ::Block const&                 block,
+        int                            updateFlags,
+        ::ActorBlockSyncMessage const* syncMsg,
+        ::BlockChangeContext const&    changeSourceContext
+    );
+
+    MCNAPI ::Block const& $getBlock(::BlockPos const& pos) const;
+
+    MCNAPI ::Block const& $getBlock(::BlockPos const& pos, uint layer) const;
+
+    MCNAPI ::Block const& $getExtraBlock(::BlockPos const& pos) const;
+
+    MCNAPI ::Block const& $getLiquidBlock(::BlockPos const& pos) const;
+
+    MCNAPI bool $hasBlock(::BlockPos const& pos) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

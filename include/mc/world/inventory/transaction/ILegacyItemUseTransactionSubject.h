@@ -1,0 +1,20 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+// clang-format on
+
+class ILegacyItemUseTransactionSubject {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ILegacyItemUseTransactionSubject() = default;
+
+    virtual bool isServerAuthBlockBreakingEnabled() const = 0;
+
+    virtual bool destroyBlock(::BlockPos const& pos, uchar face) = 0;
+    // NOLINTEND
+};

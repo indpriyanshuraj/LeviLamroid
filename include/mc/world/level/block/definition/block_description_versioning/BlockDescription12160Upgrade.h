@@ -1,0 +1,53 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/BlockCerealSchemaUpgrade.h"
+
+// auto generated forward declare list
+// clang-format off
+class SemVersion;
+// clang-format on
+
+namespace BlockDescriptionVersioning {
+
+class BlockDescription12160Upgrade : public ::BlockCerealSchemaUpgrade {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool previousSchema(
+        ::rapidjson::
+            GenericValue<::rapidjson::UTF8<char>, ::rapidjson::MemoryPoolAllocator<::rapidjson::CrtAllocator>> const&
+    ) const /*override*/;
+
+    virtual void upgradeToNext(
+        ::rapidjson::GenericDocument<
+            ::rapidjson::UTF8<char>,
+            ::rapidjson::MemoryPoolAllocator<::rapidjson::CrtAllocator>,
+            ::rapidjson::CrtAllocator>& document,
+        ::SemVersion const&
+    ) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $previousSchema(
+        ::rapidjson::
+            GenericValue<::rapidjson::UTF8<char>, ::rapidjson::MemoryPoolAllocator<::rapidjson::CrtAllocator>> const&
+    ) const;
+
+    MCAPI void $upgradeToNext(
+        ::rapidjson::GenericDocument<
+            ::rapidjson::UTF8<char>,
+            ::rapidjson::MemoryPoolAllocator<::rapidjson::CrtAllocator>,
+            ::rapidjson::CrtAllocator>& document,
+        ::SemVersion const&
+    ) const;
+
+
+    // NOLINTEND
+};
+
+} // namespace BlockDescriptionVersioning

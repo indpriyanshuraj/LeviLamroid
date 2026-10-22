@@ -17,28 +17,12 @@
 
 namespace levilamroid::item {
 
-static bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
-    if (!ptr || reinterpret_cast<uintptr_t>(ptr) < 0x10000 || size == 0) return false;
-    static int sPipe[2] = {-1, -1};
-    static std::once_flag sPipeOnce;
-    std::call_once(sPipeOnce, []() {
-        if (pipe(sPipe) == 0) {
-            fcntl(sPipe[0], F_SETFL, O_NONBLOCK);
-            fcntl(sPipe[1], F_SETFL, O_NONBLOCK);
-        }
-    });
-    if (sPipe[1] < 0) return false;
-    ssize_t written = write(sPipe[1], ptr, size);
-    if (written > 0) {
-        char dummy[128];
-        while (written > 0) {
-            ssize_t r = read(sPipe[0], dummy, std::min<size_t>(written, sizeof(dummy)));
-            if (r <= 0) break;
-            written -= r;
-        }
-        return true;
-    }
-    return false;
+static inline bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
+    if (!ptr || size == 0) return false;
+    uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
+    if (v < 0x10000 || v > 0x7fffffffff) return false;
+    if (v + size < v) return false;
+    return true;
 }
 
 static std::vector<CustomItemDefinition> sCustomItems;
@@ -75,6 +59,24 @@ struct BedrockSharedPtr {
     BedrockControlBlock* mControlBlock; // +0x00 (8 bytes total!)
 };
 
+static inline void* unwrapItemRegistry(void* ptr) {
+    if (!ptr || !isPointerReadable(ptr, 16)) return nullptr;
+    // When VanillaItems::registerItems is called, the second argument (x1) is
+    // const Bedrock::NotNullNonOwnerPtr<ItemRegistry>&.
+    // In ARM64 ABI, this passes a pointer on the caller's stack to a struct:
+    //   +0x00: ItemRegistry* mItemRegistry (heap pointer)
+    //   +0x08: ControlBlock* mControlBlock (heap pointer)
+    // We detect this by checking if both fields are valid readable pointers.
+    void* candidate = *reinterpret_cast<void**>(ptr);
+    if (candidate && isPointerReadable(candidate, 64)) {
+        void* ctrl = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(ptr) + 8);
+        if (ctrl && isPointerReadable(ctrl, 16)) {
+            return candidate;
+        }
+    }
+    return ptr;
+}
+
 static void registerSingleItem(void* registry, CustomItemDefinition& def) {
     if (!registry) return;
     if (sRegisteredRegistryItems.count({registry, def.identifier})) return;
@@ -86,154 +88,145 @@ static void registerSingleItem(void* registry, CustomItemDefinition& def) {
     const auto& off = ::levilamroid::mcpe::getOffsets();
     if (!off.itemConstructor || !off.itemRegistryRegisterItem) return;
 
-    // 1. Allocate 512 bytes (0x200) for native Item (sizeof is ~488 bytes)
-    void* itemMem = ::operator new(0x200);
-    if (!itemMem) return;
-    std::memset(itemMem, 0, 0x200);
-
-    // 2. Invoke native Item::Item constructor:
-    using ItemCtorFn = void (*)(void*, const std::string&, short);
-    auto itemCtor = reinterpret_cast<ItemCtorFn>(mcBase + off.itemConstructor);
-    itemCtor(itemMem, def.identifier, def.id);
-
-    // 3. Configure Item properties:
-    // Item::mMaxStackSize at offset +0x88 (136 bytes)
     uint8_t maxStack = (def.maxStackSize > 0) ? def.maxStackSize : (def.category == 3 ? 1 : 64);
-    *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x88) = maxStack;
-
-    // Item::mCreativeCategory at offset +0x140 (320 bytes)
-    // 1=Construction, 2=Nature, 3=Equipment, 4=Items
     uint8_t category = (def.category > 0) ? static_cast<uint8_t>(def.category) : 4;
-    *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x140) = category;
 
-    // Item::mCreativeGroup at offset +0x148 (HashedString)
-    std::string groupName = def.creativeGroup;
-    if (groupName.empty()) {
-        if (category == 3) {
-            groupName = std::string(groups::Sword);
-        } else if (def.isBlock) {
+    void* itemMem = def.nativeItemPtr;
+    if (!itemMem) {
+        // 1. Allocate 512 bytes (0x200) for native Item (sizeof is ~488 bytes)
+        itemMem = ::operator new(0x200);
+        if (!itemMem) return;
+        std::memset(itemMem, 0, 0x200);
+
+        // 2. Invoke native Item::Item constructor:
+        using ItemCtorFn = void (*)(void*, const std::string&, short);
+        auto itemCtor = reinterpret_cast<ItemCtorFn>(mcBase + off.itemConstructor);
+        itemCtor(itemMem, def.identifier, def.id);
+
+        // 3. Configure Item properties:
+        *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x88) = maxStack;
+        *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x140) = category;
+
+        std::string groupName = def.creativeGroup;
+        if (groupName.find("cooker") != std::string::npos || groupName.find("kitchen") != std::string::npos) {
+            groupName = "itemGroup.name.misc";
+        } else if (groupName.find("crate") != std::string::npos || groupName.find("cabinet") != std::string::npos) {
             groupName = "itemGroup.name.stone";
-        } else {
-            groupName = std::string(groups::Misc);
+        } else if (groupName.find("crop") != std::string::npos) {
+            groupName = "itemGroup.name.crop";
+        } else if (groupName.find(':') != std::string::npos) {
+            groupName = (def.isBlock) ? "itemGroup.name.stone" : "itemGroup.name.misc";
         }
-    }
-    new (reinterpret_cast<uint8_t*>(itemMem) + 0x148) HashedString(groupName);
-
-    // Item::mAllowOffhand at offset +0x1C8 (456 bytes)
-    if (def.allowOffhand || def.isBlock) {
-        *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1C8) = 1;
-    }
-
-    // Item::mIsHandEquipped at offset +0x1CA (458 bytes)
-    if (def.isHandEquipped || category == 3) {
-        *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1CA) = 1;
-    }
-
-    // Item::mMaxDamage at offset +0x1D0 (464 bytes)
-    if (def.maxDamage > 0) {
-        *reinterpret_cast<short*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1D0) = def.maxDamage;
-    }
-
-    // ── Phase 1: Safe Item Configuration ──
-    // Note: Do not overwrite internal offsets +0x1C4/+0x1CC/+0x1E0/+0x1E4 as they corrupt
-    // native C++ Item layout and trigger SIGSEGV when held or queried by the renderer/engine.
-    // Food eating and egg summoning actions are safely intercepted in CoreHooks GameMode handlers.
-    if (def.isFood || def.nutrition > 0) {
-        logger.info("  → Registered food item: ", def.identifier, " (Nutrition: ", def.nutrition, ")");
-    }
-    // ── End Phase 1 ──
-
-    // Item::mIconFrame at offset +0x48 (72 bytes) and +0x50
-    *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(itemMem) + 0x48) = def.iconFrame;
-    *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(itemMem) + 0x50) = def.iconFrame;
-
-    // Invoke authentic Item::setIcon(std::string const& name, int frame) [RVA: 0x0FF83DDC in 1.26.52.3]
-    if (!def.iconName.empty() && off.itemSetIconInfo) {
-        using SetIconFn = void* (*)(void*, const std::string&, int);
-        auto setIcon = reinterpret_cast<SetIconFn>(mcBase + off.itemSetIconInfo);
-        setIcon(itemMem, def.iconName, def.iconFrame);
-    }
-
-    // 3b. Configure BlockItem properties if this item represents a 3D block
-    if (def.isBlock) {
-        // Resolve BlockLegacy*: prefer Phase 2 resolved ptr, then live lookup, then stone fallback
-        void* legacyBlock = nullptr;
-
-        // A. Check if Phase 2 hook already resolved a real BlockLegacy* for this identifier
-        {
-            auto customBlocks = ::levilamroid::block::getRegisteredCustomBlocks();
-            for (const auto& cb : customBlocks) {
-                if (cb.identifier == def.identifier && cb.nativeBlockLegacyPtr) {
-                    legacyBlock = cb.nativeBlockLegacyPtr;
-                    break;
-                }
+        if (groupName.empty()) {
+            if (category == 3) {
+                groupName = std::string(groups::Sword);
+            } else if (def.isBlock) {
+                groupName = "itemGroup.name.stone";
+            } else if (def.isFood) {
+                groupName = "itemGroup.name.miscFood";
+            } else {
+                groupName = std::string(groups::Misc);
             }
         }
+        new (reinterpret_cast<uint8_t*>(itemMem) + 0x148) HashedString(groupName);
 
-        // B. Live registry lookup (works after blockTypeRegistryInit has run)
-        if (!legacyBlock && off.blockTypeRegistryGetInstance && off.blockTypeRegistryLookupByName) {
-            using GetRegistryFn = void* (*)();
-            auto getRegistry = reinterpret_cast<GetRegistryFn>(mcBase + off.blockTypeRegistryGetInstance);
-            void* blockRegistry = getRegistry();
-            if (blockRegistry) {
-                using LookupFn = void* (*)(void*, const HashedString&, bool);
-                auto lookup = reinterpret_cast<LookupFn>(mcBase + off.blockTypeRegistryLookupByName);
-                legacyBlock = lookup(blockRegistry, HashedString(def.identifier), true);
-                if (!legacyBlock && !def.baseBlock.empty() && def.baseBlock != def.identifier) {
-                    legacyBlock = lookup(blockRegistry, HashedString(def.baseBlock), true);
-                }
-                // C. Final fallback to stone only as last resort
-                if (!legacyBlock) {
-                    legacyBlock = lookup(blockRegistry, HashedString("minecraft:stone"), true);
+        if (def.allowOffhand || def.isBlock) {
+            *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1C8) = 1;
+        }
+
+        if (def.isHandEquipped || category == 3) {
+            *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1CA) = 1;
+        }
+
+        if (def.maxDamage > 0) {
+            *reinterpret_cast<short*>(reinterpret_cast<uint8_t*>(itemMem) + 0x1D0) = def.maxDamage;
+        }
+
+        if (def.isFood || def.nutrition > 0) {
+            logger.info("  → Registered food item: ", def.identifier, " (Nutrition: ", def.nutrition, ")");
+        }
+
+        *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(itemMem) + 0x48) = def.iconFrame;
+        *reinterpret_cast<int*>(reinterpret_cast<uint8_t*>(itemMem) + 0x50) = def.iconFrame;
+
+        if (!def.iconName.empty() && off.itemSetIconInfo) {
+            using SetIconFn = void* (*)(void*, const std::string&, int);
+            auto setIcon = reinterpret_cast<SetIconFn>(mcBase + off.itemSetIconInfo);
+            setIcon(itemMem, def.iconName, def.iconFrame);
+        }
+
+        if (def.isBlock) {
+            void* legacyBlock = nullptr;
+            {
+                auto customBlocks = ::levilamroid::block::getRegisteredCustomBlocks();
+                for (const auto& cb : customBlocks) {
+                    if (cb.identifier == def.identifier && cb.nativeBlockLegacyPtr) {
+                        legacyBlock = cb.nativeBlockLegacyPtr;
+                        break;
+                    }
                 }
             }
+
+            if (!legacyBlock && off.blockTypeRegistryGetInstance && off.blockTypeRegistryLookupByName) {
+                using GetRegistryFn = void* (*)();
+                auto getRegistry = reinterpret_cast<GetRegistryFn>(mcBase + off.blockTypeRegistryGetInstance);
+                void* blockRegistry = getRegistry();
+                if (blockRegistry) {
+                    using LookupFn = void* (*)(void*, const HashedString&, bool);
+                    auto lookup = reinterpret_cast<LookupFn>(mcBase + off.blockTypeRegistryLookupByName);
+                    legacyBlock = lookup(blockRegistry, HashedString(def.identifier), true);
+                    if (!legacyBlock && !def.baseBlock.empty() && def.baseBlock != def.identifier) {
+                        legacyBlock = lookup(blockRegistry, HashedString(def.baseBlock), true);
+                    }
+                    if (!legacyBlock) {
+                        legacyBlock = lookup(blockRegistry, HashedString("minecraft:stone"), true);
+                    }
+                }
+            }
+
+            auto* blkCtrl = static_cast<BedrockBlockControlBlock*>(::operator new(sizeof(BedrockBlockControlBlock)));
+            blkCtrl->mBlockLegacy = legacyBlock;
+            blkCtrl->mStrongRef = 1000000;
+            blkCtrl->mWeakRef = 1000000;
+            def.nativeBlockControlBlock = blkCtrl;
+            *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(itemMem) + 312) = blkCtrl;
+            if (legacyBlock) {
+                if (off.blockItemVtable) {
+                    *reinterpret_cast<uintptr_t*>(itemMem) = mcBase + off.blockItemVtable;
+                }
+                if (isPointerReadable(reinterpret_cast<uint8_t*>(legacyBlock) + 0x200, sizeof(void*))) {
+                    def.nativeBlockPermutation = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(legacyBlock) + 0x200);
+                }
+            }
+            logger.info("[LeviLamroid] Block item binding for: ", def.identifier, " -> BlockLegacy: ",
+                        legacyBlock ? "REAL" : "DEFERRED_TO_POST_INIT", 
+                        legacyBlock ? " (BlockItem vtable assigned)" : " (Item vtable active)");
         }
 
-        // Assign authentic BlockItem vtable so Bedrock recognizes it as a true block in inventory
-        if (off.blockItemVtable) {
-            *reinterpret_cast<uintptr_t*>(itemMem) = mcBase + off.blockItemVtable;
-        }
+        def.nativeItemPtr = itemMem;
 
-        *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(itemMem) + 312) = legacyBlock;
-        if (legacyBlock) {
-            def.nativeBlockPermutation = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(legacyBlock) + 0x200);
-        }
-        logger.info("[LeviLamroid] Block item binding for: ", def.identifier, " -> BlockLegacy: ",
-                    legacyBlock ? "REAL" : "STONE_FALLBACK", " (BlockItem vtable assigned)");
+        auto* itemCtrlBlock = static_cast<BedrockControlBlock*>(::operator new(sizeof(BedrockControlBlock)));
+        itemCtrlBlock->mItem = static_cast<Item*>(itemMem);
+        itemCtrlBlock->mStrongRef = 1000000;
+        itemCtrlBlock->mWeakRef = 1000000;
+        def.nativeControlBlock = itemCtrlBlock;
     }
 
-    // 4. Registry Control Block (for ItemRegistry::registerItem atomic add at offset +0x0c)
-    alignas(16) static uint8_t sRegBlocks[64][32];
-    static size_t sRegBlockIdx = 0;
-    uint8_t* regBlock = sRegBlocks[sRegBlockIdx % 64];
-    sRegBlockIdx++;
-    std::memset(regBlock, 0, 32);
+    // 4. Dedicated Registry Control Block for each item (never reused or wrapped)
+    uint8_t* regBlock = new uint8_t[32]();
     *reinterpret_cast<Item**>(regBlock) = static_cast<Item*>(itemMem);
-    *reinterpret_cast<uint32_t*>(regBlock + 0x0c) = 1;
+    *reinterpret_cast<uint32_t*>(regBlock + 0x08) = 1000000; // Strong count
+    *reinterpret_cast<uint32_t*>(regBlock + 0x0c) = 1000000; // Weak count
 
     BedrockSharedPtr sharedItem;
     sharedItem.mControlBlock = reinterpret_cast<BedrockControlBlock*>(regBlock);
 
-    // Invoke ItemRegistry::registerItem(ItemRegistry* this, SharedPtr<Item>* pShared) [RVA: 0x0FBB0064]
+    // Invoke ItemRegistry::registerItem(ItemRegistry* this, SharedPtr<Item>* pShared)
     using RegItemFn = void (*)(void*, BedrockSharedPtr*);
     auto regItemFn = reinterpret_cast<RegItemFn>(mcBase + off.itemRegistryRegisterItem);
     regItemFn(registry, &sharedItem);
 
     sRegisteredRegistryItems.insert({registry, def.identifier});
-    def.nativeItemPtr = itemMem;
-
-    // 5. Permanent ItemStack BedrockControlBlock
-    // Layout:
-    // +0x00: Item*
-    // +0x08: mControlBlock = nullptr (CRITICAL: 0x127a9e78 cbz x20 takes branch and skips atomic refcounting!)
-    // +0x10: strong = 1
-    // +0x14: weak = 1
-    auto* itemCtrlBlock = static_cast<BedrockControlBlock*>(::operator new(sizeof(BedrockControlBlock)));
-    itemCtrlBlock->mItem = static_cast<Item*>(itemMem);
-    itemCtrlBlock->mControlBlock = nullptr;
-    itemCtrlBlock->mStrongRef = 1;
-    itemCtrlBlock->mWeakRef = 1;
-    def.nativeControlBlock = itemCtrlBlock;
 
     logger.info("§6[LeviLamroid] §aRegistered native item: §b", def.identifier, 
                  " §7(ID: ", def.id, ", Category: ", (int)category, ", MaxStack: ", (int)maxStack, ")");
@@ -243,39 +236,40 @@ static void* sOrigVanillaItemsRegisterItems = nullptr;
 
 static void hooked_vanillaItemsRegisterItems(
     void* ctx,
-    void* itemRegistryRef,
+    void* itemRegistryPtr,
+    void* itemRegistryCtrlBlock,
     void* baseGameVersion,
     void* experiments
 ) {
     if (sOrigVanillaItemsRegisterItems) {
-        reinterpret_cast<void(*)(void*, void*, void*, void*)>(sOrigVanillaItemsRegisterItems)(
-            ctx, itemRegistryRef, baseGameVersion, experiments
+        reinterpret_cast<void(*)(void*, void*, void*, void*, void*)>(sOrigVanillaItemsRegisterItems)(
+            ctx, itemRegistryPtr, itemRegistryCtrlBlock, baseGameVersion, experiments
         );
     }
 
     auto& logger = ll::Logger::getInstance();
-    logger.info("§6[LeviLamroid] §aVanillaItems::registerItems hook fired! itemRegistryRef: ", itemRegistryRef);
+    void* registry = unwrapItemRegistry(itemRegistryPtr);
+    logger.info("§6[LeviLamroid] §aVanillaItems::registerItems hook fired! itemRegistry arg: ", itemRegistryPtr,
+                ", unwrapped: ", registry);
 
-    if (itemRegistryRef && isPointerReadable(itemRegistryRef, sizeof(void*))) {
-        void* registry = *reinterpret_cast<void**>(itemRegistryRef);
-        if (registry && isPointerReadable(registry, 16)) {
-            std::lock_guard<std::mutex> lock(sItemMutex);
-            sItemRegistryInstance = registry;
-            if (std::find(sKnownRegistries.begin(), sKnownRegistries.end(), registry) == sKnownRegistries.end()) {
-                sKnownRegistries.push_back(registry);
-            }
-            logger.info("§6[LeviLamroid] §eRegistering ", sCustomItems.size(), " custom items during VanillaItems::registerItems window...");
-            for (auto& def : sCustomItems) {
-                registerSingleItem(registry, def);
-            }
+    if (registry && isPointerReadable(registry, 16)) {
+        std::lock_guard<std::mutex> lock(sItemMutex);
+        sItemRegistryInstance = registry;
+        if (std::find(sKnownRegistries.begin(), sKnownRegistries.end(), registry) == sKnownRegistries.end()) {
+            sKnownRegistries.push_back(registry);
+        }
+        logger.info("§6[LeviLamroid] §eRegistering ", sCustomItems.size(), " custom items during VanillaItems::registerItems window...");
+        for (auto& def : sCustomItems) {
+            registerSingleItem(registry, def);
         }
     }
 }
 
-static void hooked_itemRegistryPostInit(void* registry, void* a2) {
+static void hooked_itemRegistryPostInit(void* registryArg, void* a2) {
     if (sOrigItemRegistryPostInit) {
-        reinterpret_cast<void(*)(void*, void*)>(sOrigItemRegistryPostInit)(registry, a2);
+        reinterpret_cast<void(*)(void*, void*)>(sOrigItemRegistryPostInit)(registryArg, a2);
     }
+    void* registry = unwrapItemRegistry(registryArg);
     if (!registry) return;
 
     {
@@ -318,7 +312,17 @@ void* getBlockPermutationForDef(CustomItemDefinition& def) {
 
             if (realLegacy) {
                 if (def.nativeItemPtr && isPointerReadable(reinterpret_cast<uint8_t*>(def.nativeItemPtr) + 312, sizeof(void*))) {
-                    *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(def.nativeItemPtr) + 312) = realLegacy;
+                    auto* blkCtrl = *reinterpret_cast<BedrockBlockControlBlock**>(reinterpret_cast<uint8_t*>(def.nativeItemPtr) + 312);
+                    if (blkCtrl && isPointerReadable(blkCtrl, sizeof(BedrockBlockControlBlock))) {
+                        blkCtrl->mBlockLegacy = realLegacy;
+                    } else {
+                        blkCtrl = static_cast<BedrockBlockControlBlock*>(::operator new(sizeof(BedrockBlockControlBlock)));
+                        blkCtrl->mBlockLegacy = realLegacy;
+                        blkCtrl->mStrongRef = 1000000;
+                        blkCtrl->mWeakRef = 1000000;
+                        def.nativeBlockControlBlock = blkCtrl;
+                        *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(def.nativeItemPtr) + 312) = blkCtrl;
+                    }
                 }
                 if (isPointerReadable(reinterpret_cast<uint8_t*>(realLegacy) + 0x200, sizeof(void*))) {
                     def.nativeBlockPermutation = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(realLegacy) + 0x200);
@@ -360,15 +364,39 @@ void refreshCustomBlockBindings() {
             }
         }
 
+        if (!realLegacy && !item.baseBlock.empty()) {
+            realLegacy = lookup(blockRegistry, HashedString(item.baseBlock), true);
+        }
+        if (!realLegacy) {
+            realLegacy = lookup(blockRegistry, HashedString("minecraft:stone"), true);
+        }
+
         if (realLegacy) {
-            void* oldLegacy = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312);
-            if (oldLegacy != realLegacy) {
-                *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312) = realLegacy;
+            auto* blkCtrl = *reinterpret_cast<BedrockBlockControlBlock**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312);
+            bool updated = false;
+            if (blkCtrl && isPointerReadable(blkCtrl, sizeof(BedrockBlockControlBlock))) {
+                if (blkCtrl->mBlockLegacy != realLegacy) {
+                    blkCtrl->mBlockLegacy = realLegacy;
+                    updated = true;
+                }
+            } else {
+                blkCtrl = static_cast<BedrockBlockControlBlock*>(::operator new(sizeof(BedrockBlockControlBlock)));
+                blkCtrl->mBlockLegacy = realLegacy;
+                blkCtrl->mStrongRef = 1000000;
+                blkCtrl->mWeakRef = 1000000;
+                item.nativeBlockControlBlock = blkCtrl;
+                *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(item.nativeItemPtr) + 312) = blkCtrl;
+                updated = true;
+            }
+            if (updated) {
+                if (off.blockItemVtable) {
+                    *reinterpret_cast<uintptr_t*>(item.nativeItemPtr) = mcBase + off.blockItemVtable;
+                }
                 if (isPointerReadable(reinterpret_cast<uint8_t*>(realLegacy) + 0x200, sizeof(void*))) {
                     item.nativeBlockPermutation = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(realLegacy) + 0x200);
                 }
                 logger.info("§6[LeviLamroid] §aBound custom BlockItem '", item.identifier,
-                            "' to authentic BlockLegacy @ ", realLegacy);
+                            "' to authentic BlockLegacy @ ", realLegacy, " (BlockItem vtable assigned)");
             }
         }
     }
@@ -406,7 +434,17 @@ bool registerCustomItem(const CustomItemDefinition& def) {
     std::lock_guard<std::mutex> lock(sItemMutex);
     for (auto& item : sCustomItems) {
         if (item.identifier == def.identifier) {
+            bool wasBlock = item.isBlock;
+            void* prevBlkCtrl = item.nativeBlockControlBlock;
+            void* prevPerm = item.nativeBlockPermutation;
+            std::string prevBase = item.baseBlock;
             item = def;
+            if (wasBlock) {
+                item.isBlock = true;
+                if (!item.nativeBlockControlBlock) item.nativeBlockControlBlock = prevBlkCtrl;
+                if (!item.nativeBlockPermutation) item.nativeBlockPermutation = prevPerm;
+                if (item.baseBlock.empty()) item.baseBlock = prevBase;
+            }
             for (void* reg : sKnownRegistries) {
                 registerSingleItem(reg, item);
             }
@@ -494,7 +532,7 @@ bool ItemRegistry::registerItem(
 }
 
 bool giveItemToPlayer(void* player, const std::string& identifier, int count, int slot) {
-    if (!player) return false;
+    if (!player || !isPointerReadable(player, 0x580)) return false;
 
     CustomItemDefinition* targetDef = nullptr;
     {
@@ -510,7 +548,7 @@ bool giveItemToPlayer(void* player, const std::string& identifier, int count, in
 
     uint8_t* playerBytes = reinterpret_cast<uint8_t*>(player);
     void* supplies = *reinterpret_cast<void**>(playerBytes + 0x570);
-    if (!supplies) return false;
+    if (!supplies || !isPointerReadable(supplies, 0xc0)) return false;
 
     uint8_t* suppliesBytes = reinterpret_cast<uint8_t*>(supplies);
     if (slot < 0) {
@@ -519,7 +557,7 @@ bool giveItemToPlayer(void* player, const std::string& identifier, int count, in
     }
 
     void* inventory = *reinterpret_cast<void**>(suppliesBytes + 0xb8);
-    if (!inventory) return false;
+    if (!inventory || !isPointerReadable(inventory, 0x150)) return false;
 
     uintptr_t mcBase = getMcBase();
     const auto& off = ::levilamroid::mcpe::getOffsets();
@@ -539,28 +577,27 @@ bool giveItemToPlayer(void* player, const std::string& identifier, int count, in
     stackMem[0x22] = static_cast<uint8_t>(count > 0 ? count : 1);
     stackMem[0x23] = 1; // valid = 1
 
-    // Call Container::setItem [RVA: off.containerSetItem (0x0F6EFEB8)]
-    if (off.containerSetItem) {
-        using SetItemFn = void (*)(void*, int, const void*);
-        auto setItemFn = reinterpret_cast<SetItemFn>(mcBase + off.containerSetItem);
-        setItemFn(inventory, slot, stackMem);
-    } else {
-        // Fallback: direct slot write
-        uint8_t* invBytes = reinterpret_cast<uint8_t*>(inventory);
-        uint8_t* slotsBegin = *reinterpret_cast<uint8_t**>(invBytes + 0x140);
-        if (slotsBegin) {
-            uint8_t* itemAddr = slotsBegin + (slot * 152);
-            std::memcpy(itemAddr, stackMem, 152);
+    uint8_t* invBytes = reinterpret_cast<uint8_t*>(inventory);
+    uint8_t* slotsBegin = *reinterpret_cast<uint8_t**>(invBytes + 0x140);
+    uint8_t* slotsEnd = *reinterpret_cast<uint8_t**>(invBytes + 0x148);
+    if (!slotsBegin || !slotsEnd || slotsEnd <= slotsBegin) return false;
+
+    size_t totalSlots = (slotsEnd - slotsBegin) / 152;
+    if (slot < 0 || static_cast<size_t>(slot) >= totalSlots) return false;
+
+    uint8_t* itemAddr = slotsBegin + (slot * 152);
+    std::memcpy(itemAddr, stackMem, 152);
+
+    // Notify container listeners via virtual method slot 35: Container::containerContentChanged(int slot)
+    uintptr_t* vtable = *reinterpret_cast<uintptr_t**>(inventory);
+    if (vtable && isPointerReadable(vtable, 36 * sizeof(void*))) {
+        using ContentChangedFn = void (*)(void*, int);
+        auto changedFn = reinterpret_cast<ContentChangedFn>(vtable[35]);
+        if (changedFn) {
+            changedFn(inventory, slot);
         }
     }
 
-    // Trigger UI container slot refresh (vtable[35])
-    void** invVtable = *reinterpret_cast<void***>(inventory);
-    if (invVtable && invVtable[35]) {
-        using TriggerFn = void (*)(void*, int);
-        auto triggerFn = reinterpret_cast<TriggerFn>(invVtable[35]);
-        triggerFn(inventory, slot);
-    }
     return true;
 }
 

@@ -1,0 +1,90 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/scripting/modules/minecraft/ScriptBlockVolumeBase.h"
+
+// auto generated forward declare list
+// clang-format off
+class BaseBlockLocationIterator;
+class Vec3;
+namespace ScriptModuleMinecraft { class ScriptBlockLocationIterator; }
+namespace Scripting { class WeakLifetimeScope; }
+namespace Scripting { struct ClassBinding; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+class ScriptListBlockVolume : public ::ScriptModuleMinecraft::ScriptBlockVolumeBase {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptBlockLocationIterator>
+    getBlockLocationIterator(::Scripting::WeakLifetimeScope scope) /*override*/;
+
+    virtual ::std::unique_ptr<::BaseBlockLocationIterator> createBlockLocationIterator() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ScriptListBlockVolume();
+
+#ifdef LL_PLAT_C
+    MCAPI ScriptListBlockVolume(::ScriptModuleMinecraft::ScriptListBlockVolume&& rhs);
+
+    MCAPI ScriptListBlockVolume(::ScriptModuleMinecraft::ScriptListBlockVolume const& rhs);
+#endif
+
+    MCAPI void add(::std::vector<::Vec3> const& locations);
+
+#ifdef LL_PLAT_C
+    MCAPI ::ScriptModuleMinecraft::ScriptListBlockVolume&
+    operator=(::ScriptModuleMinecraft::ScriptListBlockVolume&& rhs);
+
+    MCAPI ::ScriptModuleMinecraft::ScriptListBlockVolume&
+    operator=(::ScriptModuleMinecraft::ScriptListBlockVolume const& rhs);
+#endif
+
+    MCAPI void remove(::std::vector<::Vec3> const& locations);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::Scripting::ClassBinding bind();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor();
+
+#ifdef LL_PLAT_C
+    MCFOLD void* $ctor(::ScriptModuleMinecraft::ScriptListBlockVolume&& rhs);
+
+    MCFOLD void* $ctor(::ScriptModuleMinecraft::ScriptListBlockVolume const& rhs);
+#endif
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptBlockLocationIterator>
+    $getBlockLocationIterator(::Scripting::WeakLifetimeScope scope);
+
+    MCAPI ::std::unique_ptr<::BaseBlockLocationIterator> $createBlockLocationIterator();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

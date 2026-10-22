@@ -1,0 +1,75 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/FileAccessType.h"
+#include "mc/deps/core/file/FileStorageArea.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class FileSystemImpl; }
+namespace Core { class PathView; }
+namespace Core { class Result; }
+// clang-format on
+
+namespace Core {
+
+class WriteBufferedFileStorageArea : public ::Core::FileStorageArea {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 16> mUnkb8f56f;
+    ::ll::UntypedStorage<8, 16> mUnk847197;
+    ::ll::UntypedStorage<8, 64> mUnk3c69ca;
+    ::ll::UntypedStorage<8, 80> mUnkcad905;
+    ::ll::UntypedStorage<8, 24> mUnk5b52d0;
+    ::ll::UntypedStorage<1, 1>  mUnk13aec3;
+    ::ll::UntypedStorage<1, 1>  mUnk61c0ed;
+    ::ll::UntypedStorage<1, 1>  mUnkafc03c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    WriteBufferedFileStorageArea& operator=(WriteBufferedFileStorageArea const&);
+    WriteBufferedFileStorageArea(WriteBufferedFileStorageArea const&);
+    WriteBufferedFileStorageArea();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~WriteBufferedFileStorageArea() /*override*/ = default;
+
+    virtual ::std::unique_ptr<::Core::FileSystemImpl> createTransaction(::Core::FileAccessType) /*override*/;
+
+    virtual bool supportsSizeQuery() const /*override*/;
+
+    virtual uint64 getTotalSize() const /*override*/;
+
+    virtual ::Core::Result getUsedSize(uint64&) /*override*/;
+
+    virtual uint64 getTransactionWriteSizeLimit() const /*override*/;
+
+    virtual bool handlesPendingWrites() const /*override*/;
+
+    virtual void informPendingWriteSize(uint64, bool const) /*override*/;
+
+    virtual uint64 estimatePendingWriteDiskSize(uint64 rawFileSize) const /*override*/;
+
+    virtual void informStorageAreaCopy(uint64) /*override*/;
+
+    virtual ::Core::Result setSaveDataIcon(::Core::PathView) /*override*/;
+
+    virtual ::Core::FileStorageArea::FlushableLevelDbEnvType getFlushableLevelDbEnvType() const /*override*/;
+
+    virtual void flushImmediately(::Core::PathView flushPath) /*override*/;
+
+    virtual void enableFlushToDisk(bool) /*override*/;
+
+    virtual bool checkCorrupt(bool) /*override*/;
+
+    virtual void _onTeardown() /*override*/;
+    // NOLINTEND
+};
+
+} // namespace Core

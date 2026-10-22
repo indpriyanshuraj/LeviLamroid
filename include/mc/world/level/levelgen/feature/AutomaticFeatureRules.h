@@ -1,0 +1,100 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/puv/LoadResult.h"
+#include "mc/world/level/BiomeFilterGroup.h"
+#include "mc/world/level/biome/components/BiomeDecorationFeature.h"
+
+// auto generated forward declare list
+// clang-format off
+class BedrockLoadContext;
+class HashedString;
+class IMinecraftEventing;
+class IWorldRegistriesProvider;
+class MinEngineVersion;
+class ResourcePackManager;
+class SemVersionConstant;
+namespace SharedTypes::v1_21_20 { struct AutomaticFeatureRulesData; }
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+class AutomaticFeatureRules {
+public:
+    // AutomaticFeatureRules inner types declare
+    // clang-format off
+    struct AutomaticFeatureRule;
+    // clang-format on
+
+    // AutomaticFeatureRules inner types define
+    struct AutomaticFeatureRule {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 328, ::BiomeDecorationFeature> mAutoFeature;
+        ::ll::TypedStorage<8, 64, ::BiomeFilterGroup>        mBiomeFilter;
+        // NOLINTEND
+    };
+
+    using AutomaticFeaturePriorityList = ::std::unordered_map<
+        ::std::string,
+        ::std::unordered_map<::HashedString, ::AutomaticFeatureRules::AutomaticFeatureRule>>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        264,
+        ::Puv::SlicedLoader<
+            ::SharedTypes::v1_21_20::AutomaticFeatureRulesData,
+            ::BedrockLoadContext,
+            nullptr_t,
+            nullptr_t,
+            ::SharedTypes::v1_21_20::AutomaticFeatureRulesData>>
+                                                    mLoader;
+    ::ll::TypedStorage<8, 8, ::IMinecraftEventing&> mEventing;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    AutomaticFeatureRules& operator=(AutomaticFeatureRules const&);
+    AutomaticFeatureRules(AutomaticFeatureRules const&);
+    AutomaticFeatureRules();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI AutomaticFeatureRules(::cereal::ReflectionCtx const& ctx, ::IMinecraftEventing& eventing);
+
+    MCAPI ::Puv::LoadResult<::SharedTypes::v1_21_20::AutomaticFeatureRulesData> _parseAndInsertUnsorted(
+        ::std::string const&        filename,
+        ::std::string&&             data,
+        ::MinEngineVersion const&   minEngineVersion,
+        ::IWorldRegistriesProvider& worldRegistries,
+        ::std::unordered_map<
+            ::std::string,
+            ::std::unordered_map<::HashedString, ::AutomaticFeatureRules::AutomaticFeatureRule>>& bucketedFeatures,
+        bool                                                                                      isBasePack
+    ) const;
+
+    MCAPI void attachAutomaticFeatures(
+        ::ResourcePackManager&                                          resourcePackManager,
+        ::IWorldRegistriesProvider&                                     worldRegistries,
+        ::std::unordered_map<::HashedString, ::BiomeDecorationFeature>& biomeDecorationFeatureMap
+    ) const;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::SemVersionConstant const& SCHEMA_VERSION_1();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::cereal::ReflectionCtx const& ctx, ::IMinecraftEventing& eventing);
+    // NOLINTEND
+};

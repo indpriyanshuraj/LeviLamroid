@@ -1,0 +1,29 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor::Transactions { class IOperation; }
+// clang-format on
+
+namespace Editor::Transactions {
+
+class IPendingOperation {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IPendingOperation() = default;
+
+    virtual ::std::unique_ptr<::Editor::Transactions::IOperation>
+    _commit(::Editor::ServiceProviderCollection& services) = 0;
+
+    virtual ::Scripting::Result_deprecated<bool> _discard(::Editor::ServiceProviderCollection&) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::Transactions

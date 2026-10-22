@@ -1,0 +1,91 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/application/storage_migration/MigrationResult.h"
+
+// auto generated forward declare list
+// clang-format off
+class TaskResult;
+namespace Bedrock::StorageMigration { struct FoundFiles; }
+namespace Bedrock::StorageMigration { struct ManifestData; }
+// clang-format on
+
+namespace Bedrock::StorageMigration {
+
+class StorageMigrator : public ::std::enable_shared_from_this<::Bedrock::StorageMigration::StorageMigrator> {
+public:
+    // StorageMigrator inner types declare
+    // clang-format off
+    class MigrationProgress;
+    // clang-format on
+
+    // StorageMigrator inner types define
+    class MigrationProgress {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4>   mUnkdd4c51;
+        ::ll::UntypedStorage<4, 4>   mUnk43a903;
+        ::ll::UntypedStorage<4, 4>   mUnk1ca0e6;
+        ::ll::UntypedStorage<8, 8>   mUnk6b5656;
+        ::ll::UntypedStorage<8, 8>   mUnkcb3610;
+        ::ll::UntypedStorage<8, 32>  mUnkc298e1;
+        ::ll::UntypedStorage<8, 32>  mUnkaeacc9;
+        ::ll::UntypedStorage<8, 136> mUnkaff333;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        MigrationProgress& operator=(MigrationProgress const&);
+        MigrationProgress(MigrationProgress const&);
+        MigrationProgress();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI ~MigrationProgress();
+#endif
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI void $dtor();
+#endif
+        // NOLINTEND
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~StorageMigrator() = default;
+
+    virtual bool doQuickCompletionCheck() = 0;
+
+    virtual void _runMigration(
+        ::std::shared_ptr<::Bedrock::StorageMigration::ManifestData>,
+        ::std::shared_ptr<::Bedrock::StorageMigration::FoundFiles>,
+        ::std::function<void(::Bedrock::StorageMigration::StorageMigrator::MigrationProgress)>,
+        ::std::function<void(::Bedrock::StorageMigration::MigrationResult)>
+    ) = 0;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ::std::function<::TaskResult()> createMigrationTask(
+        ::std::shared_ptr<::Bedrock::StorageMigration::ManifestData>                           manifest,
+        ::std::shared_ptr<::Bedrock::StorageMigration::FoundFiles>                             filesToMigrate,
+        ::std::function<void(::Bedrock::StorageMigration::StorageMigrator::MigrationProgress)> progressCallback,
+        ::std::function<void(::Bedrock::StorageMigration::MigrationResult)>                    completeCallback
+    );
+#endif
+    // NOLINTEND
+};
+
+} // namespace Bedrock::StorageMigration

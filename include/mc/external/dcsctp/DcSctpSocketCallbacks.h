@@ -1,0 +1,127 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/dcsctp/ErrorKind.h"
+#include "mc/external/dcsctp/SendPacketStatus.h"
+#include "mc/external/webrtc/ArrayView.h"
+#include "mc/external/webrtc/StrongAlias.h"
+#include "mc/external/webrtc/TaskQueueBase.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace dcsctp { class DcSctpMessage; }
+namespace dcsctp { class LifecycleId; }
+namespace dcsctp { class StreamIDTag; }
+namespace dcsctp { class TimeMs; }
+namespace dcsctp { class Timeout; }
+namespace webrtc { class Timestamp; }
+// clang-format on
+
+namespace dcsctp {
+
+class DcSctpSocketCallbacks {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~DcSctpSocketCallbacks() = default;
+
+    virtual void SendPacket(::webrtc::ArrayView<uchar const>);
+
+    virtual ::dcsctp::SendPacketStatus SendPacketWithStatus(::webrtc::ArrayView<uchar const> data);
+
+    virtual ::std::unique_ptr<::dcsctp::Timeout> CreateTimeout(::webrtc::TaskQueueBase::DelayPrecision precision);
+
+    virtual ::std::unique_ptr<::dcsctp::Timeout> CreateTimeout();
+
+    virtual ::dcsctp::TimeMs TimeMillis();
+
+    virtual ::webrtc::Timestamp Now();
+
+    virtual uint GetRandomInt(uint low, uint high) = 0;
+
+    virtual void NotifyOutgoingMessageBufferEmpty();
+
+    virtual void OnMessageReceived(::dcsctp::DcSctpMessage message) = 0;
+
+    virtual void OnMessageReady();
+
+    virtual void OnError(::dcsctp::ErrorKind error, ::std::string_view message) = 0;
+
+    virtual void OnAborted(::dcsctp::ErrorKind error, ::std::string_view message) = 0;
+
+    virtual void OnConnected() = 0;
+
+    virtual void OnClosed() = 0;
+
+    virtual void OnConnectionRestarted() = 0;
+
+    virtual void OnStreamsResetFailed(
+        ::webrtc::ArrayView<::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> const> outgoing_streams,
+        ::std::string_view                                                              reason
+    ) = 0;
+
+    virtual void OnStreamsResetPerformed(
+        ::webrtc::ArrayView<::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> const> outgoing_streams
+    ) = 0;
+
+    virtual void OnIncomingStreamsReset(
+        ::webrtc::ArrayView<::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> const> incoming_streams
+    ) = 0;
+
+    virtual void OnBufferedAmountLow(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id);
+
+    virtual void OnTotalBufferedAmountLow();
+
+    virtual void OnLifecycleMessageFullySent(::dcsctp::LifecycleId lifecycle_id);
+
+    virtual void OnLifecycleMessageExpired(::dcsctp::LifecycleId lifecycle_id, bool maybe_delivered);
+
+    virtual void OnLifecycleMessageDelivered(::dcsctp::LifecycleId lifecycle_id);
+
+    virtual void OnLifecycleEnd(::dcsctp::LifecycleId lifecycle_id);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $SendPacket(::webrtc::ArrayView<uchar const>);
+
+    MCNAPI ::dcsctp::SendPacketStatus $SendPacketWithStatus(::webrtc::ArrayView<uchar const> data);
+
+    MCNAPI ::std::unique_ptr<::dcsctp::Timeout> $CreateTimeout(::webrtc::TaskQueueBase::DelayPrecision precision);
+
+    MCNAPI ::std::unique_ptr<::dcsctp::Timeout> $CreateTimeout();
+
+    MCNAPI ::dcsctp::TimeMs $TimeMillis();
+
+    MCNAPI ::webrtc::Timestamp $Now();
+
+    MCNAPI void $NotifyOutgoingMessageBufferEmpty();
+
+    MCNAPI void $OnMessageReady();
+
+    MCNAPI void $OnBufferedAmountLow(::webrtc::StrongAlias<::dcsctp::StreamIDTag, ushort> stream_id);
+
+    MCNAPI void $OnTotalBufferedAmountLow();
+
+    MCNAPI void $OnLifecycleMessageFullySent(::dcsctp::LifecycleId lifecycle_id);
+
+    MCNAPI void $OnLifecycleMessageExpired(::dcsctp::LifecycleId lifecycle_id, bool maybe_delivered);
+
+    MCNAPI void $OnLifecycleMessageDelivered(::dcsctp::LifecycleId lifecycle_id);
+
+    MCNAPI void $OnLifecycleEnd(::dcsctp::LifecycleId lifecycle_id);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace dcsctp

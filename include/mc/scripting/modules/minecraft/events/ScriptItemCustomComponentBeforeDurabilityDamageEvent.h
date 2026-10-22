@@ -1,0 +1,68 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/scripting/modules/minecraft/events/ScriptCustomComponentPubSubConnectors.h"
+#include "mc/scripting/modules/minecraft/events/ScriptItemCustomComponentBeforeEvent.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class ItemStack;
+class Mob;
+namespace ScriptModuleMinecraft { class ScriptActor; }
+namespace ScriptModuleMinecraft { class ScriptItemStack; }
+namespace Scripting { struct ClassBinding; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+struct ScriptItemCustomComponentBeforeDurabilityDamageEvent
+: public ::ScriptModuleMinecraft::ScriptItemCustomComponentBeforeEvent<int&, ::ItemStack&, ::Actor&, ::Mob&> {
+public:
+    // ScriptItemCustomComponentBeforeDurabilityDamageEvent inner types define
+    using EventConnectorsType =
+        ::ScriptModuleMinecraft::ScriptCustomComponentPubSubConnectors<void(int&, ::ItemStack&, ::Actor&, ::Mob&)>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, int> mDurabilityDamage;
+    ::ll::TypedStorage<
+        8,
+        40,
+        ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptItemStack>>>
+                                                                                                          mScriptItem;
+    ::ll::TypedStorage<8, 32, ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptActor>> mHitEntity;
+    ::ll::TypedStorage<8, 32, ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptActor>>
+        mAttackingEntity;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void updateEngineEvent(int& durabilityDamage, ::ItemStack& item, ::Actor&, ::Mob&) const /*override*/;
+
+    virtual bool shouldCancel() const /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::Scripting::ClassBinding bind();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $updateEngineEvent(int& durabilityDamage, ::ItemStack& item, ::Actor&, ::Mob&) const;
+
+    MCFOLD bool $shouldCancel() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

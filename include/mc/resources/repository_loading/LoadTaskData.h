@@ -1,0 +1,27 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace RepositoryLoading {
+
+struct LoadTaskData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnkca2a0f;
+    ::ll::UntypedStorage<8, 8>  mUnk1a6566;
+    ::ll::UntypedStorage<8, 8>  mUnkbc3885;
+    ::ll::UntypedStorage<8, 24> mUnk262e36;
+    ::ll::UntypedStorage<8, 8>  mUnk543e5c;
+    ::ll::UntypedStorage<8, 8>  mUnk97bde5;
+    ::ll::UntypedStorage<8, 24> mUnk8a892c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LoadTaskData& operator=(LoadTaskData const&);
+    LoadTaskData(LoadTaskData const&);
+    LoadTaskData();
+};
+
+} // namespace RepositoryLoading

@@ -1,0 +1,14 @@
+#include "mc/world/level/block/BlockType.h"
+#include "mc/deps/core/string/HashedString.h"
+#include "mc/world/level/block/VanillaBlockConversion.h"
+#include "mc/world/level/block/registry/BlockTypeRegistry.h"
+
+std::string const&            BlockType::getTypeName() const { return mNameInfo->mFullName->getString(); }
+optional_ref<BlockType const> BlockType::tryGetFromRegistry(HashedString const& name) {
+    auto blockTypePtr = BlockTypeRegistry::mBlockTypeRegistry().mValue.lookupByName(name);
+    return blockTypePtr;
+}
+optional_ref<BlockType const> BlockType::tryGetFromRegistry(uint legacyBlockID) {
+    auto blockTypePtr = VanillaBlockConversion::getBlockTypeFromLegacyId(legacyBlockID);
+    return blockTypePtr;
+}

@@ -1,0 +1,135 @@
+#include "ll/core/mod/NativeModManager.h"
+
+#include <cstddef>
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <utility>
+
+#include "pl/dependency/DependencyWalker.h"
+
+#include "ll/api/base/ScopedValue.h"
+#include "ll/api/i18n/I18n.h"
+#include "ll/api/memory/Memory.h"
+#include "ll/api/mod/Manifest.h"
+#include "ll/api/mod/Mod.h"
+#include "ll/api/mod/ModManager.h"
+#include "ll/api/mod/NativeMod.h"
+#include "ll/api/utils/ErrorUtils.h"
+#include "ll/api/utils/StringUtils.h"
+#include "ll/api/utils/SystemUtils.h"
+#include "ll/core/LeviLamina.h"
+
+namespace ll::mod {
+NativeModManager::NativeModManager() : ModManager(NativeModManagerName) {
+    handleMap[sys_utils::getCurrentModuleHandle()] = NativeMod::current();
+}
+NativeModManager::~NativeModManager() = default;
+
+static std::shared_ptr<NativeMod> currentLoadingMod;
+
+std::shared_ptr<NativeMod> NativeModManager::getModByHandle(Handle handle) {
+    auto l(lock());
+    if (handleMap.contains(handle)) {
+        return handleMap.at(handle);
+    }
+    if (currentLoadingMod) { // for getCurrent before main
+        return currentLoadingMod;
+    }
+    return {};
+}
+static Error diagnosticDependency(pl::dependency_walker::DependencyIssueItem const& item, size_t depth = 0) {
+    Error       error;
+    std::string indent(depth * 3 + 3, ' ');
+    if (item.mContainsError) {
+        error.join(
+            makeI18nStringError<"{0}module: {1}">(indent, string_utils::u8str2str(item.mPath.filename().u8string()))
+
+        );
+        if (!item.mMissingModule.empty()) {
+            error.join(makeI18nStringError<"{0}missing module:">(indent));
+            for (auto const& missingModule : item.mMissingModule) {
+                error.join(makeI18nStringError<"{0}|- {1}">(indent, missingModule));
+            }
+        }
+        if (!item.mMissingProcedure.empty()) {
+            error.join(makeI18nStringError<"{0}missing content:">(indent));
+            for (auto const& [module, missingProcedure] : item.mMissingProcedure) {
+                error.join(makeI18nStringError<"{0}|- {1}">(indent, module));
+                for (auto const& procedure : missingProcedure) {
+                    error.join(makeI18nStringError<"{0}|---- {1}">(indent, memory::SymbolView(procedure).toString()));
+                }
+            }
+        }
+        if (!item.mDependencies.empty()) {
+            for (auto const& [_, subItem] : item.mDependencies) {
+                error.join(diagnosticDependency(*subItem, depth + 1));
+            }
+        }
+    }
+    return error;
+}
+
+static Error diagnosticDependency(std::filesystem::path const& path) {
+    auto  result = pl::dependency_walker::pl_diagnostic_dependency_new(path);
+    Error error  = makeI18nStringError<"Dependency diagnostic:">();
+    error.join(diagnosticDependency(*result));
+    return error;
+}
+
+Expected<> NativeModManager::load(Manifest manifest) {
+    auto            l(lock());
+    ScopedValue     currentLoadingScope{currentLoadingMod, std::make_shared<NativeMod>(std::move(manifest))};
+    std::error_code ec;
+    auto            modDir = getModsRoot() / string_utils::sv2u8sv(currentLoadingMod->getName());
+    if (auto c = std::filesystem::canonical(modDir, ec); ec.value() == 0) {
+        modDir = c;
+    } else {
+        modDir = modDir.lexically_normal();
+    }
+    sys_utils::addOrSetEnvironmentVariable("PATH", string_utils::u8sv2sv(modDir.u8string()));
+
+    auto entry = modDir / string_utils::sv2u8sv(currentLoadingMod->getManifest().entry);
+    if (auto e = currentLoadingMod->getDynamicLibrary().load(entry); e) {
+        Expected<> error{makeExceptionError(std::make_exception_ptr(e.value()))};
+        if (e->code().value() == 126 || e->code().value() == 127) {
+            error.error().join(diagnosticDependency(entry));
+        }
+        return error;
+    }
+    auto& lib = currentLoadingMod->getDynamicLibrary();
+    if (!lib.getAddress("ll_memory_operator_overrided")) {
+        return makeI18nStringError<
+            "{0} will not be loaded because it isn't using the unified memory allocation operator">(
+            currentLoadingMod->getName()
+        );
+    }
+    currentLoadingMod->onLoad(lib.getAddress<Mod::callback_t*>("ll_mod_load"));
+    currentLoadingMod->onUnload(lib.getAddress<Mod::callback_t*>("ll_mod_unload"));
+    currentLoadingMod->onEnable(lib.getAddress<Mod::callback_t*>("ll_mod_enable"));
+    currentLoadingMod->onDisable(lib.getAddress<Mod::callback_t*>("ll_mod_disable"));
+
+    return currentLoadingMod->onLoad().transform([&, this] {
+        addMod(currentLoadingMod->getName(), currentLoadingMod);
+        handleMap[lib.handle()] = currentLoadingMod;
+    });
+}
+
+Expected<> NativeModManager::unload(std::string_view name) {
+    auto l(lock());
+    auto ptr = std::static_pointer_cast<NativeMod>(getMod(name));
+    if (!ptr->hasOnUnload()) {
+        return makeI18nStringError<"The mod does not register an unload function">();
+    }
+    if (auto res = ptr->onUnload(); !res) {
+        return res;
+    }
+    if (auto err = ptr->getDynamicLibrary().free(); err) {
+        return makeExceptionError(std::make_exception_ptr(*err));
+    }
+    handleMap.erase(ptr->getHandle());
+    eraseMod(name);
+    return {};
+}
+} // namespace ll::mod

@@ -1,0 +1,363 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/pub_sub/Publisher.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/selection/PayloadServiceProvider.h"
+#include "mc/editor/services/IEditorService.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class DebuggerStat;
+class EditorNetworkPacket;
+class PacketSender;
+class WeakEntityRef;
+namespace Bedrock::PubSub { class Subscription; }
+namespace Bedrock::PubSub::ThreadModel { struct SingleThreaded; }
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor::Network { class INetworkPayload; }
+namespace Editor::Network { struct PayloadMetrics; }
+namespace mce { class UUID; }
+// clang-format on
+
+namespace Editor::Network {
+
+class PayloadService : public ::Editor::Services::IEditorService, public ::Editor::Network::PayloadServiceProvider {
+public:
+    // PayloadService inner types declare
+    // clang-format off
+    struct CachedPacket;
+    struct DeferredSend;
+    struct PayloadFactory;
+    struct PayloadPublisher;
+    struct PayloadInfo;
+    // clang-format on
+
+    // PayloadService inner types define
+    enum class SendTarget : int {
+        ServerPlayer              = 0,
+        ClientPlayer              = 1,
+        ServerManager             = 2,
+        ClientManager             = 3,
+        BroadcastToClientPlayers  = 4,
+        BroadcastToClientManagers = 5,
+    };
+
+    struct CachedPacket {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 24>  mUnkea7626;
+        ::ll::UntypedStorage<8, 128> mUnk8c3e7c;
+        ::ll::UntypedStorage<4, 4>   mUnk88f348;
+        ::ll::UntypedStorage<8, 8>   mUnk618bb4;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        CachedPacket& operator=(CachedPacket const&);
+        CachedPacket(CachedPacket const&);
+        CachedPacket();
+    };
+
+    struct DeferredSend {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 16> mUnk602310;
+        ::ll::UntypedStorage<8, 8>  mUnk418b94;
+        ::ll::UntypedStorage<4, 4>  mUnk37ab3c;
+        ::ll::UntypedStorage<8, 16> mUnk247113;
+        ::ll::UntypedStorage<1, 1>  mUnk67dac4;
+        ::ll::UntypedStorage<8, 8>  mUnkef2734;
+        ::ll::UntypedStorage<8, 8>  mUnkbcbd70;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        DeferredSend& operator=(DeferredSend const&);
+        DeferredSend(DeferredSend const&);
+        DeferredSend();
+    };
+
+    struct PayloadFactory {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 64> mUnkdd8c80;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PayloadFactory& operator=(PayloadFactory const&);
+        PayloadFactory(PayloadFactory const&);
+        PayloadFactory();
+    };
+
+    struct PayloadPublisher {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8> mUnk27a74f;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PayloadPublisher& operator=(PayloadPublisher const&);
+        PayloadPublisher(PayloadPublisher const&);
+        PayloadPublisher();
+    };
+
+    struct PayloadInfo {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 32> mUnk20af30;
+        ::ll::UntypedStorage<8, 64> mUnk34ed57;
+        ::ll::UntypedStorage<8, 8>  mUnka29ebc;
+        ::ll::UntypedStorage<8, 8>  mUnkff84cc;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PayloadInfo& operator=(PayloadInfo const&);
+        PayloadInfo(PayloadInfo const&);
+        PayloadInfo();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 64> mUnk15ebab;
+    ::ll::UntypedStorage<1, 1>  mUnk880d81;
+    ::ll::UntypedStorage<8, 24> mUnk5cce2e;
+    ::ll::UntypedStorage<8, 24> mUnk17b6ea;
+    ::ll::UntypedStorage<8, 24> mUnk5c8add;
+    ::ll::UntypedStorage<1, 1>  mUnk89f9cd;
+    ::ll::UntypedStorage<1, 1>  mUnkb98162;
+    ::ll::UntypedStorage<8, 64> mUnk699286;
+    ::ll::UntypedStorage<8, 16> mUnke8ca7c;
+    ::ll::UntypedStorage<1, 1>  mUnk39b4cf;
+    ::ll::UntypedStorage<8, 8>  mUnk12b642;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PayloadService& operator=(PayloadService const&);
+    PayloadService(PayloadService const&);
+    PayloadService();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~PayloadService() /*override*/ = default;
+
+    virtual ::Scripting::Result_deprecated<void> init() /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> quit() /*override*/;
+
+    virtual ::std::string_view getServiceName() const /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void>
+    dispatchToSelf(::Editor::Network::INetworkPayload& payload) /*override*/;
+
+    virtual void onReceivePayload(::EditorNetworkPacket const& packet) /*override*/;
+
+    virtual void flushDeferred(uint64 coalesceKey) /*override*/;
+
+    virtual bool isCollectingMetrics() const /*override*/;
+
+    virtual void clearMetrics() /*override*/;
+
+    virtual void setCollectingMetrics(bool collecting) /*override*/;
+
+    virtual ::std::vector<::std::pair<::std::string, ::Editor::Network::PayloadMetrics>> collectMetricsReport() const
+        /*override*/;
+
+    virtual ::Editor::Network::PayloadMetrics* _registerPayload(
+        char const*                                                              payloadName,
+        ::std::function<::std::shared_ptr<::Editor::Network::INetworkPayload>()> constructorFunc
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void>
+    _send(::Editor::Network::INetworkPayload& payload, ::Editor::Network::PayloadMetrics* metrics) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _sendDeferred(
+        ::std::shared_ptr<::Editor::Network::INetworkPayload> payload,
+        uint64                                                coalesceKey,
+        ::Editor::Network::PayloadMetrics*                    metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _sendToManager(
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _sendToClientId(
+        ::mce::UUID const&                  clientId,
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _sendToClientIds(
+        ::std::vector<::mce::UUID> const&   clientIds,
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _broadcastToClients(
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> _broadcastToClientManagers(
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    ) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<::Bedrock::PubSub::Subscription> _listenFor(
+        char const*                                                      payloadName,
+        ::std::function<void(::Editor::Network::INetworkPayload const&)> fnSubscriber
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PayloadService(
+        ::Editor::ServiceProviderCollection& providers,
+        ::WeakEntityRef                      optionalPlayerRef,
+        ::PacketSender&                      packetSender,
+        bool                                 isClientSide,
+        bool                                 collectMetrics
+    );
+
+    MCNAPI void _buildRecipientListAndSend(
+        ::std::vector<::Actor*> const&     actors,
+        ::EditorNetworkPacket&             packet,
+        ::Editor::Network::PayloadMetrics* metrics
+    );
+
+    MCNAPI ::std::optional<::DebuggerStat> _collectScriptStats(uint64, uint64, uint64);
+
+    MCNAPI ::std::vector<::Actor*> _getEditorClientActors() const;
+
+    MCNAPI ::Scripting::Result_deprecated<::EditorNetworkPacket> _populatePacket(
+        ::Editor::Network::INetworkPayload*                 payload,
+        ::Editor::Network::PayloadService::SendTarget const target,
+        ::Editor::Network::PayloadMetrics*                  metrics
+    );
+
+    MCNAPI void _pump();
+
+    MCNAPI void _sendCachedPacketToTarget(::Editor::Network::PayloadService::CachedPacket& packet);
+
+    MCNAPI ::Scripting::Result_deprecated<void> _sendToClient(
+        ::Editor::Network::INetworkPayload&           payload,
+        ::Editor::Network::PayloadService::SendTarget target,
+        ::Editor::Network::PayloadMetrics*            metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void> _sendToClientTargets(
+        ::std::vector<::Actor*>            actorList,
+        ::EditorNetworkPacket&             outPacket,
+        ::Editor::Network::PayloadMetrics* metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void> _sendToServer(
+        ::Editor::Network::INetworkPayload&           payload,
+        ::Editor::Network::PayloadService::SendTarget target,
+        ::Editor::Network::PayloadMetrics*            metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void> _sendToTarget(
+        ::Actor*                                      actor,
+        ::EditorNetworkPacket&                        outPacket,
+        ::Editor::Network::PayloadService::SendTarget toWhom,
+        ::Editor::Network::PayloadMetrics*            metrics
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(
+        ::Editor::ServiceProviderCollection& providers,
+        ::WeakEntityRef                      optionalPlayerRef,
+        ::PacketSender&                      packetSender,
+        bool                                 isClientSide,
+        bool                                 collectMetrics
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result_deprecated<void> $init();
+
+    MCNAPI ::Scripting::Result_deprecated<void> $quit();
+
+    MCNAPI ::std::string_view $getServiceName() const;
+
+    MCNAPI ::Scripting::Result_deprecated<void> $dispatchToSelf(::Editor::Network::INetworkPayload& payload);
+
+    MCNAPI void $onReceivePayload(::EditorNetworkPacket const& packet);
+
+    MCNAPI void $flushDeferred(uint64 coalesceKey);
+
+    MCNAPI bool $isCollectingMetrics() const;
+
+    MCNAPI void $clearMetrics();
+
+    MCNAPI void $setCollectingMetrics(bool collecting);
+
+    MCNAPI ::std::vector<::std::pair<::std::string, ::Editor::Network::PayloadMetrics>> $collectMetricsReport() const;
+
+    MCNAPI ::Editor::Network::PayloadMetrics* $_registerPayload(
+        char const*                                                              payloadName,
+        ::std::function<::std::shared_ptr<::Editor::Network::INetworkPayload>()> constructorFunc
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void>
+    $_send(::Editor::Network::INetworkPayload& payload, ::Editor::Network::PayloadMetrics* metrics);
+
+    MCNAPI ::Scripting::Result_deprecated<void> $_sendDeferred(
+        ::std::shared_ptr<::Editor::Network::INetworkPayload> payload,
+        uint64                                                coalesceKey,
+        ::Editor::Network::PayloadMetrics*                    metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void>
+    $_sendToManager(::Editor::Network::INetworkPayload& payload, ::Editor::Network::PayloadMetrics* metrics);
+
+    MCNAPI ::Scripting::Result_deprecated<void> $_sendToClientId(
+        ::mce::UUID const&                  clientId,
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void> $_sendToClientIds(
+        ::std::vector<::mce::UUID> const&   clientIds,
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<void>
+    $_broadcastToClients(::Editor::Network::INetworkPayload& payload, ::Editor::Network::PayloadMetrics* metrics);
+
+    MCNAPI ::Scripting::Result_deprecated<void> $_broadcastToClientManagers(
+        ::Editor::Network::INetworkPayload& payload,
+        ::Editor::Network::PayloadMetrics*  metrics
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<::Bedrock::PubSub::Subscription>
+    $_listenFor(char const* payloadName, ::std::function<void(::Editor::Network::INetworkPayload const&)> fnSubscriber);
+
+
+    // NOLINTEND
+};
+
+} // namespace Editor::Network

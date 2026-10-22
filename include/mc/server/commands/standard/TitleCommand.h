@@ -1,0 +1,72 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/network/packet/SetTitlePacketPayload.h"
+#include "mc/server/commands/CommandMessage.h"
+#include "mc/server/commands/CommandSelector.h"
+#include "mc/server/commands/standard/MessagingCommand.h"
+
+// auto generated forward declare list
+// clang-format off
+class CommandOrigin;
+class CommandOutput;
+class CommandRegistry;
+class EntityContext;
+class Level;
+class Player;
+// clang-format on
+
+class TitleCommand : public ::MessagingCommand {
+public:
+    // TitleCommand inner types define
+    enum class Mode : int {
+        Clear     = 0,
+        Reset     = 1,
+        Title     = 2,
+        Subtitle  = 3,
+        ActionBar = 4,
+        Times     = 5,
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, ::TitleCommand::Mode>          mMode;
+    ::ll::TypedStorage<8, 200, ::CommandSelector<::Player>> mTargets;
+    ::ll::TypedStorage<8, 32, ::CommandMessage>             mMessage;
+    ::ll::TypedStorage<4, 4, int>                           mFadeIn;
+    ::ll::TypedStorage<4, 4, int>                           mStay;
+    ::ll::TypedStorage<4, 4, int>                           mFadeOut;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void execute(::CommandOrigin const& origin, ::CommandOutput& output) const /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static bool _sendEvent(
+        ::Level&                                 level,
+        ::std::string const&                     sender,
+        ::std::vector<::EntityContext> const&    targets,
+        ::std::string const&                     title,
+        ::std::optional<::std::string> const&    filteredTitle,
+        ::SetTitlePacketPayload::TitleType const titleType
+    );
+
+    MCAPI static void setup(::CommandRegistry& registry);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $execute(::CommandOrigin const& origin, ::CommandOutput& output) const;
+
+
+    // NOLINTEND
+};

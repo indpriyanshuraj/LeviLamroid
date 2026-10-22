@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor::Services { class IEditorService; }
+// clang-format on
+
+namespace Editor::Services {
+
+class EditorServiceList {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnk656819;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EditorServiceList& operator=(EditorServiceList const&);
+    EditorServiceList(EditorServiceList const&);
+    EditorServiceList();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorServiceList();
+
+    virtual ::Editor::ServiceProviderCollection& getServiceProviders() = 0;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result_deprecated<void> _destroyServices();
+
+    MCNAPI ::Editor::Services::IEditorService* _findService(::std::string const& serviceName) const;
+
+    MCNAPI ::Scripting::Result_deprecated<void> _readyServices();
+
+    MCNAPI ::Scripting::Result_deprecated<::Editor::Services::IEditorService*>
+    _registerAndInitService(::std::unique_ptr<::Editor::Services::IEditorService> service);
+
+    MCNAPI ::Scripting::Result_deprecated<void>
+    _registerAndInitServiceList(::std::vector<::std::unique_ptr<::Editor::Services::IEditorService>> serviceList);
+
+    MCNAPI ::Scripting::Result_deprecated<::Editor::Services::IEditorService*>
+    _registerService(::std::unique_ptr<::Editor::Services::IEditorService> servicePtr);
+
+    MCNAPI ::Scripting::Result_deprecated<void> _startServices();
+
+    MCNAPI ::Scripting::Result_deprecated<void> _tickToStart();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

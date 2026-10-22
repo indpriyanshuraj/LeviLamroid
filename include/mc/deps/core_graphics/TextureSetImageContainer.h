@@ -1,0 +1,65 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core_graphics/TextureSetLayerType.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cg { class CompressedImageBuffer; }
+namespace cg { class ImageBuffer; }
+namespace cg { class ImageResource; }
+namespace cg { class TextureSetLayerImageMipList; }
+namespace cg { struct ImageDescription; }
+// clang-format on
+
+namespace cg {
+
+class TextureSetImageContainer : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // TextureSetImageContainer inner types define
+    using TextureSetCompressedLayer = ::std::pair<::cg::TextureSetLayerType, ::cg::CompressedImageBuffer>;
+
+    using TextureSetImageContainerList = ::std::vector<::cg::TextureSetLayerImageMipList>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::cg::TextureSetLayerImageMipList>> mLayerImageList;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::pair<::cg::TextureSetLayerType, ::cg::CompressedImageBuffer>>>
+        mCompressedLayers;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void _removeLayer(::cg::TextureSetLayerType const& layerType);
+
+    MCAPI void addImage(::cg::TextureSetLayerType const& layerType, ::cg::ImageBuffer imageBuffer);
+
+    MCAPI void
+    addImage(::cg::TextureSetLayerType const& layerType, ::std::shared_ptr<::cg::ImageResource> imageResource);
+
+    MCAPI ::cg::ImageDescription getImageDescription(::cg::TextureSetLayerType const& layerType, uint64 mipLevel) const;
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void $dtor();
+#endif
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace cg

@@ -1,0 +1,227 @@
+#include "ll/api/utils/FontUtils.h"
+
+#include "ll/api/i18n/I18n.h"
+#include "ll/api/utils/StringUtils.h"
+
+#include <memory>
+
+#include "windows.h"
+
+#include "dwrite.h"
+#include "wingdi.h"
+#include "winuser.h"
+
+namespace ll::inline utils::font_utils {
+using namespace string_utils;
+
+template <class T>
+struct ComReleaser {
+    void operator()(T* ptr) const noexcept { ptr->Release(); }
+};
+
+template <class T>
+using ComUniquePtr = std::unique_ptr<T, ComReleaser<T>>;
+
+static HRESULT createDWriteFactory(ComUniquePtr<IDWriteFactory>& factory) {
+    IDWriteFactory* rawFactory{};
+    HRESULT         hr = DWriteCreateFactory(
+        DWRITE_FACTORY_TYPE_SHARED,
+        __uuidof(IDWriteFactory),
+        reinterpret_cast<IUnknown**>(&rawFactory)
+    );
+    factory.reset(rawFactory);
+    return hr;
+}
+
+static bool isValidFontFileType(DWRITE_FONT_FILE_TYPE fileType) {
+    return fileType == DWRITE_FONT_FILE_TYPE_CFF || fileType == DWRITE_FONT_FILE_TYPE_TRUETYPE
+        || fileType == DWRITE_FONT_FILE_TYPE_OPENTYPE_COLLECTION;
+}
+
+static std::vector<std::filesystem::path> getFilePathFromIDWriteFontFace(IDWriteFontFace& fontFace) {
+    std::vector<std::filesystem::path> result;
+
+    UINT32  fileCount = 0;
+    HRESULT hr        = fontFace.GetFiles(&fileCount, nullptr);
+    if (!SUCCEEDED(hr)) {
+        return result;
+    }
+    using FontFilePtr = ComUniquePtr<IDWriteFontFile>;
+    static_assert(sizeof(FontFilePtr) == sizeof(IDWriteFontFile*));
+    static_assert(alignof(FontFilePtr) == alignof(IDWriteFontFile*));
+
+    auto fontFiles = std::make_unique<FontFilePtr[]>(fileCount);
+    hr             = fontFace.GetFiles(&fileCount, reinterpret_cast<IDWriteFontFile**>(fontFiles.get()));
+    if (FAILED(hr)) {
+        return result;
+    }
+
+    for (UINT32 i = 0; i < fileCount; ++i) {
+        auto& fontFile = fontFiles[i];
+        if (!fontFile) {
+            continue;
+        }
+
+        void const* refKey{};
+        UINT32      refKeySize = 0;
+        hr                     = fontFile->GetReferenceKey(&refKey, &refKeySize);
+        ComUniquePtr<IDWriteFontFileLoader> loader;
+        if (SUCCEEDED(hr)) {
+            hr = fontFile->GetLoader(std::out_ptr(loader));
+        }
+        ComUniquePtr<IDWriteLocalFontFileLoader> localLoader;
+        if (SUCCEEDED(hr)) {
+            hr = loader->QueryInterface<IDWriteLocalFontFileLoader>(std::out_ptr(localLoader));
+        }
+        BOOL                  isSupportedFontType = false;
+        DWRITE_FONT_FILE_TYPE fontFileType        = DWRITE_FONT_FILE_TYPE_UNKNOWN;
+        DWRITE_FONT_FACE_TYPE fontFaceType        = DWRITE_FONT_FACE_TYPE_UNKNOWN;
+        UINT32                numberOfFaces       = 0;
+        if (SUCCEEDED(hr)) {
+            hr = fontFile->Analyze(&isSupportedFontType, &fontFileType, &fontFaceType, &numberOfFaces);
+        }
+        if (!isValidFontFileType(fontFileType)) {
+            continue;
+        }
+        UINT pathLen = 0;
+        if (SUCCEEDED(hr)) {
+            hr = localLoader->GetFilePathLengthFromKey(refKey, refKeySize, &pathLen);
+        }
+        std::wstring filePath(pathLen, '\0');
+        if (SUCCEEDED(hr)) {
+            hr = localLoader->GetFilePathFromKey(refKey, refKeySize, filePath.data(), pathLen + 1);
+        }
+        result.push_back(std::move(filePath));
+    }
+    return result;
+}
+
+static std::vector<std::filesystem::path> getFilePathFromIDWriteFontFamily(
+    IDWriteFontFamily& family,
+    optional_ref<uint> index,
+    float              weight,
+    float              stretch,
+    FontStyle          style
+) {
+    ComUniquePtr<IDWriteFont> pDWriteFont;
+    HRESULT                   hr = family.GetFirstMatchingFont(
+        (DWRITE_FONT_WEIGHT)std::round(1 + weight * 998),
+        (DWRITE_FONT_STRETCH)std::round(1 + stretch * 8),
+        (DWRITE_FONT_STYLE)style,
+        std::out_ptr(pDWriteFont)
+    );
+    ComUniquePtr<IDWriteFontFace> pDWriteFontFace;
+    if (SUCCEEDED(hr)) {
+        hr = pDWriteFont->CreateFontFace(std::out_ptr(pDWriteFontFace));
+    }
+    if (SUCCEEDED(hr)) {
+        if (index) {
+            *index = pDWriteFontFace->GetIndex();
+        }
+        return getFilePathFromIDWriteFontFace(*pDWriteFontFace);
+    }
+    return {};
+}
+
+std::vector<std::filesystem::path> getFilePathFromFontName(
+    std::string_view         name,
+    optional_ref<uint>       index,
+    std::optional<float>     weight,
+    std::optional<float>     stretch,
+    std::optional<FontStyle> style
+) {
+    ComUniquePtr<IDWriteFactory>        pDWriteFactory;
+    HRESULT                             hr = createDWriteFactory(pDWriteFactory);
+    ComUniquePtr<IDWriteFontCollection> pFontCollection;
+    // Get the system font collection.
+    if (SUCCEEDED(hr)) {
+        hr = pDWriteFactory->GetSystemFontCollection(std::out_ptr(pFontCollection));
+    }
+    UINT32 findex = 0;
+    BOOL   exists = false;
+    // Get the number of font families in the collection.
+    if (SUCCEEDED(hr)) {
+        hr = pFontCollection->FindFamilyName(str2wstr(name).c_str(), &findex, &exists);
+    }
+    ComUniquePtr<IDWriteFontFamily> pFontFamily;
+    if (SUCCEEDED(hr) && exists && findex != UINT_MAX) {
+        hr = pFontCollection->GetFontFamily(findex, std::out_ptr(pFontFamily));
+    }
+    if (SUCCEEDED(hr)) {
+        return getFilePathFromIDWriteFontFamily(
+            *pFontFamily,
+            index,
+            weight.value_or(0.5f),
+            stretch.value_or(0.5f),
+            style.value_or(FontStyle::Normal)
+        );
+    }
+    return {};
+}
+
+std::vector<std::string> getSystemFontNames() {
+    ComUniquePtr<IDWriteFactory>        pDWriteFactory;
+    HRESULT                             hr = createDWriteFactory(pDWriteFactory);
+    ComUniquePtr<IDWriteFontCollection> pFontCollection;
+    // Get the system font collection.
+    if (SUCCEEDED(hr)) {
+        hr = pDWriteFactory->GetSystemFontCollection(std::out_ptr(pFontCollection));
+    }
+    UINT32 familyCount = 0;
+    // Get the number of font families in the collection.
+    if (SUCCEEDED(hr)) {
+        familyCount = pFontCollection->GetFontFamilyCount();
+    }
+    std::vector<std::string> result;
+    result.reserve(familyCount);
+    std::wstring localeCode = str2wstr(i18n::getDefaultLocaleCode());
+    for (UINT32 i = 0; i < familyCount; ++i) {
+        ComUniquePtr<IDWriteFontFamily> pFontFamily;
+        // Get the font family.
+        if (SUCCEEDED(hr)) {
+            hr = pFontCollection->GetFontFamily(i, std::out_ptr(pFontFamily));
+        }
+        ComUniquePtr<IDWriteLocalizedStrings> pFamilyNames;
+        // Get a list of localized strings for the family name.
+        if (SUCCEEDED(hr)) {
+            hr = pFontFamily->GetFamilyNames(std::out_ptr(pFamilyNames));
+        }
+        UINT32 index  = 0;
+        BOOL   exists = false;
+
+        if (SUCCEEDED(hr)) {
+            // If the default locale is returned, find that locale name, otherwise use "en-us".
+            hr = pFamilyNames->FindLocaleName(localeCode.c_str(), &index, &exists);
+
+            if (SUCCEEDED(hr) && !exists) // if the above find did not find a match, retry with US English
+            {
+                hr = pFamilyNames->FindLocaleName(L"en-us", &index, &exists);
+            }
+        }
+        // If the specified locale doesn't exist, select the first on the list.
+        if (!exists) index = 0;
+
+        UINT32 length = 0;
+        // Get the string length.
+        if (SUCCEEDED(hr)) {
+            hr = pFamilyNames->GetStringLength(index, &length);
+        }
+        // Get the family name.
+        if (SUCCEEDED(hr)) {
+            std::wstring name(length, '\0');
+            hr = pFamilyNames->GetString(index, name.data(), length + 1);
+            result.emplace_back(wstr2str(name));
+        }
+    }
+    return result;
+}
+
+LLNDAPI std::optional<std::string> getSystemDefaultFontName() {
+    NONCLIENTMETRICSW nonClientMetrics;
+    nonClientMetrics.cbSize = sizeof(nonClientMetrics);
+    if (SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(nonClientMetrics), &nonClientMetrics, 0)) {
+        return wstr2str(nonClientMetrics.lfMessageFont.lfFaceName);
+    }
+    return {};
+}
+} // namespace ll::inline utils::font_utils

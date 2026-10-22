@@ -1,0 +1,113 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/IRandom.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace mce { class UUID; }
+// clang-format on
+
+namespace Core {
+
+class Random : public ::IRandom {
+public:
+    // Random inner types define
+    using result_type = uint;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, uint>         mSeed;
+    ::ll::TypedStorage<4, 2496, uint[624]> _mt;
+    ::ll::TypedStorage<4, 4, int>          _mti;
+    ::ll::TypedStorage<4, 4, int>          mInitedIdx;
+    ::ll::TypedStorage<4, 4, float>        mNextNextGaussian;
+    ::ll::TypedStorage<8, 8, double>       mNextNextGaussianDouble;
+    ::ll::TypedStorage<4, 4, uint>         mFakeUniformRandomInt;
+    ::ll::TypedStorage<1, 1, bool>         mHaveNextNextGaussian;
+    ::ll::TypedStorage<1, 1, bool>         mHaveNextNextGaussianDouble;
+    ::ll::TypedStorage<1, 1, bool>         mTest_OnlyUsedDeterministically;
+    ::ll::TypedStorage<1, 1, bool>         mAllowSeedChanges;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool nextBoolean() /*override*/;
+
+    virtual float nextFloat() /*override*/;
+
+    virtual double nextDouble() /*override*/;
+
+    virtual int nextInt() /*override*/;
+
+    virtual int nextInt(int n) /*override*/;
+
+    virtual int64 nextLong() /*override*/;
+
+    virtual void consumeCount(uint count) /*override*/;
+
+    virtual double nextGaussianDouble() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI Random();
+
+    MCAPI uint _genRandInt32(bool allowUnitTestDeterministicOverride);
+
+#ifdef LL_PLAT_C
+    MCAPI float nextGaussianFloat();
+#endif
+
+    MCAPI ::glm::vec3 nextGaussianVec3();
+
+    MCAPI void reset();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::mce::UUID generateUUID();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $nextBoolean();
+
+    MCAPI float $nextFloat();
+
+    MCAPI double $nextDouble();
+
+    MCAPI int $nextInt();
+
+    MCAPI int $nextInt(int n);
+
+    MCAPI int64 $nextLong();
+
+    MCAPI void $consumeCount(uint count);
+
+    MCAPI double $nextGaussianDouble();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace Core

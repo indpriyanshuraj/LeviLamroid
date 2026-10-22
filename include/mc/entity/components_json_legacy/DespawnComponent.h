@@ -1,0 +1,130 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BlockPos;
+class ChunkPos;
+class DespawnDefinition;
+class IRandom;
+class Player;
+class Vec3;
+// clang-format on
+
+class DespawnComponent {
+public:
+    // DespawnComponent inner types declare
+    // clang-format off
+    class IWorldAccessor;
+    class WorldAccessor;
+    // clang-format on
+
+    // DespawnComponent inner types define
+    class IWorldAccessor {
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual ~IWorldAccessor() = default;
+
+        virtual ::Player* fetchAnyInteractablePlayer(::Vec3 const& searchPos, float maxDist) const = 0;
+
+        virtual uint getChunkTickRange() const = 0;
+
+        virtual bool areChunksFullyLoaded(::BlockPos const& min, int r) const = 0;
+
+        virtual bool hasUntickedNeighborChunk(::ChunkPos const& pos, int chunkRadius) const = 0;
+
+        virtual ::IRandom& getChanceRandom() = 0;
+
+        virtual ::std::optional<int> getActorNoActionTime(::Actor const& actor) const = 0;
+
+        virtual void resetActorNoActionTime(::Actor& actor) = 0;
+        // NOLINTEND
+    };
+
+    class WorldAccessor : public ::DespawnComponent::IWorldAccessor {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 8, ::Actor&> mActor;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        WorldAccessor& operator=(WorldAccessor const&);
+        WorldAccessor(WorldAccessor const&);
+        WorldAccessor();
+
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual ::Player* fetchAnyInteractablePlayer(::Vec3 const& searchPos, float maxDist) const /*override*/;
+
+        virtual uint getChunkTickRange() const /*override*/;
+
+        virtual bool areChunksFullyLoaded(::BlockPos const& min, int r) const /*override*/;
+
+        virtual bool hasUntickedNeighborChunk(::ChunkPos const& pos, int chunkRadius) const /*override*/;
+
+        virtual ::IRandom& getChanceRandom() /*override*/;
+
+        virtual ::std::optional<int> getActorNoActionTime(::Actor const& actor) const /*override*/;
+
+        virtual void resetActorNoActionTime(::Actor& actor) /*override*/;
+        // NOLINTEND
+
+    public:
+        // virtual function thunks
+        // NOLINTBEGIN
+        MCAPI ::Player* $fetchAnyInteractablePlayer(::Vec3 const& searchPos, float maxDist) const;
+
+        MCAPI uint $getChunkTickRange() const;
+
+        MCAPI bool $areChunksFullyLoaded(::BlockPos const& min, int r) const;
+
+        MCAPI bool $hasUntickedNeighborChunk(::ChunkPos const& pos, int chunkRadius) const;
+
+        MCAPI ::IRandom& $getChanceRandom();
+
+        MCAPI ::std::optional<int> $getActorNoActionTime(::Actor const& actor) const;
+
+        MCAPI void $resetActorNoActionTime(::Actor& actor);
+
+
+        // NOLINTEND
+
+    public:
+        // vftables
+        // NOLINTBEGIN
+        MCNAPI static void** $vftable();
+        // NOLINTEND
+    };
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI bool _canDespawn(
+        ::Actor&                            actor,
+        ::DespawnComponent::IWorldAccessor& worldAccessor,
+        ::DespawnDefinition const&          definition
+    ) const;
+
+    MCAPI bool _instantRulesPrescribeDespawn(
+        ::Actor&                                  actor,
+        ::DespawnDefinition const&                definition,
+        ::DespawnComponent::IWorldAccessor const& worldAccessor
+    ) const;
+
+    MCAPI bool _softRulesPrescribeDespawn(
+        ::Actor&                            actor,
+        ::DespawnDefinition const&          definition,
+        ::DespawnComponent::IWorldAccessor& worldAccessor
+    ) const;
+
+    MCAPI void onDespawn(::Actor& actor);
+
+    MCAPI void tick(::Actor& actor);
+    // NOLINTEND
+};

@@ -1,0 +1,101 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/resources/interface/IPackManifestFactory.h"
+
+// auto generated forward declare list
+// clang-format off
+class I18n;
+class IPackManifestFactoryImpl;
+class PackAccessStrategy;
+class PackCapabilityRegistry;
+class PackManifest;
+class PackReport;
+class ResourceLocation;
+class SubpackInfoCollection;
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+class PackManifestFactory : public ::IPackManifestFactory {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnkf4e802;
+    ::ll::UntypedStorage<8, 8>  mUnk848295;
+    ::ll::UntypedStorage<8, 16> mUnk6440d6;
+    ::ll::UntypedStorage<8, 8>  mUnk7afdc0;
+    ::ll::UntypedStorage<8, 8>  mUnke128bf;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackManifestFactory& operator=(PackManifestFactory const&);
+    PackManifestFactory(PackManifestFactory const&);
+    PackManifestFactory();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~PackManifestFactory() /*override*/ = default;
+
+    virtual ::std::unique_ptr<::PackManifest> create(
+        ::PackAccessStrategy&     accessStrategy,
+        ::ResourceLocation const& location,
+        ::PackReport&             report,
+        ::SubpackInfoCollection*  subpackInfoStack
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PackManifestFactory(
+        ::PackCapabilityRegistry const&               packCapabilityRegistry,
+        ::std::unique_ptr<::IPackManifestFactoryImpl> impl,
+        ::std::unique_ptr<::cereal::ReflectionCtx>    context,
+        ::I18n&                                       loc
+    );
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::std::string const& MANIFEST_PACK_UUID_UPGRADE_SALT();
+
+    MCNAPI static ::std::unordered_map<::std::string, ::std::vector<char> const>& mAlternateContentKeys();
+
+    MCNAPI static ::std::unordered_map<::std::string, ::std::vector<char> const>& mContentKeys();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(
+        ::PackCapabilityRegistry const&               packCapabilityRegistry,
+        ::std::unique_ptr<::IPackManifestFactoryImpl> impl,
+        ::std::unique_ptr<::cereal::ReflectionCtx>    context,
+        ::I18n&                                       loc
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::std::unique_ptr<::PackManifest> $create(
+        ::PackAccessStrategy&     accessStrategy,
+        ::ResourceLocation const& location,
+        ::PackReport&             report,
+        ::SubpackInfoCollection*  subpackInfoStack
+    );
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

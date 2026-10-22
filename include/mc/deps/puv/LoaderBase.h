@@ -1,0 +1,45 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/cereal/ContextArea.h"
+
+// auto generated forward declare list
+// clang-format off
+class SemVersion;
+namespace Puv { class Input; }
+namespace Puv { class LoadResultAny; }
+namespace Puv { class ParserBase; }
+namespace Puv { class UpgraderBase; }
+// clang-format on
+
+namespace Puv::internal {
+
+class LoaderBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnk8c6785;
+    ::ll::UntypedStorage<8, 16> mUnkeaa9c8;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LoaderBase& operator=(LoaderBase const&);
+    LoaderBase(LoaderBase const&);
+    LoaderBase();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::Puv::LoadResultAny
+    doLoad(::Puv::Input const& input, ::SemVersion const& parserVersion, ::cereal::ContextArea contextArea) const;
+
+    MCNAPI void registerParser(::std::unique_ptr<::Puv::ParserBase> parser);
+
+    MCNAPI void registerUpgrader(::std::unique_ptr<::Puv::UpgraderBase> upgrader);
+    // NOLINTEND
+};
+
+} // namespace Puv::internal

@@ -1,0 +1,62 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/locale/I18nObserver.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class NpcComponent;
+class PackManifest;
+// clang-format on
+
+class NpcI18nObserver : public ::I18nObserver {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::NpcComponent*> mOwner;
+    ::ll::TypedStorage<8, 8, ::Actor&>        mActor;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    NpcI18nObserver& operator=(NpcI18nObserver const&);
+    NpcI18nObserver(NpcI18nObserver const&);
+    NpcI18nObserver();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void onLanguageChanged(::std::string const& code, bool languageSystemInitializing) /*override*/;
+
+    virtual void onLanguageKeywordsLoadedFromPack(::PackManifest const& manifest) /*override*/;
+
+    virtual void onLanguagesLoaded() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void _loadNpcData();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD void $onLanguageChanged(::std::string const& code, bool languageSystemInitializing);
+
+    MCFOLD void $onLanguageKeywordsLoadedFromPack(::PackManifest const& manifest);
+
+    MCFOLD void $onLanguagesLoaded();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

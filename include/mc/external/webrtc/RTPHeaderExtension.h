@@ -1,0 +1,40 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace webrtc {
+
+struct RTPHeaderExtension {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 1>  mUnk220d88;
+    ::ll::UntypedStorage<4, 4>  mUnkf3db4c;
+    ::ll::UntypedStorage<1, 1>  mUnk7c0a87;
+    ::ll::UntypedStorage<4, 4>  mUnkebf946;
+    ::ll::UntypedStorage<8, 32> mUnk5cfb50;
+    ::ll::UntypedStorage<1, 1>  mUnk852f76;
+    ::ll::UntypedStorage<2, 2>  mUnk27d4b5;
+    ::ll::UntypedStorage<4, 12> mUnka4ce58;
+    ::ll::UntypedStorage<1, 1>  mUnk65717d;
+    ::ll::UntypedStorage<4, 4>  mUnkdaa3f1;
+    ::ll::UntypedStorage<1, 1>  mUnka098de;
+    ::ll::UntypedStorage<1, 1>  mUnk23fe64;
+    ::ll::UntypedStorage<1, 1>  mUnkf5a4d5;
+    ::ll::UntypedStorage<2, 14> mUnkd3c47b;
+    ::ll::UntypedStorage<8, 16> mUnk62543e;
+    ::ll::UntypedStorage<8, 32> mUnkef16c0;
+    ::ll::UntypedStorage<8, 32> mUnk599c9a;
+    ::ll::UntypedStorage<8, 32> mUnk8b5522;
+    ::ll::UntypedStorage<4, 72> mUnk4b63ae;
+    ::ll::UntypedStorage<4, 12> mUnk6964e1;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RTPHeaderExtension& operator=(RTPHeaderExtension const&);
+    RTPHeaderExtension(RTPHeaderExtension const&);
+    RTPHeaderExtension();
+};
+
+} // namespace webrtc

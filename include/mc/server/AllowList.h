@@ -1,0 +1,97 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/server/AllowListEntry.h"
+#include "mc/server/IJsonSerializable.h"
+
+// auto generated forward declare list
+// clang-format off
+class AllowListEntry;
+namespace Json { class Value; }
+namespace mce { class UUID; }
+// clang-format on
+
+class AllowList : public ::IJsonSerializable {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::AllowListEntry>> mEntries;
+    ::ll::TypedStorage<8, 64, ::std::function<void()>>         mSyncCallback;
+    ::ll::TypedStorage<1, 1, bool>                             mIsEnabled;
+    // NOLINTEND
+
+#ifdef LL_PLAT_S
+#else // LL_PLAT_C
+public:
+    // prevent constructor by default
+    AllowList();
+
+#endif
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::Json::Value serialize() const /*override*/;
+
+    virtual void deserialize(::Json::Value const& root) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI explicit AllowList(::std::function<void()> syncCallback);
+#endif
+
+    MCAPI bool isAllowed(
+        ::mce::UUID const& uuid,
+        ::std::string_view xuid,
+        ::std::string_view psnId,
+        ::std::string_view nsaId
+    ) const;
+
+#ifdef LL_PLAT_S
+    MCAPI bool removeByName(::std::string_view name);
+
+    MCAPI bool removeEntry(
+        ::std::string_view name,
+        ::std::string_view xuid,
+        ::std::string_view psnId,
+        ::std::string_view nintendoId
+    );
+#endif
+
+    MCAPI bool tryUpdateEntries(
+        ::std::string_view name,
+        ::std::string_view xuid,
+        ::std::string_view psnId,
+        ::std::string_view nsaId,
+        bool               ignorePlayerLimit
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void* $ctor(::std::function<void()> syncCallback);
+#endif
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::Json::Value $serialize() const;
+
+    MCAPI void $deserialize(::Json::Value const& root);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

@@ -1,0 +1,30 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+
+// auto generated forward declare list
+// clang-format off
+class PackAccessStrategy;
+class PackManifest;
+class PackReport;
+class ResourceLocation;
+class SubpackInfoCollection;
+// clang-format on
+
+class IPackManifestFactory : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IPackManifestFactory() /*override*/ = default;
+
+    virtual ::std::unique_ptr<::PackManifest> create(
+        ::PackAccessStrategy&     accessStrategy,
+        ::ResourceLocation const& location,
+        ::PackReport&             report,
+        ::SubpackInfoCollection*  subpackInfoStack
+    ) = 0;
+    // NOLINTEND
+};

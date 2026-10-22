@@ -1,0 +1,58 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/oreui/binding/QueryBase.h"
+#include "mc/client/gui/oreui/binding/properties/Property.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace GameplayUI { struct GameplayUIContext; }
+// clang-format on
+
+namespace OreUI {
+
+class TradeOfferQuery : public ::OreUI::QueryBase<::OreUI::TradeOfferQuery> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<bool, bool>>                                 mIsOutOfUses;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mBuyAItemName;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mBuyBItemName;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mSellItemName;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>>                                   mBuyAItemAmount;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>>                                   mBuyBItemAmount;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<int, int>>                                   mSellItemAmount;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mBuyAItemId;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mBuyBItemId;
+    ::ll::TypedStorage<8, 200, ::OreUI::Property<::std::string, ::std::string>>               mSellItemId;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<bool, bool>>                                 mHasSecondaryBuyItem;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<bool, bool>>                                 mPlayerHasItemsForTrade;
+    ::ll::TypedStorage<8, 176, ::OreUI::Property<bool, bool>>                                 mIsSelectedTrade;
+    ::ll::TypedStorage<4, 4, int>                                                             mTradeTier;
+    ::ll::TypedStorage<4, 4, int>                                                             mTradeIndex;
+    ::ll::TypedStorage<8, 24, ::Bedrock::NotNullNonOwnerPtr<::GameplayUI::GameplayUIContext>> mContext;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void update(double) /*override*/;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<char const[31]> NAME();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $update(double);
+    // NOLINTEND
+};
+
+} // namespace OreUI

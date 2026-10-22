@@ -42,6 +42,8 @@ bool installRecipeHooks();
 namespace levilamroid::command {
 bool installCommandHooks();
 void flushPendingCommands(void* registry);
+bool dispatchCommand(const std::string& rawInput);
+bool hasCommand(const std::string& rawInput);
 }
 
 namespace levilamroid::hooks {
@@ -77,7 +79,7 @@ static void* sCurrentLevel = nullptr;
 static void* sOrigClientInstanceUpdate = nullptr;
 static void* sOrigPlayerNormalTick = nullptr;
 static void* sOrigApplyTurnDelta = nullptr;
-static void* sOrigCommandRegistryRegisterCommand = nullptr;
+void* sOrigCommandRegistryRegisterCommand = nullptr;
 static void* sEngineCommandRegistry = nullptr;
 
 static std::unordered_map<std::string, std::function<void(const std::string&)>> sClientCommands;
@@ -94,22 +96,22 @@ LL_API void ll_command_register_client(const char* name, void (*handler)(const c
     ll::Logger::getInstance().info("Registered native client command: /", key);
 }
 
-LL_API bool ll_command_dispatch_client(const char* fullCommand) {
+extern "C" LL_API bool ll_command_dispatch_client(const char* fullCommand) {
     if (!fullCommand) return false;
+
+    // 1. Check levilamroid::command dispatchCommand
+    if (::levilamroid::command::dispatchCommand(fullCommand)) {
+        return true;
+    }
+
     std::string cmd = fullCommand;
-    if (!cmd.empty() && (cmd[0] == '/' || cmd[0] == '!')) cmd = cmd.substr(1);
+    while (!cmd.empty() && (cmd.front() == '/' || cmd.front() == '!' || std::isspace(static_cast<unsigned char>(cmd.front())))) {
+        cmd.erase(0, 1);
+    }
 
     auto spacePos = cmd.find(' ');
     std::string baseCmd = (spacePos == std::string::npos) ? cmd : cmd.substr(0, spacePos);
     std::string args = (spacePos == std::string::npos) ? "" : cmd.substr(spacePos + 1);
-
-    // 1. Check ll::command::CommandRegistrar first
-    if (ll::command::CommandRegistrar::getInstance().dispatchCommand(fullCommand)) {
-        return true;
-    }
-    if (ll::command::CommandRegistrar::getInstance().dispatchCommand(cmd)) {
-        return true;
-    }
 
     // 2. Check sClientCommands map
     std::function<void(const std::string&)> cb;
@@ -173,28 +175,33 @@ bool isLoading() {
     return sIsLoading.load();
 }
 
-static bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
-    if (!ptr || reinterpret_cast<uintptr_t>(ptr) < 0x10000 || size == 0) return false;
-    static int sPipe[2] = {-1, -1};
-    static std::once_flag sPipeOnce;
-    std::call_once(sPipeOnce, []() {
-        if (pipe(sPipe) == 0) {
-            fcntl(sPipe[0], F_SETFL, O_NONBLOCK);
-            fcntl(sPipe[1], F_SETFL, O_NONBLOCK);
-        }
-    });
-    if (sPipe[1] < 0) return false;
-    ssize_t written = write(sPipe[1], ptr, size);
-    if (written > 0) {
-        char dummy[128];
-        while (written > 0) {
-            ssize_t r = read(sPipe[0], dummy, std::min<size_t>(written, sizeof(dummy)));
-            if (r <= 0) break;
-            written -= r;
-        }
-        return true;
+static inline bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
+    if (!ptr || size == 0) return false;
+    uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
+    if (v < 0x10000 || v > 0x7fffffffff) return false;
+    if (v + size < v) return false;
+    return true;
+}
+
+static std::vector<std::string> sPendingMainThreadCommands;
+static std::mutex sPendingCmdMutex;
+
+void queueMainThreadCommand(const std::string& cmd) {
+    std::lock_guard<std::mutex> lock(sPendingCmdMutex);
+    sPendingMainThreadCommands.push_back(cmd);
+}
+
+void executePendingMainThreadCommands(void* player) {
+    std::vector<std::string> toExec;
+    {
+        std::lock_guard<std::mutex> lock(sPendingCmdMutex);
+        if (sPendingMainThreadCommands.empty()) return;
+        toExec.swap(sPendingMainThreadCommands);
     }
-    return false;
+    for (const auto& cmd : toExec) {
+        ll::Logger::getInstance().info("§6[MainThread] §aExecuting queued client command: §e", cmd);
+        ll_command_dispatch_client(cmd.c_str());
+    }
 }
 
 static void hooked_clientInstanceUpdate(void* self) {
@@ -243,6 +250,8 @@ static void hooked_minecraftGameClientUpdate(void* self, void* arg1) {
 
 static void hooked_playerNormalTick(void* self) {
     sCurrentLocalPlayer = self;
+    executePendingMainThreadCommands(self);
+
     if (self && isPointerReadable(reinterpret_cast<uint8_t*>(self) + 472, sizeof(void*))) {
         sCurrentLevel = *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(self) + 472);
     }
@@ -321,8 +330,8 @@ static bool hooked_gameModeAttack(void* self, void* targetActor) {
 
 static void* sOrigGameModeUseItem = nullptr;
 static void* sOrigGameModeUseItemOn = nullptr;
-static void* sOrigCommandRequestPacketWrite = nullptr;
 static void* sOrigLoopbackPacketSenderSend = nullptr;
+static void* sOrigLoopbackPacketSenderSendToServer = nullptr;
 static void* sOrigServerNetworkHandlerHandle = nullptr;
 
 static bool isCustomItem(
@@ -405,28 +414,57 @@ static void handleBlockPlacement(
     const void* pos,
     uint8_t face
 ) {
-    ll_ui_send_toast(def.identifier.c_str(), "Block placed!", def.iconName.c_str(), 2500);
-    ll::Logger::getInstance().info("Custom block item placed: ", def.identifier);
+    if (!pos || !isPointerReadable(pos, 12)) return;
+
+    const int* p = reinterpret_cast<const int*>(pos);
+    int x = p[0];
+    int y = p[1];
+    int z = p[2];
+    switch (face) {
+        case 0: y--; break; // down
+        case 1: y++; break; // up
+        case 2: z--; break; // north
+        case 3: z++; break; // south
+        case 4: x--; break; // west
+        case 5: x++; break; // east
+        default: y++; break;
+    }
 
     uintptr_t mcBase = getMcBase();
     const auto& off = ::levilamroid::mcpe::getOffsets();
-    if (mcBase && off.blockItemUseOn && def.nativeItemPtr && itemStack && player && pos) {
-        using BlockUseOnFn = bool (*)(void*, void*, void*, const void*, uint8_t, const void*);
-        auto blockUseOn = reinterpret_cast<BlockUseOnFn>(mcBase + off.blockItemUseOn);
-        float hitVec[3] = {0.5f, 0.5f, 0.5f};
-        blockUseOn(def.nativeItemPtr, itemStack, player, pos, face, hitVec);
-    } else {
+    bool placed = false;
+
+    if (mcBase && off.blockItemUseOn && def.nativeItemPtr && itemStack && player) {
+        try {
+            using BlockUseOnFn = bool (*)(void*, void*, void*, const void*, uint8_t, const void*);
+            auto blockUseOn = reinterpret_cast<BlockUseOnFn>(mcBase + off.blockItemUseOn);
+            float hitVec[3] = {0.5f, 0.5f, 0.5f};
+            placed = blockUseOn(def.nativeItemPtr, itemStack, player, pos, face, hitVec);
+        } catch (...) {
+            placed = false;
+        }
+    }
+
+    if (!placed) {
+        char cmd[128];
+        std::snprintf(cmd, sizeof(cmd), "/setblock %d %d %d %s", x, y, z, def.identifier.c_str());
+        ll_command_dispatch_client(cmd);
+        ll_command_dispatch_client("/playsound dig.stone @a ~ ~ ~ 0.8 1.0");
+
         if (itemStack && isPointerReadable(itemStack, 0x24)) {
             uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
             if (stackBytes[0x22] > 0) stackBytes[0x22]--;
         }
     }
+
+    ll_ui_send_toast(def.identifier.c_str(), "Block placed!", def.iconName.c_str(), 2000);
+    ll::Logger::getInstance().info("§6[LeviLamroid] §aCustom block placed at (", x, ", ", y, ", ", z, "): ", def.identifier);
 }
 
 static bool hooked_gameModeUseItem(void* self, void* itemStack, uint32_t handSlot) {
     std::string ident;
     const ::levilamroid::item::CustomItemDefinition* def = nullptr;
-    if (isCustomItem(itemStack, &ident, &def)) {
+    if (isCustomItem(itemStack, &ident, &def) && def) {
         ll::Logger::getInstance().info("Hooked GameMode::useItem intercepted custom item: ", ident);
         void* player = self ? *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(self) + 0x8) : nullptr;
         if (!player) player = sCurrentLocalPlayer;
@@ -435,36 +473,32 @@ static bool hooked_gameModeUseItem(void* self, void* itemStack, uint32_t handSlo
         ll::event::PlayerUseItemEvent ev(reinterpret_cast<Player*>(player), itemStack);
         ll::event::EventBus::getInstance().publish(ev);
 
-        // Safely handle custom item usage — NEVER fall through to vanilla GameMode::useItem
-        // which crashes on items without native engine C++ components
-        if (def && (def->isFood || def->nutrition > 0)) {
-            if (itemStack && isPointerReadable(itemStack, 0x24)) {
-                uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
-                if (stackBytes[0x22] > 0) {
-                    stackBytes[0x22]--;
+        // Handle food consumption if this item has nutrition or is marked food
+        if (def->isFood || def->nutrition > 0) {
+            static auto sLastEatTime = std::chrono::steady_clock::now();
+            auto now = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastEatTime).count();
+            if (elapsed > 400) {
+                sLastEatTime = now;
+                ll_command_dispatch_client("/playsound random.eat @a ~ ~ ~ 0.8 1.0");
+                ll_command_dispatch_client("/playsound random.burp @a ~ ~ ~ 0.6 1.0");
+
+                int dur = std::max(1, def->nutrition / 2);
+                char effectCmd[128];
+                std::snprintf(effectCmd, sizeof(effectCmd), "/effect @s saturation %d 1 true", dur);
+                ll_command_dispatch_client(effectCmd);
+
+                char msg[64];
+                std::snprintf(msg, sizeof(msg), "+%d Hunger", def->nutrition);
+                ll_ui_send_toast(def->identifier.c_str(), msg, def->iconName.c_str(), 1800);
+
+                if (itemStack && isPointerReadable(itemStack, 0x24)) {
+                    uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
+                    if (stackBytes[0x22] > 0) stackBytes[0x22]--;
                 }
             }
-            ll_command_dispatch_client("/effect @s instant_health 1 1");
-            ll_command_dispatch_client("/effect @s saturation 5 2");
-            ll_command_dispatch_client("/playsound random.burp @a ~ ~ ~ 1.0 1.0");
-            ll_command_dispatch_client("/playsound random.eat @a ~ ~ ~ 1.0 1.0");
-            ll_item_give_player(player, "levitest:astral_core", 1, -1);
-            ll_ui_send_toast(ident.c_str(), "Consumed! Vitality restored (+8 HP) & Astral Core Granted!", def->iconName.c_str(), 2500);
-            ll::Logger::getInstance().info("§a[Food] ", ident, " consumed: vitality restored, burp played, core granted");
-            return true;
-        } else if (ident == "levitest:cosmic_golem_spawn_egg") {
-            if (itemStack && isPointerReadable(itemStack, 0x24)) {
-                uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
-                if (stackBytes[0x22] > 0) {
-                    stackBytes[0x22]--;
-                }
-            }
-            handleMobSpawn(player, itemStack, nullptr, 1);
-            return true;
-        } else if (ident == "levitest:cosmic_blade") {
             return true;
         }
-        return true;
     }
 
     if (sOrigGameModeUseItem) {
@@ -486,8 +520,7 @@ static bool hooked_gameModeUseItemOn(
 ) {
     std::string ident;
     const ::levilamroid::item::CustomItemDefinition* def = nullptr;
-    if (isCustomItem(itemStack, &ident, &def)) {
-        ll::Logger::getInstance().info("Hooked GameMode::useItemOn intercepted: ", ident, " on face ", (int)face);
+    if (isCustomItem(itemStack, &ident, &def) && def) {
         void* player = self ? *reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(self) + 0x8) : nullptr;
         if (!player) player = sCurrentLocalPlayer;
 
@@ -495,35 +528,10 @@ static bool hooked_gameModeUseItemOn(
         ll::event::PlayerUseItemEvent ev(reinterpret_cast<Player*>(player), itemStack);
         ll::event::EventBus::getInstance().publish(ev);
 
-        if (def && (def->isFood || def->nutrition > 0)) {
-            if (itemStack && isPointerReadable(itemStack, 0x24)) {
-                uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
-                if (stackBytes[0x22] > 0) {
-                    stackBytes[0x22]--;
-                }
-            }
-            ll_command_dispatch_client("/effect @s instant_health 1 1");
-            ll_command_dispatch_client("/effect @s saturation 5 2");
-            ll_command_dispatch_client("/playsound random.burp @a ~ ~ ~ 1.0 1.0");
-            ll_command_dispatch_client("/playsound random.eat @a ~ ~ ~ 1.0 1.0");
-            ll_item_give_player(player, "levitest:astral_core", 1, -1);
-            ll_ui_send_toast(ident.c_str(), "Consumed! Vitality restored (+8 HP) & Astral Core Granted!", def->iconName.c_str(), 2500);
-            ll::Logger::getInstance().info("§a[Food] ", ident, " consumed: vitality restored, burp played, core granted");
-            return true;
-        } else if (ident == "levitest:cosmic_golem_spawn_egg") {
-            if (itemStack && isPointerReadable(itemStack, 0x24)) {
-                uint8_t* stackBytes = reinterpret_cast<uint8_t*>(itemStack);
-                if (stackBytes[0x22] > 0) {
-                    stackBytes[0x22]--;
-                }
-            }
-            handleMobSpawn(player, itemStack, pos, face);
-            return true;
-        } else if (def && def->isBlock) {
+        if (def->isBlock) {
             handleBlockPlacement(self, player, itemStack, *def, pos, face);
             return true;
         }
-        return true;
     }
 
     if (sOrigGameModeUseItemOn) {
@@ -558,6 +566,7 @@ static void hooked_commandRegistryRegisterCommand(
     void* self,
     const std::string& name,
     const char* desc,
+    bool enabled,
     int perm,
     int flag1,
     int flag2
@@ -569,32 +578,67 @@ static void hooked_commandRegistryRegisterCommand(
         ::levilamroid::command::flushPendingCommands(self);
     }
     if (sOrigCommandRegistryRegisterCommand) {
-        reinterpret_cast<void(*)(void*, const std::string&, const char*, int, int, int)>(
-            sOrigCommandRegistryRegisterCommand)(self, name, desc, perm, flag1, flag2);
+        reinterpret_cast<void(*)(void*, const std::string&, const char*, bool, int, int, int)>(
+            sOrigCommandRegistryRegisterCommand)(self, name, desc, enabled, perm, flag1, flag2);
     }
 }
 
-static void hooked_commandRequestPacketWrite(void* self, void* stream) {
-    if (self) {
-        std::string* cmdStr = reinterpret_cast<std::string*>(reinterpret_cast<uint8_t*>(self) + 0x30);
-        if (cmdStr && isPointerReadable(cmdStr, sizeof(std::string)) && !cmdStr->empty()) {
+
+static bool handleCommandPacket(void* packet) {
+    if (!packet || !isPointerReadable(packet, 0x48)) return false;
+    void** vtable = *reinterpret_cast<void***>(packet);
+    if (!vtable || !isPointerReadable(vtable, 24)) return false;
+
+    using GetIdFn = int (*)(void*);
+    GetIdFn getId = reinterpret_cast<GetIdFn>(vtable[2]);
+    if (!getId || !isPointerReadable(reinterpret_cast<void*>(getId), 4)) return false;
+
+    int packetId = 0;
+    try {
+        packetId = getId(packet);
+    } catch (...) {
+        return false;
+    }
+
+    if (packetId == 0x4D) { // 77 = CommandRequestPacket
+        const std::string* cmdStr = reinterpret_cast<const std::string*>(
+            reinterpret_cast<const uint8_t*>(packet) + 0x30
+        );
+        if (isPointerReadable(cmdStr, sizeof(std::string)) && !cmdStr->empty() && cmdStr->size() < 1024) {
             std::string cmd = *cmdStr;
-            ll::Logger::getInstance().info("CommandRequestPacket write: ", cmd);
-            if (cmd.rfind("/levi", 0) == 0 || cmd.rfind("levi", 0) == 0) {
-                ll_command_dispatch_client(cmd.c_str());
-            } else if (cmd.find("particle sparkle") != std::string::npos) {
-                ll_command_dispatch_client("levi sparkle");
+            std::string clean = cmd;
+            while (!clean.empty() && std::isspace(static_cast<unsigned char>(clean.front()))) clean.erase(0, 1);
+            if (!clean.empty() && clean.front() == '/') {
+                std::string stripped = clean.substr(1);
+                auto space = stripped.find(' ');
+                std::string base = (space != std::string::npos) ? stripped.substr(0, space) : stripped;
+                // Check if this command belongs to our mods
+                if (::levilamroid::command::hasCommand(clean) ||
+                    base == "fd" || base == "knife" || base == "pot" || base == "board" ||
+                    base == "stove" || base == "food" || base == "fdkit" ||
+                    base == "record" || base == "playback" ||
+                    base == "adv" || base == "advancements" || base == "farmersdelight") {
+                    ll::Logger::getInstance().info("§6[LoopbackPacketSender] §bIntercepted CommandRequestPacket; queueing to main thread: §e", clean);
+                    queueMainThreadCommand(clean);
+                    return true; // Dropped! Do not forward to server
+                }
             }
         }
     }
-    if (sOrigCommandRequestPacketWrite) {
-        reinterpret_cast<void(*)(void*, void*)>(sOrigCommandRequestPacketWrite)(self, stream);
-    }
+    return false;
 }
 
 static void hooked_loopbackPacketSenderSend(void* self, void* packet) {
+    if (handleCommandPacket(packet)) return;
     if (sOrigLoopbackPacketSenderSend) {
         reinterpret_cast<void(*)(void*, void*)>(sOrigLoopbackPacketSenderSend)(self, packet);
+    }
+}
+
+static void hooked_loopbackPacketSenderSendToServer(void* self, void* packet) {
+    if (handleCommandPacket(packet)) return;
+    if (sOrigLoopbackPacketSenderSendToServer) {
+        reinterpret_cast<void(*)(void*, void*)>(sOrigLoopbackPacketSenderSendToServer)(self, packet);
     }
 }
 
@@ -644,15 +688,15 @@ static bool installGameplayHooks() {
         }
     }
 
-    if (off.commandRequestPacketWrite) {
-        if (ll::memory::hookRva(off.commandRequestPacketWrite, (void*)&hooked_commandRequestPacketWrite, &sOrigCommandRequestPacketWrite)) {
-            logger.info("Hooked CommandRequestPacket::write [RVA: 0x", std::hex, off.commandRequestPacketWrite, "]");
-        }
-    }
-
     if (off.loopbackPacketSenderSend) {
         if (ll::memory::hookRva(off.loopbackPacketSenderSend, (void*)&hooked_loopbackPacketSenderSend, &sOrigLoopbackPacketSenderSend)) {
             logger.info("Hooked LoopbackPacketSender::send [RVA: 0x", std::hex, off.loopbackPacketSenderSend, "]");
+        }
+    }
+
+    if (off.loopbackPacketSenderSendToServer) {
+        if (ll::memory::hookRva(off.loopbackPacketSenderSendToServer, (void*)&hooked_loopbackPacketSenderSendToServer, &sOrigLoopbackPacketSenderSendToServer)) {
+            logger.info("Hooked LoopbackPacketSender::sendToServer [RVA: 0x", std::hex, off.loopbackPacketSenderSendToServer, "]");
         }
     }
 
@@ -747,14 +791,72 @@ LL_API void ll_command_register_native(const char* name, const char* desc) {
     if (::levilamroid::hooks::sEngineCommandRegistry && ::levilamroid::hooks::sOrigCommandRegistryRegisterCommand) {
         std::string n = name;
         const char* d = desc ? desc : "";
-        reinterpret_cast<void(*)(void*, const std::string&, const char*, int, int, int)>(
+        reinterpret_cast<void(*)(void*, const std::string&, const char*, bool, int, int, int)>(
             ::levilamroid::hooks::sOrigCommandRegistryRegisterCommand)(
-            ::levilamroid::hooks::sEngineCommandRegistry, n, d, 0, 0, 0);
+            ::levilamroid::hooks::sEngineCommandRegistry, n, d, false, 0, 0, 0);
     }
 }
 
 LL_API void* ll_command_get_engine_registry() {
     return ::levilamroid::hooks::sEngineCommandRegistry;
+}
+
+LL_API void* ll_block_source_get_block(void* blockSource, int x, int y, int z) {
+    if (!blockSource) return nullptr;
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+    uintptr_t mcBase = ::levilamroid::hooks::getMcBase();
+    if (!mcBase || !off.blockSourceGetBlock) return nullptr;
+    using GetBlockFn = void* (*)(void*, int, int, int);
+    auto fn = reinterpret_cast<GetBlockFn>(mcBase + off.blockSourceGetBlock);
+    return fn(blockSource, x, y, z);
+}
+
+LL_API bool ll_block_source_set_block(void* blockSource, int x, int y, int z, void* blockPermutation, int updateFlags) {
+    if (!blockSource || !blockPermutation) return false;
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+    uintptr_t mcBase = ::levilamroid::hooks::getMcBase();
+    if (!mcBase || !off.blockSourceSetBlock) return false;
+    using SetBlockFn = bool (*)(void*, int, int, int, void*, int);
+    auto fn = reinterpret_cast<SetBlockFn>(mcBase + off.blockSourceSetBlock);
+    return fn(blockSource, x, y, z, blockPermutation, updateFlags);
+}
+
+LL_API int ll_block_source_get_brightness(void* blockSource, int x, int y, int z) {
+    if (!blockSource) return 0;
+    const auto& off = ::levilamroid::mcpe::getOffsets();
+    uintptr_t mcBase = ::levilamroid::hooks::getMcBase();
+    if (!mcBase || !off.blockSourceGetBrightness) return 0;
+    using GetBrightFn = int (*)(void*, int, int, int);
+    auto fn = reinterpret_cast<GetBrightFn>(mcBase + off.blockSourceGetBrightness);
+    return fn(blockSource, x, y, z);
+}
+
+LL_API int ll_item_stack_get_count(const void* itemStack) {
+    if (!itemStack) return 0;
+    return static_cast<int>(*reinterpret_cast<const uint8_t*>(reinterpret_cast<const uint8_t*>(itemStack) + 0x22));
+}
+
+LL_API bool ll_item_stack_set_count(void* itemStack, uint8_t count) {
+    if (!itemStack) return false;
+    *reinterpret_cast<uint8_t*>(reinterpret_cast<uint8_t*>(itemStack) + 0x22) = count;
+    return true;
+}
+
+LL_API short ll_item_stack_get_aux(const void* itemStack) {
+    if (!itemStack) return 0;
+    return *reinterpret_cast<const short*>(reinterpret_cast<const uint8_t*>(itemStack) + 0x20);
+}
+
+LL_API bool ll_item_stack_is_valid(const void* itemStack) {
+    if (!itemStack) return false;
+    return (*reinterpret_cast<const uint8_t*>(reinterpret_cast<const uint8_t*>(itemStack) + 0x23) != 0);
+}
+
+LL_API void* ll_item_stack_get_item(const void* itemStack) {
+    if (!itemStack) return nullptr;
+    void* ctrl = *reinterpret_cast<void* const*>(reinterpret_cast<const uint8_t*>(itemStack) + 0x08);
+    if (!ctrl) return nullptr;
+    return *reinterpret_cast<void**>(ctrl);
 }
 
 } // extern "C"

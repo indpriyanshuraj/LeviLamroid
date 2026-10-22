@@ -1,0 +1,63 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/json/Value.h"
+
+// auto generated forward declare list
+// clang-format off
+class LayoutManager;
+class TaskGroup;
+class UIControlFactory;
+class VisualTree;
+struct CachedScene;
+// clang-format on
+
+class CachedScenes {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool>                                                         mLowMemoryDevice;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::TaskGroup>>                               mDestroyScreenTaskGroup;
+    ::ll::TypedStorage<8, 16, ::std::map<::Json::Value, ::std::unique_ptr<::CachedScene>>> mCachedScene;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    CachedScenes();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI CachedScenes(
+        bool                                                                  lowMemoryDevice,
+        ::std::function<::std::unique_ptr<::TaskGroup>(::std::string)> const& taskGroupProvider
+    );
+
+    MCAPI void cacheVisualTree(
+        ::std::unique_ptr<::VisualTree>       screen,
+        ::std::shared_ptr<::UIControlFactory> factory,
+        ::std::unique_ptr<::LayoutManager>    layoutManager
+    );
+
+    MCAPI ::std::unique_ptr<::CachedScene> getCachedScene(::Json::Value const& info);
+
+    MCAPI ~CachedScenes();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        bool                                                                  lowMemoryDevice,
+        ::std::function<::std::unique_ptr<::TaskGroup>(::std::string)> const& taskGroupProvider
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};

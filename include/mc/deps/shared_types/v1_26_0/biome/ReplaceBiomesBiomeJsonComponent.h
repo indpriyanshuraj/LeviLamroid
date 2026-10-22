@@ -1,0 +1,71 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/util/Reference.h"
+#include "mc/deps/shared_types/v1_20_60/biome/components/IBiomeJsonComponent.h"
+
+namespace SharedTypes::v1_26_0 {
+
+struct ReplaceBiomesBiomeJsonComponent : public ::SharedTypes::v1_20_60::IBiomeJsonComponent {
+public:
+    // ReplaceBiomesBiomeJsonComponent inner types declare
+    // clang-format off
+    struct BiomeReplacement;
+    // clang-format on
+
+    // ReplaceBiomesBiomeJsonComponent inner types define
+    struct BiomeReplacement {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 32, ::std::string>                              mDimension;
+        ::ll::TypedStorage<8, 24, ::std::vector<::SharedTypes::Reference<3>>> mTargetBiomes;
+        ::ll::TypedStorage<4, 4, float>                                       mAmount;
+        ::ll::TypedStorage<4, 4, float>                                       mNoiseFrequencyScale;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        BiomeReplacement& operator=(BiomeReplacement const&);
+        BiomeReplacement();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCAPI BiomeReplacement(::SharedTypes::v1_26_0::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&);
+
+        MCFOLD bool operator==(::SharedTypes::v1_26_0::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&) const;
+
+        MCAPI ~BiomeReplacement();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCFOLD void* $ctor(::SharedTypes::v1_26_0::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&);
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCFOLD void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::SharedTypes::v1_26_0::ReplaceBiomesBiomeJsonComponent::BiomeReplacement>>
+        mBiomeReplacements;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<char const[]> SCHEMA_NAME();
+    // NOLINTEND
+};
+
+} // namespace SharedTypes::v1_26_0

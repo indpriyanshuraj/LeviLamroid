@@ -1,0 +1,24 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace NetherNet::LanEvents {
+
+struct MessageSent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 16> mUnk9b2f6f;
+    ::ll::UntypedStorage<8, 24> mUnk54701c;
+    ::ll::UntypedStorage<8, 32> mUnk54897a;
+    ::ll::UntypedStorage<8, 32> mUnk3ce9bc;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    MessageSent& operator=(MessageSent const&);
+    MessageSent(MessageSent const&);
+    MessageSent();
+};
+
+} // namespace NetherNet::LanEvents

@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Scripting { struct InterfaceBinding; }
+// clang-format on
+
+namespace ScriptModuleMinecraftServerUI {
+
+struct ScriptModalFormDataToggleOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 2>   mUnk24b964;
+    ::ll::UntypedStorage<8, 224> mUnk4c1140;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptModalFormDataToggleOptions& operator=(ScriptModalFormDataToggleOptions const&);
+    ScriptModalFormDataToggleOptions(ScriptModalFormDataToggleOptions const&);
+    ScriptModalFormDataToggleOptions();
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::InterfaceBinding bind();
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraftServerUI

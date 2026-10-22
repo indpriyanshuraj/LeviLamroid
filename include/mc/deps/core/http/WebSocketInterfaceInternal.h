@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/http/WebSocketInterface.h"
+#include "mc/external/lib_http_client/HCWebSocketCloseStatus.h"
+
+// auto generated forward declare list
+// clang-format off
+struct HC_PERFORM_ENV;
+struct XAsyncBlock;
+struct HC_WEBSOCKET_OBSERVER;
+// clang-format on
+
+namespace Bedrock::Http {
+
+class WebSocketInterfaceInternal : public ::Bedrock::Http::WebSocketInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~WebSocketInterfaceInternal() /*override*/ = default;
+
+    virtual HRESULT connect(
+        char const*,
+        char const*,
+        ::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>,
+        ::gsl::not_null<::XAsyncBlock*>,
+        ::HC_PERFORM_ENV*
+    ) /*override*/;
+
+    virtual HRESULT sendMessage(
+        ::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>,
+        ::std::string_view,
+        ::gsl::not_null<::XAsyncBlock*>
+    ) /*override*/;
+
+    virtual HRESULT sendBinaryMessage(
+        ::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>,
+        ::gsl::span<uchar const>,
+        ::gsl::not_null<::XAsyncBlock*>
+    ) /*override*/;
+
+    virtual HRESULT disconnect(::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>, ::HCWebSocketCloseStatus) /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI HRESULT $connect(
+        char const*,
+        char const*,
+        ::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>,
+        ::gsl::not_null<::XAsyncBlock*>,
+        ::HC_PERFORM_ENV*
+    );
+
+    MCNAPI HRESULT
+        $sendMessage(::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>, ::std::string_view, ::gsl::not_null<::XAsyncBlock*>);
+
+    MCNAPI HRESULT $sendBinaryMessage(
+        ::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>,
+        ::gsl::span<uchar const>,
+        ::gsl::not_null<::XAsyncBlock*>
+    );
+
+    MCNAPI HRESULT $disconnect(::gsl::not_null<::HC_WEBSOCKET_OBSERVER*>, ::HCWebSocketCloseStatus);
+
+
+    // NOLINTEND
+};
+
+} // namespace Bedrock::Http

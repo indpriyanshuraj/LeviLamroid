@@ -1,0 +1,150 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/DiskAccessDiagnostics.h"
+#include "mc/deps/core/file/WriteOperation.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class DiskAccessDiagnostics; }
+namespace Core { class PathView; }
+namespace Core::WriteThrottledOS { class OSWriteThrottleTracker; }
+// clang-format on
+
+namespace Core {
+
+class DiskAccessTracker {
+public:
+    // DiskAccessTracker inner types declare
+    // clang-format off
+    struct TrackerStats;
+    struct WriteOperation;
+    // clang-format on
+
+    // DiskAccessTracker inner types define
+    struct TrackerStats {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8> mUnk7f81a1;
+        ::ll::UntypedStorage<4, 4> mUnkbd5b4c;
+        ::ll::UntypedStorage<1, 1> mUnkf1891e;
+        ::ll::UntypedStorage<1, 1> mUnk268666;
+        ::ll::UntypedStorage<1, 1> mUnk700cbe;
+        ::ll::UntypedStorage<8, 8> mUnke2d2e0;
+        ::ll::UntypedStorage<8, 8> mUnk19960e;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        TrackerStats& operator=(TrackerStats const&);
+        TrackerStats(TrackerStats const&);
+        TrackerStats();
+    };
+
+    struct WriteOperation {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8> mUnk45f898;
+        ::ll::UntypedStorage<8, 8> mUnkdacc78;
+        ::ll::UntypedStorage<8, 8> mUnk8312bc;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        WriteOperation& operator=(WriteOperation const&);
+        WriteOperation(WriteOperation const&);
+        WriteOperation();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 40> mUnk23c562;
+    ::ll::UntypedStorage<8, 32> mUnke3c629;
+    ::ll::UntypedStorage<8, 8>  mUnk4dcf2e;
+    ::ll::UntypedStorage<8, 8>  mUnk8b0df6;
+    ::ll::UntypedStorage<8, 8>  mUnkec4b4c;
+    ::ll::UntypedStorage<8, 16> mUnk70b829;
+    ::ll::UntypedStorage<8, 16> mUnk81e3dd;
+    ::ll::UntypedStorage<8, 16> mUnk164044;
+    ::ll::UntypedStorage<8, 56> mUnk5a4c44;
+    ::ll::UntypedStorage<8, 8>  mUnkdb336a;
+    ::ll::UntypedStorage<8, 8>  mUnk4b0c78;
+    ::ll::UntypedStorage<8, 80> mUnk7826c4;
+    ::ll::UntypedStorage<8, 80> mUnk58509b;
+    ::ll::UntypedStorage<1, 1>  mUnk51bb1c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DiskAccessTracker& operator=(DiskAccessTracker const&);
+    DiskAccessTracker(DiskAccessTracker const&);
+    DiskAccessTracker();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit DiskAccessTracker(::std::unique_ptr<::Core::DiskAccessDiagnostics> diagnostics);
+
+    MCNAPI void _addNewWriteOperation(uint64 amount, ::Core::WriteOperation writeOperation, ::Core::PathView path);
+
+#ifdef LL_PLAT_C
+    MCNAPI void _computeTrackerStats(
+        ::Core::DiskAccessTracker::TrackerStats& trackerStats,
+        ::std::chrono::steady_clock::time_point  byteWriteCalculationWindow,
+        ::std::chrono::steady_clock::time_point  writeCountCalculationWindow
+    );
+
+    MCNAPI void _setCurrentWriteThrottleTracker(
+        ::std::shared_ptr<::Core::WriteThrottledOS::OSWriteThrottleTracker> osWriteThrottleTracker
+    );
+#endif
+
+    MCNAPI void addIgnoredPath(::Core::PathView path);
+
+#ifdef LL_PLAT_C
+    MCNAPI ::Core::DiskAccessTracker::TrackerStats computeMainTrackerStats(
+        ::std::chrono::nanoseconds byteWriteCalculationWindow,
+        ::std::chrono::nanoseconds writeCountCalculationWindow
+    );
+
+    MCNAPI void computeTrackerStats(
+        ::Core::DiskAccessTracker::TrackerStats& trackerStats,
+        ::std::chrono::nanoseconds               byteWriteCalculationWindow,
+        ::std::chrono::nanoseconds               writeCountCalculationWindow
+    );
+
+    MCNAPI void setOSWriteThrottleTracker(
+        ::std::shared_ptr<::Core::WriteThrottledOS::OSWriteThrottleTracker> osWriteThrottleTracker
+    );
+
+    MCNAPI void setOnBudgetAboveRecoverThreshold(
+        ::std::function<void(::std::chrono::nanoseconds, uint64, ::std::optional<uint64>, ::std::string const&)>
+            onBudgetAboveRecoverThreshold
+    );
+
+    MCNAPI void setOnBudgetBelowLowThreshold(
+        ::std::function<void(uint64, double, double, ::std::string const&)> onBudgetBelowLowThreshold
+    );
+
+    MCNAPI void setShouldRepeatLowTelemetryFunc(
+        ::std::function<bool(::Core::DiskAccessDiagnostics::WriteBudgetTelemetryPeriodState&)>
+            shouldRepeatLowTelemetryFunc
+    );
+
+    MCNAPI void update();
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::std::unique_ptr<::Core::DiskAccessDiagnostics> diagnostics);
+    // NOLINTEND
+};
+
+} // namespace Core

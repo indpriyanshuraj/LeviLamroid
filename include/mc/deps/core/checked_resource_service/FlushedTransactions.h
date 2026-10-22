@@ -1,0 +1,38 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace mce {
+
+struct FlushedTransactions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnkc279ee;
+    ::ll::UntypedStorage<8, 24> mUnkf602f1;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FlushedTransactions& operator=(FlushedTransactions const&);
+    FlushedTransactions(FlushedTransactions const&);
+    FlushedTransactions();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ~FlushedTransactions();
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};
+
+} // namespace mce

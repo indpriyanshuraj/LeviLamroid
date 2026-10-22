@@ -1,0 +1,83 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/goal/RandomLookAroundGoal.h"
+#include "mc/world/level/Tick.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+struct GoalId;
+// clang-format on
+
+class RandomLookAroundAndSitGoal : public ::RandomLookAroundGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool>   mContinueSittingOnReload;
+    ::ll::TypedStorage<1, 1, bool>   mContinueIfLeashed;
+    ::ll::TypedStorage<4, 4, int>    mMinLookCount;
+    ::ll::TypedStorage<4, 4, int>    mMaxLookCount;
+    ::ll::TypedStorage<4, 4, int>    mRemainingLookCount;
+    ::ll::TypedStorage<4, 4, int>    mRandomLookAroundCooldown;
+    ::ll::TypedStorage<8, 8, ::Tick> mNextAvailableSitTick;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RandomLookAroundAndSitGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI RandomLookAroundAndSitGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI void $start();
+
+    MCAPI void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

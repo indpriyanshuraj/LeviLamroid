@@ -1,0 +1,46 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/registry/flattening_utils/RemovedState.h"
+
+// auto generated forward declare list
+// clang-format off
+class CompoundTag;
+class CompoundTagUpdaterNodeBuilder;
+// clang-format on
+
+namespace FlatteningUtils {
+
+class RemovedIntState : public ::FlatteningUtils::RemovedState {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<int>> mValues;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void addValue(::CompoundTag const& tag) /*override*/;
+
+    virtual void match(::CompoundTagUpdaterNodeBuilder& builder, uint64 index) const /*override*/;
+
+    virtual uint64 valueCount() const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $addValue(::CompoundTag const& tag);
+
+    MCFOLD void $match(::CompoundTagUpdaterNodeBuilder& builder, uint64 index) const;
+
+    MCFOLD uint64 $valueCount() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace FlatteningUtils

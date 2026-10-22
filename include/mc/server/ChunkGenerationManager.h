@@ -1,0 +1,18 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/threading/SpinLockImpl.h"
+#include "mc/world/level/ChunkPos.h"
+#include "mc/world/level/chunk/ChunkViewOwner.h"
+
+class ChunkGenerationManager {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::SpinLockImpl> mGenerationRequestLock;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::ChunkViewOwner, ::std::unordered_set<::ChunkPos>>>
+        mGenerationRequests;
+    // NOLINTEND
+};

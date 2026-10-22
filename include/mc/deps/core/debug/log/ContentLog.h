@@ -1,0 +1,177 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/debug/log/LogArea.h"
+#include "mc/deps/core/debug/log/LogLevel.h"
+#include "mc/deps/core/string/StaticOptimizedString.h"
+#include "mc/deps/core/threading/InstancedThreadLocal.h"
+#include "mc/deps/core/utility/DisableServiceLocatorOverride.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/deps/core/utility/typeid_t.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContentLogEndPoint;
+class ContextMessageLogger;
+// clang-format on
+
+class ContentLog : public ::Bedrock::EnableNonOwnerReferences, public ::DisableServiceLocatorOverride {
+public:
+    // ContentLog inner types declare
+    // clang-format off
+    class ContentLogEndPointData;
+    class ThreadSpecificData;
+    class ScopeHandler;
+    class ContentLogScope;
+    // clang-format on
+
+    // ContentLog inner types define
+    class ContentLogEndPointData {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 24, ::Bedrock::NotNullNonOwnerPtr<::ContentLogEndPoint>> mContentLogEndPoint;
+        // NOLINTEND
+    };
+
+    class ThreadSpecificData {
+    public:
+        // ThreadSpecificData inner types declare
+        // clang-format off
+        struct ScopeData;
+        // clang-format on
+
+        // ThreadSpecificData inner types define
+        struct ScopeData {
+        public:
+            // member variables
+            // NOLINTBEGIN
+            ::ll::TypedStorage<8, 24, ::std::optional<::std::string_view>>                  mMessageRef;
+            ::ll::TypedStorage<8, 8, ::Bedrock::StaticOptimizedString>                      mMessageStr;
+            ::ll::TypedStorage<8, 8, ::gsl::not_null<::ContentLog::ContentLogScope const*>> mContentLogScope;
+            // NOLINTEND
+        };
+
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 24, ::std::vector<::ContentLog::ThreadSpecificData::ScopeData>> mScope;
+        ::ll::TypedStorage<8, 24, ::std::vector<::ContextMessageLogger*>>                     mMessageLoggers;
+        // NOLINTEND
+    };
+
+    class ScopeHandler : public ::std::enable_shared_from_this<::ContentLog::ScopeHandler> {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<
+            8,
+            168,
+            ::Bedrock::Threading::InstancedThreadLocal<
+                ::ContentLog::ThreadSpecificData,
+                ::std::allocator<::ContentLog::ThreadSpecificData>>>
+            mThreadSpecificData;
+        // NOLINTEND
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI ::std::string getScope();
+        // NOLINTEND
+    };
+
+    class ContentLogScope {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<1, 1, bool>                                         mPopScope;
+        ::ll::TypedStorage<8, 16, ::std::weak_ptr<::ContentLog::ScopeHandler>> mScopeHandler;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        ContentLogScope();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI explicit ContentLogScope(::std::string_view scope);
+
+        MCNAPI ContentLogScope(::std::optional<::std::string_view> ref, ::Bedrock::StaticOptimizedString const& str);
+
+        MCNAPI ~ContentLogScope();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCNAPI void* $ctor(::std::string_view scope);
+
+        MCNAPI void* $ctor(::std::optional<::std::string_view> ref, ::Bedrock::StaticOptimizedString const& str);
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+    using ScopeHandler = ::ContentLog::ScopeHandler;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, bool> mEnabled;
+    ::ll::TypedStorage<8, 16, ::std::map<::Bedrock::typeid_t<::ContentLog>, ::ContentLog::ContentLogEndPointData>>
+                                                                             mEndPoints;
+    ::ll::TypedStorage<8, 80, ::std::mutex>                                  mEndpointMutex;
+    ::ll::TypedStorage<8, 16, ::std::shared_ptr<::ContentLog::ScopeHandler>> mScopeHandler;
+    ::ll::TypedStorage<
+        8,
+        64,
+        ::std::unordered_map<::LogLevel, ::std::unordered_map<::LogArea, ::std::unordered_set<uint64>>>>
+        mOnceOnlyMessages;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ContentLog() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ContentLog();
+
+    MCAPI void _writeToLog(bool logOnlyOnce, ::LogArea area, ::LogLevel level, char*& args);
+
+#ifdef LL_PLAT_C
+    MCAPI void flush();
+#endif
+
+    MCAPI void log(bool logOnlyOnce, ::LogLevel level, ::LogArea area, ...);
+
+    MCAPI void registerEndPoint(::Bedrock::typeid_t<::ContentLog> id, ::gsl::not_null<::ContentLogEndPoint*> endPoint);
+
+    MCAPI void unregisterEndPoint(::gsl::not_null<::ContentLogEndPoint*> endPoint);
+
+    MCAPI void updateEnabledStatus();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

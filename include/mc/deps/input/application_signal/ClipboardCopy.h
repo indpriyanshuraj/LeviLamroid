@@ -1,0 +1,18 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/application/signals/Signal.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace ApplicationSignal { struct ClipboardCopyData; }
+// clang-format on
+
+namespace ApplicationSignal {
+
+class ClipboardCopy
+: public ::Bedrock::Signal<::ApplicationSignal::ClipboardCopy, ::ApplicationSignal::ClipboardCopyData> {};
+
+} // namespace ApplicationSignal

@@ -1,0 +1,174 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/string/HashedString.h"
+#include "mc/deps/shared_types/legacy/ContainerType.h"
+#include "mc/world/ContainerID.h"
+#include "mc/world/containers/ContainerEnumName.h"
+#include "mc/world/containers/managers/models/ContainerManagerModel.h"
+#include "mc/world/containers/models/FilterResult.h"
+#include "mc/world/level/BlockPos.h"
+#include "mc/world/level/block/actor/BlockActorType.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContainerModel;
+class ContainerScreenContext;
+class ItemDescriptor;
+class ItemInstance;
+class ItemStack;
+class Player;
+class Recipe;
+struct IngredientSearchInfo;
+// clang-format on
+
+class FurnaceContainerManagerModel : public ::ContainerManagerModel {
+public:
+    // FurnaceContainerManagerModel inner types define
+    using FilterFunction = ::std::function<::FilterResult(::ItemInstance const&, bool)>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 12, ::BlockPos>                                 mBlockPos;
+    ::ll::TypedStorage<4, 4, int>                                         mLastTickCount;
+    ::ll::TypedStorage<4, 4, int>                                         mLastLitTime;
+    ::ll::TypedStorage<4, 4, int>                                         mLastLitDuration;
+    ::ll::TypedStorage<4, 4, int>                                         mLastStoredXP;
+    ::ll::TypedStorage<4, 4, int>                                         mLastInputId;
+    ::ll::TypedStorage<4, 4, int>                                         mLastInputAux;
+    ::ll::TypedStorage<1, 1, ::BlockActorType const>                      mBlockActorType;
+    ::ll::TypedStorage<1, 1, ::ContainerEnumName const>                   mIngredientContainerName;
+    ::ll::TypedStorage<8, 48, ::HashedString const>                       mRecipeTag;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::shared_ptr<::Recipe>>> mRecipeBook;
+    ::ll::TypedStorage<1, 1, bool>                                        mSmeltableFilterOn;
+    ::ll::TypedStorage<8, 32, ::std::string>                              mSearchString;
+    ::ll::TypedStorage<8, 32, ::std::string>                              mCaseFoldedSearchString;
+    ::ll::TypedStorage<4, 4, int>                                         mNumFoodRecipes;
+    ::ll::TypedStorage<4, 4, int>                                         mNumBlocksRecipes;
+    ::ll::TypedStorage<4, 4, int>                                         mNumItemsRecipes;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FurnaceContainerManagerModel();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~FurnaceContainerManagerModel() /*override*/;
+
+    virtual ::std::vector<::ItemStack> getItemCopies() const /*override*/;
+
+    virtual void setSlot(int slot, ::ItemStack const& item, bool fromNetwork) /*override*/;
+
+    virtual ::ItemStack const& getSlot(int slot) const /*override*/;
+
+    virtual void setData(int id, int value) /*override*/;
+
+    virtual bool isValid(float pickRange) /*override*/;
+
+    virtual void broadcastChanges() /*override*/;
+
+    virtual ::ContainerScreenContext _postInit() /*override*/;
+
+    virtual void _onDynamicContainerContentsChanged() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI FurnaceContainerManagerModel(
+        ::HashedString const&                recipeTag,
+        ::SharedTypes::Legacy::ContainerType containerType,
+        ::BlockActorType                     blockActorType,
+        ::ContainerID                        containerId,
+        ::Player&                            player,
+        ::BlockPos const&                    blockPos
+    );
+
+    MCAPI ::FilterResult _filterByInventory(::ItemInstance const& item, bool includeCursorItem) const;
+
+    MCAPI bool _hasUnlockedRecipes(::ItemInstance const& item) const;
+
+    MCAPI void _populateRecipeBook();
+
+#ifdef LL_PLAT_C
+    MCAPI void fireItemAcquiredEvent(::ItemInstance const& itemInstance, int count);
+
+    MCAPI void fireItemSmeltedEvent(::ItemDescriptor const& itemDescriptor);
+
+    MCAPI int getBurnProgress(int max);
+
+    MCAPI int getLitProgress(int max);
+#endif
+
+    MCAPI ::std::vector<::ItemInstance> getUnlockedRecipeIngredientsForResult(::ItemInstance const& item) const;
+
+#ifdef LL_PLAT_C
+    MCAPI void grantExperienceForSmelting(::ItemInstance const& item, int count);
+
+    MCAPI bool isFinished(::std::string& outputName, int& outputId, int& outputAuxValue);
+#endif
+
+    MCAPI ::IngredientSearchInfo searchIngredientInContainers(
+        ::ItemInstance const&                   itemInstance,
+        ::std::vector<::ContainerModel*> const& containers
+    ) const;
+
+    MCAPI void setIsFiltering(bool smeltableFilterOn);
+
+#ifdef LL_PLAT_C
+    MCAPI void setSearchString(::std::string const& searchString);
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::HashedString const&                recipeTag,
+        ::SharedTypes::Legacy::ContainerType containerType,
+        ::BlockActorType                     blockActorType,
+        ::ContainerID                        containerId,
+        ::Player&                            player,
+        ::BlockPos const&                    blockPos
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::std::vector<::ItemStack> $getItemCopies() const;
+
+    MCAPI void $setSlot(int slot, ::ItemStack const& item, bool fromNetwork);
+
+    MCAPI ::ItemStack const& $getSlot(int slot) const;
+
+    MCAPI void $setData(int id, int value);
+
+    MCAPI bool $isValid(float pickRange);
+
+    MCAPI void $broadcastChanges();
+
+    MCAPI ::ContainerScreenContext $_postInit();
+
+    MCAPI void $_onDynamicContainerContentsChanged();
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

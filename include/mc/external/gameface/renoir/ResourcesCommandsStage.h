@@ -1,0 +1,15 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace renoir {
+
+enum class ResourcesCommandsStage : int {
+    PreExecuteRendering          = 0,
+    PostExecuteRendering         = 1,
+    DestroyAllRenderingResources = 2,
+    CreateGlyphResources         = 3,
+    DestroyGlyphAtlases          = 4,
+};
+
+}

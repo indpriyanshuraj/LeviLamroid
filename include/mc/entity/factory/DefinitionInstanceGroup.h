@@ -1,0 +1,25 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+class DefinitionInstanceGroup {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 72> mUnk4e28b4;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DefinitionInstanceGroup& operator=(DefinitionInstanceGroup const&);
+    DefinitionInstanceGroup(DefinitionInstanceGroup const&);
+    DefinitionInstanceGroup();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void combine(::DefinitionInstanceGroup const& other);
+
+    MCNAPI void subtract(::DefinitionInstanceGroup const& other);
+    // NOLINTEND
+};

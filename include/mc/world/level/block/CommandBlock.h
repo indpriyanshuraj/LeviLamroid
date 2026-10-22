@@ -1,0 +1,137 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/ActorBlockBase.h"
+#include "mc/world/level/block/BlockType.h"
+#include "mc/world/level/block/CommandBlockMode.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Block;
+class BlockActor;
+class BlockPos;
+class BlockSource;
+class CommandBlockActor;
+class ItemInstance;
+class Vec3;
+namespace BlockEvents { class BlockPlayerInteractEvent; }
+namespace BlockEvents { class BlockQueuedTickEvent; }
+namespace BlockEvents { class BlockRedstoneUpdateEvent; }
+// clang-format on
+
+class CommandBlock : public ::ActorBlock {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<2, 2, ::CommandBlockMode> mCBMode;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    CommandBlock();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool isInteractiveBlock() const /*override*/;
+
+    virtual ::Block const&
+    getPlacementBlock(::Actor const& by, ::BlockPos const& pos, uchar face, ::Vec3 const& clickPos, int itemValue) const
+        /*override*/;
+
+    virtual uchar getMappedFace(uchar face, ::Block const& block) const /*override*/;
+
+    virtual void neighborChanged(::BlockSource& region, ::BlockPos const& pos, ::BlockPos const& neighborPos) const
+        /*override*/;
+
+    virtual bool canInstatick() const /*override*/;
+
+    virtual ::ItemInstance asItemInstance(::Block const&, ::BlockActor const*) const /*override*/;
+
+    virtual int getVariant(::Block const& block) const /*override*/;
+
+    virtual bool hasComparatorSignal() const /*override*/;
+
+    virtual int getComparatorSignal(::BlockSource& region, ::BlockPos const& pos, ::Block const& block, uchar dir) const
+        /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI CommandBlock(::std::string const& nameId, int id, ::CommandBlockMode mode);
+
+    MCAPI bool _executeChainBlock(
+        ::BlockSource&       region,
+        ::BlockPos const&    pos,
+        ::CommandBlockActor& blockActor,
+        bool                 fromTickQueue
+    ) const;
+
+    MCAPI void _onRedstoneUpdate(::BlockEvents::BlockRedstoneUpdateEvent& blockEvent) const;
+
+    MCAPI void tick(::BlockEvents::BlockQueuedTickEvent& eventData) const;
+
+    MCAPI void
+    updateBlock(::BlockSource& region, ::BlockPos const& pos, ::CommandBlockMode newMode, bool conditional) const;
+
+    MCFOLD void use(::BlockEvents::BlockPlayerInteractEvent& eventData) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void _executeChain(::BlockSource& region, ::BlockPos const& pos);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<int[]> mCBModeMap();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::std::string const& nameId, int id, ::CommandBlockMode mode);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $isInteractiveBlock() const;
+
+    MCFOLD ::Block const& $getPlacementBlock(
+        ::Actor const&    by,
+        ::BlockPos const& pos,
+        uchar             face,
+        ::Vec3 const&     clickPos,
+        int               itemValue
+    ) const;
+
+    MCAPI uchar $getMappedFace(uchar face, ::Block const& block) const;
+
+    MCFOLD void $neighborChanged(::BlockSource& region, ::BlockPos const& pos, ::BlockPos const& neighborPos) const;
+
+    MCFOLD bool $canInstatick() const;
+
+    MCAPI ::ItemInstance $asItemInstance(::Block const&, ::BlockActor const*) const;
+
+    MCAPI int $getVariant(::Block const& block) const;
+
+    MCFOLD bool $hasComparatorSignal() const;
+
+    MCAPI int $getComparatorSignal(::BlockSource& region, ::BlockPos const& pos, ::Block const& block, uchar dir) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

@@ -1,0 +1,36 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class DynamicContainerManager;
+class ItemStack;
+class ListTag;
+class StorageItemComponent;
+class StorageWeightLimitItemComponent;
+struct FullContainerName;
+// clang-format on
+
+class IContainerRegistryTracker {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::unique_ptr<::DynamicContainerManager> createContainerManager(
+        ::FullContainerName const&         id,
+        ::ItemStack const&                 storageItem,
+        ::StorageItemComponent*            storageItemComponent,
+        ::StorageWeightLimitItemComponent* storageWeightLimitItemComponent
+    ) = 0;
+
+    virtual uint generateNewID() = 0;
+
+    virtual void tryLoadSavedStorageItem(::ListTag const& contentData, ::FullContainerName const& name) = 0;
+
+    virtual void setExpired(::std::vector<::FullContainerName> const& removedContainers) = 0;
+
+    virtual uint64 getSize() = 0;
+
+    virtual ~IContainerRegistryTracker() = default;
+    // NOLINTEND
+};

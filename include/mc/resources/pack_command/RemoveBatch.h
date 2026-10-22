@@ -1,0 +1,21 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace PackCommand {
+
+struct RemoveBatch {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnkacbd6c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RemoveBatch& operator=(RemoveBatch const&);
+    RemoveBatch(RemoveBatch const&);
+    RemoveBatch();
+};
+
+} // namespace PackCommand

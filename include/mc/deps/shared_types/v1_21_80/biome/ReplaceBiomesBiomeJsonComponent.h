@@ -1,0 +1,80 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/shared_types/util/Reference.h"
+#include "mc/deps/shared_types/v1_20_60/biome/components/IBiomeJsonComponent.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace cereal { struct ReflectionCtx; }
+// clang-format on
+
+namespace SharedTypes::v1_21_80 {
+
+struct ReplaceBiomesBiomeJsonComponent : public ::SharedTypes::v1_20_60::IBiomeJsonComponent {
+public:
+    // ReplaceBiomesBiomeJsonComponent inner types declare
+    // clang-format off
+    struct BiomeReplacement;
+    // clang-format on
+
+    // ReplaceBiomesBiomeJsonComponent inner types define
+    struct BiomeReplacement {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 32, ::std::string>                              mDimension;
+        ::ll::TypedStorage<8, 24, ::std::vector<::SharedTypes::Reference<3>>> mTargetBiomes;
+        ::ll::TypedStorage<4, 4, float>                                       mAmount;
+        ::ll::TypedStorage<4, 4, float>                                       mNoiseFrequencyScale;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        BiomeReplacement& operator=(BiomeReplacement const&);
+        BiomeReplacement();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCAPI BiomeReplacement(::SharedTypes::v1_21_80::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&);
+
+        MCAPI bool operator==(::SharedTypes::v1_21_80::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&) const;
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCFOLD void* $ctor(::SharedTypes::v1_21_80::ReplaceBiomesBiomeJsonComponent::BiomeReplacement const&);
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::SharedTypes::v1_21_80::ReplaceBiomesBiomeJsonComponent::BiomeReplacement>>
+        mBiomeReplacements;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void bindType(::cereal::ReflectionCtx& ctx);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<char const[]> SCHEMA_NAME();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace SharedTypes::v1_21_80

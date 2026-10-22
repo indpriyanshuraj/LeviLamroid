@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class BlockSource;
+namespace ScriptModuleMinecraft { class ScriptActor; }
+namespace ScriptModuleMinecraft { class ScriptDimension; }
+namespace ScriptModuleMinecraft { struct ScriptExplosionStartedAfterEventIntermediateData; }
+namespace Scripting { class WeakLifetimeScope; }
+namespace Scripting { struct ClassBinding; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+struct ScriptExplosionStartedAfterEvent {
+public:
+    // ScriptExplosionStartedAfterEvent inner types define
+    using QueueType = ::ScriptModuleMinecraft::ScriptExplosionStartedAfterEventIntermediateData;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::std::vector<::BlockPos>> mBlocks;
+    ::ll::TypedStorage<8, 32, ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptDimension>>
+        mDimension;
+    ::ll::
+        TypedStorage<8, 40, ::std::optional<::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptActor>>>
+                                                                    mSource;
+    ::ll::TypedStorage<8, 8, ::BlockSource&>                        mBlockSource;
+    ::ll::TypedStorage<8, 8, ::Scripting::WeakLifetimeScope const&> mScope;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptExplosionStartedAfterEvent& operator=(ScriptExplosionStartedAfterEvent const&);
+    ScriptExplosionStartedAfterEvent();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ScriptExplosionStartedAfterEvent(::ScriptModuleMinecraft::ScriptExplosionStartedAfterEvent const&);
+
+    MCAPI ScriptExplosionStartedAfterEvent(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptExplosionStartedAfterEventIntermediateData> const& eventData,
+        ::Scripting::WeakLifetimeScope const&                                                               scope
+    );
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::Scripting::ClassBinding bind();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::ScriptModuleMinecraft::ScriptExplosionStartedAfterEvent const&);
+
+    MCAPI void* $ctor(
+        ::std::shared_ptr<::ScriptModuleMinecraft::ScriptExplosionStartedAfterEventIntermediateData> const& eventData,
+        ::Scripting::WeakLifetimeScope const&                                                               scope
+    );
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

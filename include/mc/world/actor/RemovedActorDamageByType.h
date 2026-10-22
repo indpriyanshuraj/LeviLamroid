@@ -1,0 +1,31 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ActorDamageSource.h"
+#include "mc/world/actor/ActorType.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+// clang-format on
+
+class RemovedActorDamageByType : public ::ActorDamageSource {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, ::ActorType> mEntityType;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::unique_ptr<::ActorDamageSource> clone() const /*override*/;
+
+    virtual ::ActorType getEntityType() const /*override*/;
+
+    virtual ::std::pair<::std::string, ::std::vector<::std::string>>
+    _getDeathMessageInternal(::std::string const& deadName, ::Actor* dead) const /*override*/;
+    // NOLINTEND
+};

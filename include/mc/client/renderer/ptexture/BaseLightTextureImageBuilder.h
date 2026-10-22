@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class BaseLightData;
+class Dimension;
+class IClientInstance;
+namespace mce { struct Image; }
+// clang-format on
+
+class BaseLightTextureImageBuilder {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Dimension const*> mDimension;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~BaseLightTextureImageBuilder() = default;
+
+    virtual void init(::Dimension* d);
+
+    virtual bool buildImage(
+        ::BaseLightData const& lightData,
+        ::mce::Image*          targetImage,
+        uint                   imageLength,
+        float                  a,
+        float                  ambientBoost,
+        bool                   clampToMinimum
+    );
+
+    virtual bool buildImageSplit(
+        ::BaseLightData const& lightData,
+        ::mce::Image*          targetImage,
+        uint                   imageLength,
+        float                  a,
+        bool                   clampToMinimum
+    );
+
+    virtual ::std::unique_ptr<::BaseLightData>
+    createBaseLightTextureData(::IClientInstance* client, ::BaseLightData const& currentData);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD void $init(::Dimension* d);
+
+    MCAPI bool $buildImage(
+        ::BaseLightData const& lightData,
+        ::mce::Image*          targetImage,
+        uint                   imageLength,
+        float                  a,
+        float                  ambientBoost,
+        bool                   clampToMinimum
+    );
+
+    MCAPI bool $buildImageSplit(
+        ::BaseLightData const& lightData,
+        ::mce::Image*          targetImage,
+        uint                   imageLength,
+        float                  a,
+        bool                   clampToMinimum
+    );
+
+    MCAPI ::std::unique_ptr<::BaseLightData>
+    $createBaseLightTextureData(::IClientInstance* client, ::BaseLightData const& currentData);
+    // NOLINTEND
+};

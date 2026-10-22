@@ -1,0 +1,67 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/Matrix.h"
+
+class MatrixStack {
+public:
+    // MatrixStack inner types declare
+    // clang-format off
+    struct MatrixStackRef;
+    // clang-format on
+
+    // MatrixStack inner types define
+    struct MatrixStackRef {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 8, ::MatrixStack*> stack;
+        ::ll::TypedStorage<8, 8, ::Matrix*>      mat;
+        // NOLINTEND
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCAPI ~MatrixStackRef();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 40, ::std::deque<::Matrix>>  stack;
+    ::ll::TypedStorage<8, 16, ::std::optional<uint64>> sortOrigin;
+    ::ll::TypedStorage<1, 1, bool>                     _isDirty;
+    // NOLINTEND
+
+public:
+    Matrix& getTop() {
+        _isDirty = true;
+        return stack->back();
+    }
+    Matrix const& top() const { return stack->back(); }
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI MatrixStack();
+
+    MCAPI ::MatrixStack::MatrixStackRef push(bool isSortOrigin);
+
+    MCAPI ::MatrixStack::MatrixStackRef pushIdentity(bool isSortOrigin);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor();
+    // NOLINTEND
+};

@@ -1,0 +1,80 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/actor/VanillaBlockActor.h"
+#include "mc/world/level/levelgen/structure/JigsawEditorData.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockActorDataPacket;
+class BlockPos;
+class BlockSource;
+class CompoundTag;
+class DataLoadHelper;
+class ILevel;
+class SaveContext;
+// clang-format on
+
+class JigsawBlockActor : public ::VanillaBlockActor {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 144, ::JigsawEditorData> mCurrData;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    JigsawBlockActor();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void load(::ILevel& level, ::CompoundTag const& tag, ::DataLoadHelper& dataLoadHelper) /*override*/;
+
+    virtual bool save(::CompoundTag& tag, ::SaveContext const& saveContext) const /*override*/;
+
+    virtual ::std::vector<::std::string> getUgcStrings(::CompoundTag const&) const /*override*/;
+
+    virtual void setUgcStrings(::CompoundTag&, ::std::vector<::std::string> const&) const /*override*/;
+
+    virtual void onChanged(::BlockSource& region) /*override*/;
+
+    virtual ::std::unique_ptr<::BlockActorDataPacket> _getUpdatePacket(::BlockSource& region) /*override*/;
+
+    virtual void _onUpdatePacket(::CompoundTag const& data, ::BlockSource& region) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI explicit JigsawBlockActor(::BlockPos const& pos);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::BlockPos const& pos);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $load(::ILevel& level, ::CompoundTag const& tag, ::DataLoadHelper& dataLoadHelper);
+
+    MCAPI bool $save(::CompoundTag& tag, ::SaveContext const& saveContext) const;
+
+    MCFOLD ::std::vector<::std::string> $getUgcStrings(::CompoundTag const&) const;
+
+    MCFOLD void $setUgcStrings(::CompoundTag&, ::std::vector<::std::string> const&) const;
+
+    MCAPI void $onChanged(::BlockSource& region);
+
+    MCFOLD ::std::unique_ptr<::BlockActorDataPacket> $_getUpdatePacket(::BlockSource& region);
+
+    MCFOLD void $_onUpdatePacket(::CompoundTag const& data, ::BlockSource& region);
+
+
+    // NOLINTEND
+};

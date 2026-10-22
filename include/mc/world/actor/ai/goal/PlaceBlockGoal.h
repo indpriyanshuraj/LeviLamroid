@@ -1,0 +1,95 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/IntRange.h"
+#include "mc/world/actor/ActorDefinitionTrigger.h"
+#include "mc/world/actor/ActorFilterGroup.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+#include "mc/world/level/block/BlockDescriptor.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+struct GoalId;
+// clang-format on
+
+class PlaceBlockGoal : public ::BaseGoal {
+public:
+    // PlaceBlockGoal inner types declare
+    // clang-format off
+    struct WeightedBlockDescriptor;
+    // clang-format on
+
+    // PlaceBlockGoal inner types define
+    struct WeightedBlockDescriptor {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::TypedStorage<8, 176, ::BlockDescriptor> mBlock;
+        ::ll::TypedStorage<8, 64, ::ActorFilterGroup> mFilter;
+        ::ll::TypedStorage<4, 4, int>                 mWeight;
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>                                                    mMob;
+    ::ll::TypedStorage<8, 24, ::std::vector<::BlockDescriptor>>                         mPlaceableCarriedBlocks;
+    ::ll::TypedStorage<8, 24, ::std::vector<::PlaceBlockGoal::WeightedBlockDescriptor>> mRandomlyPlaceableBlocks;
+    ::ll::TypedStorage<8, 64, ::ActorFilterGroup>                                       mCanPlace;
+    ::ll::TypedStorage<8, 104, ::ActorDefinitionTrigger>                                mOnPlace;
+    ::ll::TypedStorage<4, 8, ::IntRange>                                                mXZRange;
+    ::ll::TypedStorage<4, 8, ::IntRange>                                                mYRange;
+    ::ll::TypedStorage<4, 4, float>                                                     mChance;
+    ::ll::TypedStorage<1, 1, bool>                                                      mAffectedByGriefingRule;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PlaceBlockGoal& operator=(PlaceBlockGoal const&);
+    PlaceBlockGoal(PlaceBlockGoal const&);
+    PlaceBlockGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI PlaceBlockGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

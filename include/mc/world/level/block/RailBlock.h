@@ -1,0 +1,33 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/block/BaseRailBlock.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+// clang-format on
+
+class RailBlock : public ::BaseRailBlock {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual int getVariant(::Block const& block) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI int $getVariant(::Block const& block) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

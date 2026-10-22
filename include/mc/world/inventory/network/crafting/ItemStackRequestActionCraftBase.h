@@ -1,0 +1,44 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/Result.h"
+#include "mc/world/inventory/network/ItemStackRequestAction.h"
+
+// auto generated forward declare list
+// clang-format off
+class BinaryStream;
+class BlockPalette;
+class ReadOnlyBinaryStream;
+// clang-format on
+
+class ItemStackRequestActionCraftBase : public ::ItemStackRequestAction {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<1, 1, uchar> mNumCrafts;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::ItemStackRequestActionCraftBase const* getCraftAction() const /*override*/;
+
+    virtual void postLoadItems_DEPRECATEDASKTYLAING(::BlockPalette& blockPalette, bool isClientSide) /*override*/;
+
+    virtual void _write(::BinaryStream& stream) const = 0;
+
+    virtual ::Bedrock::Result<void> _read(::ReadOnlyBinaryStream& stream) = 0;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::ItemStackRequestActionCraftBase const* $getCraftAction() const;
+
+    MCFOLD void $postLoadItems_DEPRECATEDASKTYLAING(::BlockPalette& blockPalette, bool isClientSide);
+
+
+    // NOLINTEND
+};

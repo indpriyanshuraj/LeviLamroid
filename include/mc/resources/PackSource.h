@@ -1,0 +1,177 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/resource/PackOrigin.h"
+#include "mc/deps/core/resource/PackType.h"
+#include "mc/deps/core/threading/Async.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+#include "mc/platform/brstd/function_ref.h"
+
+// auto generated forward declare list
+// clang-format off
+class IContentKeyProvider;
+class IPackIOProvider;
+class IPackManifestFactory;
+class Pack;
+class PackSourceReport;
+class PackStorageContainer;
+class TaskGroup;
+struct PackSourceLoadOptions;
+struct PackSourceLoadResult;
+struct PackSourceOptions;
+struct PackTaskData;
+// clang-format on
+
+class PackSource : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // PackSource inner types declare
+    // clang-format off
+    class RequiredPackOrigin;
+    class RequiredPackType;
+    class RequiredResourceOrBehaviorPackType;
+    // clang-format on
+
+    // PackSource inner types define
+    class RequiredPackOrigin {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1> mUnk6149af;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RequiredPackOrigin& operator=(RequiredPackOrigin const&);
+        RequiredPackOrigin(RequiredPackOrigin const&);
+        RequiredPackOrigin();
+    };
+
+    class RequiredPackType {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1> mUnka29ba2;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RequiredPackType& operator=(RequiredPackType const&);
+        RequiredPackType(RequiredPackType const&);
+        RequiredPackType();
+
+    public:
+        // static functions
+        // NOLINTBEGIN
+        MCNAPI static ::PackType assertValidPackType(::PackType type);
+        // NOLINTEND
+    };
+
+    class RequiredResourceOrBehaviorPackType {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1> mUnk2a81d8;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RequiredResourceOrBehaviorPackType& operator=(RequiredResourceOrBehaviorPackType const&);
+        RequiredResourceOrBehaviorPackType(RequiredResourceOrBehaviorPackType const&);
+        RequiredResourceOrBehaviorPackType();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::gsl::not_null<::std::unique_ptr<::IPackIOProvider>> const> mIO;
+    ::ll::TypedStorage<8, 8, ::gsl::not_null<::std::unique_ptr<::TaskGroup>>>             mTaskGroup;
+    ::ll::TypedStorage<8, 8, ::gsl::not_null<::std::unique_ptr<::PackStorageContainer>>>  mContainer;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PackSource();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~PackSource() = 0;
+
+    virtual void forEachPackShared(::brstd::function_ref<void(::gsl::not_null<::std::shared_ptr<::Pack>>)> callback);
+
+    virtual ::PackOrigin getPackOrigin() const;
+
+    virtual ::PackType getPackType() const;
+
+    virtual void _buildSourcesForLoad(::std::vector<::gsl::not_null<::PackSource*>>& sources);
+
+    virtual ::PackSourceLoadResult _loadImpl(::PackSourceLoadOptions&& options) = 0;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI explicit PackSource(::PackSourceOptions options);
+
+    MCAPI void _addPack(::std::shared_ptr<::Pack> pack);
+
+#ifdef LL_PLAT_C
+    MCAPI ::Bedrock::Threading::Async<void>
+    _addPacks(::std::vector<::gsl::not_null<::std::shared_ptr<::Pack>>>&& packs);
+#endif
+
+    MCAPI ::PackSourceLoadResult _applyAndFinishLoadTask(::std::shared_ptr<::PackTaskData> task);
+
+    MCAPI ::PackSourceLoadResult _createImmediateLoadResult();
+
+    MCAPI ::PackSourceLoadResult
+    _getTaskData(::brstd::function_ref<::PackSourceLoadResult(::std::shared_ptr<::PackTaskData>)> task);
+
+#ifdef LL_PLAT_C
+    MCAPI bool _removePack(::brstd::function_ref<bool(::Pack const&)> predicate);
+
+    MCAPI ::Bedrock::Threading::Async<::std::vector<::gsl::not_null<::std::shared_ptr<::Pack const>>>> getPacks();
+#endif
+
+    MCAPI ::PackSourceReport load(
+        ::IPackManifestFactory&                                           manifestFactory,
+        ::Bedrock::NotNullNonOwnerPtr<::IContentKeyProvider const> const& keyProvider
+    );
+
+    MCAPI ::PackSourceLoadResult loadImmediate(
+        ::IPackManifestFactory&                                           manifestFactory,
+        ::Bedrock::NotNullNonOwnerPtr<::IContentKeyProvider const> const& keyProvider
+    );
+
+    MCAPI ::PackSourceLoadResult requestLoad(::PackSourceLoadOptions&& options);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::PackSourceOptions options);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $forEachPackShared(::brstd::function_ref<void(::gsl::not_null<::std::shared_ptr<::Pack>>)> callback);
+
+    MCFOLD ::PackOrigin $getPackOrigin() const;
+
+    MCFOLD ::PackType $getPackType() const;
+
+    MCAPI void $_buildSourcesForLoad(::std::vector<::gsl::not_null<::PackSource*>>& sources);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

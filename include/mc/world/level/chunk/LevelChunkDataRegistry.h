@@ -1,0 +1,84 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/spawn_category/Type.h"
+#include "mc/world/level/chunk/ChunkBoundingBox.h"
+#include "mc/world/level/chunk/ChunkEntity.h"
+#include "mc/world/level/chunk/DynamicSpawnArea.h"
+#include "mc/world/level/chunk/FullStructureBoundingBox.h"
+#include "mc/world/level/chunk/StaticSpawnArea.h"
+#include "mc/world/level/chunk/StorageTypeHelper.h"
+#include "mc/world/level/chunk/StructureKey.h"
+#include "mc/world/level/chunk/StructureType.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace br::worldgen { struct StructureSpawnOverride; }
+// clang-format on
+
+namespace br {
+
+class LevelChunkDataRegistry {
+public:
+    // LevelChunkDataRegistry inner types define
+    using Entity = ::br::ChunkEntity;
+
+    using StorageType = ::br::detail::StorageTypeHelper<
+        ::br::StructureType,
+        ::br::ChunkBoundingBox,
+        ::br::StructureKey,
+        ::br::FullStructureBoundingBox,
+        ::br::DynamicSpawnArea,
+        ::br::StaticSpawnArea,
+        ::std::unordered_map<::SpawnCategory::Type, ::br::worldgen::StructureSpawnOverride>>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 88, ::entt::basic_storage<::br::ChunkEntity, ::br::ChunkEntity>> mEntities;
+    ::ll::TypedStorage<
+        8,
+        680,
+        ::std::tuple<
+            ::entt::basic_storage<::br::StructureType, ::br::ChunkEntity>,
+            ::entt::basic_storage<::br::ChunkBoundingBox, ::br::ChunkEntity>,
+            ::entt::basic_storage<::br::StructureKey, ::br::ChunkEntity>,
+            ::entt::basic_storage<::br::FullStructureBoundingBox, ::br::ChunkEntity>,
+            ::entt::basic_storage<::br::DynamicSpawnArea, ::br::ChunkEntity>,
+            ::entt::basic_storage<::br::StaticSpawnArea, ::br::ChunkEntity>,
+            ::entt::basic_storage<
+                ::std::unordered_map<::SpawnCategory::Type, ::br::worldgen::StructureSpawnOverride>,
+                ::br::ChunkEntity>>>
+        mData;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI LevelChunkDataRegistry();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor();
+    // NOLINTEND
+};
+
+} // namespace br
+
+namespace entt {
+
+template <typename Entity>
+struct component_traits<::std::unordered_map<::SpawnCategory::Type, ::br::worldgen::StructureSpawnOverride>, Entity> {
+    using element_type = ::std::unordered_map<::SpawnCategory::Type, ::br::worldgen::StructureSpawnOverride>;
+    using entity_type  = Entity;
+
+    static constexpr bool in_place_delete = false;
+
+    static constexpr std::size_t page_size = 1024;
+};
+
+} // namespace entt

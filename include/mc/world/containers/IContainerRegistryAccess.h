@@ -1,0 +1,30 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class FillingContainer;
+class StorageItemComponent;
+class StorageItemContainerModel;
+class StorageWeightLimitItemComponent;
+struct FullContainerName;
+// clang-format on
+
+class IContainerRegistryAccess {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::std::shared_ptr<::StorageItemContainerModel> getModel(::FullContainerName const& name) = 0;
+
+    virtual ::std::shared_ptr<::FillingContainer> getBackingContainer(::FullContainerName const& name) = 0;
+
+    virtual void tryCreateEntry(
+        ::StorageItemComponent*            storageItemComponent,
+        ::StorageWeightLimitItemComponent* storageWeightLimitItemComponent,
+        ::FullContainerName const&         name
+    ) = 0;
+
+    virtual ~IContainerRegistryAccess() = default;
+    // NOLINTEND
+};

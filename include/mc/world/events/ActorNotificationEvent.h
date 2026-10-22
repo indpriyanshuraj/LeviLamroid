@@ -1,0 +1,120 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/world/events/ActorAcquiredItemEvent.h"
+#include "mc/world/events/ActorAddEffectEvent.h"
+#include "mc/world/events/ActorAnimationChangedEvent.h"
+#include "mc/world/events/ActorAttackEvent.h"
+#include "mc/world/events/ActorBeforeAcquireItemEvent.h"
+#include "mc/world/events/ActorBeforeHealEvent.h"
+#include "mc/world/events/ActorBeforeHurtEvent.h"
+#include "mc/world/events/ActorCarriedItemChangedEvent.h"
+#include "mc/world/events/ActorDefinitionEndedEvent.h"
+#include "mc/world/events/ActorDefinitionStartedEvent.h"
+#include "mc/world/events/ActorDefinitionTriggeredEvent.h"
+#include "mc/world/events/ActorDiedEvent.h"
+#include "mc/world/events/ActorDroppedItemEvent.h"
+#include "mc/world/events/ActorEquippedArmorEvent.h"
+#include "mc/world/events/ActorGriefingBlockEvent.h"
+#include "mc/world/events/ActorHealEvent.h"
+#include "mc/world/events/ActorHealthChangedEvent.h"
+#include "mc/world/events/ActorHurtEvent.h"
+#include "mc/world/events/ActorItemEventAfterDroppedItem.h"
+#include "mc/world/events/ActorItemEventBeforeDroppedItem.h"
+#include "mc/world/events/ActorKilledEvent.h"
+#include "mc/world/events/ActorPlacedItemEvent.h"
+#include "mc/world/events/ActorRemoveEffectEvent.h"
+#include "mc/world/events/ActorRemovedEvent.h"
+#include "mc/world/events/ActorStartRidingEvent.h"
+#include "mc/world/events/ActorStopRidingEvent.h"
+#include "mc/world/events/ActorUpgradeEndedEvent.h"
+#include "mc/world/events/ActorUpgradeStartedEvent.h"
+#include "mc/world/events/ActorUpgradeTriggeredEvent.h"
+#include "mc/world/events/ActorUseItemEvent.h"
+#include "mc/world/events/BeforeMountTamingEvent.h"
+#include "mc/world/events/BeforeTamingEvent.h"
+#include "mc/world/events/KnockBackEvent.h"
+#include "mc/world/events/MountTamingEvent.h"
+#include "mc/world/events/ProjectileHitEvent.h"
+#include "mc/world/events/TamingEvent.h"
+
+// auto generated inclusion list
+#include "mc/world/events/EventVariantImpl.h"
+
+// auto generated forward declare list
+// clang-format off
+struct ActorAcquiredItemEvent;
+struct ActorAddEffectEvent;
+struct ActorAnimationChangedEvent;
+struct ActorAttackEvent;
+struct ActorBeforeAcquireItemEvent;
+struct ActorBeforeHealEvent;
+struct ActorBeforeHurtEvent;
+struct ActorCarriedItemChangedEvent;
+struct ActorDefinitionEndedEvent;
+struct ActorDefinitionStartedEvent;
+struct ActorDefinitionTriggeredEvent;
+struct ActorDiedEvent;
+struct ActorDroppedItemEvent;
+struct ActorEquippedArmorEvent;
+struct ActorGriefingBlockEvent;
+struct ActorHealEvent;
+struct ActorHealthChangedEvent;
+struct ActorHurtEvent;
+struct ActorItemEventAfterDroppedItem;
+struct ActorItemEventBeforeDroppedItem;
+struct ActorKilledEvent;
+struct ActorPlacedItemEvent;
+struct ActorRemoveEffectEvent;
+struct ActorRemovedEvent;
+struct ActorStartRidingEvent;
+struct ActorStopRidingEvent;
+struct ActorUpgradeEndedEvent;
+struct ActorUpgradeStartedEvent;
+struct ActorUpgradeTriggeredEvent;
+struct ActorUseItemEvent;
+struct BeforeMountTamingEvent;
+struct BeforeTamingEvent;
+struct KnockBackEvent;
+struct MountTamingEvent;
+struct ProjectileHitEvent;
+struct TamingEvent;
+// clang-format on
+
+struct ActorNotificationEvent : public ::EventVariantImpl<
+                                    ::ActorAcquiredItemEvent const,
+                                    ::ActorAnimationChangedEvent const,
+                                    ::ActorAttackEvent const,
+                                    ::ActorCarriedItemChangedEvent const,
+                                    ::ActorDefinitionTriggeredEvent const,
+                                    ::ActorDefinitionEndedEvent const,
+                                    ::ActorDiedEvent const,
+                                    ::ActorDroppedItemEvent const,
+                                    ::ActorEquippedArmorEvent const,
+                                    ::ActorHealEvent const,
+                                    ::ActorHurtEvent const,
+                                    ::ActorHealthChangedEvent const,
+                                    ::ActorKilledEvent const,
+                                    ::ActorPlacedItemEvent const,
+                                    ::ActorRemovedEvent const,
+                                    ::ActorRemoveEffectEvent const,
+                                    ::ActorStartRidingEvent const,
+                                    ::ActorUpgradeTriggeredEvent const,
+                                    ::ActorUpgradeEndedEvent const,
+                                    ::ActorUseItemEvent const,
+                                    ::KnockBackEvent const,
+                                    ::MountTamingEvent const,
+                                    ::TamingEvent const,
+                                    ::ActorItemEventAfterDroppedItem const,
+                                    ::ProjectileHitEvent const,
+                                    ::ActorGriefingBlockEvent const,
+                                    ::ActorStopRidingEvent const,
+                                    ::ActorItemEventBeforeDroppedItem const,
+                                    ::ActorDefinitionStartedEvent const,
+                                    ::ActorAddEffectEvent const,
+                                    ::ActorBeforeAcquireItemEvent const,
+                                    ::ActorBeforeHealEvent const,
+                                    ::ActorBeforeHurtEvent const,
+                                    ::BeforeTamingEvent const,
+                                    ::BeforeMountTamingEvent const,
+                                    ::ActorUpgradeStartedEvent const> {};

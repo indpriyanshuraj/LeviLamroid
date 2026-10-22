@@ -1,0 +1,77 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ActorInitializationMethod.h"
+#include "mc/world/actor/monster/Monster.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorDamageSource;
+class ActorDefinitionGroup;
+class ActorHurtResult;
+class BlockPos;
+class EntityContext;
+struct ActorDefinitionIdentifier;
+struct HurtParameters;
+struct VariantParameterList;
+// clang-format on
+
+class Ghast : public ::Monster {
+public:
+    // prevent constructor by default
+    Ghast();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void reloadHardcoded(::ActorInitializationMethod method, ::VariantParameterList const& params) /*override*/;
+
+    virtual float getShadowRadius() const /*override*/;
+
+    virtual bool isDarkEnoughToSpawn() const /*override*/;
+
+    virtual float _getWalkTargetValue(::BlockPos const& pos) /*override*/;
+
+    virtual ::ActorHurtResult
+    _hurt(::ActorDamageSource const& source, float damage, ::HurtParameters const& hurtParameters) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI Ghast(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::ActorDefinitionGroup*            definitions,
+        ::ActorDefinitionIdentifier const& definitionName,
+        ::EntityContext&                   entityContext
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $reloadHardcoded(::ActorInitializationMethod method, ::VariantParameterList const& params);
+
+    MCFOLD float $getShadowRadius() const;
+
+    MCFOLD bool $isDarkEnoughToSpawn() const;
+
+    MCFOLD float $_getWalkTargetValue(::BlockPos const& pos);
+
+    MCAPI ::ActorHurtResult
+    $_hurt(::ActorDamageSource const& source, float damage, ::HurtParameters const& hurtParameters);
+
+
+    // NOLINTEND
+};

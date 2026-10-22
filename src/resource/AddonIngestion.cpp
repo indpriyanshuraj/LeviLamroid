@@ -117,6 +117,12 @@ static void ingestItemJson(const std::filesystem::path& filePath) {
     if (group == "itemGroup.name.mobEgg" || identifier.find("spawn_egg") != std::string::npos) {
         group = "itemGroup.name.misc";
         if (category == 2) category = 4; // Place under Items tab safely
+    } else if (group.find("cooker") != std::string::npos || group.find("kitchen") != std::string::npos) {
+        group = "itemGroup.name.misc";
+    } else if (group.find("crop") != std::string::npos) {
+        group = "itemGroup.name.crop";
+    } else if (group.find(':') != std::string::npos) {
+        group = (category == 3) ? "itemGroup.name.sword" : "itemGroup.name.misc";
     }
 
     std::string iconName = "";
@@ -319,7 +325,14 @@ static void ingestBlockJson(const std::filesystem::path& filePath) {
         }
     }
 
-    if (group == "itemGroup.name.craftingTable" || group.empty()) {
+    // Sanitize creative group to standard vanilla groups so Bedrock creative tabs accept them
+    if (group.find("cooker") != std::string::npos || group.find("kitchen") != std::string::npos) {
+        group = "itemGroup.name.misc";
+    } else if (group.find("crate") != std::string::npos || group.find("cabinet") != std::string::npos || group.find("basket") != std::string::npos) {
+        group = "itemGroup.name.stone";
+    } else if (group.find("crop") != std::string::npos) {
+        group = "itemGroup.name.crop";
+    } else if (group.find(':') != std::string::npos || group == "itemGroup.name.craftingTable" || group.empty()) {
         group = "itemGroup.name.stone";
     }
 
@@ -493,10 +506,28 @@ void ingestAddonDirectory(const std::filesystem::path& dir) {
     auto& logger = ll::Logger::getInstance();
     logger.info("§6[AddonIngest] §eScanning directory for unified BP-in-RP JSON files: ", dir.string());
 
-    // 1. Scan blocks/ first so custom block definitions and IDs are established
-    auto blocksDir = dir / "blocks";
-    if (std::filesystem::exists(blocksDir, ec) && std::filesystem::is_directory(blocksDir, ec)) {
-        for (const auto& entry : std::filesystem::directory_iterator(blocksDir, ec)) {
+    std::vector<std::filesystem::path> blockDirs;
+    std::vector<std::filesystem::path> itemDirs;
+    std::vector<std::filesystem::path> recipeDirs;
+
+    // Direct check
+    if (std::filesystem::is_directory(dir / "blocks", ec)) blockDirs.push_back(dir / "blocks");
+    if (std::filesystem::is_directory(dir / "items", ec)) itemDirs.push_back(dir / "items");
+    if (std::filesystem::is_directory(dir / "recipes", ec)) recipeDirs.push_back(dir / "recipes");
+
+    // Recursive search for any subdirectories named blocks, items, or recipes
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(dir, ec)) {
+        if (entry.is_directory(ec)) {
+            auto name = entry.path().filename().string();
+            if (name == "blocks") blockDirs.push_back(entry.path());
+            else if (name == "items") itemDirs.push_back(entry.path());
+            else if (name == "recipes") recipeDirs.push_back(entry.path());
+        }
+    }
+
+    // 1. Scan all blocks/ folders first so custom block definitions and IDs are established
+    for (const auto& bDir : blockDirs) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(bDir, ec)) {
             if (entry.is_regular_file(ec) && entry.path().extension() == ".json") {
                 try {
                     ingestBlockJson(entry.path());
@@ -507,10 +538,9 @@ void ingestAddonDirectory(const std::filesystem::path& dir) {
         }
     }
 
-    // 2. Scan items/ (binds to established blocks for BlockItem vtables)
-    auto itemsDir = dir / "items";
-    if (std::filesystem::exists(itemsDir, ec) && std::filesystem::is_directory(itemsDir, ec)) {
-        for (const auto& entry : std::filesystem::directory_iterator(itemsDir, ec)) {
+    // 2. Scan all items/ folders (binds to established blocks for BlockItem vtables)
+    for (const auto& iDir : itemDirs) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(iDir, ec)) {
             if (entry.is_regular_file(ec) && entry.path().extension() == ".json") {
                 try {
                     ingestItemJson(entry.path());
@@ -521,10 +551,9 @@ void ingestAddonDirectory(const std::filesystem::path& dir) {
         }
     }
 
-    // 3. Scan recipes/
-    auto recipesDir = dir / "recipes";
-    if (std::filesystem::exists(recipesDir, ec) && std::filesystem::is_directory(recipesDir, ec)) {
-        for (const auto& entry : std::filesystem::directory_iterator(recipesDir, ec)) {
+    // 3. Scan all recipes/ folders
+    for (const auto& rDir : recipeDirs) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(rDir, ec)) {
             if (entry.is_regular_file(ec) && entry.path().extension() == ".json") {
                 try {
                     ingestRecipeJson(entry.path());

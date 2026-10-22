@@ -1,0 +1,66 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace mce {
+
+class Blob {
+public:
+    using value_type      = uint8;
+    using delete_function = void (*)(value_type*);
+    using size_type       = std::size_t;
+    using pointer         = value_type*;
+    using const_pointer   = value_type const*;
+    using iterator        = value_type*;
+    using const_iterator  = value_type const*;
+
+    struct Deleter {
+        delete_function m_func;
+
+        LLAPI Deleter() noexcept;
+        LLAPI explicit Deleter(delete_function f) noexcept;
+        LLAPI void operator()(value_type* p) const noexcept;
+    };
+
+    using pointer_type = std::unique_ptr<value_type[], Deleter>;
+
+private:
+    pointer_type mBlob;
+    size_type    mSize{0};
+
+private:
+    static void defaultDeleter(value_type* p) noexcept;
+
+public:
+    LLNDAPI Blob() noexcept;
+    LLNDAPI explicit Blob(size_type size);
+    LLNDAPI Blob(value_type const* ptr, size_type size);
+    LLNDAPI Blob(Blob const&);
+    LLNDAPI Blob(Blob&&) noexcept;
+    LLNDAPI Blob(pointer_type&& ptr, size_type size) noexcept;
+    LLAPI ~Blob();
+    LLAPI Blob& operator=(Blob const&);
+    LLAPI Blob& operator=(Blob&& rhs) noexcept;
+
+    LLNDAPI iterator       begin() noexcept;
+    LLNDAPI iterator       end() noexcept;
+    LLNDAPI const_iterator cbegin() const noexcept;
+    LLNDAPI const_iterator cend() const noexcept;
+
+    LLNDAPI bool          empty() const noexcept;
+    LLNDAPI size_type     size() const noexcept;
+    LLNDAPI size_type     max_size() const noexcept;
+    LLNDAPI pointer       data() noexcept;
+    LLNDAPI const_pointer data() const noexcept;
+    LLNDAPI pointer       get() noexcept;
+    LLNDAPI const_pointer get() const noexcept;
+    LLNDAPI pointer_type  release() noexcept;
+
+    LLNDAPI gsl::span<unsigned char> getSpan();
+    LLNDAPI gsl::span<unsigned char const> getSpan() const;
+
+    LLAPI void fillBlob(uint8 val);
+    LLAPI void swap(Blob& other) noexcept;
+};
+
+} // namespace mce

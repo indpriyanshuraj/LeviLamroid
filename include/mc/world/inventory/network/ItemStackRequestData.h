@@ -1,0 +1,59 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/events/TextProcessingEventOrigin.h"
+#include "mc/world/inventory/network/TypedClientNetId.h"
+
+// auto generated forward declare list
+// clang-format off
+class ItemStackRequestAction;
+struct ItemStackRequestIdTag;
+// clang-format on
+
+class ItemStackRequestData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 16, ::ItemStackRequestId>                                       mClientRequestId;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                               mStringsToFilter;
+    ::ll::TypedStorage<4, 4, ::TextProcessingEventOrigin>                                 mStringsToFilterOrigin;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::unique_ptr<::ItemStackRequestAction>>> mActions;
+    // NOLINTEND
+
+#ifdef LL_PLAT_S
+#else // LL_PLAT_C
+public:
+    // prevent constructor by default
+    ItemStackRequestData& operator=(ItemStackRequestData const&);
+    ItemStackRequestData(ItemStackRequestData const&);
+    ItemStackRequestData();
+
+#endif
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI ItemStackRequestData(::ItemStackRequestData&&);
+
+    MCAPI ::ItemStackRequestData& operator=(::ItemStackRequestData&&);
+#endif
+
+    MCAPI ~ItemStackRequestData();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void* $ctor(::ItemStackRequestData&&);
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};

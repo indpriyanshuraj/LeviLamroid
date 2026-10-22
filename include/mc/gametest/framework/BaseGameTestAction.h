@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace gametest { struct GameTestError; }
+// clang-format on
+
+namespace gametest {
+
+class BaseGameTestAction {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 8> mUnkf1db7c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    BaseGameTestAction& operator=(BaseGameTestAction const&);
+    BaseGameTestAction(BaseGameTestAction const&);
+    BaseGameTestAction();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~BaseGameTestAction() = default;
+
+    virtual ::std::optional<::gametest::GameTestError> run() = 0;
+    // NOLINTEND
+};
+
+} // namespace gametest

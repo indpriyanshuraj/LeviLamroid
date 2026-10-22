@@ -1,0 +1,58 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/scripting/modules/minecraft/block/ScriptFluidType.h"
+#include "mc/scripting/modules/minecraft/block/components/BaseScriptBlockActorComponent.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockActor;
+class BlockPos;
+class BlockSource;
+namespace Scripting { class WeakLifetimeScope; }
+// clang-format on
+
+namespace ScriptModuleMinecraft {
+
+class ScriptBlockFluidContainerComponent : public ::ScriptModuleMinecraft::BaseScriptBlockActorComponent {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool _isValid() const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::std::optional<int> _tryGetFillLevel() const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::ScriptModuleMinecraft::ScriptFluidType
+    _getActualCauldronFluidType(::BlockActor& blockActor, ::BlockSource& region, ::BlockPos position);
+
+    MCAPI static ::std::optional<
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraft::ScriptBlockFluidContainerComponent>>
+    tryCreate(
+        ::BlockSource&                        region,
+        ::BlockPos                            position,
+        ::Scripting::WeakLifetimeScope const& scope,
+        ::std::string const&                  typeId
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $_isValid() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

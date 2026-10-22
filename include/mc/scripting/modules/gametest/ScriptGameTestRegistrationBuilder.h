@@ -1,0 +1,79 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/deps/script_core/lifetime_registry/scripting/WeakTypedObjectHandle.h"
+#include "mc/deps/script_core/runtime/scripting/Result.h"
+
+// auto generated forward declare list
+// clang-format off
+class Vec3;
+namespace ScriptModuleGameTest { class BaseScriptGameTestFunction; }
+namespace ScriptModuleMinecraft { class ScriptDimensionType; }
+namespace Scripting { class DependencyLocator; }
+namespace Scripting { struct EngineError; }
+namespace Scripting { struct InvalidArgumentError; }
+// clang-format on
+
+namespace ScriptModuleGameTest {
+
+class ScriptGameTestRegistrationBuilder {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        32,
+        ::Scripting::WeakTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>>
+                                                                                                     mScriptingHandle;
+    ::ll::TypedStorage<8, 16, ::std::shared_ptr<::ScriptModuleGameTest::BaseScriptGameTestFunction>> mGameTestFunction;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    batch(::std::string batchName);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    maxAttempts(int maxAttempts);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    maxTicks(int maxTicks);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    padding(int blockPadding);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    required(bool required);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    requiredSuccessfulAttempts(int requiredSuccessfulAttempts);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    rotate(bool rotate);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    setupTicks(int setupTicks);
+
+    MCAPI ::Scripting::Result<
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>,
+        ::Scripting::InvalidArgumentError,
+        ::Scripting::EngineError>
+    structureLocation(
+        ::Scripting::DependencyLocator&                                                              dependencyLocator,
+        ::Vec3                                                                                       structureLocation,
+        ::std::optional<::std::variant<::ScriptModuleMinecraft::ScriptDimensionType, ::std::string>> dimensionTypeVar
+    );
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    structureName(::std::string structureName);
+
+    MCAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleGameTest::ScriptGameTestRegistrationBuilder>
+    tag(::std::string tag);
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleGameTest

@@ -1,0 +1,52 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/screens/models/ContentSource.h"
+#include "mc/resources/InvalidPacksFilterGroup.h"
+
+// auto generated forward declare list
+// clang-format off
+class IResourcePackRepository;
+struct ContentItem;
+struct InvalidPack;
+// clang-format on
+
+struct InvalidResourceSource : public ::ContentSource {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::IResourcePackRepository*>    mResourceRepository;
+    ::ll::TypedStorage<8, 24, ::InvalidPacksFilterGroup>    mFilter;
+    ::ll::TypedStorage<8, 24, ::std::vector<::InvalidPack>> mInvalidPacks;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~InvalidResourceSource() /*override*/ = default;
+
+    virtual void load() /*override*/;
+
+    virtual void generateItems(::std::vector<::std::shared_ptr<::ContentItem>>& content) /*override*/;
+
+    virtual void deleteContentFiles(::std::vector<::std::shared_ptr<::ContentItem const>> const& items) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI bool invalidPacksChanged();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $load();
+
+    MCAPI void $generateItems(::std::vector<::std::shared_ptr<::ContentItem>>& content);
+
+    MCAPI void $deleteContentFiles(::std::vector<::std::shared_ptr<::ContentItem const>> const& items);
+    // NOLINTEND
+};

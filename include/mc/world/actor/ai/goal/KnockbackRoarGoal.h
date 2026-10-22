@@ -1,0 +1,94 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ActorDefinitionTrigger.h"
+#include "mc/world/actor/ActorFilterGroup.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Mob;
+struct GoalId;
+// clang-format on
+
+class KnockbackRoarGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>                     mMob;
+    ::ll::TypedStorage<4, 4, int>                        mMaxRoarDurationTicks;
+    ::ll::TypedStorage<4, 4, int>                        mMaxTicksUntilAttack;
+    ::ll::TypedStorage<4, 4, int>                        mKnockbackDamage;
+    ::ll::TypedStorage<4, 4, int>                        mKnockbackHorizontalStrength;
+    ::ll::TypedStorage<4, 4, int>                        mKnockbackVerticalStrength;
+    ::ll::TypedStorage<4, 4, float>                      mHeightCap;
+    ::ll::TypedStorage<4, 4, int>                        mKnockbackEffectRange;
+    ::ll::TypedStorage<4, 4, int>                        mMaxCooldownTicks;
+    ::ll::TypedStorage<8, 64, ::ActorFilterGroup>        mKnockbackFilterGroup;
+    ::ll::TypedStorage<8, 64, ::ActorFilterGroup>        mDamageFilterGroup;
+    ::ll::TypedStorage<8, 104, ::ActorDefinitionTrigger> mOnRoarEnd;
+    ::ll::TypedStorage<1, 1, bool>                       mFilterEvaluateFix;
+    ::ll::TypedStorage<4, 4, int>                        mCurrentCooldownTicks;
+    ::ll::TypedStorage<4, 4, int>                        mCurrentRoarTicks;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    KnockbackRoarGoal& operator=(KnockbackRoarGoal const&);
+    KnockbackRoarGoal(KnockbackRoarGoal const&);
+    KnockbackRoarGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool canUse() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI KnockbackRoarGoal(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::Mob& mob, ::std::string name, ::GoalId const& goalId);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $start();
+
+    MCAPI void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

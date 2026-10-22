@@ -32,6 +32,7 @@ set(SOURCES
     src/plugin/PluginManager.cpp
     src/resource/ResourceManager.cpp
     src/resource/AddonIngestion.cpp
+    src/preloader/PreloaderBridge.cpp
 )
 
 add_library(levilamroid SHARED ${SOURCES})

@@ -1,0 +1,32 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+class LevelDbRandomAccessFile : public ::leveldb::RandomAccessFile {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 72> mUnkd171ca;
+    ::ll::UntypedStorage<8, 80> mUnk2c0e30;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LevelDbRandomAccessFile& operator=(LevelDbRandomAccessFile const&);
+    LevelDbRandomAccessFile(LevelDbRandomAccessFile const&);
+    LevelDbRandomAccessFile();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::leveldb::Status Read(uint64 offset, uint64 n, ::leveldb::Slice* result, char* scratch) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::leveldb::Status $Read(uint64 offset, uint64 n, ::leveldb::Slice* result, char* scratch) const;
+
+
+    // NOLINTEND
+};

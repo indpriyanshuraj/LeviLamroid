@@ -1,0 +1,80 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/AudioSourceInterface.h"
+#include "mc/external/webrtc/MediaSourceInterface.h"
+#include "mc/external/webrtc/Notifier.h"
+#include "mc/external/webrtc/scoped_refptr.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class AudioTrackSinkInterface; }
+namespace webrtc { struct AudioOptions; }
+// clang-format on
+
+namespace webrtc {
+
+class LocalAudioSource : public ::webrtc::Notifier<::webrtc::AudioSourceInterface> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 88> mUnkd1027f;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LocalAudioSource& operator=(LocalAudioSource const&);
+    LocalAudioSource(LocalAudioSource const&);
+    LocalAudioSource();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::webrtc::MediaSourceInterface::SourceState state() const /*override*/;
+
+    virtual bool remote() const /*override*/;
+
+    virtual ::webrtc::AudioOptions const options() const /*override*/;
+
+    virtual void AddSink(::webrtc::AudioTrackSinkInterface* sink) /*override*/;
+
+    virtual void RemoveSink(::webrtc::AudioTrackSinkInterface* sink) /*override*/;
+
+    virtual ~LocalAudioSource() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::webrtc::scoped_refptr<::webrtc::LocalAudioSource>
+    Create(::webrtc::AudioOptions const* audio_options);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::webrtc::MediaSourceInterface::SourceState $state() const;
+
+    MCNAPI bool $remote() const;
+
+    MCNAPI ::webrtc::AudioOptions const $options() const;
+
+    MCNAPI void $AddSink(::webrtc::AudioTrackSinkInterface* sink);
+
+    MCNAPI void $RemoveSink(::webrtc::AudioTrackSinkInterface* sink);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftableForRefCountInterface();
+
+    MCNAPI static void** $vftableForNotifierInterface();
+    // NOLINTEND
+};
+
+} // namespace webrtc

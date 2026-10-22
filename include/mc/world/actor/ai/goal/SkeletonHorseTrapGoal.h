@@ -1,0 +1,59 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Horse;
+// clang-format on
+
+class SkeletonHorseTrapGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Horse&> mHorse;
+    ::ll::TypedStorage<4, 4, int>      mTrapLifeTicks;
+    ::ll::TypedStorage<4, 4, float>    mTriggerDistance;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    SkeletonHorseTrapGoal& operator=(SkeletonHorseTrapGoal const&);
+    SkeletonHorseTrapGoal(SkeletonHorseTrapGoal const&);
+    SkeletonHorseTrapGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void tick() /*override*/;
+
+    virtual bool canUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& debugInfo) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $tick();
+
+    MCAPI bool $canUse();
+
+    MCFOLD void $start();
+
+    MCAPI void $appendDebugInfo(::std::string& debugInfo) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

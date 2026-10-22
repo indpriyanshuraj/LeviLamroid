@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace ScriptDebuggerMessages {
+
+struct PluginDetails {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk152c4e;
+    ::ll::UntypedStorage<8, 32> mUnk1fd52c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PluginDetails& operator=(PluginDetails const&);
+    PluginDetails(PluginDetails const&);
+    PluginDetails();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI PluginDetails(::std::string name, ::std::string moduleId);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::std::string name, ::std::string moduleId);
+    // NOLINTEND
+};
+
+} // namespace ScriptDebuggerMessages

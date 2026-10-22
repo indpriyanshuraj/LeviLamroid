@@ -1,0 +1,47 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace JsonUtil {
+
+class JsonSchemaNodeBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 48> mUnk689ef1;
+    ::ll::UntypedStorage<8, 24> mUnk26697d;
+    ::ll::UntypedStorage<1, 1>  mUnk2cf354;
+    ::ll::UntypedStorage<8, 16> mUnk7537b9;
+    ::ll::UntypedStorage<1, 1>  mUnk53cc41;
+    ::ll::UntypedStorage<8, 48> mUnkc96539;
+    ::ll::UntypedStorage<8, 8>  mUnk972890;
+    ::ll::UntypedStorage<8, 8>  mUnk58f69a;
+    ::ll::UntypedStorage<8, 32> mUnk12ba7c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    JsonSchemaNodeBase& operator=(JsonSchemaNodeBase const&);
+    JsonSchemaNodeBase(JsonSchemaNodeBase const&);
+    JsonSchemaNodeBase();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~JsonSchemaNodeBase();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace JsonUtil

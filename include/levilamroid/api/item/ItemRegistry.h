@@ -43,6 +43,7 @@ struct CustomItemDefinition {
     void* nativeItemPtr{nullptr};
     void* nativeControlBlock{nullptr};
     void* nativeBlockPermutation{nullptr};
+    void* nativeBlockControlBlock{nullptr};
     std::string baseBlock{""};
 };
 

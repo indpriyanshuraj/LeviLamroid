@@ -1,0 +1,74 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/platform/threading/LockGuard.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::JSONObject { class ObjectNode; }
+namespace Core::Profile { class ProfileGroupManager; }
+// clang-format on
+
+class ProfilingConfigManager {
+public:
+    // ProfilingConfigManager inner types declare
+    // clang-format off
+    class Impl;
+    // clang-format on
+
+    // ProfilingConfigManager inner types define
+    class Impl {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1>  mUnk53d76a;
+        ::ll::UntypedStorage<1, 1>  mUnk232378;
+        ::ll::UntypedStorage<8, 64> mUnkf8bb1c;
+        ::ll::UntypedStorage<8, 80> mUnkb77cf3;
+        ::ll::UntypedStorage<8, 16> mUnkd2661b;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        Impl& operator=(Impl const&);
+        Impl(Impl const&);
+        Impl();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI void init(
+            ::Core::Profile::ProfileGroupManager&    profileGroupManager,
+            ::Bedrock::JSONObject::ObjectNode const& profileObject
+        );
+
+        MCNAPI ~Impl();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8> mUnkdd6a6c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ProfilingConfigManager& operator=(ProfilingConfigManager const&);
+    ProfilingConfigManager(ProfilingConfigManager const&);
+    ProfilingConfigManager();
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Bedrock::JSONObject::ObjectNode const* getProfileObjectFromBootstrapConfig();
+    // NOLINTEND
+};

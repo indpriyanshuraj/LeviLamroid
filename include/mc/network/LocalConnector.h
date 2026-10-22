@@ -1,0 +1,100 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/network/Connector.h"
+#include "mc/network/NetworkIdentifier.h"
+#include "mc/network/TransportLayer.h"
+
+// auto generated forward declare list
+// clang-format off
+class LocalConnectivitySystem;
+namespace Social { class GameConnectionInfo; }
+// clang-format on
+
+class LocalConnector : public ::Connector, public ::std::enable_shared_from_this<::LocalConnector> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 80, ::std::mutex>         mMutex;
+    ::ll::TypedStorage<8, 176, ::NetworkIdentifier> mLocalId;
+    ::ll::TypedStorage<8, 64, ::std::unordered_map<::NetworkIdentifier, ::std::weak_ptr<::LocalConnector>>>
+                                                                      mConnectionsMap;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::function<void()>>> mCallbackQueue;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~LocalConnector() /*override*/;
+
+    virtual ::std::string getLocalIp() /*override*/;
+
+    virtual ushort getPort() const /*override*/;
+
+    virtual ::Social::GameConnectionInfo const& getConnectedGameInfo() const /*override*/;
+
+    virtual bool isIPv4Supported() const /*override*/;
+
+    virtual bool isIPv6Supported() const /*override*/;
+
+    virtual ushort getIPv4Port() const /*override*/;
+
+    virtual ushort getIPv6Port() const /*override*/;
+
+    virtual ::TransportLayer getNetworkType() const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI bool connect(::NetworkIdentifier const& id);
+
+    MCNAPI void disconnect(bool skipMessage);
+#endif
+
+    MCNAPI void runEvents();
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::LocalConnectivitySystem& sLocalConnectivitySystem();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::std::string $getLocalIp();
+
+    MCNAPI ushort $getPort() const;
+
+    MCNAPI ::Social::GameConnectionInfo const& $getConnectedGameInfo() const;
+
+    MCNAPI bool $isIPv4Supported() const;
+
+    MCNAPI bool $isIPv6Supported() const;
+
+    MCNAPI ushort $getIPv4Port() const;
+
+    MCNAPI ushort $getIPv6Port() const;
+
+    MCNAPI ::TransportLayer $getNetworkType() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

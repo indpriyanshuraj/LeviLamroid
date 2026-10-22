@@ -1,0 +1,133 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/script_core/lifetime_registry/scripting/StrongTypedObjectHandle.h"
+#include "mc/deps/script_core/lifetime_registry/scripting/WeakHandleFromThis.h"
+#include "mc/deps/script_core/runtime/scripting/Result.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/deps/script_core/script_engine/scripting/Promise.h"
+#include "mc/server/commands/CurrentCmdVersion.h"
+
+// auto generated forward declare list
+// clang-format off
+class Player;
+namespace Json { class Value; }
+namespace ScriptModuleMinecraft { class ScriptPlayer; }
+namespace ScriptModuleMinecraft { struct ScriptInvalidActorError; }
+namespace ScriptModuleMinecraft { struct ScriptRawMessageError; }
+namespace ScriptModuleMinecraft { struct ScriptRawMessageInterface; }
+namespace ScriptModuleMinecraftServerUI { class ScriptActionFormResponse; }
+namespace ScriptModuleMinecraftServerUI { class ScriptFormRejectError; }
+namespace Scripting { class DependencyLocator; }
+namespace Scripting { class ScriptObjectFactory; }
+namespace Scripting { struct ClassBinding; }
+namespace Scripting { struct ContextConfig; }
+namespace Scripting { struct EngineError; }
+// clang-format on
+
+namespace ScriptModuleMinecraftServerUI {
+
+class ScriptActionFormData
+: public ::Scripting::WeakHandleFromThis<::ScriptModuleMinecraftServerUI::ScriptActionFormData> {
+public:
+    // ScriptActionFormData inner types declare
+    // clang-format off
+    struct ButtonData;
+    // clang-format on
+
+    // ScriptActionFormData inner types define
+    struct ButtonData {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 216> mUnkd67373;
+        ::ll::UntypedStorage<8, 32>  mUnk45b5e9;
+        ::ll::UntypedStorage<8, 40>  mUnk62d69a;
+        ::ll::UntypedStorage<8, 40>  mUnk3317c7;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        ButtonData& operator=(ButtonData const&);
+        ButtonData(ButtonData const&);
+        ButtonData();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 216> mUnk252eee;
+    ::ll::UntypedStorage<8, 216> mUnk1fdb97;
+    ::ll::UntypedStorage<8, 24>  mUnk271e27;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptActionFormData& operator=(ScriptActionFormData const&);
+    ScriptActionFormData(ScriptActionFormData const&);
+    ScriptActionFormData();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result<::Json::Value, ::ScriptModuleMinecraft::ScriptRawMessageError>
+    _buildJson(::Player& forPlayer, ::CurrentCmdVersion commandVersion) const;
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    body(::std::variant<::std::string, ::ScriptModuleMinecraft::ScriptRawMessageInterface> text);
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    bodyV010(::std::string const& text);
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData> button(
+        ::std::variant<::std::string, ::ScriptModuleMinecraft::ScriptRawMessageInterface> text,
+        ::std::optional<::std::string>                                                    iconPath
+    );
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    header(::std::variant<::std::string, ::ScriptModuleMinecraft::ScriptRawMessageInterface> text);
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    label(::std::variant<::std::string, ::ScriptModuleMinecraft::ScriptRawMessageInterface> text);
+
+    MCNAPI ::Scripting::Result<
+        ::Scripting::Promise<
+            ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormResponse>,
+            ::ScriptModuleMinecraftServerUI::ScriptFormRejectError>,
+        ::ScriptModuleMinecraft::ScriptRawMessageError,
+        ::ScriptModuleMinecraft::ScriptInvalidActorError,
+        ::Scripting::EngineError>
+    show(
+        ::Scripting::ContextConfig const&      config,
+        ::Scripting::ScriptObjectFactory&      factory,
+        ::Scripting::DependencyLocator&        locator,
+        ::ScriptModuleMinecraft::ScriptPlayer& scriptPlayer
+    );
+
+    MCNAPI ::Scripting::Result_deprecated<::Scripting::Promise<
+        ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormResponse>,
+        ::ScriptModuleMinecraftServerUI::ScriptFormRejectError>>
+    showV010(
+        ::Scripting::ContextConfig const&      config,
+        ::Scripting::ScriptObjectFactory&      factory,
+        ::Scripting::DependencyLocator&        locator,
+        ::ScriptModuleMinecraft::ScriptPlayer& scriptPlayer
+    );
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    title(::std::variant<::std::string, ::ScriptModuleMinecraft::ScriptRawMessageInterface> title);
+
+    MCNAPI ::Scripting::StrongTypedObjectHandle<::ScriptModuleMinecraftServerUI::ScriptActionFormData>
+    titleV010(::std::string const& title);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::ClassBinding bind();
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraftServerUI

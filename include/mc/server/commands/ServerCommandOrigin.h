@@ -1,0 +1,140 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/server/ServerLevel.h"
+
+// auto generated inclusion list
+#include "mc/server/commands/CommandOrigin.h"
+#include "mc/server/commands/CommandOriginType.h"
+#include "mc/server/commands/CommandPermissionLevel.h"
+#include "mc/world/level/dimension/DimensionType.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class BlockPos;
+class CompoundTag;
+class Dimension;
+class Level;
+class ServerLevel;
+class Vec2;
+class Vec3;
+// clang-format on
+
+class ServerCommandOrigin : public ::CommandOrigin {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::ServerLevel&>           mServerLevel;
+    ::ll::TypedStorage<8, 32, ::std::string>           mRequestId;
+    ::ll::TypedStorage<1, 1, ::CommandPermissionLevel> mCommandPermissionLevel;
+    ::ll::TypedStorage<4, 4, ::DimensionType>          mDimensionType;
+    // NOLINTEND
+
+public:
+    ServerCommandOrigin(
+        std::string const&     requestId,
+        ServerLevel&           level,
+        CommandPermissionLevel permission,
+        DimensionType          dimensionType
+    )
+    : mServerLevel(level),
+      mRequestId(requestId),
+      mCommandPermissionLevel(permission),
+      mDimensionType(dimensionType) {}
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ServerCommandOrigin() /*override*/;
+
+    virtual ::std::string const& getRequestId() const /*override*/;
+
+    virtual ::std::string getName() const /*override*/;
+
+    virtual ::BlockPos getBlockPosition() const /*override*/;
+
+    virtual ::Vec3 getWorldPosition() const /*override*/;
+
+    virtual ::std::optional<::Vec2> getRotation() const /*override*/;
+
+    virtual ::Level* getLevel() const /*override*/;
+
+    virtual ::Dimension* getDimension() const /*override*/;
+
+    virtual ::Actor* getEntity() const /*override*/;
+
+    virtual ::CommandPermissionLevel getPermissionsLevel() const /*override*/;
+
+    virtual ::std::unique_ptr<::CommandOrigin> clone() const /*override*/;
+
+    virtual bool canUseCommandsWithoutCheatsEnabled() const /*override*/;
+
+    virtual bool isSelectorExpansionAllowed() const /*override*/;
+
+    virtual ::CommandOriginType getOriginType() const /*override*/;
+
+    virtual ::CompoundTag serialize() const /*override*/;
+
+    virtual bool isValid() const /*override*/;
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::std::string const&     requestId,
+        ::ServerLevel&           level,
+        ::CommandPermissionLevel permission,
+        ::DimensionType          dimensionType
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::std::string const& $getRequestId() const;
+
+    MCAPI ::std::string $getName() const;
+
+    MCFOLD ::BlockPos $getBlockPosition() const;
+
+    MCFOLD ::Vec3 $getWorldPosition() const;
+
+    MCFOLD ::std::optional<::Vec2> $getRotation() const;
+
+    MCFOLD ::Level* $getLevel() const;
+
+    MCAPI ::Dimension* $getDimension() const;
+
+    MCFOLD ::Actor* $getEntity() const;
+
+    MCFOLD ::CommandPermissionLevel $getPermissionsLevel() const;
+
+    MCAPI ::std::unique_ptr<::CommandOrigin> $clone() const;
+
+    MCFOLD bool $canUseCommandsWithoutCheatsEnabled() const;
+
+    MCFOLD bool $isSelectorExpansionAllowed() const;
+
+    MCFOLD ::CommandOriginType $getOriginType() const;
+
+    MCAPI ::CompoundTag $serialize() const;
+
+    MCFOLD bool $isValid() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

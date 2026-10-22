@@ -1,0 +1,49 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/application/storage_migration/MigrationResult.h"
+#include "mc/deps/application/storage_migration/StorageMigrator.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::StorageMigration { struct FoundFiles; }
+namespace Bedrock::StorageMigration { struct ManifestData; }
+// clang-format on
+
+namespace Bedrock::StorageMigration {
+
+class StorageMigrator_DiskDisk : public ::Bedrock::StorageMigration::StorageMigrator {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 136> mUnkcf230f;
+    ::ll::UntypedStorage<8, 32>  mUnk48badf;
+    ::ll::UntypedStorage<8, 32>  mUnk937225;
+    ::ll::UntypedStorage<8, 16>  mUnk3d4ab0;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    StorageMigrator_DiskDisk& operator=(StorageMigrator_DiskDisk const&);
+    StorageMigrator_DiskDisk(StorageMigrator_DiskDisk const&);
+    StorageMigrator_DiskDisk();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~StorageMigrator_DiskDisk() /*override*/ = default;
+
+    virtual bool doQuickCompletionCheck() /*override*/;
+
+    virtual void _runMigration(
+        ::std::shared_ptr<::Bedrock::StorageMigration::ManifestData>,
+        ::std::shared_ptr<::Bedrock::StorageMigration::FoundFiles>,
+        ::std::function<void(::Bedrock::StorageMigration::StorageMigrator::MigrationProgress)>,
+        ::std::function<void(::Bedrock::StorageMigration::MigrationResult)>
+    ) /*override*/;
+    // NOLINTEND
+};
+
+} // namespace Bedrock::StorageMigration

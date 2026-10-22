@@ -1,0 +1,130 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/PathBuffer.h"
+#include "mc/deps/core/threading/Async.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/pub_sub/DeferralType.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::PubSub { class DeferredSubscription; }
+// clang-format on
+
+namespace Bedrock {
+
+class WorldRecovery : public ::Bedrock::EnableNonOwnerReferences, public ::Bedrock::ImplBase<::Bedrock::WorldRecovery> {
+public:
+    // WorldRecovery inner types declare
+    // clang-format off
+    struct RecoveryResult;
+    struct RecoveryUpdate;
+    // clang-format on
+
+    // WorldRecovery inner types define
+    struct RecoveryResult {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 32> mUnk98d9a3;
+        ::ll::UntypedStorage<8, 32> mUnk4b8910;
+        ::ll::UntypedStorage<8, 8>  mUnk990243;
+        ::ll::UntypedStorage<8, 8>  mUnk3d5990;
+        // NOLINTEND
+
+#ifdef LL_PLAT_S
+    public:
+        // prevent constructor by default
+        RecoveryResult& operator=(RecoveryResult const&);
+        RecoveryResult(RecoveryResult const&);
+        RecoveryResult();
+
+#else // LL_PLAT_C
+    public:
+        // prevent constructor by default
+        RecoveryResult& operator=(RecoveryResult const&);
+        RecoveryResult();
+
+#endif
+    public:
+        // member functions
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI RecoveryResult(::Bedrock::WorldRecovery::RecoveryResult const&);
+
+        MCNAPI ~RecoveryResult();
+#endif
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI void* $ctor(::Bedrock::WorldRecovery::RecoveryResult const&);
+#endif
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI void $dtor();
+#endif
+        // NOLINTEND
+    };
+
+    struct RecoveryUpdate {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 32> mUnkdb0b97;
+        ::ll::UntypedStorage<4, 4>  mUnk97ab87;
+        ::ll::UntypedStorage<4, 4>  mUnkd88b56;
+        ::ll::UntypedStorage<8, 8>  mUnkd29cbd;
+        ::ll::UntypedStorage<8, 8>  mUnkcd04b0;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RecoveryUpdate& operator=(RecoveryUpdate const&);
+        RecoveryUpdate(RecoveryUpdate const&);
+        RecoveryUpdate();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI ~RecoveryUpdate();
+#endif
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+#ifdef LL_PLAT_C
+        MCNAPI void $dtor();
+#endif
+        // NOLINTEND
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void initialize() = 0;
+
+    virtual ::std::tuple<
+        ::Bedrock::Threading::Async<::Bedrock::WorldRecovery::RecoveryResult>,
+        ::Bedrock::PubSub::DeferredSubscription>
+        doRecovery(
+            ::std::string_view,
+            ::std::function<void(::Bedrock::WorldRecovery::RecoveryUpdate const&)>,
+            ::Bedrock::PubSub::DeferralType
+        ) = 0;
+
+    virtual ::Core::PathBuffer<::std::string> const& getRecoveryDestinationPath() const = 0;
+    // NOLINTEND
+};
+
+} // namespace Bedrock

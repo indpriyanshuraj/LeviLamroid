@@ -1,0 +1,112 @@
+#include "mc/world/level/block/Block.h"
+
+#include "mc/deps/core/string/HashedString.h"
+#include "mc/deps/nbt/CompoundTag.h"
+#include "mc/server/ServerLevel.h"
+#include "mc/world/level/BlockPalette.h"
+#include "mc/world/level/block/BedrockBlockNames.h"
+#include "mc/world/level/block/VanillaBlockTypeIds.h"
+#include "mc/world/level/block/block_serialization_utils/BlockSerializationUtils.h"
+#include "mc/world/level/block/registry/BlockTypeRegistry.h"
+#include "mc/world/level/material/Material.h"
+
+#include "ll/api/service/Bedrock.h"
+
+optional_ref<Block const> Block::tryGetFromRegistry(uint runtimeID) {
+    return ll::service::getLevel().transform([&](auto& level) -> decltype(auto) {
+        return level.getBlockPalette().getBlock(runtimeID);
+    });
+}
+optional_ref<Block const> Block::tryGetFromRegistry(HashedString const& name) {
+    return BlockType::tryGetFromRegistry(name).transform([&](auto& block) -> decltype(auto) {
+        return block.mDefaultState;
+    });
+}
+optional_ref<Block const> Block::tryGetFromRegistry(HashedString const& name, ushort legacyData) {
+    return BlockType::tryGetFromRegistry(name).transform([&](auto& block) -> decltype(auto) {
+        return block.tryGetStateFromLegacyData(legacyData);
+    });
+}
+optional_ref<Block const> Block::tryGetFromRegistry(uint legacyBlockID, ushort legacyData) {
+    return BlockType::tryGetFromRegistry(legacyBlockID).transform([&](auto& block) -> decltype(auto) {
+        return block.tryGetStateFromLegacyData(legacyData);
+    });
+}
+optional_ref<Block const> Block::tryGetFromRegistry(HashedString const& name, Block::BlockStatesType const& states) {
+    auto blockTypePtr = BlockType::tryGetFromRegistry(name);
+    if (!blockTypePtr) {
+        return nullptr;
+    }
+    auto& registry = BlockTypeRegistry::mBlockTypeRegistry().mValue;
+    if (!registry.isComplexAliasBlock(name)) {
+        return blockTypePtr->mDefaultState;
+    }
+    std::vector<BlockTypeRegistry::BlockComplexAliasBlockState> stateList;
+    for (auto& [k, v] : states) {
+        HashedString stateNameHash{k};
+        auto*        stateBase = blockTypePtr->getBlockState(stateNameHash);
+        if (stateBase == nullptr) {
+            continue;
+        }
+        int         value{};
+        CompoundTag state{};
+        std::visit([&](auto& val) { state[k] = val; }, v);
+        if (auto res = stateBase->_fromNBT(state); !res) {
+            continue;
+        } else {
+            value = res.value();
+        }
+        stateList.emplace_back(stateNameHash, value);
+    }
+    auto block = registry._lookupByNameImpl(name, 0, BlockTypeRegistry::LookupByNameImplResolve::Block, false).mBlock;
+    if (block) {
+        for (auto& state : stateList) {
+            if (block) {
+                auto legacyBlock = block->mBlockType.get();
+                if (!legacyBlock) {
+                    return std::nullopt;
+                }
+                auto blockState = legacyBlock->getBlockState(state.stateName);
+                if (!blockState) {
+                    block = nullptr;
+                    break;
+                }
+                block = legacyBlock->trySetState(*blockState, state.value, block->mData);
+            }
+        }
+    }
+    return block;
+}
+optional_ref<Block const> Block::tryGetFromRegistry(class CompoundTag const& nbt) {
+    return BlockSerializationUtils::tryGetBlockFromNBT(nbt, nullptr).second;
+}
+
+bool Block::isAir() const { return getBlockType().mNameInfo->mFullName->mStrHash == BedrockBlockNames::Air().mStrHash; }
+
+BlockOcclusionType Block::_getBlockOcclusionType() const {
+    if (hasProperty(BlockProperty::HalfSlab)) {
+        return BlockOcclusionType::HalfSlab;
+    }
+    if (hasProperty(BlockProperty::Leaves)) {
+        return BlockOcclusionType::Leaf;
+    }
+    if (hasProperty(BlockProperty::Connects2D)) {
+        return BlockOcclusionType::Connects2D;
+    }
+    auto const& material = mBlockType->mMaterial;
+    if (material.mLiquid) {
+        return BlockOcclusionType::IsLiquid;
+    }
+    if (hasProperty(BlockProperty::Portal)) {
+        return BlockOcclusionType::Portal;
+    }
+    if (material.mType == ::SharedTypes::v1_26_20::MaterialType::Ice) {
+        return BlockOcclusionType::Ice;
+    }
+    if (material.mType == ::SharedTypes::v1_26_20::MaterialType::Cactus) {
+        return BlockOcclusionType::Cactus;
+    }
+    return mBlockType->mNameInfo->mFullName->mStrHash == ::VanillaBlockTypeIds::SculkShrieker().mStrHash
+             ? BlockOcclusionType::SculkShrieker
+             : BlockOcclusionType::Default;
+}

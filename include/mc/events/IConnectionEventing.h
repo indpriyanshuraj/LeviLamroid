@@ -1,0 +1,52 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Level;
+// clang-format on
+
+class IConnectionEventing {
+public:
+    // IConnectionEventing inner types define
+    enum class ConnectionFailureReason : int {
+        Unknown                     = -1,
+        MismatchedMinecraftProtocol = 1,
+        MismatchedRaknetVersion     = 2,
+    };
+
+    enum class PlayerJoinWorldAttemptState : int {
+        Unknown                = 0,
+        AttemptingToJoin       = 1,
+        TimedOutAttemptingJoin = 2,
+        FailedToJoin           = 3,
+        SuccessfulJoin         = 4,
+        Canceled               = 5,
+        MissingEventDetected   = 6,
+    };
+
+    enum class ServerConnectionOutcome : int {
+        Success             = 0,
+        Failed              = 1,
+        FailedUserOffline   = 2,
+        FailedServerFull    = 3,
+        FailedServerOffline = 4,
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IConnectionEventing() = default;
+
+    virtual void fireServerConnectionEvent(
+        ::IConnectionEventing::ServerConnectionOutcome outcome,
+        ::std::chrono::milliseconds                    pingLatency,
+        double                                         timeElapsed,
+        ::std::string const&                           creatorName,
+        ::std::string const&                           worldId
+    ) = 0;
+
+    virtual void fireEventOnSuccessfulClientLogin(::Level const* level) = 0;
+    // NOLINTEND
+};

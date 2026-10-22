@@ -1,0 +1,151 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/CompactionStatus.h"
+#include "mc/deps/core/file/PathBuffer.h"
+#include "mc/deps/core/threading/Async.h"
+#include "mc/world/level/storage/StorageVersion.h"
+#include "mc/world/level/storage/db_helpers/Category.h"
+
+// auto generated forward declare list
+// clang-format off
+class ChunkSource;
+class CompoundTag;
+class ContentIdentity;
+class LevelData;
+class LevelStorageObserver;
+class LevelStorageWriteBatch;
+class Player;
+struct SnapshotFilenameAndLength;
+namespace Core { struct LevelStorageResult; }
+// clang-format on
+
+class LevelStorage {
+public:
+    // LevelStorage inner types define
+    enum class StatsType : uint {
+        Level0  = 0,
+        Level1  = 1,
+        Level2  = 2,
+        Memory  = 3,
+        Default = 0,
+    };
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~LevelStorage() = default;
+
+    virtual void addStorageObserver(::std::unique_ptr<::LevelStorageObserver> observer) = 0;
+
+    virtual bool loadedSuccessfully() const;
+
+    virtual ::std::unique_ptr<::CompoundTag>
+    getCompoundTag(::std::string const& key, ::DBHelpers::Category category) = 0;
+
+    virtual bool hasKey(::std::string_view key, ::DBHelpers::Category category) const = 0;
+
+    virtual void forEachKeyWithPrefix(
+        ::std::string_view                                                   prefix,
+        ::DBHelpers::Category                                                category,
+        ::std::function<void(::std::string_view, ::std::string_view)> const& callback
+    ) const = 0;
+
+    virtual bool loadLevelData(::LevelData& data) = 0;
+
+    virtual ::std::unique_ptr<::ChunkSource> createChunkStorage(::std::unique_ptr<::ChunkSource>, ::StorageVersion) = 0;
+
+    virtual void saveLevelData(::LevelData const& levelData) = 0;
+
+    virtual ::Core::PathBuffer<::std::string> const& getFullPath() const = 0;
+
+    virtual ::Bedrock::Threading::Async<void>
+    saveData(::std::string const& key, ::std::string&& data, ::DBHelpers::Category category) = 0;
+
+    virtual ::Bedrock::Threading::Async<void> saveData(::LevelStorageWriteBatch const& batch) = 0;
+
+    virtual ::Bedrock::Threading::Async<void> deleteData(::std::string const& key, ::DBHelpers::Category category) = 0;
+
+    virtual void getStatistics(::std::string& outStats, ::LevelStorage::StatsType statsType) const = 0;
+
+    virtual bool clonePlayerData(::std::string_view fromKey, ::std::string_view toKey, bool isEditorPlayer);
+
+    virtual ::Core::LevelStorageResult getLevelStorageState() const = 0;
+
+    virtual ::ContentIdentity const* getContentIdentity() const = 0;
+
+    virtual void startShutdown() = 0;
+
+    virtual bool isShuttingDown() const = 0;
+
+    virtual bool checkShutdownDone() = 0;
+
+    virtual bool loadData(::std::string_view key, ::std::string& buffer, ::DBHelpers::Category category) const;
+
+    virtual ::Core::LevelStorageResult getState() const = 0;
+
+    virtual ::std::vector<::SnapshotFilenameAndLength>
+    createSnapshot(::std::string const& filePrefix, bool flushWriteCache) = 0;
+
+    virtual void releaseSnapshot() = 0;
+
+    virtual ::Bedrock::Threading::Async<void> compactStorage() = 0;
+
+    virtual void syncAndSuspendStorage() = 0;
+
+    virtual void resumeStorage() = 0;
+
+    virtual void setFlushAllowed(bool flushAllowed) = 0;
+
+    virtual void flushToPermanentStorage() = 0;
+
+    virtual void freeCaches();
+
+    virtual void setCompactionCallback(::std::function<void(::CompactionStatus)> callback) = 0;
+
+    virtual void setCriticalSyncSaveCallback(::std::function<void()> callback) = 0;
+
+    virtual void corruptLevel();
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI ::std::unique_ptr<::LevelStorageWriteBatch> createWriteBatch();
+#endif
+
+    MCAPI ::std::string getServerId(::Player const& client, bool isXboxLive);
+
+    MCAPI ::std::vector<::std::string> loadAllPlayerIDs(bool includeLocalPlayer) const;
+
+    MCAPI ::std::unique_ptr<::CompoundTag> loadServerPlayerData(::Player const& client, bool isXboxLive);
+
+    MCAPI void save(::Player& player);
+
+    MCAPI ::Bedrock::Threading::Async<void>
+    saveData(::std::string const& key, ::CompoundTag const& tag, ::DBHelpers::Category category);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::string const& LEGACY_CONSOLE_PLAYER_PREFIX();
+
+    MCAPI static ::std::string const& LOCAL_PLAYER_EDITOR_TAG();
+
+    MCAPI static ::std::string const& LOCAL_PLAYER_TAG();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $clonePlayerData(::std::string_view fromKey, ::std::string_view toKey, bool isEditorPlayer);
+
+    MCFOLD void $corruptLevel();
+
+
+    // NOLINTEND
+};

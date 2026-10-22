@@ -1,0 +1,21 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/resources/IContentKeyProvider.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContentIdentity;
+// clang-format on
+
+class IContentAccessibilityProvider : public ::IContentKeyProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IContentAccessibilityProvider() /*override*/ = default;
+
+    virtual bool canAccess(::ContentIdentity const& contentIdentity) const = 0;
+    // NOLINTEND
+};

@@ -1,0 +1,23 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace OreUI::Detail {
+
+class IBindable {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IBindable() = default;
+
+    virtual void onReadyForBindings() = 0;
+
+    virtual void onSuspend() = 0;
+
+    virtual void onBindingsReleased() = 0;
+
+    virtual void update(double const time) = 0;
+    // NOLINTEND
+};
+
+} // namespace OreUI::Detail

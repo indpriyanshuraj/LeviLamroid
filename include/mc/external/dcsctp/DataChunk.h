@@ -1,0 +1,57 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/dcsctp/AnyDataChunk.h"
+#include "mc/external/dcsctp/TLVTrait.h"
+#include "mc/external/webrtc/ArrayView.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace dcsctp { struct DataChunkConfig; }
+// clang-format on
+
+namespace dcsctp {
+
+class DataChunk : public ::dcsctp::AnyDataChunk, public ::dcsctp::TLVTrait<::dcsctp::DataChunkConfig> {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void SerializeTo(::std::vector<uchar>& out) const /*override*/;
+
+    virtual ::std::string ToString() const /*override*/;
+
+    virtual ~DataChunk() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::std::optional<::dcsctp::DataChunk> Parse(::webrtc::ArrayView<uchar const> data);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void $SerializeTo(::std::vector<uchar>& out) const;
+
+    MCNAPI ::std::string $ToString() const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace dcsctp

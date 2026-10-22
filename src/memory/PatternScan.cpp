@@ -8,7 +8,18 @@
 #include <unordered_map>
 #include <mutex>
 
+#include <fcntl.h>
+
 namespace ll::memory {
+
+static bool isMemoryReadable(const void* ptr, size_t size) {
+    if (!ptr || size == 0) return false;
+    int nullfd = open("/dev/null", O_WRONLY);
+    if (nullfd < 0) return true;
+    ssize_t ret = write(nullfd, ptr, size);
+    close(nullfd);
+    return ret >= 0;
+}
 
 std::vector<int> parsePattern(const std::string& pattern) {
     std::vector<int> bytes;
@@ -30,7 +41,7 @@ bool verifyPattern(uintptr_t addr, const std::string& patternStr) {
     auto pattern = parsePattern(patternStr);
     if (pattern.empty()) return false;
 
-    if (!SafeMemory::isReadable(reinterpret_cast<const void*>(addr), pattern.size())) {
+    if (!isMemoryReadable(reinterpret_cast<const void*>(addr), pattern.size())) {
         return false;
     }
 

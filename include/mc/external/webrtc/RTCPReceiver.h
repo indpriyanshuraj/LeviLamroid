@@ -1,0 +1,390 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/ArrayView.h"
+#include "mc/external/webrtc/RtpRtcpInterface.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class Environment; }
+namespace webrtc { class ReportBlockData; }
+namespace webrtc { class TimeDelta; }
+namespace webrtc { class Timestamp; }
+namespace webrtc::rtcp { class CommonHeader; }
+namespace webrtc::rtcp { class ReportBlock; }
+namespace webrtc::rtcp { class Rrtr; }
+namespace webrtc::rtcp { class TmmbItem; }
+namespace webrtc::rtcp { struct ReceiveTimeInfo; }
+// clang-format on
+
+namespace webrtc {
+
+class RTCPReceiver {
+public:
+    // RTCPReceiver inner types declare
+    // clang-format off
+    struct LastFirStatus;
+    class ModuleRtpRtcp;
+    class NonSenderRttStats;
+    struct PacketInformation;
+    class RegisteredSsrcs;
+    struct RrtrInformation;
+    class RttStats;
+    struct TmmbrInformation;
+    // clang-format on
+
+    // RTCPReceiver inner types define
+    struct LastFirStatus {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8> mUnk43d0d1;
+        ::ll::UntypedStorage<1, 1> mUnk35d576;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        LastFirStatus& operator=(LastFirStatus const&);
+        LastFirStatus(LastFirStatus const&);
+        LastFirStatus();
+    };
+
+    class ModuleRtpRtcp {
+    public:
+        // virtual functions
+        // NOLINTBEGIN
+        virtual void SetTmmbn(::std::vector<::webrtc::rtcp::TmmbItem> bounding_set) = 0;
+
+        virtual void OnRequestSendReport() = 0;
+
+        virtual void OnReceivedNack(::std::vector<ushort> const& nack_sequence_numbers) = 0;
+
+        virtual void OnReceivedRtcpReportBlocks(::webrtc::ArrayView<::webrtc::ReportBlockData const> report_blocks) = 0;
+
+        virtual ~ModuleRtpRtcp() = default;
+        // NOLINTEND
+    };
+
+    class NonSenderRttStats {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 16> mUnk59dd82;
+        ::ll::UntypedStorage<8, 8>  mUnk5a1536;
+        ::ll::UntypedStorage<4, 4>  mUnkca9896;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        NonSenderRttStats& operator=(NonSenderRttStats const&);
+        NonSenderRttStats(NonSenderRttStats const&);
+        NonSenderRttStats();
+    };
+
+    struct PacketInformation {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4>   mUnkb10304;
+        ::ll::UntypedStorage<4, 4>   mUnk4a0133;
+        ::ll::UntypedStorage<8, 24>  mUnke0f0c6;
+        ::ll::UntypedStorage<8, 24>  mUnk200c9d;
+        ::ll::UntypedStorage<8, 16>  mUnk63fb49;
+        ::ll::UntypedStorage<4, 4>   mUnkb69d48;
+        ::ll::UntypedStorage<8, 8>   mUnk22422c;
+        ::ll::UntypedStorage<8, 64>  mUnk6fb1c3;
+        ::ll::UntypedStorage<4, 172> mUnk6b762e;
+        ::ll::UntypedStorage<8, 144> mUnk521b78;
+        ::ll::UntypedStorage<8, 8>   mUnkd2a463;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        PacketInformation& operator=(PacketInformation const&);
+        PacketInformation(PacketInformation const&);
+        PacketInformation();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI ~PacketInformation();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+    class RegisteredSsrcs {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<1, 1>  mUnk4c13f5;
+        ::ll::UntypedStorage<8, 24> mUnk8f2d4f;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RegisteredSsrcs& operator=(RegisteredSsrcs const&);
+        RegisteredSsrcs(RegisteredSsrcs const&);
+        RegisteredSsrcs();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI bool count(uint ssrc) const;
+
+        MCNAPI ~RegisteredSsrcs();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+    struct RrtrInformation {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4> mUnk2e959c;
+        ::ll::UntypedStorage<4, 4> mUnk6f8d04;
+        ::ll::UntypedStorage<4, 4> mUnk70c74c;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RrtrInformation& operator=(RrtrInformation const&);
+        RrtrInformation(RrtrInformation const&);
+        RrtrInformation();
+    };
+
+    class RttStats {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8> mUnkf5055e;
+        ::ll::UntypedStorage<8, 8> mUnkfbd3ff;
+        ::ll::UntypedStorage<8, 8> mUnkabd139;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        RttStats& operator=(RttStats const&);
+        RttStats(RttStats const&);
+        RttStats();
+    };
+
+    struct TmmbrInformation {
+    public:
+        // TmmbrInformation inner types declare
+        // clang-format off
+        struct TimedTmmbrItem;
+        // clang-format on
+
+        // TmmbrInformation inner types define
+        struct TimedTmmbrItem {
+        public:
+            // member variables
+            // NOLINTBEGIN
+            ::ll::UntypedStorage<8, 24> mUnkc7648d;
+            ::ll::UntypedStorage<8, 8>  mUnk58f74f;
+            // NOLINTEND
+
+        public:
+            // prevent constructor by default
+            TimedTmmbrItem& operator=(TimedTmmbrItem const&);
+            TimedTmmbrItem(TimedTmmbrItem const&);
+            TimedTmmbrItem();
+        };
+
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 8>  mUnk70b0df;
+        ::ll::UntypedStorage<1, 1>  mUnk703cf5;
+        ::ll::UntypedStorage<8, 24> mUnk47bc82;
+        ::ll::UntypedStorage<8, 16> mUnkad2270;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        TmmbrInformation& operator=(TmmbrInformation const&);
+        TmmbrInformation(TmmbrInformation const&);
+        TmmbrInformation();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI TmmbrInformation(::webrtc::RTCPReceiver::TmmbrInformation&&);
+
+        MCNAPI ::webrtc::RTCPReceiver::TmmbrInformation& operator=(::webrtc::RTCPReceiver::TmmbrInformation&&);
+
+        MCNAPI ~TmmbrInformation();
+        // NOLINTEND
+
+    public:
+        // constructor thunks
+        // NOLINTBEGIN
+        MCNAPI void* $ctor(::webrtc::RTCPReceiver::TmmbrInformation&&);
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 40> mUnkb2abd1;
+    ::ll::UntypedStorage<1, 1>  mUnkc3a58d;
+    ::ll::UntypedStorage<1, 1>  mUnkd865c8;
+    ::ll::UntypedStorage<8, 8>  mUnkbb5694;
+    ::ll::UntypedStorage<8, 32> mUnk29a22d;
+    ::ll::UntypedStorage<8, 8>  mUnkc11de9;
+    ::ll::UntypedStorage<8, 8>  mUnk3bd3d0;
+    ::ll::UntypedStorage<8, 8>  mUnke4ed2a;
+    ::ll::UntypedStorage<8, 8>  mUnkce9e59;
+    ::ll::UntypedStorage<8, 8>  mUnk77c62e;
+    ::ll::UntypedStorage<8, 8>  mUnkb68c3a;
+    ::ll::UntypedStorage<8, 40> mUnk643873;
+    ::ll::UntypedStorage<4, 4>  mUnkdc1ae4;
+    ::ll::UntypedStorage<8, 48> mUnk15b893;
+    ::ll::UntypedStorage<8, 16> mUnka72441;
+    ::ll::UntypedStorage<8, 32> mUnk80dd77;
+    ::ll::UntypedStorage<1, 1>  mUnkd92c89;
+    ::ll::UntypedStorage<8, 16> mUnkca010f;
+    ::ll::UntypedStorage<8, 8>  mUnk756ec7;
+    ::ll::UntypedStorage<8, 32> mUnka83f27;
+    ::ll::UntypedStorage<8, 32> mUnka12cd9;
+    ::ll::UntypedStorage<8, 32> mUnk2839b5;
+    ::ll::UntypedStorage<8, 32> mUnk2c1b45;
+    ::ll::UntypedStorage<8, 32> mUnk10a57b;
+    ::ll::UntypedStorage<8, 8>  mUnkfb80d4;
+    ::ll::UntypedStorage<8, 8>  mUnk77efb5;
+    ::ll::UntypedStorage<8, 8>  mUnk4a4374;
+    ::ll::UntypedStorage<8, 8>  mUnkb1356f;
+    ::ll::UntypedStorage<8, 8>  mUnkbe51a6;
+    ::ll::UntypedStorage<4, 20> mUnk658dd7;
+    ::ll::UntypedStorage<4, 12> mUnkd29957;
+    ::ll::UntypedStorage<8, 8>  mUnk17de96;
+    ::ll::UntypedStorage<8, 8>  mUnk1d003d;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RTCPReceiver& operator=(RTCPReceiver const&);
+    RTCPReceiver(RTCPReceiver const&);
+    RTCPReceiver();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::optional<::webrtc::TimeDelta> AverageRtt() const;
+
+    MCNAPI ::std::vector<::webrtc::rtcp::TmmbItem> BoundingSet(bool* tmmbr_owner);
+
+    MCNAPI ::std::vector<::webrtc::rtcp::ReceiveTimeInfo> ConsumeReceivedXrReferenceTimeInfo();
+
+    MCNAPI ::webrtc::RTCPReceiver::TmmbrInformation* FindOrCreateTmmbrInfo(uint remote_ssrc);
+
+    MCNAPI ::std::vector<::webrtc::ReportBlockData> GetLatestReportBlockData() const;
+
+    MCNAPI ::webrtc::RTCPReceiver::NonSenderRttStats GetNonSenderRTT() const;
+
+    MCNAPI ::std::optional<::webrtc::RtpRtcpInterface::SenderReportStats> GetSenderReportStats() const;
+
+    MCNAPI ::webrtc::RTCPReceiver::TmmbrInformation* GetTmmbrInformation(uint remote_ssrc);
+
+    MCNAPI bool HandleBye(::webrtc::rtcp::CommonHeader const& rtcp_block);
+
+    MCNAPI bool HandleCongestionControlFeedback(
+        ::webrtc::rtcp::CommonHeader const&        rtcp_block,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information
+    );
+
+    MCNAPI bool HandleFir(
+        ::webrtc::rtcp::CommonHeader const&        rtcp_block,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information
+    );
+
+    MCNAPI void HandleReportBlock(
+        ::webrtc::rtcp::ReportBlock const&         report_block,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information,
+        uint                                       remote_ssrc
+    );
+
+    MCNAPI bool HandleTmmbr(
+        ::webrtc::rtcp::CommonHeader const&        rtcp_block,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information
+    );
+
+    MCNAPI bool HandleXr(
+        ::webrtc::rtcp::CommonHeader const&        rtcp_block,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information,
+        bool&                                      contains_dlrr,
+        uint&                                      ssrc
+    );
+
+    MCNAPI void HandleXrDlrrReportBlock(uint sender_ssrc, ::webrtc::rtcp::ReceiveTimeInfo const& rti);
+
+    MCNAPI void HandleXrReceiveReferenceTime(uint sender_ssrc, ::webrtc::rtcp::Rrtr const& rrtr);
+
+    MCNAPI void IncomingPacket(::webrtc::ArrayView<uchar const> packet);
+
+    MCNAPI ::std::optional<::webrtc::TimeDelta> LastRtt() const;
+
+    MCNAPI ::std::optional<::webrtc::TimeDelta> OnPeriodicRttUpdate(::webrtc::Timestamp newer_than, bool sending);
+
+    MCNAPI bool ParseCompoundPacket(
+        ::webrtc::ArrayView<uchar const>           packet,
+        ::webrtc::RTCPReceiver::PacketInformation* packet_information
+    );
+
+    MCNAPI RTCPReceiver(
+        ::webrtc::Environment const&                     env,
+        ::webrtc::RtpRtcpInterface::Configuration const& config,
+        ::webrtc::RTCPReceiver::ModuleRtpRtcp*           owner
+    );
+
+    MCNAPI void SetNonSenderRttMeasurement(bool enabled);
+
+    MCNAPI void SetRemoteSSRC(uint ssrc);
+
+    MCNAPI ::std::vector<::webrtc::rtcp::TmmbItem> TmmbrReceived();
+
+    MCNAPI void TriggerCallbacksFromRtcpPacket(::webrtc::RTCPReceiver::PacketInformation const& packet_information);
+
+    MCNAPI void UpdateTmmbrRemoteIsAlive(uint remote_ssrc);
+
+    MCNAPI void set_local_media_ssrc(uint ssrc);
+
+    MCNAPI ~RTCPReceiver();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(
+        ::webrtc::Environment const&                     env,
+        ::webrtc::RtpRtcpInterface::Configuration const& config,
+        ::webrtc::RTCPReceiver::ModuleRtpRtcp*           owner
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace webrtc

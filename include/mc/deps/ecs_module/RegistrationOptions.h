@@ -1,0 +1,35 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+struct TickingSystemWithInfo;
+// clang-format on
+
+namespace ECSModule {
+
+struct RegistrationOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 1>  mUnk932cf3;
+    ::ll::UntypedStorage<1, 1>  mUnk2b4915;
+    ::ll::UntypedStorage<1, 1>  mUnkda5e8c;
+    ::ll::UntypedStorage<1, 1>  mUnk3fc97f;
+    ::ll::UntypedStorage<8, 32> mUnkc0443a;
+    ::ll::UntypedStorage<2, 12> mUnk876c1b;
+    ::ll::UntypedStorage<8, 8>  mUnk4ce9c1;
+    ::ll::UntypedStorage<8, 8>  mUnk81c0d8;
+    ::ll::UntypedStorage<8, 8>  mUnkb85446;
+    ::ll::UntypedStorage<8, 8>  mUnk797ea0;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RegistrationOptions& operator=(RegistrationOptions const&);
+    RegistrationOptions(RegistrationOptions const&);
+    RegistrationOptions();
+};
+
+} // namespace ECSModule

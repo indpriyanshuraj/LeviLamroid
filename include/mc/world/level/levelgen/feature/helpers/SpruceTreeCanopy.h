@@ -1,0 +1,62 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/IntRange.h"
+#include "mc/world/level/block/BlockDescriptor.h"
+#include "mc/world/level/levelgen/feature/helpers/ITreeCanopy.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class IBlockWorldGenAPI;
+class Random;
+class RenderParams;
+namespace TreeHelper { struct TreeParams; }
+// clang-format on
+
+class SpruceTreeCanopy : public ::ITreeCanopy {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 8, ::IntRange>          mLowerOffset;
+    ::ll::TypedStorage<4, 8, ::IntRange>          mUpperOffset;
+    ::ll::TypedStorage<4, 8, ::IntRange>          mRadius;
+    ::ll::TypedStorage<8, 176, ::BlockDescriptor> mLeafBlockDescriptor;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~SpruceTreeCanopy() /*override*/ = default;
+
+    virtual ::std::optional<::BlockPos> placeCanopy(
+        ::IBlockWorldGenAPI& target,
+        ::BlockPos const&    pos,
+        ::ITreeCanopy::BranchSize const&,
+        ::Random& random,
+        ::RenderParams&,
+        ::TreeHelper::TreeParams const& treeParams,
+        ::std::vector<::BlockPos> const&,
+        ::std::vector<::ITreeCanopy::BranchSize> const&
+    ) const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::std::optional<::BlockPos> $placeCanopy(
+        ::IBlockWorldGenAPI& target,
+        ::BlockPos const&    pos,
+        ::ITreeCanopy::BranchSize const&,
+        ::Random& random,
+        ::RenderParams&,
+        ::TreeHelper::TreeParams const& treeParams,
+        ::std::vector<::BlockPos> const&,
+        ::std::vector<::ITreeCanopy::BranchSize> const&
+    ) const;
+
+
+    // NOLINTEND
+};

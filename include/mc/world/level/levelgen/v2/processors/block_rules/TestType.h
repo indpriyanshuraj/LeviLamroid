@@ -1,0 +1,26 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class IRandom;
+namespace Util { class XXHash; }
+// clang-format on
+
+namespace br::worldgen::processors::BlockRules {
+
+struct TestType {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~TestType() = default;
+
+    virtual bool test(::Block const& block, ::IRandom& random) const = 0;
+
+    virtual void appendMetadataKey(::Util::XXHash& hash) const = 0;
+    // NOLINTEND
+};
+
+} // namespace br::worldgen::processors::BlockRules

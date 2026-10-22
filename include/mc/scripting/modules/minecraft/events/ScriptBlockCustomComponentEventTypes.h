@@ -1,0 +1,25 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace ScriptModuleMinecraft {
+
+enum class ScriptBlockCustomComponentEventTypes : ushort {
+    OnStepOn            = 0,
+    OnRandomTick        = 1,
+    OnRandomTickLegacy  = 2,
+    OnEntityFallOn      = 3,
+    OnTick              = 4,
+    OnStepOff           = 5,
+    OnPlayerInteract    = 6,
+    OnPlayerBreak       = 7,
+    OnPlace             = 8,
+    OnBreak             = 9,
+    OnActor             = 10,
+    BeforeOnPlayerPlace = 11,
+    OnRedstoneUpdate    = 12,
+    OnBlockStateChange  = 13,
+    Count               = 14,
+};
+
+}

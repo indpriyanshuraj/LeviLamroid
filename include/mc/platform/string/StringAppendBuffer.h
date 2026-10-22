@@ -1,0 +1,45 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Bedrock {
+
+class StringAppendBuffer : public ::std::streambuf {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8> mUnkb33ce2;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    StringAppendBuffer& operator=(StringAppendBuffer const&);
+    StringAppendBuffer(StringAppendBuffer const&);
+    StringAppendBuffer();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual int overflow(int c) /*override*/;
+
+    virtual int64 xsputn(char const* s, int64 n) /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI int $overflow(int c);
+
+    MCNAPI int64 $xsputn(char const* s, int64 n);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace Bedrock

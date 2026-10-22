@@ -1,0 +1,18 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+struct WorldTemplateManagerProxyCallbacks {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 64> mUnkf80408;
+    ::ll::UntypedStorage<8, 64> mUnkcc2ce5;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    WorldTemplateManagerProxyCallbacks& operator=(WorldTemplateManagerProxyCallbacks const&);
+    WorldTemplateManagerProxyCallbacks(WorldTemplateManagerProxyCallbacks const&);
+    WorldTemplateManagerProxyCallbacks();
+};

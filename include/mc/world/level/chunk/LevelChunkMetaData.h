@@ -1,0 +1,22 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/nbt/CompoundTag.h"
+
+class LevelChunkMetaData {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 24, ::CompoundTag> mMetaData;
+    ::ll::TypedStorage<8, 8, uint64>         mCurrentHash;
+    ::ll::TypedStorage<1, 1, bool>           mHashNeedsRecomputing;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void _recomputeHash() const;
+    // NOLINTEND
+};

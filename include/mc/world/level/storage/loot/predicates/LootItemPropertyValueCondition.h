@@ -1,0 +1,43 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/storage/loot/predicates/LootItemCondition.h"
+
+// auto generated forward declare list
+// clang-format off
+class LootTableContext;
+class PropertyComponent;
+class Random;
+// clang-format on
+
+class LootItemPropertyValueCondition : public ::LootItemCondition {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 48> mUnke360f1;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    LootItemPropertyValueCondition& operator=(LootItemPropertyValueCondition const&);
+    LootItemPropertyValueCondition(LootItemPropertyValueCondition const&);
+    LootItemPropertyValueCondition();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool _applies(::Random&, ::LootTableContext& context) /*override*/;
+
+    virtual bool _hasPropertyValue(::PropertyComponent const& component) const = 0;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI bool $_applies(::Random&, ::LootTableContext& context);
+
+
+    // NOLINTEND
+};

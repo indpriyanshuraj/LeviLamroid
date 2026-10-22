@@ -1,0 +1,68 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/util/json_util/JsonSchemaObjectNode.h"
+
+// auto generated forward declare list
+// clang-format off
+class EntityContext;
+class ItemDescriptor;
+struct ActorDefinitionFeedItem;
+struct AgeableComponent;
+namespace JsonUtil { class EmptyClass; }
+// clang-format on
+
+class AgeableDefinition {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>   mUnk207183;
+    ::ll::UntypedStorage<8, 64>  mUnk1793dc;
+    ::ll::UntypedStorage<8, 24>  mUnk238b7c;
+    ::ll::UntypedStorage<8, 24>  mUnk921531;
+    ::ll::UntypedStorage<8, 104> mUnka52bbd;
+    ::ll::UntypedStorage<8, 24>  mUnk6f6d9a;
+    ::ll::UntypedStorage<8, 24>  mUnk16daff;
+    ::ll::UntypedStorage<8, 104> mUnk2ae021;
+    ::ll::UntypedStorage<8, 104> mUnk10292d;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    AgeableDefinition& operator=(AgeableDefinition const&);
+    AgeableDefinition(AgeableDefinition const&);
+    AgeableDefinition();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI void addDropItem(::ItemDescriptor const& itemDescriptor);
+
+    MCAPI void addFeedItem(::ActorDefinitionFeedItem const& feedItem);
+
+    MCAPI void addFeedItemByName(::std::string const& itemName);
+
+    MCAPI void addPauseGrowthItem(::ItemDescriptor const& itemDescriptor);
+
+    MCAPI void addResetGrowthItem(::ItemDescriptor const& itemDescriptor);
+
+    MCAPI void initialize(::EntityContext& entity, ::AgeableComponent& component) const;
+
+    MCAPI ~AgeableDefinition();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void
+    buildSchema(::std::shared_ptr<::JsonUtil::JsonSchemaObjectNode<::JsonUtil::EmptyClass, ::AgeableDefinition>>& root);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};

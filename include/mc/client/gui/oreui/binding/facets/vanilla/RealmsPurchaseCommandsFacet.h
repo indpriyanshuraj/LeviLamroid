@@ -1,0 +1,85 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/oreui/binding/FacetBase_DEPRECATED.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Realms { class LegacyRealmsPurchase; }
+namespace Realms { class LegacyRealmsPurchaseReconciler; }
+// clang-format on
+
+namespace OreUI {
+
+class RealmsPurchaseCommandsFacet : public ::OreUI::FacetBase_DEPRECATED<::OreUI::RealmsPurchaseCommandsFacet> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 16, ::std::shared_ptr<::Realms::LegacyRealmsPurchaseReconciler>> mRealmsPurchaseReconciler;
+    ::ll::TypedStorage<8, 16, ::std::shared_ptr<::Realms::LegacyRealmsPurchase>>           mRealmsPurchase;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RealmsPurchaseCommandsFacet();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~RealmsPurchaseCommandsFacet() /*override*/ = default;
+
+    virtual bool update() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI RealmsPurchaseCommandsFacet(
+        ::std::shared_ptr<::Realms::LegacyRealmsPurchase>           realmsPurchase,
+        ::std::shared_ptr<::Realms::LegacyRealmsPurchaseReconciler> realmsPurchaseReconciler
+    );
+
+    MCAPI void fulfillPriorRealmsPurchase(::std::string const& xuid);
+
+    MCAPI void prepareAppStoreForReconciliation(::std::string const& xuid);
+
+    MCAPI void prepareAppStoreForTrialPurchases(::std::string const& xuid, ::std::string const& worldName);
+
+    MCAPI void purchaseTrial(::std::string const& xuid, ::std::string const& worldName);
+
+    MCAPI void resetPurchase();
+
+    MCAPI void resetReconciler();
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<char const[]> NAME();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::std::shared_ptr<::Realms::LegacyRealmsPurchase>           realmsPurchase,
+        ::std::shared_ptr<::Realms::LegacyRealmsPurchaseReconciler> realmsPurchaseReconciler
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $update();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace OreUI

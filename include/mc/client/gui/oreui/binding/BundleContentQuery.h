@@ -1,0 +1,50 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/client/gui/oreui/binding/QueryBase.h"
+#include "mc/client/gui/oreui/binding/properties/PropertyVector.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace GameplayUI { struct GameplayUIContext; }
+namespace OreUI { struct ContainerItemPropertyObject; }
+// clang-format on
+
+namespace OreUI {
+
+class BundleContentQuery : public ::OreUI::QueryBase<::OreUI::BundleContentQuery> {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<
+        8,
+        120,
+        ::OreUI::PropertyVector<::OreUI::ContainerItemPropertyObject, ::OreUI::ContainerItemPropertyObject>>
+                                                                                              mItems;
+    ::ll::TypedStorage<8, 24, ::Bedrock::NotNullNonOwnerPtr<::GameplayUI::GameplayUIContext>> mContext;
+    ::ll::TypedStorage<4, 4, int>                                                             mBundleID;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void update(double) /*override*/;
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCAPI static ::std::add_lvalue_reference_t<char const[34]> NAME();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $update(double);
+    // NOLINTEND
+};
+
+} // namespace OreUI

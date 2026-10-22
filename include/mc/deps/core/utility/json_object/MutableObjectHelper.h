@@ -1,0 +1,28 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/json_object/ObjectHelperBase.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Bedrock::JSONObject { class Node; }
+namespace Bedrock::JSONObject { class ValueWrapper; }
+// clang-format on
+
+namespace Bedrock::JSONObject {
+
+class MutableObjectHelper : public ::Bedrock::JSONObject::ObjectHelperBase<0> {
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::pair<
+        ::std::_Tree_iterator<::std::_Tree_val<
+            ::std::_Tree_simple_types<::std::pair<::std::string_view const, ::Bedrock::JSONObject::Node*>>>>,
+        bool>
+    insert(::std::string_view key, ::Bedrock::JSONObject::ValueWrapper const& value, bool copyKey);
+    // NOLINTEND
+};
+
+} // namespace Bedrock::JSONObject

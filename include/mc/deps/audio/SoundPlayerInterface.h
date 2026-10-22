@@ -1,0 +1,118 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/audio/SoundPauseSource.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+
+// auto generated forward declare list
+// clang-format off
+class ServerSoundHandle;
+class Vec3;
+struct LoopingSoundAttributes;
+struct LoopingSoundState;
+struct PlaySoundOptions;
+struct PlayingSoundAttributes;
+struct SoundInstanceProperties;
+namespace Core { class Path; }
+namespace Core { class PathView; }
+class SoundItem;
+// clang-format on
+
+class SoundPlayerInterface : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~SoundPlayerInterface() /*override*/ = default;
+
+    virtual uint64 play(
+        ::std::string const&                 name,
+        ::Vec3 const&                        pos,
+        float                                volume,
+        float                                pitch,
+        ::std::optional<::ServerSoundHandle> serverSoundHandle
+    ) = 0;
+
+    virtual uint64 play(::PlaySoundOptions options) = 0;
+
+    virtual uint64 playUI(::std::string const& name, float volume, float pitch) = 0;
+
+    virtual void playMusic(::std::string const& eventName, float volume, uint& playlistIndex) = 0;
+
+    virtual void playMusic(::std::string const& eventName, float volume) = 0;
+
+    virtual bool isLoadingMusic() const = 0;
+
+    virtual bool isPlayingMusicEvent(::std::string const& eventName) const = 0;
+
+    virtual bool isPlayingMusic(::Core::PathView soundPath) const = 0;
+
+    virtual void fadeToStopMusic(float fadeSeconds) = 0;
+
+    virtual void setMusicCommandVolumeMultiplier(float volumeMultiplier) = 0;
+
+    virtual void fadeOut(uint64 handle, float duration) = 0;
+
+    virtual void stopMusic() = 0;
+
+    virtual void stop(::std::string const& name) = 0;
+
+    virtual void stop(uint64 handle) = 0;
+
+    virtual void stop(::ServerSoundHandle serverSoundHandle) = 0;
+
+    virtual void setVolume(::ServerSoundHandle serverSoundHandle, float volume) = 0;
+
+    virtual void setPitch(::ServerSoundHandle serverSoundHandle, float pitch) = 0;
+
+    virtual void fade(::ServerSoundHandle serverSoundHandle, float duration, float targetVolume) = 0;
+
+    virtual void setPlaybackPosition(::ServerSoundHandle serverSoundHandle, float seconds) = 0;
+
+    virtual void pause(::ServerSoundHandle serverSoundHandle, ::SoundPauseSource source) = 0;
+
+    virtual void resume(::ServerSoundHandle serverSoundHandle, ::SoundPauseSource source) = 0;
+
+    virtual void stopAllSounds() = 0;
+
+    virtual void pauseAllPlayingSounds(::SoundPauseSource source) = 0;
+
+    virtual void resumeAllPreviouslyPlayingSounds(::SoundPauseSource source) = 0;
+
+    virtual void pauseMusic(bool state) = 0;
+
+    virtual ::Core::PathView getCurrentlyPlayingMusicPath() const = 0;
+
+    virtual bool getItem(::std::string const& eventName, ::Core::PathView soundPath, ::SoundItem& soundItem) const = 0;
+
+    virtual uint64 registerLoop(
+        ::std::string const&                        name,
+        ::std::function<void(::LoopingSoundState&)> getSoundState,
+        float                                       fadeInDuration,
+        float                                       fadeOutDuration
+    ) = 0;
+
+    virtual void unregisterLoop(uint64 handle, bool hard) = 0;
+
+    virtual ::std::optional<::std::string> getSubtitle(::std::string const& name) const = 0;
+
+    virtual bool isPlayingSound(uint64 handle) const = 0;
+
+    virtual bool isPlayingSound(::Core::Path const& soundName) const = 0;
+
+    virtual bool isPlayingSound(::ServerSoundHandle serverSoundHandle) const = 0;
+
+    virtual uint64 playAttached(
+        ::std::string const&                                eventName,
+        ::std::function<void(::SoundInstanceProperties&)>&& getSoundProperties
+    ) = 0;
+
+    virtual ::std::optional<::PlayingSoundAttributes> tryGetPlayingSoundAttributes(uint64 handle) const = 0;
+
+    virtual ::std::optional<::PlayingSoundAttributes>
+    tryGetPlayingSoundAttributes(::ServerSoundHandle serverSoundHandle) const = 0;
+
+    virtual ::std::optional<::LoopingSoundAttributes> tryGetLoopingSoundAttributes(uint64 handle) const = 0;
+    // NOLINTEND
+};

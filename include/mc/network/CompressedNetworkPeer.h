@@ -1,0 +1,63 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/network/NetworkSettingOptions.h"
+
+// auto generated inclusion list
+#include "mc/network/Compressibility.h"
+#include "mc/network/NetworkPeer.h"
+#include "mc/network/NetworkSettingOptions.h"
+
+class CompressedNetworkPeer : public ::NetworkPeer {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 32, ::std::string>           mSendBuffer;
+    ::ll::TypedStorage<8, 32, ::std::string>           mReceiveBuffer;
+    ::ll::TypedStorage<1, 1, bool>                     mCompressionEnabled;
+    ::ll::TypedStorage<1, 1, bool>                     mHybridCompressionEnabled;
+    ::ll::TypedStorage<8, 8, uint64>                   mMaxDecompressedSize;
+    ::ll::TypedStorage<4, 20, ::NetworkSettingOptions> mNetworkSettings;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~CompressedNetworkPeer() /*override*/ = default;
+
+    virtual void sendPacket(
+        ::std::string const&       data,
+        ::NetworkPeer::Reliability reliability,
+        ::Compressibility          compressible
+    ) /*override*/;
+
+    virtual ::NetworkPeer::NetworkStatus getNetworkStatus() const /*override*/;
+
+    virtual ::NetworkPeer::DataStatus _receivePacket(
+        ::std::string&                                                    outData,
+        ::std::shared_ptr<::std::chrono::steady_clock::time_point> const& timepointPtr
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI void
+    $sendPacket(::std::string const& data, ::NetworkPeer::Reliability reliability, ::Compressibility compressible);
+
+    MCNAPI ::NetworkPeer::NetworkStatus $getNetworkStatus() const;
+
+    MCNAPI ::NetworkPeer::DataStatus $_receivePacket(
+        ::std::string&                                                    outData,
+        ::std::shared_ptr<::std::chrono::steady_clock::time_point> const& timepointPtr
+    );
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

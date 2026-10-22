@@ -1,0 +1,55 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/item/ItemColor.h"
+#include "mc/world/level/block/BannerBlockType.h"
+#include "mc/world/level/storage/loot/functions/LootItemFunction.h"
+
+// auto generated forward declare list
+// clang-format off
+class ItemStackBase;
+class LootTableContext;
+class Random;
+namespace Json { class Value; }
+// clang-format on
+
+class SetBannerDetailsFunction : public ::LootItemFunction {
+public:
+    // SetBannerDetailsFunction inner types define
+    using Pattern = ::std::pair<uchar, ::ItemColor>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, ::BannerBlockType>                               mBannerType;
+    ::ll::TypedStorage<1, 1, ::ItemColor>                                     mBaseColor;
+    ::ll::TypedStorage<8, 24, ::std::vector<::std::pair<uchar, ::ItemColor>>> mBannerPatterns;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::LootItemFunction::FunctionType getFunctionType() const /*override*/;
+
+    virtual void applyPreVersion(::ItemStackBase& item, ::Random&, ::LootTableContext&) /*override*/;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static void
+    _parseBannerPattern(::std::vector<::std::pair<uchar, ::ItemColor>>& patternVec, ::Json::Value const& object);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD ::LootItemFunction::FunctionType $getFunctionType() const;
+
+    MCAPI void $applyPreVersion(::ItemStackBase& item, ::Random&, ::LootTableContext&);
+
+
+    // NOLINTEND
+};

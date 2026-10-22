@@ -1,0 +1,70 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/options/option_types/IntOption.h"
+#include "mc/options/option_types/OptionID.h"
+#include "mc/options/option_types/OptionOwnerType.h"
+#include "mc/options/option_types/OptionResetFlags.h"
+
+// auto generated forward declare list
+// clang-format off
+class GameVersion;
+// clang-format on
+
+class EnumOption : public ::IntOption {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::std::unordered_map<int, ::std::string> const&> ValueNameMap;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EnumOption& operator=(EnumOption const&);
+    EnumOption(EnumOption const&);
+    EnumOption();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI EnumOption(
+        ::OptionID                                      id,
+        ::OptionOwnerType                               ownerType,
+        ::OptionResetFlags                              resetFlags,
+        ::std::string const&                            captionId,
+        ::std::string const&                            saveTag,
+        int                                             value,
+        ::std::vector<int> const&                       values,
+        ::std::unordered_map<int, ::std::string> const& valueNameMap,
+        ::GameVersion                                   version
+    );
+#endif
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void* $ctor(
+        ::OptionID                                      id,
+        ::OptionOwnerType                               ownerType,
+        ::OptionResetFlags                              resetFlags,
+        ::std::string const&                            captionId,
+        ::std::string const&                            saveTag,
+        int                                             value,
+        ::std::vector<int> const&                       values,
+        ::std::unordered_map<int, ::std::string> const& valueNameMap,
+        ::GameVersion                                   version
+    );
+#endif
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

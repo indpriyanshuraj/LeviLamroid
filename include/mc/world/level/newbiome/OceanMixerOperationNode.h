@@ -1,0 +1,93 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/level/biome/BiomeTemperatureCategory.h"
+#include "mc/world/level/newbiome/MixerOperationNode.h"
+#include "mc/world/level/newbiome/OperationGraphResult.h"
+#include "mc/world/level/newbiome/OperationNode.h"
+#include "mc/world/level/newbiome/operation_node_details/WorkingData.h"
+
+// auto generated forward declare list
+// clang-format off
+class Biome;
+class BiomeRegistry;
+class Pos2d;
+// clang-format on
+
+class OceanMixerOperationNode
+: public ::MixerOperationNode<::Biome const*, ::Pos2d, ::Biome const*, ::BiomeTemperatureCategory> {
+public:
+    // OceanMixerOperationNode inner types define
+    using OceanData = ::OperationGraphResult<::BiomeTemperatureCategory>;
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Biome const*>                                        mGenericShallowOcean;
+    ::ll::TypedStorage<8, 8, ::Biome const*>                                        mGenericDeepOcean;
+    ::ll::TypedStorage<8, 120, ::std::vector<::std::pair<::Biome const*, uint>>[5]> mShallowOceanBiomes;
+    ::ll::TypedStorage<8, 120, ::std::vector<::std::pair<::Biome const*, uint>>[5]> mDeepOceanBiomes;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    OceanMixerOperationNode();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void _fillArea(
+        ::OperationNodeDetails::WorkingData<::Biome const*, ::Biome const*>& operationNodeData,
+        ::Pos2d const&                                                       origin,
+        ::Pos2d const&                                                       size,
+        int                                                                  pw,
+        ::OperationGraphResult<::BiomeTemperatureCategory>                   oceanData
+    ) const /*override*/;
+
+    virtual ::std::tuple<::Pos2d, ::Pos2d> _getAreaRead(::Pos2d const& origin, ::Pos2d const& size) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI OceanMixerOperationNode(
+        uint                                                                     seedMixup,
+        ::std::shared_ptr<::OperationNode<::Biome const*, ::Pos2d>>&             biomeLayer,
+        ::std::shared_ptr<::OperationNode<::BiomeTemperatureCategory, ::Pos2d>>& oceanLayer,
+        ::BiomeRegistry const&                                                   registry,
+        ::Biome const&                                                           genericShallowOcean,
+        ::Biome const&                                                           genericDeepOcean
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        uint                                                                     seedMixup,
+        ::std::shared_ptr<::OperationNode<::Biome const*, ::Pos2d>>&             biomeLayer,
+        ::std::shared_ptr<::OperationNode<::BiomeTemperatureCategory, ::Pos2d>>& oceanLayer,
+        ::BiomeRegistry const&                                                   registry,
+        ::Biome const&                                                           genericShallowOcean,
+        ::Biome const&                                                           genericDeepOcean
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI void $_fillArea(
+        ::OperationNodeDetails::WorkingData<::Biome const*, ::Biome const*>& operationNodeData,
+        ::Pos2d const&                                                       origin,
+        ::Pos2d const&                                                       size,
+        int                                                                  pw,
+        ::OperationGraphResult<::BiomeTemperatureCategory>                   oceanData
+    ) const;
+
+    MCAPI ::std::tuple<::Pos2d, ::Pos2d> $_getAreaRead(::Pos2d const& origin, ::Pos2d const& size) const;
+
+
+    // NOLINTEND
+};

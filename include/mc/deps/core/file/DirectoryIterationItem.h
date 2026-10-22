@@ -1,0 +1,48 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Core { class PathView; }
+// clang-format on
+
+namespace Core {
+
+struct DirectoryIterationItem {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnkba94d0;
+    ::ll::UntypedStorage<8, 32> mUnk47aa5b;
+    ::ll::UntypedStorage<8, 8>  mUnk657388;
+    ::ll::UntypedStorage<8, 8>  mUnk5990e0;
+    ::ll::UntypedStorage<4, 4>  mUnk657618;
+    ::ll::UntypedStorage<8, 8>  mUnkd41f5c;
+    ::ll::UntypedStorage<8, 8>  mUnkf25ac3;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    DirectoryIterationItem& operator=(DirectoryIterationItem const&);
+    DirectoryIterationItem(DirectoryIterationItem const&);
+    DirectoryIterationItem();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void setFullPathName(::Core::PathView fullPathName);
+
+    MCNAPI void setName(::Core::PathView name);
+
+    MCNAPI ~DirectoryIterationItem();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Core

@@ -1,0 +1,55 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/PathBuffer.h"
+
+// auto generated forward declare list
+// clang-format off
+class PackAccessStrategy;
+// clang-format on
+
+class ResourceSignature {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 64> mUnke8472c;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ResourceSignature& operator=(ResourceSignature const&);
+    ResourceSignature(ResourceSignature const&);
+    ResourceSignature();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI bool _areKnownFilesValid(::PackAccessStrategy const& accessStrategy, bool requiresSignaturesFile);
+#endif
+
+#ifdef LL_PLAT_S
+    MCNAPI bool _areKnownFilesValid(::PackAccessStrategy const& accessStrategy, bool requiresSignaturesFile);
+#endif
+
+#ifdef LL_PLAT_C
+    MCNAPI ~ResourceSignature();
+#endif
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::Core::PathBuffer<::std::string> const& SIGNATURE_FILENAME();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};

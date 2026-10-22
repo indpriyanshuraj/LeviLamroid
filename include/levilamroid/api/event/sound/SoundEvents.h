@@ -1,17 +1,13 @@
 #pragma once
 
 #include <string>
-#include "levilamroid/api/event/Event.h"
+#include "ll/api/event/Event.h"
 #include "levilamroid/api/sound/SoundEngine.h"
 #include "levilamroid/api/sound/LevelSoundEvent.h"
 
 namespace ll::event {
 
-/// @brief Fired before Minecraft plays any 3D sound event in the world.
-/// Essential for acoustic simulation mods (e.g. Sound Physics / Spatial Reverb).
-/// Mods can read sound parameters, perform block raycasts, calculate occlusion / reverberation,
-/// adjust volume and pitch, or cancel the sound entirely.
-class SoundPlayEvent : public Event {
+class SoundPlayEvent final : public Event {
 private:
     std::string mSoundName;
     levilamroid::mcpe::Vec3 mPosition;
@@ -40,8 +36,7 @@ public:
     void setPitch(float p) { mPitch = p; }
 };
 
-/// @brief Fired when a high-level gameplay sound event is triggered (e.g. footsteps, breaking, chests).
-class LevelSoundEventOccurred : public Event {
+class LevelSoundEventOccurred final : public Event {
 private:
     levilamroid::mcpe::LevelSoundEvent mType;
     levilamroid::mcpe::Vec3 mPosition;
@@ -60,7 +55,3 @@ public:
 };
 
 } // namespace ll::event
-
-namespace levilamroid::event {
-    using namespace ll::event;
-}

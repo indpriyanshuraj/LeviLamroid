@@ -1,0 +1,73 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/container/MovePriorityQueue.h"
+#include "mc/deps/core/threading/BackgroundTaskBase.h"
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/platform/brstd/flat_set.h"
+
+// auto generated forward declare list
+// clang-format off
+class BackgroundTaskBase;
+// clang-format on
+
+class WorkerPool : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 1>   mUnkc24dea;
+    ::ll::UntypedStorage<8, 24>  mUnkd8a69f;
+    ::ll::UntypedStorage<8, 32>  mUnk7789a2;
+    ::ll::UntypedStorage<8, 64>  mUnk66023e;
+    ::ll::UntypedStorage<8, 8>   mUnk462341;
+    ::ll::UntypedStorage<8, 8>   mUnk5991a5;
+    ::ll::UntypedStorage<8, 80>  mUnk831ddc;
+    ::ll::UntypedStorage<4, 4>   mUnkda7062;
+    ::ll::UntypedStorage<4, 4>   mUnk853032;
+    ::ll::UntypedStorage<8, 24>  mUnkceb84a;
+    ::ll::UntypedStorage<8, 24>  mUnk6b6c7b;
+    ::ll::UntypedStorage<8, 8>   mUnk5695b7;
+    ::ll::UntypedStorage<8, 360> mUnk40c061;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    WorkerPool& operator=(WorkerPool const&);
+    WorkerPool(WorkerPool const&);
+    WorkerPool();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~WorkerPool() /*override*/ = default;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ::std::vector<::std::thread::id> getThreadIds() const;
+
+    MCNAPI void kick(uint64 count);
+#endif
+
+    MCNAPI void queue(::std::shared_ptr<::BackgroundTaskBase> task, bool queueImmediate);
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static void _registerPool(::WorkerPool& pool);
+    // NOLINTEND
+
+public:
+    // static variables
+    // NOLINTBEGIN
+    MCNAPI static ::brstd::flat_set<::WorkerPool*, ::std::less<::WorkerPool*>, ::std::vector<::WorkerPool*>>&
+    sAllPools();
+
+    MCNAPI static ::std::mutex& sAllPoolsMutex();
+    // NOLINTEND
+};

@@ -1,0 +1,59 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace Scripting { struct InterfaceBinding; }
+// clang-format on
+
+namespace Editor::ScriptModule {
+
+class ScriptWidgetCreateOptions {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<1, 2>   mUnk682969;
+    ::ll::UntypedStorage<1, 2>   mUnk9c524c;
+    ::ll::UntypedStorage<4, 8>   mUnk8984bf;
+    ::ll::UntypedStorage<4, 16>  mUnke60091;
+    ::ll::UntypedStorage<1, 2>   mUnk91901b;
+    ::ll::UntypedStorage<1, 2>   mUnkebb8cf;
+    ::ll::UntypedStorage<1, 2>   mUnkdf15ce;
+    ::ll::UntypedStorage<8, 40>  mUnkbaabc5;
+    ::ll::UntypedStorage<4, 16>  mUnk41ac7c;
+    ::ll::UntypedStorage<4, 16>  mUnkfc3427;
+    ::ll::UntypedStorage<8, 120> mUnkd41faf;
+    ::ll::UntypedStorage<4, 8>   mUnk82e11c;
+    ::ll::UntypedStorage<1, 2>   mUnkbb0b4b;
+    ::ll::UntypedStorage<8, 40>  mUnkc53364;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    ScriptWidgetCreateOptions(ScriptWidgetCreateOptions const&);
+    ScriptWidgetCreateOptions();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::Editor::ScriptModule::ScriptWidgetCreateOptions&
+    operator=(::Editor::ScriptModule::ScriptWidgetCreateOptions const&);
+
+    MCNAPI ~ScriptWidgetCreateOptions();
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCNAPI static ::Scripting::InterfaceBinding bindScript();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace Editor::ScriptModule

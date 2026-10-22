@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/scripting/modules/minecraft/block/components/BaseScriptBlockComponent.h"
+
+namespace ScriptModuleMinecraft {
+
+class BaseScriptBlockActorComponent : public ::ScriptModuleMinecraft::BaseScriptBlockComponent {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, void*> mBlockActor;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~BaseScriptBlockActorComponent() /*override*/ = default;
+
+    virtual bool _isValid() const /*override*/;
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $_isValid() const;
+
+
+    // NOLINTEND
+};
+
+} // namespace ScriptModuleMinecraft

@@ -1,0 +1,43 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class WorldTransferAgent;
+struct ExternalWorldTransferActionFunc;
+struct LocalWorldTransferActionFunc;
+struct RealmTransferActionFunc;
+// clang-format on
+
+struct IWorldTransfer {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~IWorldTransfer() = default;
+
+    virtual void setWorldTransferAction(
+        ::std::variant<
+            ::LocalWorldTransferActionFunc,
+            ::ExternalWorldTransferActionFunc,
+            ::RealmTransferActionFunc,
+            ::std::monostate>&& worldTransferAction
+    ) = 0;
+
+    virtual ::std::variant<
+        ::LocalWorldTransferActionFunc,
+        ::ExternalWorldTransferActionFunc,
+        ::RealmTransferActionFunc,
+        ::std::monostate> const&
+    getWorldTransferAction() const = 0;
+
+    virtual ::Bedrock::NonOwnerPointer<::WorldTransferAgent> const getWorldTransferAgent() const = 0;
+
+    virtual void setIsWorldTransferInProgress(bool isWorldTransferInProgress) = 0;
+
+    virtual bool isWorldTransferInProgress() const = 0;
+    // NOLINTEND
+};

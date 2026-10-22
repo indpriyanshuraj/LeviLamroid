@@ -1,0 +1,107 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/string/HashedString.h"
+#include "mc/util/molang/ExpressionNode.h"
+#include "mc/world/actor/SkeletalHierarchyIndex.h"
+#include "mc/world/actor/animation/ActorAnimationType.h"
+
+// auto generated forward declare list
+// clang-format off
+class AnimationComponent;
+class ApplyAnimationContext;
+class BoneOrientation;
+class RenderParams;
+struct AnimationVisitor;
+// clang-format on
+
+class ActorAnimationPlayer {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 48, ::HashedString const>   mFriendlyName;
+    ::ll::TypedStorage<8, 16, ::ExpressionNode const> mBlendExpression;
+    ::ll::TypedStorage<1, 1, bool>                    mExpanded;
+    ::ll::TypedStorage<1, 1, bool>                    mAnimationFinished;
+    // NOLINTEND
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_S
+    virtual ~ActorAnimationPlayer() = default;
+#else // LL_PLAT_C
+    virtual ~ActorAnimationPlayer();
+#endif
+
+#ifdef LL_PLAT_S
+    virtual void applyToPose(
+        ::ApplyAnimationContext const&                                                    applyContext,
+        ::RenderParams&                                                                   renderParams,
+        ::std::unordered_map<::SkeletalHierarchyIndex, ::std::vector<::BoneOrientation>>& destBoneOrientationsMap,
+        float                                                                             blendWeight
+    ) = 0;
+#else // LL_PLAT_C
+    virtual void applyToPose(
+        ::ApplyAnimationContext const&                                                    applyContext,
+        ::RenderParams&                                                                   renderParams,
+        ::std::unordered_map<::SkeletalHierarchyIndex, ::std::vector<::BoneOrientation>>& destBoneOrientationMap,
+        float                                                                             blendWeight
+    ) = 0;
+#endif
+
+    virtual void resetAnimation() = 0;
+
+    virtual void buildBoneToPartMapping(::AnimationComponent& animationComponent);
+
+    virtual void
+    bindParticleEffects(::std::unordered_map<::HashedString, ::HashedString> const& actorParticleEffectMap);
+
+    virtual void bindSoundEffects(::std::unordered_map<::HashedString, ::std::string> const& actorSoundEffectMap);
+
+    virtual bool hasAnimationFinished() const = 0;
+
+    virtual ::std::shared_ptr<::ActorAnimationPlayer> findAnimation(::HashedString const& friendlyName) = 0;
+
+    virtual ::ActorAnimationType getAnimationType() const = 0;
+
+    virtual ::HashedString const& getRawName() const = 0;
+
+    virtual void visit(::AnimationVisitor&& dispatcher);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCAPI void $dtor();
+#endif
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD void $buildBoneToPartMapping(::AnimationComponent& animationComponent);
+
+    MCFOLD void
+    $bindParticleEffects(::std::unordered_map<::HashedString, ::HashedString> const& actorParticleEffectMap);
+
+    MCFOLD void $bindSoundEffects(::std::unordered_map<::HashedString, ::std::string> const& actorSoundEffectMap);
+
+#ifdef LL_PLAT_S
+    MCAPI void $visit(::AnimationVisitor&& dispatcher);
+#else // LL_PLAT_C
+    MCFOLD void $visit(::AnimationVisitor&& dispatcher);
+#endif
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

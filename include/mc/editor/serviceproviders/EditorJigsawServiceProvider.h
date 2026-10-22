@@ -1,0 +1,72 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/JigsawJsonType.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPos;
+class JigsawEditorData;
+class JigsawStructureRegistry;
+class WeakEntityRef;
+namespace Bedrock::PubSub { class Subscription; }
+namespace Editor::ScriptModule { class ScriptClipboardItem; }
+namespace Editor::Services { struct EditorJigsawSection; }
+namespace Editor::Services { struct EditorRegistryFile; }
+// clang-format on
+
+namespace Editor::Services {
+
+class EditorJigsawServiceProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~EditorJigsawServiceProvider() = default;
+
+    virtual ::std::string getJigsawExportDirectory() = 0;
+
+    virtual ::std::map<::Editor::Services::JigsawJsonType, ::std::string> getEmptyJigsawFiles() = 0;
+
+    virtual ::std::vector<::std::string> getJigsawRegistryList() = 0;
+
+    virtual ::JigsawStructureRegistry* getJigsawRegistry(::std::string const& registryName) = 0;
+
+    virtual void setJigsawRegistry(
+        ::std::string const& registryName,
+        ::std::map<::Editor::Services::JigsawJsonType, ::std::vector<::Editor::Services::EditorRegistryFile>> data,
+        bool shouldSaveFiles
+    ) = 0;
+
+    virtual ::std::map<::Editor::Services::JigsawJsonType, ::std::vector<::Editor::Services::EditorRegistryFile>>
+    getJigsawRegistryJson(::std::string const& registryName) = 0;
+
+    virtual void generateJigsawPreview(
+        ::std::string const&,
+        ::std::string const&,
+        ::std::string const&,
+        ::BlockPos const&,
+        int,
+        int const,
+        bool const,
+        ::Editor::ScriptModule::ScriptClipboardItem const&,
+        ::WeakEntityRef
+    ) = 0;
+
+    virtual ::JigsawEditorData const getJigsawBlockData(::BlockPos& pos, ::WeakEntityRef playerRef) = 0;
+
+    virtual void deleteJigsawRegistry(::std::string const& registryName) = 0;
+
+    virtual void setJigsawBlockData(::BlockPos& pos, ::WeakEntityRef playerRef, ::JigsawEditorData jigsawData) = 0;
+
+    virtual ::Bedrock::PubSub::Subscription
+    listenForSetJigsawRegistry(::std::function<void(::std::vector<::std::string>)> callback) = 0;
+
+    virtual ::Bedrock::PubSub::Subscription listenForGenerateJigsawPreview(
+        ::std::function<void(::std::vector<::Editor::Services::EditorJigsawSection>)> callback
+    ) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

@@ -1,0 +1,300 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/common/editor/PrefabSource.h"
+#include "mc/deps/game_refs/StackRefResult.h"
+#include "mc/deps/game_refs/WeakRef.h"
+#include "mc/deps/script_core/runtime/scripting/Result_deprecated.h"
+#include "mc/editor/services/IEditorService.h"
+#include "mc/editor/services/PayloadStoreHelper.h"
+#include "mc/server/editor/serviceproviders/PrefabDBServerPlayerServiceProvider.h"
+#include "mc/server/editor/serviceproviders/PrefabDBServiceProvider.h"
+#include "mc/util/Mirror.h"
+#include "mc/util/Rotation.h"
+
+// auto generated forward declare list
+// clang-format off
+class BlockPalette;
+class BlockSource;
+class ChunkPos;
+class Vec3;
+class WeakEntityRef;
+struct DimensionType;
+namespace Bedrock::PubSub { class Subscription; }
+namespace Editor { class EditorManager; }
+namespace Editor { class ServiceProviderCollection; }
+namespace Editor::Prefabs { class PrefabDBPrefabInstance; }
+namespace Editor::Prefabs { class PrefabDBTemplate; }
+namespace Editor::Prefabs { class VisiblePrefabInstance; }
+namespace Editor::Prefabs { struct PrefabDBInstanceChangeEvent; }
+namespace Editor::Prefabs { struct PrefabDBTemplateChangeEvent; }
+namespace Editor::Prefabs::PrefabDBInstanceLoader::v1 { struct InstanceData; }
+namespace mce { class UUID; }
+// clang-format on
+
+namespace Editor::Services {
+
+class PrefabDBService : public ::Editor::Services::IEditorService,
+                        public ::Editor::Prefabs::PrefabDBServiceProvider,
+                        public ::Editor::Prefabs::PrefabDBServerPlayerServiceProvider,
+                        public ::Editor::Services::PayloadStoreHelper {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnke4ef26;
+    ::ll::UntypedStorage<8, 32> mUnk5db5bc;
+    ::ll::UntypedStorage<8, 64> mUnk8132d3;
+    ::ll::UntypedStorage<8, 64> mUnk4f26f2;
+    ::ll::UntypedStorage<8, 16> mUnkaab249;
+    ::ll::UntypedStorage<8, 16> mUnk156c5f;
+    ::ll::UntypedStorage<8, 48> mUnk7e0a09;
+    ::ll::UntypedStorage<8, 48> mUnk811b7b;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PrefabDBService& operator=(PrefabDBService const&);
+    PrefabDBService(PrefabDBService const&);
+    PrefabDBService();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~PrefabDBService() /*override*/ = default;
+
+    virtual ::Scripting::Result_deprecated<void> init() /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> ready() /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> quit() /*override*/;
+
+    virtual ::std::string_view getServiceName() const /*override*/;
+
+    virtual ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>>
+    getInstancesInChunk(::DimensionType const& dimension, ::ChunkPos const& chunkPos) const /*override*/;
+
+    virtual ::std::optional<::Editor::Prefabs::VisiblePrefabInstance> generateVisibleInstanceDataFromPrefabInstance(
+        ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance const> instanceRef
+    ) const /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBTemplate const> getTemplate(::mce::UUID const& templateId) const
+        /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> getTemplate(::mce::UUID const& templateId) /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> getTemplate(::std::string_view name) /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> createPrefabTemplate(
+        ::std::string const&                name,
+        ::std::string const&                displayName,
+        ::std::string const&                description,
+        ::std::string const&                notes,
+        ::std::vector<::std::string> const& tags
+    ) /*override*/;
+
+    virtual ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBTemplate const>> getTemplates() const /*override*/;
+
+    virtual bool deleteTemplate(::mce::UUID const& templateId) /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> cloneTemplate(
+        ::WeakRef<::Editor::Prefabs::PrefabDBTemplate const> templateToCopyRef,
+        ::std::string const&                                 newName,
+        ::std::optional<::std::string> const&                optNewDisplayName
+    ) /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> createPrefabInstance(
+        ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> prefabTemplateRef,
+        ::DimensionType const&                         dimension,
+        ::Vec3 const&                                  position,
+        ::Mirror                                       mirror,
+        ::Rotation                                     rotation
+    ) /*override*/;
+
+    virtual void deletePrefabInstance(::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> instanceRef) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription subscribeToInstanceChanges(
+        ::std::function<void(::Editor::Prefabs::PrefabDBInstanceChangeEvent const&)> callback
+    ) /*override*/;
+
+    virtual ::Bedrock::PubSub::Subscription subscribeToTemplateChanges(
+        ::std::function<void(::Editor::Prefabs::PrefabDBTemplateChangeEvent const&)> callback
+    ) /*override*/;
+
+    virtual ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>
+    getInstance(::DimensionType const& dimension, ::mce::UUID const& instanceId) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void>
+    applyInstanceSnapshot(::Editor::Prefabs::PrefabDBInstanceLoader::v1::InstanceData const& data) /*override*/;
+
+    virtual ::Scripting::Result_deprecated<void> deleteInstanceById(::mce::UUID const& instanceId) /*override*/;
+
+    virtual ::std::optional<::Editor::Prefabs::PrefabDBInstanceLoader::v1::InstanceData>
+    getInstanceSnapshot(::mce::UUID const& instanceId) /*override*/;
+
+    virtual void findInstancesOfTemplate(
+        ::mce::UUID const&                                                   templateId,
+        ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>>& outInstances
+    ) /*override*/;
+
+    virtual void bakePrefabInstanceToWorld(
+        ::BlockSource&                                       region,
+        ::BlockPalette const&                                globalBlockPalette,
+        ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> instanceRef,
+        ::std::optional<::std::string_view>                  optionalCapturePath,
+        bool&                                                outSuccess
+    ) /*override*/;
+
+    virtual void bake(
+        ::WeakEntityRef                           weakPlayerRef,
+        ::std::function<void(bool)>               completionCallback,
+        ::std::function<void(::std::string_view)> logger,
+        bool                                      deleteInstancesAfterBake
+    ) /*override*/;
+
+    virtual void unbake(
+        ::WeakEntityRef                           weakPlayerRef,
+        ::std::function<void(bool)>               completionCallback,
+        ::std::function<void(::std::string_view)> logger
+    ) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI explicit PrefabDBService(::Editor::ServiceProviderCollection& serviceProviders);
+
+    MCNAPI bool _buildManifests();
+
+    MCNAPI ::StackRefResult<::Editor::Prefabs::PrefabDBPrefabInstance>
+    _createPrefabInstanceFromData(::Editor::Prefabs::PrefabDBInstanceLoader::v1::InstanceData const& data);
+
+    MCNAPI ::StackRefResult<::Editor::Prefabs::PrefabDBTemplate> _createPrefabTemplate(
+        ::std::string const&                   name,
+        ::std::string const&                   displayName,
+        ::std::string const&                   description,
+        ::std::string const&                   notes,
+        ::std::vector<::std::string> const&    tags,
+        ::Editor::Prefabs::PrefabSource const& source
+    );
+
+    MCNAPI void _onTickEvent(::Editor::EditorManager&);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::Editor::ServiceProviderCollection& serviceProviders);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::Scripting::Result_deprecated<void> $init();
+
+    MCNAPI ::Scripting::Result_deprecated<void> $ready();
+
+    MCNAPI ::Scripting::Result_deprecated<void> $quit();
+
+    MCNAPI ::std::string_view $getServiceName() const;
+
+    MCNAPI ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>>
+    $getInstancesInChunk(::DimensionType const& dimension, ::ChunkPos const& chunkPos) const;
+
+    MCNAPI ::std::optional<::Editor::Prefabs::VisiblePrefabInstance> $generateVisibleInstanceDataFromPrefabInstance(
+        ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance const> instanceRef
+    ) const;
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBTemplate const> $getTemplate(::mce::UUID const& templateId) const;
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> $getTemplate(::mce::UUID const& templateId);
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> $getTemplate(::std::string_view name);
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> $createPrefabTemplate(
+        ::std::string const&                name,
+        ::std::string const&                displayName,
+        ::std::string const&                description,
+        ::std::string const&                notes,
+        ::std::vector<::std::string> const& tags
+    );
+
+    MCNAPI ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBTemplate const>> $getTemplates() const;
+
+    MCNAPI bool $deleteTemplate(::mce::UUID const& templateId);
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> $cloneTemplate(
+        ::WeakRef<::Editor::Prefabs::PrefabDBTemplate const> templateToCopyRef,
+        ::std::string const&                                 newName,
+        ::std::optional<::std::string> const&                optNewDisplayName
+    );
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> $createPrefabInstance(
+        ::WeakRef<::Editor::Prefabs::PrefabDBTemplate> prefabTemplateRef,
+        ::DimensionType const&                         dimension,
+        ::Vec3 const&                                  position,
+        ::Mirror                                       mirror,
+        ::Rotation                                     rotation
+    );
+
+    MCNAPI void $deletePrefabInstance(::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> instanceRef);
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $subscribeToInstanceChanges(::std::function<void(::Editor::Prefabs::PrefabDBInstanceChangeEvent const&)> callback);
+
+    MCNAPI ::Bedrock::PubSub::Subscription
+    $subscribeToTemplateChanges(::std::function<void(::Editor::Prefabs::PrefabDBTemplateChangeEvent const&)> callback);
+
+    MCNAPI ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>
+    $getInstance(::DimensionType const& dimension, ::mce::UUID const& instanceId);
+
+    MCNAPI ::Scripting::Result_deprecated<void>
+    $applyInstanceSnapshot(::Editor::Prefabs::PrefabDBInstanceLoader::v1::InstanceData const& data);
+
+    MCNAPI ::Scripting::Result_deprecated<void> $deleteInstanceById(::mce::UUID const& instanceId);
+
+    MCNAPI ::std::optional<::Editor::Prefabs::PrefabDBInstanceLoader::v1::InstanceData>
+    $getInstanceSnapshot(::mce::UUID const& instanceId);
+
+    MCNAPI void $findInstancesOfTemplate(
+        ::mce::UUID const&                                                   templateId,
+        ::std::vector<::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance>>& outInstances
+    );
+
+    MCNAPI void $bakePrefabInstanceToWorld(
+        ::BlockSource&                                       region,
+        ::BlockPalette const&                                globalBlockPalette,
+        ::WeakRef<::Editor::Prefabs::PrefabDBPrefabInstance> instanceRef,
+        ::std::optional<::std::string_view>                  optionalCapturePath,
+        bool&                                                outSuccess
+    );
+
+    MCNAPI void $bake(
+        ::WeakEntityRef                           weakPlayerRef,
+        ::std::function<void(bool)>               completionCallback,
+        ::std::function<void(::std::string_view)> logger,
+        bool                                      deleteInstancesAfterBake
+    );
+
+    MCNAPI void $unbake(
+        ::WeakEntityRef                           weakPlayerRef,
+        ::std::function<void(bool)>               completionCallback,
+        ::std::function<void(::std::string_view)> logger
+    );
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftableForPrefabDBServiceProvider();
+
+    MCNAPI static void** $vftableForPrefabDBServerPlayerServiceProvider();
+
+    MCNAPI static void** $vftableForIEditorService();
+    // NOLINTEND
+};
+
+} // namespace Editor::Services

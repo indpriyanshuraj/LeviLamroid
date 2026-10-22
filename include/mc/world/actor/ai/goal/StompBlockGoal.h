@@ -1,0 +1,133 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/goal/BaseMoveToBlockGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockPos;
+class BlockSource;
+class Level;
+class Mob;
+struct GoalId;
+// clang-format on
+
+class StompBlockGoal : public ::BaseMoveToBlockGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Block const*> mBlockToRemove;
+    ::ll::TypedStorage<4, 4, int>            mTicksSinceReachedGoal;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    StompBlockGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool findTargetBlock() /*override*/;
+
+    virtual bool canUse() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+
+    virtual bool isValidTarget(::BlockSource& region, ::BlockPos const& pos) /*override*/;
+
+    virtual void _moveToBlock() /*override*/;
+
+    virtual bool _canReach(::BlockPos const& pos) /*override*/;
+
+    virtual void _createBreakProgressParticles(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    virtual void _createDestroyParticles(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    virtual void _playBreakProgressSound(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    virtual void _playDestroySound(::Level& level, ::BlockSource& region, ::BlockPos pos);
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI StompBlockGoal(
+        ::Block const*  block,
+        ::Mob&          mob,
+        ::std::string   name,
+        ::GoalId const& goalId,
+        float           speedModifier,
+        int             horizontalSearchRange,
+        int             verticalSearchRange,
+        float           goalRadius,
+        int             interval
+    );
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::Block const*  block,
+        ::Mob&          mob,
+        ::std::string   name,
+        ::GoalId const& goalId,
+        float           speedModifier,
+        int             horizontalSearchRange,
+        int             verticalSearchRange,
+        float           goalRadius,
+        int             interval
+    );
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $findTargetBlock();
+
+    MCAPI bool $canUse();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $start();
+
+    MCFOLD void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+    MCAPI bool $isValidTarget(::BlockSource& region, ::BlockPos const& pos);
+
+    MCAPI void $_moveToBlock();
+
+    MCAPI bool $_canReach(::BlockPos const& pos);
+
+    MCFOLD void $_createBreakProgressParticles(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    MCFOLD void $_createDestroyParticles(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    MCFOLD void $_playBreakProgressSound(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+    MCFOLD void $_playDestroySound(::Level& level, ::BlockSource& region, ::BlockPos pos);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

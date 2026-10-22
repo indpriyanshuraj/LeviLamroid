@@ -1,0 +1,129 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { struct RtpStreamConfig; }
+// clang-format on
+
+namespace webrtc {
+
+struct RtpConfig {
+public:
+    // RtpConfig inner types declare
+    // clang-format off
+    struct Flexfec;
+    struct Rtx;
+    // clang-format on
+
+    // RtpConfig inner types define
+    struct Flexfec {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<4, 4>  mUnk75bd38;
+        ::ll::UntypedStorage<4, 4>  mUnka37e51;
+        ::ll::UntypedStorage<8, 24> mUnk124f43;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        Flexfec& operator=(Flexfec const&);
+        Flexfec(Flexfec const&);
+        Flexfec();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI ~Flexfec();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+    struct Rtx {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 24> mUnk7162bf;
+        ::ll::UntypedStorage<4, 4>  mUnk65e3b1;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        Rtx& operator=(Rtx const&);
+        Rtx(Rtx const&);
+        Rtx();
+
+    public:
+        // member functions
+        // NOLINTBEGIN
+        MCNAPI ~Rtx();
+        // NOLINTEND
+
+    public:
+        // destructor thunk
+        // NOLINTBEGIN
+        MCNAPI void $dtor();
+        // NOLINTEND
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnke9b11a;
+    ::ll::UntypedStorage<8, 24> mUnkbda88d;
+    ::ll::UntypedStorage<8, 32> mUnk14c0da;
+    ::ll::UntypedStorage<4, 4>  mUnkbe7ad8;
+    ::ll::UntypedStorage<8, 8>  mUnkca506a;
+    ::ll::UntypedStorage<1, 1>  mUnk7035fb;
+    ::ll::UntypedStorage<8, 24> mUnk53934f;
+    ::ll::UntypedStorage<8, 32> mUnk342802;
+    ::ll::UntypedStorage<4, 4>  mUnkf5e267;
+    ::ll::UntypedStorage<1, 1>  mUnk9b0d30;
+    ::ll::UntypedStorage<8, 24> mUnk21506b;
+    ::ll::UntypedStorage<1, 1>  mUnk44ee85;
+    ::ll::UntypedStorage<4, 4>  mUnkdc0e80;
+    ::ll::UntypedStorage<4, 12> mUnk7e6fb9;
+    ::ll::UntypedStorage<8, 32> mUnk8b9c0a;
+    ::ll::UntypedStorage<8, 32> mUnk6ef217;
+    ::ll::UntypedStorage<8, 32> mUnk464adf;
+    ::ll::UntypedStorage<1, 1>  mUnk5cd110;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    RtpConfig& operator=(RtpConfig const&);
+    RtpConfig();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI ::std::optional<uint> GetRtxSsrcAssociatedWithMediaSsrc(uint media_ssrc) const;
+
+    MCNAPI ::webrtc::RtpStreamConfig GetStreamConfig(uint64 index) const;
+
+    MCNAPI RtpConfig(::webrtc::RtpConfig const&);
+
+    MCNAPI ~RtpConfig();
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::webrtc::RtpConfig const&);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace webrtc

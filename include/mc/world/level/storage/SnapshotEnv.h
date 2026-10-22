@@ -1,0 +1,105 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/file/PathBuffer.h"
+
+// auto generated forward declare list
+// clang-format off
+struct SnapshotFilenameAndLength;
+namespace Core { class Path; }
+// clang-format on
+
+class SnapshotEnv : public ::leveldb::EnvWrapper {
+public:
+    // SnapshotEnv inner types declare
+    // clang-format off
+    class DeleteFileEntry;
+    // clang-format on
+
+    // SnapshotEnv inner types define
+    class DeleteFileEntry {
+    public:
+        // member variables
+        // NOLINTBEGIN
+        ::ll::UntypedStorage<8, 32> mUnka98c22;
+        ::ll::UntypedStorage<1, 1>  mUnk67b7f6;
+        // NOLINTEND
+
+    public:
+        // prevent constructor by default
+        DeleteFileEntry& operator=(DeleteFileEntry const&);
+        DeleteFileEntry(DeleteFileEntry const&);
+        DeleteFileEntry();
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 8>  mUnk953b73;
+    ::ll::UntypedStorage<8, 80> mUnkcecc5a;
+    ::ll::UntypedStorage<8, 8>  mUnkfaff08;
+    ::ll::UntypedStorage<8, 80> mUnkbc386b;
+    ::ll::UntypedStorage<8, 80> mUnk17f475;
+    ::ll::UntypedStorage<1, 1>  mUnk270131;
+    ::ll::UntypedStorage<8, 24> mUnk7f224d;
+    ::ll::UntypedStorage<8, 80> mUnk7b1f17;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    SnapshotEnv& operator=(SnapshotEnv const&);
+    SnapshotEnv(SnapshotEnv const&);
+    SnapshotEnv();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::leveldb::Status NewSequentialFile(::std::string const& f, ::leveldb::SequentialFile** r) /*override*/;
+
+    virtual ::leveldb::Status NewRandomAccessFile(::std::string const& f, ::leveldb::RandomAccessFile** r) /*override*/;
+
+    virtual ::leveldb::Status NewWritableFile(::std::string const& f, ::leveldb::WritableFile** r) /*override*/;
+
+    virtual ::leveldb::Status NewAppendableFile(::std::string const& f, ::leveldb::WritableFile** r) /*override*/;
+
+    virtual ::leveldb::Status RemoveFile(::std::string const& f) /*override*/;
+
+    virtual ::leveldb::Status RenameFile(::std::string const& from, ::std::string const& to) /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI bool _isQueuedForRemoval(::Core::PathBuffer<::std::string> const& file);
+
+    MCNAPI ::std::vector<::SnapshotFilenameAndLength> createSnapshot(::Core::Path const& dir);
+
+    MCNAPI void releaseSnapshot();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCNAPI ::leveldb::Status $NewSequentialFile(::std::string const& f, ::leveldb::SequentialFile** r);
+
+    MCNAPI ::leveldb::Status $NewRandomAccessFile(::std::string const& f, ::leveldb::RandomAccessFile** r);
+
+    MCNAPI ::leveldb::Status $NewWritableFile(::std::string const& f, ::leveldb::WritableFile** r);
+
+    MCNAPI ::leveldb::Status $NewAppendableFile(::std::string const& f, ::leveldb::WritableFile** r);
+
+    MCNAPI ::leveldb::Status $RemoveFile(::std::string const& f);
+
+    MCNAPI ::leveldb::Status $RenameFile(::std::string const& from, ::std::string const& to);
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

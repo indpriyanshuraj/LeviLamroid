@@ -1,0 +1,30 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class Block;
+class BlockVolumeBase;
+namespace Editor { class RelativeVolumeListBlockVolume; }
+namespace Editor::BlockUtils { class CommonBlockUtilityServiceProvider; }
+// clang-format on
+
+namespace Editor::BlockUtils {
+
+class ServerBlockUtilityServiceProvider {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ServerBlockUtilityServiceProvider() = default;
+
+    virtual ::Editor::BlockUtils::CommonBlockUtilityServiceProvider& getCommonInterface() = 0;
+
+    virtual void fillVolume(
+        ::std::variant<::BlockVolumeBase const*, ::Editor::RelativeVolumeListBlockVolume const*> const volume,
+        ::std::optional<::Block const*> const                                                          optBlock
+    ) = 0;
+    // NOLINTEND
+};
+
+} // namespace Editor::BlockUtils

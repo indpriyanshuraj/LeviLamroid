@@ -1,0 +1,87 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/TempEPtr.h"
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Mob;
+class Path;
+// clang-format on
+
+class FindMountGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 40, ::TempEPtr<::Actor>>      mTarget;
+    ::ll::TypedStorage<4, 4, float>                     mTargetDist;
+    ::ll::TypedStorage<4, 4, int>                       mTimeToRecalcPath;
+    ::ll::TypedStorage<4, 4, int>                       mStartCounter;
+    ::ll::TypedStorage<4, 4, int>                       mStartDelay;
+    ::ll::TypedStorage<1, 1, bool>                      mAvoidWater;
+    ::ll::TypedStorage<1, 1, bool>                      mTargetNeeded;
+    ::ll::TypedStorage<4, 4, float>                     mMountDistance;
+    ::ll::TypedStorage<4, 4, int>                       mFailedAttemptsCounter;
+    ::ll::TypedStorage<4, 4, int>                       mMaxFailedAttempts;
+    ::ll::TypedStorage<8, 8, ::Mob&>                    mMob;
+    ::ll::TypedStorage<8, 8, ::std::unique_ptr<::Path>> mPath;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    FindMountGoal& operator=(FindMountGoal const&);
+    FindMountGoal(FindMountGoal const&);
+    FindMountGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~FindMountGoal() /*override*/ = default;
+
+    virtual bool canUse() /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI bool isInMountRange();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI bool $canUse();
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $start();
+
+    MCAPI void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};

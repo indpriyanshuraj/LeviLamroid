@@ -1,0 +1,34 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/external/webrtc/RefCountInterface.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace webrtc { class RTCError; }
+namespace webrtc { class SessionDescriptionInterface; }
+// clang-format on
+
+namespace webrtc {
+
+class CreateSessionDescriptionObserver : public ::webrtc::RefCountInterface {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual void OnSuccess(::webrtc::SessionDescriptionInterface* desc_ptr) = 0;
+
+    virtual void OnFailure(::webrtc::RTCError error) = 0;
+
+    virtual ~CreateSessionDescriptionObserver() /*override*/;
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace webrtc

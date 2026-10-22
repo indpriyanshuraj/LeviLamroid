@@ -1,0 +1,51 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/ecs/Optional.h"
+#include "mc/deps/ecs/ViewT.h"
+#include "mc/deps/ecs/strict/Include.h"
+
+// auto generated forward declare list
+// clang-format off
+class AABB;
+class GetCollisionShapeInterface;
+class IConstBlockSource;
+class LocalSpatialEntityFetcher;
+class StrictEntityContext;
+struct AABBShapeComponent;
+struct ActorDataFlagComponent;
+struct CollidableMobFlagComponent;
+struct CollidableMobNearFlagComponent;
+struct FallingBlockFlagComponent;
+struct MaxAutoStepComponent;
+struct MinecartFlagComponent;
+struct MoveRequestComponent;
+namespace BlockSourceVisitor { struct CollisionShape; }
+// clang-format on
+
+namespace MoveCollisionSystem {
+// functions
+// NOLINTBEGIN
+MCAPI void fetchCollisionShapes(
+    ::StrictEntityContext const&                       entity,
+    ::AABBShapeComponent const&                        aabb,
+    ::MaxAutoStepComponent const&                      autoStep,
+    ::Optional<::CollidableMobNearFlagComponent const> collidableMobNear,
+    ::MoveRequestComponent&                            request,
+    ::Optional<::MinecartFlagComponent const>          isMinecart,
+    ::ViewT<::StrictEntityContext, ::Include<::CollidableMobFlagComponent>, ::AABBShapeComponent const> const&
+                                                                                                      collidableMobs,
+    ::ViewT<::StrictEntityContext, ::AABBShapeComponent const, ::ActorDataFlagComponent const> const& stackableView,
+    ::ViewT<::StrictEntityContext, ::Include<::FallingBlockFlagComponent>> const&                     fallingBlocks,
+    ::IConstBlockSource const&                                                                        region,
+    ::LocalSpatialEntityFetcher&                                                                      fetcher,
+    ::GetCollisionShapeInterface const&                                                               collisionShape,
+    ::std::vector<::BlockSourceVisitor::CollisionShape>& tempCollisionShapes,
+    ::std::vector<::BlockSourceVisitor::CollisionShape>& scratchCollisionShapes,
+    ::std::vector<::AABB>&                               tempShapes
+);
+// NOLINTEND
+
+} // namespace MoveCollisionSystem

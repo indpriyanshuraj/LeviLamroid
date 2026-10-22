@@ -1,0 +1,57 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/container/small_vector.h"
+#include "mc/deps/core/utility/NonOwnerPointer.h"
+
+// auto generated forward declare list
+// clang-format off
+class EntityId;
+struct TickingSystemId;
+namespace Bedrock::Profiling { class PerfClock; }
+namespace ECS::Profiling { class IEntityTrackingSheet; }
+// clang-format on
+
+namespace ECS::Profiling {
+
+class EntitySystemTimeTracker {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<4, 4>  mUnk2a397e;
+    ::ll::UntypedStorage<4, 4>  mUnkd4db5a;
+    ::ll::UntypedStorage<8, 8>  mUnk1b6fe4;
+    ::ll::UntypedStorage<8, 24> mUnkbf573c;
+    ::ll::UntypedStorage<8, 24> mUnk19dd2d;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    EntitySystemTimeTracker& operator=(EntitySystemTimeTracker const&);
+    EntitySystemTimeTracker(EntitySystemTimeTracker const&);
+    EntitySystemTimeTracker();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void finishTimingCurrentEntity(::EntityId entity);
+
+    MCNAPI void setTrackingSheet(::Bedrock::NonOwnerPointer<::ECS::Profiling::IEntityTrackingSheet> trackingSheet);
+
+    MCNAPI ~EntitySystemTimeTracker();
+#endif
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI void $dtor();
+#endif
+    // NOLINTEND
+};
+
+} // namespace ECS::Profiling

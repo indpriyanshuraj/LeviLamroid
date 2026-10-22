@@ -1,0 +1,51 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+#include "mc/deps/core/image/Image.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/math/AlphaUsage.h"
+#include "mc/deps/core_graphics/ImageType.h"
+#include "mc/deps/core_graphics/enums/ColorSpace.h"
+#include "mc/deps/core_graphics/enums/TextureFormat.h"
+
+namespace cg {
+
+struct ImageDescription {
+    LLAPI ImageDescription();
+    LLAPI ImageDescription(
+        uint32             width,
+        uint32             height,
+        mce::TextureFormat format,
+        cg::ColorSpace     colorSpace,
+        cg::ImageType      imageType,
+        uint32             arraySizeOrDepth
+    );
+    LLAPI explicit ImageDescription(mce::Image const& image);
+    ImageDescription(ImageDescription const&)            = default;
+    ImageDescription& operator=(ImageDescription const&) = default;
+
+    LLAPI bool operator!=(ImageDescription const& rhs) const;
+    bool       operator==(ImageDescription const& rhs) const { return !(*this != rhs); }
+
+
+    LLAPI void     setArraySize(uint32 size);
+    LLNDAPI uint32 getArraySize() const;
+    LLNDAPI uint32 getDepth() const;
+    LLNDAPI uint32 getSubimageSize() const;
+    LLNDAPI uint64 getStorageSize() const;
+
+    LLAPI static uint32 getStrideFromFormat(mce::TextureFormat fmt);
+
+    uint32             mWidth{0};
+    uint32             mHeight{0};
+    mce::TextureFormat mTextureFormat;
+    cg::ColorSpace     mColorSpace{cg::ColorSpace::Unknown};
+    cg::ImageType      mImageType{cg::ImageType::Texture2D};
+    mce::AlphaUsage    mAlphaUsage{mce::AlphaUsage::Unknown};
+
+private:
+    uint32 mArraySizeOrDepth{1};
+};
+
+} // namespace cg

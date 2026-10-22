@@ -1,0 +1,39 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class ContentTierIncompatibleReason;
+class ContentTierInfo;
+// clang-format on
+
+class SubpackInfoCollection {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnka263b4;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    SubpackInfoCollection& operator=(SubpackInfoCollection const&);
+    SubpackInfoCollection(SubpackInfoCollection const&);
+    SubpackInfoCollection();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+#ifdef LL_PLAT_C
+    MCNAPI ::ContentTierIncompatibleReason isCompatible(::ContentTierInfo const& contentInfoTier) const;
+#endif
+
+    MCNAPI ~SubpackInfoCollection();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};

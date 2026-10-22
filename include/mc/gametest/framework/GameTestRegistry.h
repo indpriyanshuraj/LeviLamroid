@@ -1,0 +1,58 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+namespace gametest { class BaseGameTestFunction; }
+// clang-format on
+
+namespace gametest {
+
+class GameTestRegistry {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 64> mUnkfd6023;
+    ::ll::UntypedStorage<8, 64> mUnkb19192;
+    ::ll::UntypedStorage<8, 24> mUnk329014;
+    ::ll::UntypedStorage<8, 24> mUnk9b0e1e;
+    ::ll::UntypedStorage<8, 24> mUnkf4b42a;
+    ::ll::UntypedStorage<1, 1>  mUnk67eda1;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    GameTestRegistry& operator=(GameTestRegistry const&);
+    GameTestRegistry(GameTestRegistry const&);
+    GameTestRegistry();
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI void clearAllTestMethods();
+
+    MCNAPI void generateTagsList();
+
+    MCNAPI ::std::function<void()> getAfterBatchFunction(::std::string const& batchName);
+
+    MCNAPI ::std::function<void()> getBeforeBatchFunction(::std::string const& batchName);
+
+    MCNAPI bool registerAfterBatchFunction(::std::string const& batchName, ::std::function<void()> fn);
+
+    MCNAPI bool registerBeforeBatchFunction(::std::string const& batchName, ::std::function<void()> fn);
+
+    MCNAPI bool
+    registerTestMethod(::std::string const& className, ::std::shared_ptr<::gametest::BaseGameTestFunction> fn);
+
+    MCNAPI ~GameTestRegistry();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+};
+
+} // namespace gametest

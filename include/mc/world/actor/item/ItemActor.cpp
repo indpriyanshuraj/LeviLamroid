@@ -1,0 +1,28 @@
+#include "mc/world/actor/item/ItemActor.h"
+#include "mc/deps/ecs/gamerefs_entity/GameRefsEntity.h"
+
+ItemStack&       ItemActor::item() { return *mItem; }
+ItemStack const& ItemActor::item() const { return *mItem; }
+int&             ItemActor::age() { return mAge; }
+int const&       ItemActor::age() const { return mAge; }
+int&             ItemActor::pickupDelay() { return mPickupDelay; }
+int const&       ItemActor::pickupDelay() const { return mPickupDelay; }
+int&             ItemActor::throwTime() { return mThrowTime; }
+int const&       ItemActor::throwTime() const { return mThrowTime; }
+float&           ItemActor::bobOffs() { return mBobOffs; }
+float const&     ItemActor::bobOffs() const { return mBobOffs; }
+int&             ItemActor::health() { return mHealth; }
+int const&       ItemActor::health() const { return mHealth; }
+int&             ItemActor::lifeTime() { return mLifeTime; }
+int const&       ItemActor::lifeTime() const { return mLifeTime; }
+bool&            ItemActor::isInItemFrame() { return mIsInItemFrame; }
+bool const&      ItemActor::isInItemFrame() const { return mIsInItemFrame; }
+bool&            ItemActor::isFromFishing() { return mIsFromFishing; }
+bool const&      ItemActor::isFromFishing() const { return mIsFromFishing; }
+
+ItemActor* ItemActor::tryGetFromEntity(::EntityContext& entity, bool includeRemoved) {
+    if (auto* actor = Actor::tryGetFromEntity(entity, includeRemoved); actor && actor->isType(ActorType::ItemEntity)) {
+        return static_cast<ItemActor*>(actor);
+    }
+    return nullptr;
+}

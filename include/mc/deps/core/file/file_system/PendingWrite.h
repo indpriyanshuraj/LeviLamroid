@@ -1,0 +1,22 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+namespace Core {
+
+struct PendingWrite {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 32> mUnk15782c;
+    ::ll::UntypedStorage<1, 2>  mUnkaeb3eb;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    PendingWrite& operator=(PendingWrite const&);
+    PendingWrite(PendingWrite const&);
+    PendingWrite();
+};
+
+} // namespace Core

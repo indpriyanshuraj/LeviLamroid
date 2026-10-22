@@ -1,0 +1,148 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/world/actor/ai/goal/BaseGoal.h"
+
+// auto generated forward declare list
+// clang-format off
+class Actor;
+class Mob;
+struct GoalId;
+struct MobDescriptor;
+// clang-format on
+
+class TargetGoal : public ::BaseGoal {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<8, 8, ::Mob&>                          mMob;
+    ::ll::TypedStorage<1, 1, bool>                            mAttackOwner;
+    ::ll::TypedStorage<1, 1, bool>                            mMustReach;
+    ::ll::TypedStorage<1, 1, bool>                            mGlobalMustSee;
+    ::ll::TypedStorage<1, 1, bool>                            mTargetMustSee;
+    ::ll::TypedStorage<4, 4, int>                             mTargetMustSeeForgetTicks;
+    ::ll::TypedStorage<1, 1, bool>                            mFilterFailure;
+    ::ll::TypedStorage<4, 4, int>                             mFilterFailureTicks;
+    ::ll::TypedStorage<4, 4, int>                             mGlobalMustSeeForgetTicks;
+    ::ll::TypedStorage<4, 4, int>                             mPersistTargetTicks;
+    ::ll::TypedStorage<4, 4, int>                             mReachCache;
+    ::ll::TypedStorage<4, 4, int>                             mReachCacheTime;
+    ::ll::TypedStorage<4, 4, int>                             mUnseenTicks;
+    ::ll::TypedStorage<4, 4, float>                           mWithinDefault;
+    ::ll::TypedStorage<1, 1, bool>                            mReevaluateTarget;
+    ::ll::TypedStorage<8, 24, ::std::vector<::MobDescriptor>> mTargetTypes;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    TargetGoal& operator=(TargetGoal const&);
+    TargetGoal(TargetGoal const&);
+    TargetGoal();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual bool isTargetGoal() const /*override*/;
+
+    virtual bool canContinueToUse() /*override*/;
+
+    virtual void start() /*override*/;
+
+    virtual void stop() /*override*/;
+
+    virtual void tick() /*override*/;
+
+    virtual void appendDebugInfo(::std::string& str) const /*override*/;
+
+    virtual bool _canAttack(
+        ::Mob*                  testMob,
+        ::Actor*                target,
+        bool                    allowInvulnerable,
+        bool                    mustSee,
+        ::MobDescriptor const** outDescriptorMatch
+    );
+
+    virtual ~TargetGoal() /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI TargetGoal(
+        ::Mob&                                pathMob,
+        ::std::string                         name,
+        ::GoalId const&                       goalId,
+        ::std::vector<::MobDescriptor> const& targetTypes,
+        bool                                  mustSee,
+        int                                   mustSeeForgetTicks,
+        bool                                  mustReach,
+        float                                 withinDefault,
+        bool                                  attackOwner,
+        int                                   persistTargetTicks
+    );
+
+    MCAPI bool _canAttack(::Actor* target, bool allowInvulnerable, ::MobDescriptor const** outDescriptorMatch);
+
+    MCAPI bool _canReach(::Actor& target);
+
+    MCAPI bool
+    _matchesTargetTypes(::Mob* testMob, ::Actor* target, bool mustSee, ::MobDescriptor const** outDescriptorMatch);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(
+        ::Mob&                                pathMob,
+        ::std::string                         name,
+        ::GoalId const&                       goalId,
+        ::std::vector<::MobDescriptor> const& targetTypes,
+        bool                                  mustSee,
+        int                                   mustSeeForgetTicks,
+        bool                                  mustReach,
+        float                                 withinDefault,
+        bool                                  attackOwner,
+        int                                   persistTargetTicks
+    );
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCFOLD bool $isTargetGoal() const;
+
+    MCAPI bool $canContinueToUse();
+
+    MCAPI void $start();
+
+    MCFOLD void $stop();
+
+    MCAPI void $tick();
+
+    MCAPI void $appendDebugInfo(::std::string& str) const;
+
+    MCAPI bool $_canAttack(
+        ::Mob*                  testMob,
+        ::Actor*                target,
+        bool                    allowInvulnerable,
+        bool                    mustSee,
+        ::MobDescriptor const** outDescriptorMatch
+    );
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

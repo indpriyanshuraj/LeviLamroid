@@ -1,0 +1,128 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/optional_ref.h"
+#include "mc/world/level/block/BlockSupportType.h"
+#include "mc/world/level/block/FallingBlock.h"
+
+// auto generated forward declare list
+// clang-format off
+class AABB;
+class BaseGameVersion;
+class Block;
+class BlockPos;
+class BlockSource;
+class GetCollisionShapeInterface;
+class HashedString;
+class IConstBlockSource;
+class IRandom;
+class Player;
+struct BlockAnimateTickData;
+namespace BlockEvents { class BlockPlayerInteractEvent; }
+namespace mce { class Color; }
+// clang-format on
+
+class AnvilBlock : public ::FallingBlock {
+public:
+    // prevent constructor by default
+    AnvilBlock();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ::AABB getCollisionShape(
+        ::Block const& block,
+        ::IConstBlockSource const&,
+        ::BlockPos const& pos,
+        ::optional_ref<::GetCollisionShapeInterface const>
+    ) const /*override*/;
+
+    virtual ::AABB const&
+    getOutline(::Block const& block, ::IConstBlockSource const&, ::BlockPos const& pos, ::AABB& bufferValue) const
+        /*override*/;
+
+    virtual ::mce::Color getDustColor(::Block const&) const /*override*/;
+
+    virtual ::std::string getDustParticleName(::Block const&) const /*override*/;
+
+    virtual void animateTick(::BlockAnimateTickData const&) const /*override*/;
+
+    virtual bool falling() const /*override*/;
+
+    virtual void onLand(::BlockSource& region, ::BlockPos const& pos) const /*override*/;
+
+    virtual bool isCraftingBlock() const /*override*/;
+
+    virtual bool breaksFallingBlocks(::Block const& block, ::BaseGameVersion const version) const /*override*/;
+
+    virtual bool isInteractiveBlock() const /*override*/;
+
+    virtual bool canProvideSupport(::Block const&, uchar face, ::BlockSupportType type) const /*override*/;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI AnvilBlock(::std::string const& nameId, int id);
+
+    MCFOLD void use(::BlockEvents::BlockPlayerInteractEvent& eventData) const;
+    // NOLINTEND
+
+public:
+    // static functions
+    // NOLINTBEGIN
+    MCAPI static ::AABB const& _getShape(::BlockPos const& pos, ::Block const& block, ::AABB& bufferValue);
+
+    MCAPI static int getDamageForName(::HashedString const& name);
+
+    MCAPI static void tryApplyCraftingDamage(::Player const& player, ::BlockPos const& pos, ::IRandom& random);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCAPI void* $ctor(::std::string const& nameId, int id);
+    // NOLINTEND
+
+public:
+    // virtual function thunks
+    // NOLINTBEGIN
+    MCAPI ::AABB $getCollisionShape(
+        ::Block const& block,
+        ::IConstBlockSource const&,
+        ::BlockPos const& pos,
+        ::optional_ref<::GetCollisionShapeInterface const>
+    ) const;
+
+    MCAPI ::AABB const&
+    $getOutline(::Block const& block, ::IConstBlockSource const&, ::BlockPos const& pos, ::AABB& bufferValue) const;
+
+    MCFOLD ::mce::Color $getDustColor(::Block const&) const;
+
+    MCFOLD ::std::string $getDustParticleName(::Block const&) const;
+
+    MCFOLD void $animateTick(::BlockAnimateTickData const&) const;
+
+    MCFOLD bool $falling() const;
+
+    MCAPI void $onLand(::BlockSource& region, ::BlockPos const& pos) const;
+
+    MCFOLD bool $isCraftingBlock() const;
+
+    MCFOLD bool $breaksFallingBlocks(::Block const& block, ::BaseGameVersion const version) const;
+
+    MCFOLD bool $isInteractiveBlock() const;
+
+    MCFOLD bool $canProvideSupport(::Block const&, uchar face, ::BlockSupportType type) const;
+
+
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCAPI static void** $vftable();
+    // NOLINTEND
+};

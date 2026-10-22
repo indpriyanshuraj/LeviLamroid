@@ -1,0 +1,38 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class RecipeIngredient;
+// clang-format on
+
+class RecipeUnlockingRequirement {
+public:
+    // RecipeUnlockingRequirement inner types define
+    enum class UnlockingContext : int {
+        None               = 0,
+        AlwaysUnlocked     = 1,
+        PlayerInWater      = 2,
+        PlayerHasManyItems = 3,
+    };
+
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::TypedStorage<4, 4, ::RecipeUnlockingRequirement::UnlockingContext> mContext;
+    ::ll::TypedStorage<8, 24, ::std::vector<::RecipeIngredient>>             mIngredients;
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCAPI ~RecipeUnlockingRequirement();
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCAPI void $dtor();
+    // NOLINTEND
+};

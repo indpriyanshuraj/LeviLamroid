@@ -1,0 +1,65 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated forward declare list
+// clang-format off
+class SemVersion;
+namespace Puv { class LoadResultAny; }
+// clang-format on
+
+namespace Puv {
+
+class UpgraderBase {
+public:
+    // member variables
+    // NOLINTBEGIN
+    ::ll::UntypedStorage<8, 24> mUnk71ed8e;
+    ::ll::UntypedStorage<8, 24> mUnkb85c5a;
+    // NOLINTEND
+
+public:
+    // prevent constructor by default
+    UpgraderBase& operator=(UpgraderBase const&);
+    UpgraderBase(UpgraderBase const&);
+    UpgraderBase();
+
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~UpgraderBase();
+
+#ifdef LL_PLAT_S
+    virtual ::Puv::LoadResultAny doUpgrade(::Puv::LoadResultAny sourceAny) const = 0;
+#else // LL_PLAT_C
+    virtual ::Puv::LoadResultAny doUpgrade(::Puv::LoadResultAny source) const = 0;
+#endif
+
+    // NOLINTEND
+
+public:
+    // member functions
+    // NOLINTBEGIN
+    MCNAPI UpgraderBase(::SemVersion const& from, ::SemVersion const& to);
+    // NOLINTEND
+
+public:
+    // constructor thunks
+    // NOLINTBEGIN
+    MCNAPI void* $ctor(::SemVersion const& from, ::SemVersion const& to);
+    // NOLINTEND
+
+public:
+    // destructor thunk
+    // NOLINTBEGIN
+    MCNAPI void $dtor();
+    // NOLINTEND
+
+public:
+    // vftables
+    // NOLINTBEGIN
+    MCNAPI static void** $vftable();
+    // NOLINTEND
+};
+
+} // namespace Puv

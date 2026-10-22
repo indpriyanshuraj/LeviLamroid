@@ -1,0 +1,38 @@
+#pragma once
+
+#include "mc/_HeaderOutputPredefine.h"
+
+// auto generated inclusion list
+#include "mc/deps/core/utility/EnableNonOwnerReferences.h"
+#include "mc/deps/core/utility/pub_sub/Connector.h"
+#include "mc/deps/core/utility/pub_sub/Publisher.h"
+
+// auto generated forward declare list
+// clang-format off
+class ActorSoundIdentifier;
+class Vec3;
+struct PlaySoundOptions;
+struct SoundEventIdentifier;
+namespace Bedrock::PubSub::ThreadModel { struct MultiThreaded; }
+// clang-format on
+
+class ILevelSoundManagerConnector : public ::Bedrock::EnableNonOwnerReferences {
+public:
+    // virtual functions
+    // NOLINTBEGIN
+    virtual ~ILevelSoundManagerConnector() /*override*/ = default;
+
+    virtual ::Bedrock::PubSub::Connector<
+        void(::SoundEventIdentifier const&, ::Vec3 const&, int, ::ActorSoundIdentifier const&, bool)>&
+    getOnLevelSoundEventConnector() = 0;
+
+    virtual ::Bedrock::PubSub::Connector<void(::PlaySoundOptions const&)>&
+    getOnLevelSoundEventWithVolumeAndPitchConnector() = 0;
+
+    virtual ::Bedrock::PubSub::Connector<void(::std::string const&)>& getOnStopLevelSoundEventConnector() = 0;
+
+    virtual ::Bedrock::PubSub::Connector<void()>& getOnStopAllLevelSoundsEventConnector() = 0;
+
+    virtual ::Bedrock::PubSub::Connector<void()>& getOnStopMusicEventConnector() = 0;
+    // NOLINTEND
+};
