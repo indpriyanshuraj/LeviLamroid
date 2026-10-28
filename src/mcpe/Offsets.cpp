@@ -1,4 +1,5 @@
 #include "levilamroid/api/mcpe/Offsets.h"
+#include "levilamroid/api/mcpe/Symbols.h"
 #include "levilamroid/api/Logger.h"
 #include "levilamroid/api/memory/Hook.h"
 #include <mutex>
@@ -778,6 +779,19 @@ uintptr_t findFunctionRva(std::string_view name) {
     // Scene Factory Abstract Creation
     if (name == "sceneFactoryCreateUIScene" || name == "SceneFactory::createUIScene") return off.sceneFactoryCreateUIScene;
     if (name == "sceneFactoryCreateScreenAbstract" || name == "SceneFactory::createScreenAbstract") return off.sceneFactoryCreateScreenAbstract;
+
+    // Fallback to universal symbol table (5,573+ Bedrock engine symbols)
+    const auto* sym = findSymbolInfo(name);
+    if (sym) {
+        std::string ver = getDetectedVersion();
+        if (ver.find("1.26.60") != std::string::npos && sym->rva1_26_60 != 0) {
+            return sym->rva1_26_60;
+        } else if ((ver.find("1.26.44") != std::string::npos || ver.find("1.26.45") != std::string::npos) && sym->rva1_26_45 != 0) {
+            return sym->rva1_26_45;
+        } else if (sym->rva1_26_52 != 0) {
+            return sym->rva1_26_52;
+        }
+    }
 
     return 0;
 }
