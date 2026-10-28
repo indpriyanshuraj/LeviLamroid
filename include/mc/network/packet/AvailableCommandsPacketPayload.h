@@ -22,170 +22,117 @@ public:
     // AvailableCommandsPacketPayload inner types define
     struct ChainedSubcommandRelationship {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<4, 4, uint> subCommandFirstValue;
         ::ll::TypedStorage<4, 4, uint> subCommandSecondValue;
-        // NOLINTEND
+
+        ChainedSubcommandRelationship() = default;
+        ~ChainedSubcommandRelationship() = default;
+        ChainedSubcommandRelationship(ChainedSubcommandRelationship const&) = default;
+        ChainedSubcommandRelationship(ChainedSubcommandRelationship&&) = default;
+        ChainedSubcommandRelationship& operator=(ChainedSubcommandRelationship const&) = default;
+        ChainedSubcommandRelationship& operator=(ChainedSubcommandRelationship&&) = default;
     };
 
     struct ChainedSubcommandData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 32, ::std::string> name;
-        ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::ChainedSubcommandRelationship>>
-            values;
-        // NOLINTEND
+        ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::ChainedSubcommandRelationship>> values;
 
-    public:
-        // prevent constructor by default
-        ChainedSubcommandData& operator=(ChainedSubcommandData const&);
-        ChainedSubcommandData();
-
-    public:
-        // member functions
-        // NOLINTBEGIN
-        MCAPI ChainedSubcommandData(::AvailableCommandsPacketPayload::ChainedSubcommandData const&);
-
-        MCFOLD ::AvailableCommandsPacketPayload::ChainedSubcommandData&
-        operator=(::AvailableCommandsPacketPayload::ChainedSubcommandData&&);
-        // NOLINTEND
-
-    public:
-        // constructor thunks
-        // NOLINTBEGIN
-        MCFOLD void* $ctor(::AvailableCommandsPacketPayload::ChainedSubcommandData const&);
-        // NOLINTEND
+        ChainedSubcommandData() = default;
+        ~ChainedSubcommandData() = default;
+        ChainedSubcommandData(ChainedSubcommandData const&) = default;
+        ChainedSubcommandData(ChainedSubcommandData&&) = default;
+        ChainedSubcommandData& operator=(ChainedSubcommandData const&) = default;
+        ChainedSubcommandData& operator=(ChainedSubcommandData&&) = default;
     };
 
     struct ConstrainedValueData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<4, 4, uint>                  enumValueSymbol;
         ::ll::TypedStorage<4, 4, uint>                  enumSymbol;
         ::ll::TypedStorage<8, 24, ::std::vector<uchar>> constraints;
-        // NOLINTEND
+
+        ConstrainedValueData() = default;
+        ~ConstrainedValueData() = default;
+        ConstrainedValueData(ConstrainedValueData const&) = default;
+        ConstrainedValueData(ConstrainedValueData&&) = default;
+        ConstrainedValueData& operator=(ConstrainedValueData const&) = default;
+        ConstrainedValueData& operator=(ConstrainedValueData&&) = default;
     };
 
     struct EnumData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 32, ::std::string>       name;
         ::ll::TypedStorage<8, 24, ::std::vector<uint>> values;
-        // NOLINTEND
 
-    public:
-        // prevent constructor by default
-        EnumData& operator=(EnumData const&);
-        EnumData();
-
-    public:
-        // member functions
-        // NOLINTBEGIN
-        MCAPI EnumData(::AvailableCommandsPacketPayload::EnumData const&);
-
-        MCFOLD ::AvailableCommandsPacketPayload::EnumData& operator=(::AvailableCommandsPacketPayload::EnumData&&);
-        // NOLINTEND
-
-    public:
-        // constructor thunks
-        // NOLINTBEGIN
-        MCFOLD void* $ctor(::AvailableCommandsPacketPayload::EnumData const&);
-        // NOLINTEND
+        EnumData() = default;
+        ~EnumData() = default;
+        EnumData(EnumData const&) = default;
+        EnumData(EnumData&&) = default;
+        EnumData& operator=(EnumData const&) = default;
+        EnumData& operator=(EnumData&&) = default;
     };
 
     struct ParamData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 32, ::std::string> name;
         ::ll::TypedStorage<4, 4, uint>           parseSymbol;
         ::ll::TypedStorage<1, 1, bool>           optional;
         ::ll::TypedStorage<1, 1, uchar>          paramOptions;
-        // NOLINTEND
+
+        ParamData() = default;
+        ~ParamData() = default;
+        ParamData(ParamData const&) = default;
+        ParamData(ParamData&&) = default;
+        ParamData& operator=(ParamData const&) = default;
+        ParamData& operator=(ParamData&&) = default;
     };
 
     struct OverloadData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::ParamData>> params;
         ::ll::TypedStorage<1, 1, bool>                                                        isChaining;
-        // NOLINTEND
 
-    public:
-        // member functions
-        // NOLINTBEGIN
-        MCAPI bool operator==(::AvailableCommandsPacketPayload::OverloadData const& other) const;
-        // NOLINTEND
+        OverloadData() = default;
+        ~OverloadData() = default;
+        OverloadData(OverloadData const&) = default;
+        OverloadData(OverloadData&&) = default;
+        OverloadData& operator=(OverloadData const&) = default;
+        OverloadData& operator=(OverloadData&&) = default;
     };
 
     struct CommandData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 32, ::std::string>                                                 name;
         ::ll::TypedStorage<8, 32, ::std::string>                                                 description;
         ::ll::TypedStorage<2, 2, ushort>                                                         flags;
         ::ll::TypedStorage<1, 1, ::CommandPermissionLevel>                                       permission;
         ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::OverloadData>> overloads;
-        ::ll::TypedStorage<8, 24, ::std::vector<uint>> chainedSubcommandIndexes;
-        ::ll::TypedStorage<4, 4, int>                  aliasEnum;
-        // NOLINTEND
+        ::ll::TypedStorage<8, 24, ::std::vector<uint>>                                          chainedSubcommandIndexes;
+        ::ll::TypedStorage<4, 4, int>                                                            aliasEnum;
 
-    public:
-        // prevent constructor by default
-        CommandData();
-
-    public:
-        // member functions
-        // NOLINTBEGIN
-        MCAPI CommandData(::AvailableCommandsPacketPayload::CommandData const&);
-
-        MCAPI ::AvailableCommandsPacketPayload::CommandData& operator=(::AvailableCommandsPacketPayload::CommandData&&);
-
-        MCAPI ::AvailableCommandsPacketPayload::CommandData&
-        operator=(::AvailableCommandsPacketPayload::CommandData const&);
-
-        MCAPI bool operator==(::AvailableCommandsPacketPayload::CommandData const& other) const;
-
-        MCAPI ~CommandData();
-        // NOLINTEND
-
-    public:
-        // constructor thunks
-        // NOLINTBEGIN
-        MCAPI void* $ctor(::AvailableCommandsPacketPayload::CommandData const&);
-        // NOLINTEND
-
-    public:
-        // destructor thunk
-        // NOLINTBEGIN
-        MCAPI void $dtor();
-        // NOLINTEND
+        CommandData() = default;
+        ~CommandData() = default;
+        CommandData(CommandData const&) = default;
+        CommandData(CommandData&&) = default;
+        CommandData& operator=(CommandData const&) = default;
+        CommandData& operator=(CommandData&&) = default;
     };
 
     struct SoftEnumData {
     public:
-        // member variables
-        // NOLINTBEGIN
         ::ll::TypedStorage<8, 32, ::std::string>                name;
         ::ll::TypedStorage<8, 24, ::std::vector<::std::string>> values;
-        // NOLINTEND
 
-    public:
-        // member functions
-        // NOLINTBEGIN
-        MCFOLD bool operator==(::AvailableCommandsPacketPayload::SoftEnumData const& other) const;
-        // NOLINTEND
+        SoftEnumData() = default;
+        ~SoftEnumData() = default;
+        SoftEnumData(SoftEnumData const&) = default;
+        SoftEnumData(SoftEnumData&&) = default;
+        SoftEnumData& operator=(SoftEnumData const&) = default;
+        SoftEnumData& operator=(SoftEnumData&&) = default;
     };
 
 public:
-    // member variables
-    // NOLINTBEGIN
     ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                              mEnumValues;
     ::ll::TypedStorage<8, 24, ::std::vector<::std::string>>                              mPostfixes;
     ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::EnumData>> mEnums;
@@ -195,52 +142,12 @@ public:
     ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::CommandData>>  mCommands;
     ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::SoftEnumData>> mSoftEnums;
     ::ll::TypedStorage<8, 24, ::std::vector<::AvailableCommandsPacketPayload::ConstrainedValueData>> mConstraints;
-    // NOLINTEND
 
 public:
-    // prevent constructor by default
-    AvailableCommandsPacketPayload& operator=(AvailableCommandsPacketPayload const&);
-    AvailableCommandsPacketPayload();
-
-public:
-    // member functions
-    // NOLINTBEGIN
-    MCAPI AvailableCommandsPacketPayload(::AvailableCommandsPacketPayload const&);
-
-    MCAPI AvailableCommandsPacketPayload(
-        ::std::vector<::std::string> const&                                      enumValues,
-        ::std::vector<::std::string> const&                                      chainedSubcommandValues,
-        ::std::vector<::std::string> const&                                      postfixes,
-        ::std::vector<::AvailableCommandsPacketPayload::EnumData>&&              enumData,
-        ::std::vector<::AvailableCommandsPacketPayload::ChainedSubcommandData>&& chainedSubcommandData,
-        ::std::vector<::AvailableCommandsPacketPayload::ConstrainedValueData>&&  constraints,
-        ::std::vector<::AvailableCommandsPacketPayload::CommandData>&&           commandData,
-        ::std::vector<::AvailableCommandsPacketPayload::SoftEnumData>&&          softEnumData
-    );
-
-    MCAPI ~AvailableCommandsPacketPayload();
-    // NOLINTEND
-
-public:
-    // constructor thunks
-    // NOLINTBEGIN
-    MCAPI void* $ctor(::AvailableCommandsPacketPayload const&);
-
-    MCAPI void* $ctor(
-        ::std::vector<::std::string> const&                                      enumValues,
-        ::std::vector<::std::string> const&                                      chainedSubcommandValues,
-        ::std::vector<::std::string> const&                                      postfixes,
-        ::std::vector<::AvailableCommandsPacketPayload::EnumData>&&              enumData,
-        ::std::vector<::AvailableCommandsPacketPayload::ChainedSubcommandData>&& chainedSubcommandData,
-        ::std::vector<::AvailableCommandsPacketPayload::ConstrainedValueData>&&  constraints,
-        ::std::vector<::AvailableCommandsPacketPayload::CommandData>&&           commandData,
-        ::std::vector<::AvailableCommandsPacketPayload::SoftEnumData>&&          softEnumData
-    );
-    // NOLINTEND
-
-public:
-    // destructor thunk
-    // NOLINTBEGIN
-    MCAPI void $dtor();
-    // NOLINTEND
+    AvailableCommandsPacketPayload() = default;
+    ~AvailableCommandsPacketPayload() = default;
+    AvailableCommandsPacketPayload(AvailableCommandsPacketPayload const&) = default;
+    AvailableCommandsPacketPayload(AvailableCommandsPacketPayload&&) = default;
+    AvailableCommandsPacketPayload& operator=(AvailableCommandsPacketPayload const&) = default;
+    AvailableCommandsPacketPayload& operator=(AvailableCommandsPacketPayload&&) = default;
 };

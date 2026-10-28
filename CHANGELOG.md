@@ -4,9 +4,127 @@ All notable changes to **LeviLamroid** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and release versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.5-beta] - 2026-10-28
+
+### Multi-Version Engine (1.26.60.6 Parity), ResourcePackManager & Camera Subsystems
+- **Bedrock 1.26.60.6 Full Parity & GNU Build ID Detection (`Offsets.cpp`)**:
+  - Reverse-engineered and verified 4,557 symbols for Minecraft Bedrock 1.26.60.6 (`eb291b883dfdfaff70c4999c2eabd61885ae3e15`).
+  - Added `kOffsets_1_26_60_6` with verified RVAs: `LocalPlayer::applyTurnDelta` (`0x0fd9ae30`), `LocalPlayer::normalTick` (`0x101eccd4`), `LevelRenderer::renderLevel` (`0x11b3f100`), `BlockSource::getBlock` (`0x10371548`), `SoundEngine::play` (`0x0bce01c8`), `CommandRegistry::registerCommand` (`0x08a06ce8`), and `ScreenController::handleEvent` (`0x09e95354`).
+- **Complete Camera Subsystem & Rotation Handling**:
+  - Mapped 118 camera-related symbols and components: `LevelRendererCamera::setupViewArea` (`0x0b0a80e4`), `LevelRendererCamera::updatePerChunkFaceSortState` (`0x0b7a9ba8`), `VanillaCamera::CameraBobComponent` (`0x088e7558`), `PlayerAuthInputPacketPayload::mCameraOrientation` (`0x0daa5398`), and MinecraftCamera component graph (`CameraComponent`, `DeathCameraComponent`, `CameraOrbitComponent`, `CameraFirstPersonComponent`).
+- **`ResourcePackManager::_composeFullStack` Reverse Engineering & Zero-RP Pipeline**:
+  - Located, disassembled, and verified `ResourcePackManager::_composeFullStack`, `composeFullStack`, `setStack`, `_doStackOperation`, `load`, and `getStack` across all major Bedrock 1.26 releases (`1.26.44.3`, `1.26.45.1`, `1.26.51.1`, `1.26.52.3`, `1.26.60.6`).
+  - Documented stack assembly lifecycle: `mFullStackAccess` mutex locking, layer composition (`mGlobalStack` + `mLevelStack`), version evaluation (`_calculateMinEngineVersionFromFullStack`), and `ResourcePackListener` observer broadcast.
+- **AAPCS64 IDA/Amethyst Wildcard Byte Signatures**:
+  - Discovered 100% byte-identical 48-byte machine code signature for `ResourcePackManager::composeFullStack` matching every 1.26.x Bedrock engine build.
+  - Extracted unique masked signatures for `_composeFullStack`, `setStack`, and `_doStackOperation` for AArch64 pattern scanning.
+- **Universal Modder RE Studio Target Ingestion**:
+  - Ingested all 2,036 symbols from `Symbols_1_26_52_3.inl` into the RE Studio Parity Database, expanding master targets to **5,039 symbols**.
+  - Implemented Phase 1.5 Signature Scanner in RE Studio orchestrator, auto-generating C++ signature headers for all verified symbols.
+
+## [1.0.8-beta] - 2026-10-27
+
+### Crash Elimination, Authentic Usable Items & Doctor Strange 3D Mandala
+- **Zero-Crash GameMode Interception & Corrupted RVA Removal (`Offsets.cpp`)**:
+  - Eliminated bogus mid-function RVAs for `gameModeUseItem` (`0x0F8A2EB0`), `gameModeUseItemOn` (`0x0F89FE18`), `gameModeAttack` (`0x0F8A073C`), and `gameModeDestroyBlock` (`0x0F8A03AC`) which were landing inside `__stack_chk_fail@plt` epilogues and causing instant SIGSEGV crashes on right-click / item interaction.
+  - Set all four offsets to `0` across all version profiles (1.26.52.3, 1.21.90, 1.21.80, 1.21.60), delegating interactions to safe event loop dispatching.
+- **Geyser-Compliant Weapon Properties & Unsafe Memory Dereference Elimination (`LeviItems.cpp`, `NbtBuilder.cpp`)**:
+  - Adhered to Geyser rule (`CustomItemRegistryPopulator.java:404`): Weapons/swords (`def.category == 3 && def.attackDamage > 0`) must NEVER contain `minecraft:use_modifiers` or `use_duration`, preventing Bedrock client from executing unallocated virtual components. Removed legacy `use_modifiers` from `cosmic_blade.json`.
+  - Removed dangerous `reinterpret_cast<const std::string*>` pointer loop from `PlayerUseItemEvent` in `LeviItems.cpp` which was dereferencing `ItemStack::vftable` pointers as C++ strings and crashing with SIGSEGV.
+  - Replaced with robust C ABI listener `ll_item_register_use_listener` passing clean, null-terminated `const char* itemIdent`.
+- **Authentic Food Consumption & Stack Invalidation Engine (`CoreHooks.cpp`)**:
+  - Replaced artificial instant `-1` decrement hacks with continuous hold tracking:
+    - Chewing audio (`/playsound random.eat @a ~ ~ ~ 0.7 1.1`) and crumb particles emitted every 320ms while holding.
+    - Full 1500ms (1.5s = 30 ticks) hold threshold required to consume food.
+    - Full nourishment playback: burp sound (`random.burp`), saturation effect (`/effect @s saturation`), heart particle burst, and `+N Hunger` toast.
+    - Fixed empty stack corruption: when stack count reaches 0, `mValid` byte at offset `+0x23` is cleanly cleared to `0`, preventing invalid empty stack engine panics across all placement and consumption routines.
+  - Added `can_always_eat: true` on `astral_core.json`, allowing consumption at full hunger like golden apples.
+- **Doctor Strange 3D Mystic Mandala Custom Item (`levitest:astral_mandala`)**:
+  - Conjures an authentic 3D Doctor Strange Eldritch Mandala in world space hovering directly in front of the caster at chest height:
+    - Dynamic orthonormal vector basis $(\vec{R}, \vec{U}, \vec{F})$ constructed from player pitch and yaw.
+    - 7 sacred geometry vector layers: outer fiery perimeter ring ($R=1.6$), 12 runic perimeter spokes ($R=1.8$), middle amber concentric circle ($R=1.15$), interlocking double square octagram star, inner sacred hexagon ($R=0.65$), central eye core ring ($R=0.35$), and singularity of Agamotto.
+    - Mystical audio (`block.enchantment_table.use`, `beacon.activate`, `conduit.activate`) and eldritch shield buffs (`resistance 12 2`, `absorption 12 1`, `fire_resistance 12 0`).
+  - Implemented `minecraft:cooldown` parsing in `AddonIngestion.cpp` and Network NBT builder matching Geyser `CustomItemRegistryPopulator.java:696`.
+- **Zero C++ Hardcoding**:
+  - 100% of custom items, blocks, recipes, and entities load dynamically from standard Bedrock addon `.json` files in the unified `resources/` folder.
+
+## [1.0.7-beta] - 2026-10-26
+
+### Geyser-Parity 2.0 & Network Packet Redesign
+- **Exact Geyser Network NBT Wire Protocol Realignment (`NbtBuilder.cpp`)**:
+  - Re-engineered `buildItemComponentNbt` matching Geyser `CustomItemRegistryPopulator.java`:
+    - Injected `item_tags` (ListTag of StringTag, including `geyser:is_custom` and `levilamroid:is_custom`), replacing invalid string tag format.
+    - Added string `minecraft:use_animation` ("eat", "drink", "bow", "spear") in components alongside integer `use_animation` in `item_properties`.
+    - Added `minecraft:use_modifiers` with duration in seconds (float: ticks / 20.0f).
+    - Added `minecraft:food` schema with `can_always_eat: 0` and `using_converts_to: {}`.
+    - Added `minecraft:digger` compound list with `block: { tags: "1" }` and tool mining speed.
+  - Re-engineered `buildBlockPropertyNbt` matching Geyser `CustomBlockRegistryPopulator.java`:
+    - Enforced float `1.0f` for `ambient_occlusion` (required by Bedrock 1.26.20+ to avoid mesh rejection).
+    - Added `packed_bools: 1` and `mappings: {}` to material instances.
+    - Aligned component properties to `"value"` (`minecraft:destructible_by_mining`, `minecraft:friction`), `"emission"` (`minecraft:light_emission`).
+    - Redesigned `minecraft:collision_box` and `minecraft:selection_box` to `{ "enabled": 1, "boxes": [ { minX, minY, minZ, maxX, maxY, maxZ } ] }`.
+  - Re-engineered `buildEntityDefinitionNbt` with `{ id, bid, rid, summonable: 1, hasSpawnEgg: 1, experimental: 0 }`.
+
+- **Comprehensive Network Packet Ingestion & Loopback Symmetry (`CoreHooks.cpp`)**:
+  - **`AvailableCommandsPacket` (Packet 76)**: Injected all registered custom/client commands with flags `0x40` (Not Cheat) and `CommandPermissionLevel::Any`, enabling client grammar validation and autocompletion without "Unknown command" red text.
+  - **Inlined Value-Type Constructors (`AvailableCommandsPacketPayload.h`)**: Inlined default constructors, destructors, copy & move operations (`= default;`) for `CommandData`, `OverloadData`, `ParamData`, `EnumData`, `SoftEnumData`, `ConstrainedValueData`, `ChainedSubcommandData`, `ChainedSubcommandRelationship`, completely eliminating Android linker missing symbol crashes (`cannot locate symbol _ZN30AvailableCommandsPacketPayload11CommandDataC1Ev`).
+  - **`CreativeContentPacket` (Packet 145)**: Cloned authentic `NetworkItemInstanceDescriptor` template entry from incoming packet and rebound `mItem` (+0x08) to native `Item*` pointer (`def.nativeItemPtr`), guaranteeing valid Itanium vtable and preventing null descriptor crashes in creative menu.
+  - **`AvailableActorIdentifiersPacket` (Packet 119)**: Injected custom mobs with `mExperimentIndex = std::nullopt` and base identifier `bid` fallback.
+  - **`LoopbackPacketSender::send` (Packet ID 145 / 76 / 162 / 119 / 11)**: Symmetrically hooked loopback packet sender so custom items, blocks, mobs, commands, and creative tabs function identically in local singleplayer, LAN host, and dedicated multiplayer sessions.
+
+## [1.0.6-beta] - 2026-10-24
+
+### Geyser-Parity Network Registration Architecture
+- **Bedrock Network NBT Wire Serialization Engine (`NbtBuilder.cpp`)**:
+  - Implemented full Little-Endian and ZigZag Network NBT serialization/deserialization matching GeyserMC and Minecraft Bedrock network protocol standards.
+  - High-performance encoders for VarInt, Signed VarInt (ZigZag: `(n << 1) ^ (n >> 31)`), VarLong, UTF-8 String (VarInt length-prefixed), and IEEE 754 Little-Endian 32-bit/64-bit floating point numbers.
+  - Automated schema builders:
+    - `buildItemComponentNbt`: Constructs DataDriven item component compounds (`minecraft:icon`, `minecraft:display_name`, `minecraft:damage`, `minecraft:food`, `minecraft:weapon`, `minecraft:record`, `minecraft:render_offsets`).
+    - `buildBlockPropertyNbt`: Constructs block property compounds (`minecraft:material_instances`, `minecraft:geometry`, `minecraft:collision_box`, `minecraft:selection_box`, `minecraft:light_emission`, `minecraft:destructible_by_mining`, `minecraft:explosion_resistance`).
+    - `buildEntityDefinitionNbt`: Constructs runtime actor identifier compounds for mobs and entities.
+  - Standalone verification test passing 100% roundtrips across all compound types.
+
+- **Zero-Drop Packet Ingestion Subsystem (`CoreHooks.cpp`)**:
+  - Hooked `ClientNetworkHandler::handle` (`0x09EE5908` on 1.26.52.3 / `0x09ADC770` on 1.26.45.1).
+  - Intercepts incoming network packets and injects custom mod content before engine processing:
+    - **`StartGamePacket` (ID 11)**: Injects custom block properties into `mPayload.mBlockProperties` (`std::vector<ServerBlockProperty>`) AND auto-enables data-driven experimental flags (`data_driven_items`, `upcoming_creator_features`, `experimental_molang_features`, `mOverrideForceExperimentalGameplayFlag = true`).
+    - **`ItemRegistryPacket` (ID 162)**: Injects custom item components into `mPayload.mItems` (`std::vector<ItemData>`) with runtime IDs, `isComponentBased = true`, and `itemVersion = 2`.
+    - **`AvailableActorIdentifiersPacket` (ID 119)**: Injects custom mob definitions into `mPayload.mIdentifierList` (`std::vector<ActorInfo>`).
+    - **`CreativeContentPacket` (ID 145)**: Injects custom items into `mPayload.mEntries` (`std::vector<CreativeItemEntryPayload>`), assigning unique net IDs and group indices matching `def.category` so items appear in the creative inventory tabs.
+  - Solves the need for fragile polymorphic C++ class reverse engineering (`FoodItemComponent`, `SpawnEggItem`), providing stable, crash-free registration.
+
+- **Loader Startup & Linker dlopen Hardening**:
+  - **Inlined Value-Type Constructors & Destructors**: Completely eliminated missing symbol crashes on stripped Android ARM64 `libminecraftpe.so` by providing inline `= default;` constructors/destructors for `ServerBlockProperty`, `ActorInfo`, `ActorDefinitionIdentifier`, `ItemDescriptor`, `ItemDescriptorCount`, `NetworkItemInstanceDescriptor`, `CreativeItemEntryPayload`, `CreativeGroupInfoPayload`, and `CreativeContentPacketPayload`.
+  - **Fixed BlockHooks Nested Namespace**: Resolved misplaced namespace bracket that placed `isPlaceableItem` into `levilamroid::block::levilamroid::block`.
+  - **Dynamic Mod Symbol Resolution**: In `levilamroid::init()`, promoted `liblevilamroid.so` to `RTLD_GLOBAL` via `dlopen`. In `LeviItems`, implemented dynamic loader function resolver (`resolveLoaderFn`) via `dlsym` and direct `liblevilamroid.so` handle lookup, ensuring 100% symbol resolution across all loader configurations.
+
+- **Expanded C & C++ Modding APIs**:
+  - Weapons: `ll_item_register_weapon(identifier, id, name, icon, frame, attackDamage, durability, category, creativeGroup)`
+  - Foods: `ll_item_register_food(identifier, id, name, icon, frame, nutrition, saturation, category, creativeGroup)`
+  - Tools: `ll_item_register_tool(identifier, id, name, icon, frame, attackDamage, durability, miningSpeed, category, creativeGroup)`
+  - Blocks: `ll_block_register`, `ll_block_register_with_id`, `ll_block_register_with_base`
+  - Entities: `ll_entity_register`, `ll_entity_spawn`, `ll_entity_register_spawn_listener`, `ll_entity_register_hurt_listener`, `ll_entity_register_death_listener`
+
+- **Reference Mod Validation (`examples/levi-items-mod`)**:
+  - Updated reference mod registering `levitest:cosmic_blade` (14 dmg, 2500 dur), `levitest:astral_core` (8 nut, 1.2 sat), `levitest:astral_block` (solid, light 10, resistance 12), and `levitest:astral_golem` (150 HP).
+  - Built `libLeviItems.so` and packaged `levi_items.levipack` with raw texture mounting and zero Behavior Pack overhead.
+  - Verified 0 missing/unresolved symbols on both libraries with `nm -u`.
+  - Automatically deployed and enabled across all 6 LeviLauncher profiles.
+
 ## [1.0.5-beta] - 2026-10-22
 
 ### Critical World Join & Item Registration Crash Fix
+- **Android ARM64 Tagged Pointer & `__next_prime` Overflow Fix**:
+  - Identified and fixed crash `std::overflow_error: __next_prime overflow` occurring during item registration on world load.
+  - On 64-bit Android (API 29+ / Android 15), the Scudo Hardened Allocator tags heap pointers in bits 56..63 (e.g. `0xb4...` or `0x20...`). `isPointerReadable()` checked `v > 0x7fffffffff`, causing all valid heap pointers to be falsely rejected.
+  - This false rejection caused `unwrapItemRegistry()` to fail dereferencing the authentic `ItemRegistry*` heap pointer from the stack `ItemRegistryRef`, causing `ItemRegistry::registerItem` to operate on stack memory where `max_load_factor` at offset `+152` was `0.0f`, dividing by zero and triggering `__next_prime(UINT64_MAX)`.
+  - Updated `isPointerReadable()` across `ItemHooks.cpp`, `CoreHooks.cpp`, `ResourceHooks.cpp`, and `UIHooks.cpp` to mask off Top-Byte Ignore tags (`v & 0x00ffffffffffffffULL`).
+  - Added `max_load_factor` sanity check (guaranteeing `1.0f`) and exception handling around `ItemRegistry::registerItem`.
+- **Scudo Chunk Corruption & BlockItem Vtable Resolution**:
+  - Eliminated native crash `Scudo ERROR: corrupted chunk header` occurring upon world load when registering block items (e.g. `farmersdelight:tomato_crate`).
+  - Fixed ABI mismatch in `BlockTypeRegistry::lookupByName`: ARM64 AAPCS requires struct-return buffers in `X0` for `WeakPtr<BlockLegacy>` (16B), passing `this` in `X1`. Direct calls with `this` in `X0` corrupted the singleton's header memory. Implemented `safeLookupBlockLegacy` with the authentic 4-parameter struct-return signature.
+  - Removed premature block lookup during `VanillaItems::registerItems`, deferring block resolution to post-init.
+  - Removed assignment of uninitialized/zeroed `blockItemVtable` (`0x122F10F0`), preserving the authentic `Item` vtable initialized by `Item::Item` constructor.
 - **ItemRegistry Reference Unwrapping**:
   - Identified and fixed critical SIGSEGV crash during world join in `VanillaItems::registerItems` (`0x0F2AC634` / `0xF2C1ED0` on 1.26.45.1 and `0x0FA05B18` on 1.26.52.3).
   - In Bedrock ARM64 ABI, `VanillaItems::registerItems` passes `const Bedrock::NotNullNonOwnerPtr<ItemRegistry>&` as a pointer on the caller's stack to `{ ItemRegistry* ptr, ControlBlock* ctrl }`.

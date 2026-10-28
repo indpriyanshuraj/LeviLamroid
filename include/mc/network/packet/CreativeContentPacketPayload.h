@@ -21,8 +21,12 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    CreativeContentPacketPayload();
+    CreativeContentPacketPayload() = default;
+    ~CreativeContentPacketPayload() = default;
+    CreativeContentPacketPayload(CreativeContentPacketPayload const&) = default;
+    CreativeContentPacketPayload(CreativeContentPacketPayload&&) = default;
+    CreativeContentPacketPayload& operator=(CreativeContentPacketPayload const&) = default;
+    CreativeContentPacketPayload& operator=(CreativeContentPacketPayload&&) = default;
 
 public:
     // member functions

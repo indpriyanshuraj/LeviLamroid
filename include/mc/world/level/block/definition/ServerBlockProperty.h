@@ -14,20 +14,10 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    ServerBlockProperty();
-
-public:
-    // member functions
-    // NOLINTBEGIN
-    MCAPI ServerBlockProperty(::ServerBlockProperty const& other);
-
-    MCAPI ::ServerBlockProperty& operator=(::ServerBlockProperty const& other);
-    // NOLINTEND
-
-public:
-    // constructor thunks
-    // NOLINTBEGIN
-    MCAPI void* $ctor(::ServerBlockProperty const& other);
-    // NOLINTEND
+    ServerBlockProperty() = default;
+    ServerBlockProperty(::ServerBlockProperty const& other) = default;
+    ServerBlockProperty(::ServerBlockProperty&& other) noexcept = default;
+    ::ServerBlockProperty& operator=(::ServerBlockProperty const& other) = default;
+    ::ServerBlockProperty& operator=(::ServerBlockProperty&& other) noexcept = default;
+    ~ServerBlockProperty() = default;
 };

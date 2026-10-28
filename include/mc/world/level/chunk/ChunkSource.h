@@ -4,12 +4,7 @@
 #include <span>
 #include <functional>
 #include "mc/world/level/chunk/LevelChunk.h"
-#include "mc/world/level/BlockPos.h"
-
-namespace gsl {
-    template <typename T>
-    using span = std::span<T>;
-}
+#include "mc/_HeaderOutputPredefine.h"
 
 class ChunkSource {
 public:

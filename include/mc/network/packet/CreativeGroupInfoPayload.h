@@ -16,14 +16,10 @@ public:
     // NOLINTEND
 
 public:
-    // member functions
-    // NOLINTBEGIN
-    MCAPI ~CreativeGroupInfoPayload();
-    // NOLINTEND
-
-public:
-    // destructor thunk
-    // NOLINTBEGIN
-    MCAPI void $dtor();
-    // NOLINTEND
+    CreativeGroupInfoPayload() = default;
+    ~CreativeGroupInfoPayload() = default;
+    CreativeGroupInfoPayload(CreativeGroupInfoPayload const&) = default;
+    CreativeGroupInfoPayload(CreativeGroupInfoPayload&&) = default;
+    CreativeGroupInfoPayload& operator=(CreativeGroupInfoPayload const&) = default;
+    CreativeGroupInfoPayload& operator=(CreativeGroupInfoPayload&&) = default;
 };

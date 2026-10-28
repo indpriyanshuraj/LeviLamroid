@@ -23,108 +23,10 @@
 #include <cstring>
 #include <cctype>
 
-namespace pl::modmenu {
+// Note: pl::modmenu is provided exclusively by libpreloader.so.
+// LeviLamroid must NOT shadow or stub pl::modmenu, ensuring all client mods
+// communicate directly with the launcher's native overlay and Mod Menu drawer.
 
-static std::mutex sModuleMutex;
-static std::vector<ModuleInfo> sModules;
-static std::mutex sButtonMutex;
-static std::vector<ButtonInfo> sButtons;
-
-PL_EXPORT bool registerModule(const ModuleInfo &info) {
-    using RealFn = bool(*)(const ModuleInfo&);
-    static auto realFn = reinterpret_cast<RealFn>(dlsym(RTLD_DEFAULT, "_ZN2pl7modmenu14registerModuleERKNS0_10ModuleInfoE"));
-    Dl_info dlinfo;
-    if (realFn && dladdr(reinterpret_cast<void*>(realFn), &dlinfo) && dlinfo.dli_fbase) {
-        if (dlinfo.dli_fname && strstr(dlinfo.dli_fname, "libpreloader.so")) {
-            return realFn(info);
-        }
-    }
-    std::lock_guard<std::mutex> lock(sModuleMutex);
-    sModules.push_back(info);
-    levilamroid::Logger::getInstance().info("[PreLoader] Registered module: ", info.moduleId, " (", info.displayName, ")");
-    if (info.defaultEnabled && info.onToggle) {
-        try {
-            info.onToggle(info.moduleId, true);
-        } catch (...) {}
-    }
-    return true;
-}
-
-PL_EXPORT void unregisterModule(std::string_view moduleId) {
-    std::lock_guard<std::mutex> lock(sModuleMutex);
-    for (auto it = sModules.begin(); it != sModules.end();) {
-        if (it->moduleId == moduleId) {
-            it = sModules.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
-
-PL_EXPORT void setModuleEnabled(std::string_view moduleId, bool enabled) {
-    std::lock_guard<std::mutex> lock(sModuleMutex);
-    for (auto& m : sModules) {
-        if (m.moduleId == moduleId) {
-            m.defaultEnabled = enabled;
-            if (m.onToggle) {
-                try { m.onToggle(moduleId, enabled); } catch (...) {}
-            }
-            break;
-        }
-    }
-}
-
-PL_EXPORT void submitDrawCommands(std::string_view moduleId, std::span<const DrawCommand> commands) {
-    (void)moduleId;
-    (void)commands;
-}
-
-PL_EXPORT bool registerFont(std::string_view fontId, std::span<const unsigned char> ttfData) {
-    (void)fontId;
-    (void)ttfData;
-    return true;
-}
-
-PL_EXPORT bool registerImage(std::string_view imageId, std::span<const unsigned char> imageData, int width, int height) {
-    (void)imageId;
-    (void)imageData;
-    (void)width;
-    (void)height;
-    return true;
-}
-
-PL_EXPORT bool registerButton(const ButtonInfo &info) {
-    using RealFn = bool(*)(const ButtonInfo&);
-    static auto realFn = reinterpret_cast<RealFn>(dlsym(RTLD_DEFAULT, "_ZN2pl7modmenu14registerButtonERKNS0_10ButtonInfoE"));
-    Dl_info dlinfo;
-    if (realFn && dladdr(reinterpret_cast<void*>(realFn), &dlinfo) && dlinfo.dli_fbase) {
-        if (dlinfo.dli_fname && strstr(dlinfo.dli_fname, "libpreloader.so")) {
-            return realFn(info);
-        }
-    }
-    std::lock_guard<std::mutex> lock(sButtonMutex);
-    sButtons.push_back(info);
-    levilamroid::Logger::getInstance().info("[PreLoader] Registered HUD button: ", info.buttonId, " (", info.label, ")");
-    return true;
-}
-
-PL_EXPORT void setConfigSchemaJson(std::string_view moduleId, std::string_view schemaJson) {
-    (void)moduleId;
-    (void)schemaJson;
-}
-
-PL_EXPORT void unregisterButton(std::string_view buttonId) {
-    std::lock_guard<std::mutex> lock(sButtonMutex);
-    for (auto it = sButtons.begin(); it != sButtons.end();) {
-        if (it->buttonId == buttonId) {
-            it = sButtons.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
-
-} // namespace pl::modmenu
 
 namespace pl::input {
 
@@ -146,6 +48,39 @@ PL_EXPORT void registerKeyCallback(KeyCallback callback) {
 PL_EXPORT void registerMouseCallback(MouseCallback callback) {
     std::lock_guard<std::mutex> lock(sInputMutex);
     if (callback) sMouseCallbacks.push_back(std::move(callback));
+}
+
+PL_EXPORT bool dispatchTouchEvent(const TouchEvent &event) {
+    std::lock_guard<std::mutex> lock(sInputMutex);
+    bool handled = false;
+    for (const auto& cb : sTouchCallbacks) {
+        try {
+            if (cb && cb(event)) handled = true;
+        } catch (...) {}
+    }
+    return handled;
+}
+
+PL_EXPORT bool dispatchKeyEvent(const KeyEvent &event) {
+    std::lock_guard<std::mutex> lock(sInputMutex);
+    bool handled = false;
+    for (const auto& cb : sKeyCallbacks) {
+        try {
+            if (cb && cb(event)) handled = true;
+        } catch (...) {}
+    }
+    return handled;
+}
+
+PL_EXPORT bool dispatchMouseEvent(const MouseEvent &event) {
+    std::lock_guard<std::mutex> lock(sInputMutex);
+    bool handled = false;
+    for (const auto& cb : sMouseCallbacks) {
+        try {
+            if (cb && cb(event)) handled = true;
+        } catch (...) {}
+    }
+    return handled;
 }
 
 PL_EXPORT void showKeyboard() {}
@@ -188,14 +123,14 @@ PL_EXPORT uintptr_t resolveVtableFunction(std::string_view typeInfoName, size_t 
 
 PL_EXPORT uintptr_t resolveSignature(std::string_view signature, std::string_view moduleName) {
     (void)moduleName;
-    return ll::memory::scanMinecraft(std::string(signature));
+    return ll::memory::SignatureEngine::resolve(signature, 0, std::string(signature));
 }
 
 PL_EXPORT std::unordered_map<std::string, uintptr_t> resolveSignatures(std::span<const std::string> signatures, std::string_view moduleName) {
     (void)moduleName;
     std::unordered_map<std::string, uintptr_t> result;
     for (const auto& sig : signatures) {
-        result[sig] = ll::memory::scanMinecraft(sig);
+        result[sig] = ll::memory::SignatureEngine::resolve(sig, 0, sig);
     }
     return result;
 }

@@ -74,7 +74,7 @@ public:
         return MinecraftPacketIds::Text;
     }
 
-    [[nodiscard]] std::string getName() const override {
+    [[nodiscard]] ::std::string_view getName() const override {
         return "TextPacket";
     }
 

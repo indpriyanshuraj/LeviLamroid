@@ -23,14 +23,12 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    NetworkItemInstanceDescriptor();
-
-public:
-    // virtual functions
-    // NOLINTBEGIN
-    virtual ~NetworkItemInstanceDescriptor() /*override*/;
-    // NOLINTEND
+    NetworkItemInstanceDescriptor() = default;
+    virtual ~NetworkItemInstanceDescriptor() override = default;
+    NetworkItemInstanceDescriptor(NetworkItemInstanceDescriptor const&) = default;
+    NetworkItemInstanceDescriptor(NetworkItemInstanceDescriptor&&) = default;
+    NetworkItemInstanceDescriptor& operator=(NetworkItemInstanceDescriptor const&) = default;
+    NetworkItemInstanceDescriptor& operator=(NetworkItemInstanceDescriptor&&) = default;
 
 public:
     // member functions

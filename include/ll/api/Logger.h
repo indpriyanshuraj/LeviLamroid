@@ -17,26 +17,27 @@ enum class LogLevel {
     Error
 };
 
+namespace detail {
+    inline void logLine(const std::string& line) {
+        static std::mutex sMutex;
+        std::lock_guard<std::mutex> lock(sMutex);
+        const char* p = "/sdcard/Android/media/org.levimc.launcher/minecraft/levilamroid.log";
+        FILE* fp = fopen(p, "a");
+        if (fp) {
+            fputs(line.c_str(), fp);
+            fputc('\n', fp);
+            fflush(fp);
+            fclose(fp);
+        }
+    }
+}
+
 class Logger {
 private:
     std::string mTitle;
-    std::mutex mMutex;
-    std::ofstream mLogFile;
 
 public:
-    Logger(std::string title = "LeviLamroid") : mTitle(std::move(title)) {
-        // Open log file in Minecraft folder
-        const char* paths[] = {
-            "/sdcard/Android/media/org.levimc.launcher/minecraft/levilamroid.log",
-            "/sdcard/Android/media/org.levimc.launcher/minecraft/com.mojang.minecraftpe/levilamroid.log",
-            "/sdcard/levilamroid.log",
-            "/sdcard/Android/media/org.levimc.launcher/minecraft/levilamroid.log"
-        };
-        for (const char* p : paths) {
-            mLogFile.open(p, std::ios::app);
-            if (mLogFile.is_open()) break;
-        }
-    }
+    Logger(std::string title = "LeviLamroid") : mTitle(std::move(title)) {}
 
     static Logger& getInstance(std::string title = "LeviLamroid") {
         static Logger instance(std::move(title));
@@ -45,7 +46,6 @@ public:
 
     template <typename... Args>
     void log(LogLevel level, Args&&... args) {
-        std::lock_guard<std::mutex> lock(mMutex);
         std::ostringstream ss;
         (ss << ... << std::forward<Args>(args));
         std::string msg = ss.str();
@@ -60,10 +60,7 @@ public:
 
         std::string line = std::string(levelStr) + " [" + mTitle + "] " + msg;
         std::cout << line << std::endl;
-        if (mLogFile.is_open()) {
-            mLogFile << line << std::endl;
-            mLogFile.flush();
-        }
+        detail::logLine(line);
     }
 
     template <typename... Args>

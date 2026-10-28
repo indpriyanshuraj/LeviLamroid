@@ -5,6 +5,8 @@
 #include "ll/api/event/render/RenderEvents.h"
 #include "ll/api/render/Render.h"
 #include "fabric/ClientSignatures.hpp"
+#include "fabric/hud/ModularHud.hpp"
+#include "fabric/schematic/SchematicRenderer.hpp"
 #include <GLES3/gl3.h>
 #include <vector>
 #include <atomic>
@@ -45,7 +47,7 @@ static void hooked_glClear(GLbitfield mask) {
         reinterpret_cast<void(*)(GLbitfield)>(sOrigGlClear)(mask);
     }
 
-    if ((mask & GL_COLOR_BUFFER_BIT) && isMainMenu() && !isInWorld() && !isLoading()) {
+    if (mask & GL_COLOR_BUFFER_BIT) {
         GLint currentFbo = 0;
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFbo);
         if (currentFbo != 0) {
@@ -55,11 +57,28 @@ static void hooked_glClear(GLbitfield mask) {
         GLint vp[4] = {0, 0, 1920, 1080};
         glGetIntegerv(GL_VIEWPORT, vp);
 
-        ll::event::GlClearEvent event(static_cast<uint32_t>(mask), vp);
-        ll::event::EventBus::getInstance().publish(event);
+        if (isMainMenu() && !isInWorld() && !isLoading()) {
+            try {
+                ll::event::GlClearEvent event(static_cast<uint32_t>(mask), vp);
+                ll::event::EventBus::getInstance().publish(event);
+            } catch (...) {}
 
-        for (auto cb : sPostClearCallbacks) {
-            if (cb) cb(vp[2], vp[3]);
+            for (auto cb : sPostClearCallbacks) {
+                try {
+                    if (cb) cb(vp[2], vp[3]);
+                } catch (...) {}
+            }
+        } else if (isInWorld() && !isLoading()) {
+            // Safe in-world frame render pass for Fabric client mods
+            std::lock_guard<std::mutex> lock(sRenderCallbackMutex);
+            for (auto cb : sUIRenderCallbacks) {
+                try {
+                    if (cb) cb(nullptr, nullptr);
+                } catch (...) {}
+            }
+            try {
+                fabric::hud::ModularHudRegistry::getInstance().renderAll(nullptr, nullptr);
+            } catch (...) {}
         }
     }
 }
@@ -114,13 +133,24 @@ static void hooked_inGamePlayScreenRender(void* self, void* screenContext, const
         reinterpret_cast<void(*)(void*, void*, const void*)>(sOrigInGamePlayScreenRender)(self, screenContext, frameObj);
     }
 
-    ll::event::UIRenderEvent event(screenContext, frameObj);
-    ll::event::EventBus::getInstance().publish(event);
+    try {
+        ll::event::UIRenderEvent event(screenContext, frameObj);
+        ll::event::EventBus::getInstance().publish(event);
+    } catch (...) {}
 
-    std::lock_guard<std::mutex> lock(sRenderCallbackMutex);
-    for (auto cb : sUIRenderCallbacks) {
-        if (cb) cb(screenContext, frameObj);
+    {
+        std::lock_guard<std::mutex> lock(sRenderCallbackMutex);
+        for (auto cb : sUIRenderCallbacks) {
+            try {
+                if (cb) cb(screenContext, frameObj);
+            } catch (...) {}
+        }
     }
+
+    try {
+        fabric::hud::ModularHudRegistry::getInstance().renderAll(screenContext, frameObj);
+        fabric::schematic::SchematicRendererEngine::getInstance().renderGhostBlocks();
+    } catch (...) {}
 }
 
 // ── InGamePlayScreen::_renderLevel (3D Voxel World Terrain & Mesh Pass) ──
@@ -131,13 +161,23 @@ static void hooked_inGamePlayScreenRenderLevel(void* self, void* screenContext, 
         reinterpret_cast<void(*)(void*, void*, const void*)>(sOrigInGamePlayScreenRenderLevel)(self, screenContext, frameObj);
     }
 
-    ll::event::RenderLevelEvent event(screenContext, frameObj);
-    ll::event::EventBus::getInstance().publish(event);
+    try {
+        ll::event::RenderLevelEvent event(screenContext, frameObj);
+        ll::event::EventBus::getInstance().publish(event);
+    } catch (...) {}
 
-    std::lock_guard<std::mutex> lock(sRenderCallbackMutex);
-    for (auto cb : sLevelRenderCallbacks) {
-        if (cb) cb(screenContext, frameObj);
+    {
+        std::lock_guard<std::mutex> lock(sRenderCallbackMutex);
+        for (auto cb : sLevelRenderCallbacks) {
+            try {
+                if (cb) cb(screenContext, frameObj);
+            } catch (...) {}
+        }
     }
+
+    try {
+        fabric::schematic::SchematicRendererEngine::getInstance().renderGhostBlocks();
+    } catch (...) {}
 }
 
 // ── InGamePlayScreen::_renderLevelPrep ──
@@ -216,6 +256,8 @@ bool installRenderHooks() {
             logger.info("Hooked glClear GOT relocation [Raw RVA: 0x", std::hex, off.glClearGotRva, "]");
         }
     }
+
+    ensureInGameRenderHooksInstalled();
 
     logger.info("LeviLamroid Render hook subsystem initialized.");
     return true;

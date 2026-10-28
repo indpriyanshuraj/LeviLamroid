@@ -4,7 +4,7 @@ project(LeviLamroid VERSION 1.0.5 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fPIC -fvisibility=hidden -Wall -Wextra -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fPIC -fvisibility=hidden -Wall -Wextra -pthread -DLL_EXPORT -DFABRIC_EXPORT")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -29,10 +29,14 @@ set(SOURCES
     src/hooks/BlockHooks.cpp
     src/hooks/RecipeHooks.cpp
     src/hooks/CommandHooks.cpp
+    src/geometry/GeometryRegistry.cpp
+    src/entity/EntityRegistry.cpp
     src/plugin/PluginManager.cpp
     src/resource/ResourceManager.cpp
     src/resource/AddonIngestion.cpp
     src/preloader/PreloaderBridge.cpp
+    src/nbt/NbtBuilder.cpp
+    src/fabric/FabricClientBridge.cpp
 )
 
 add_library(levilamroid SHARED ${SOURCES})

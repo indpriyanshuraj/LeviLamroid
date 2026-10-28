@@ -18,20 +18,123 @@ static void* sOrigZipPackHasAsset = nullptr;
 static inline bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
     if (!ptr || size == 0) return false;
     uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
-    if (v < 0x10000 || v > 0x7fffffffff) return false;
-    if (v + size < v) return false;
+    uintptr_t untagged = v & 0x00ffffffffffffffULL;
+    if (untagged < 0x10000 || untagged > 0x00007fffffffffffULL) return false;
+    if (untagged + size < untagged) return false;
     return true;
 }
 
 static bool safeExtractPath(const void* pathPtr, std::string& outPath) {
-    if (!pathPtr || !isPointerReadable(pathPtr, sizeof(std::string))) return false;
+    if (!pathPtr || !isPointerReadable(pathPtr, 8)) return false;
+
+    // 1. Try std::string at offset 0 (standard Core::Path layout)
     try {
-        const auto* s = reinterpret_cast<const std::string*>(pathPtr);
-        if (s->size() > 0 && s->size() < 1024) {
-            outPath = *s;
-            return true;
+        if (isPointerReadable(pathPtr, sizeof(std::string))) {
+            const auto* s = reinterpret_cast<const std::string*>(pathPtr);
+            size_t sz = s->size();
+            if (sz > 0 && sz < 1024) {
+                const char* d = s->c_str();
+                if (isPointerReadable(d, sz)) {
+                    bool valid = true;
+                    for (size_t i = 0; i < sz; ++i) {
+                        unsigned char c = static_cast<unsigned char>(d[i]);
+                        if (c < 32 || c > 126) { valid = false; break; }
+                    }
+                    if (valid) {
+                        outPath.assign(d, sz);
+                        return true;
+                    }
+                }
+            }
         }
     } catch (...) {}
+
+    // 2. Try std::string at offset 8 (in case Core::Path has an 8-byte vtable/prefix)
+    try {
+        const void* p8 = reinterpret_cast<const char*>(pathPtr) + 8;
+        if (isPointerReadable(p8, sizeof(std::string))) {
+            const auto* s = reinterpret_cast<const std::string*>(p8);
+            size_t sz = s->size();
+            if (sz > 0 && sz < 1024) {
+                const char* d = s->c_str();
+                if (isPointerReadable(d, sz)) {
+                    bool valid = true;
+                    for (size_t i = 0; i < sz; ++i) {
+                        unsigned char c = static_cast<unsigned char>(d[i]);
+                        if (c < 32 || c > 126) { valid = false; break; }
+                    }
+                    if (valid) {
+                        outPath.assign(d, sz);
+                        return true;
+                    }
+                }
+            }
+        }
+    } catch (...) {}
+
+    // 3. Try direct raw C string pointer
+    try {
+        const char* cs = reinterpret_cast<const char*>(pathPtr);
+        if (isPointerReadable(cs, 4)) {
+            size_t len = 0;
+            while (len < 512 && isPointerReadable(cs + len, 1) && cs[len] != 0) {
+                unsigned char c = static_cast<unsigned char>(cs[len]);
+                if (c < 32 || c > 126) break;
+                len++;
+            }
+            if (len >= 3 && cs[len] == 0) {
+                outPath.assign(cs, len);
+                return true;
+            }
+        }
+    } catch (...) {}
+
+    return false;
+}
+
+static inline bool isExcludedFromFallback(const std::string& p) {
+    // Never exclude textures, images, sounds, or models from fallback
+    if (p.size() >= 4) {
+        if (p.ends_with(".png") || p.ends_with(".tga") || p.ends_with(".hdr") ||
+            p.ends_with(".jpg") || p.ends_with(".mesh") || p.ends_with(".fsb")) {
+            return false;
+        }
+    }
+
+    if (p.find("blocks.json") != std::string::npos) return true;
+    if (p.find("terrain_texture.json") != std::string::npos) return true;
+    if (p.find("item_texture.json") != std::string::npos) return true;
+    if (p.find("_ui_defs.json") != std::string::npos) return true;
+    if (p.rfind("ui/", 0) == 0 && p.ends_with(".json")) return true;
+    if (p.find("flipbook_textures.json") != std::string::npos) return true;
+    if (p.find("manifest.json") != std::string::npos) return true;
+    if (p.find("pack_manifest.json") != std::string::npos) return true;
+    if (p.find("contents.json") != std::string::npos) return true;
+    if (p.find(".lang") != std::string::npos) return true;
+    if (p.find("languages.json") != std::string::npos) return true;
+    if (p.find("sound_definitions.json") != std::string::npos) return true;
+    if (p.find(".material") != std::string::npos) return true;
+    if (p.find("materials/") != std::string::npos) return true;
+
+    // Core vanilla JSON UI screens must never be replaced by partial delta snippets via fallback
+    static const char* sVanillaScreens[] = {
+        "hud_screen.json",
+        "pause_screen.json",
+        "chest_screen.json",
+        "redstone_screen.json",
+        "inventory_screen.json",
+        "chat_screen.json",
+        "death_screen.json",
+        "start_screen.json",
+        "settings_screen.json",
+        "progress_screen.json",
+        "world_loading_screen.json",
+        "common.json",
+        "ui_common.json"
+    };
+    for (const char* v : sVanillaScreens) {
+        if (p.find(v) != std::string::npos) return true;
+    }
     return false;
 }
 
@@ -45,6 +148,9 @@ static bool hooked_directoryPackHasAsset(void* self, void* pathPtr, bool flag1, 
 
         std::string p;
         if (safeExtractPath(pathPtr, p)) {
+            if (isExcludedFromFallback(p)) {
+                return false;
+            }
             if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
                 return true;
             }
@@ -63,6 +169,9 @@ static bool hooked_zipPackHasAsset(void* self, void* pathPtr, bool flag1, bool f
 
         std::string p;
         if (safeExtractPath(pathPtr, p)) {
+            if (isExcludedFromFallback(p)) {
+                return false;
+            }
             if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
                 return true;
             }
@@ -72,6 +181,7 @@ static bool hooked_zipPackHasAsset(void* self, void* pathPtr, bool flag1, bool f
 }
 
 static bool hooked_directoryPackGetAsset(void* self, void* pathPtr, std::string& outBuffer, bool loadMode) noexcept {
+    if (!isPointerReadable(&outBuffer, sizeof(std::string))) return false;
     bool res = false;
     try {
         if (sOrigDirectoryPackGetAsset) {
@@ -83,65 +193,32 @@ static bool hooked_directoryPackGetAsset(void* self, void* pathPtr, std::string&
             return res;
         }
 
-        // 1. Patch item_texture.json when loaded (merge custom item textures into atlas)
-        if (p.find("item_texture.json") != std::string::npos) {
-            if (res) {
+        // 1. Only patch global JSON files if the pack genuinely has them (e.g. vanilla packs)
+        if (res && !outBuffer.empty()) {
+            if (p.find("item_texture.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchItemTextureJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchItemTextureJson(outBuffer);
-                return true;
-            }
-        }
-        
-        // 2. Patch terrain_texture.json when loaded (merge custom block textures into terrain atlas)
-        if (p.find("terrain_texture.json") != std::string::npos) {
-            if (res) {
+            } else if (p.find("terrain_texture.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchTerrainTextureJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchTerrainTextureJson(outBuffer);
-                return true;
-            }
-        }
-
-        // 3. Patch blocks.json when loaded
-        if (p.find("blocks.json") != std::string::npos) {
-            if (res) {
-                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
-                return true;
-            }
-        }
-
-        // 4. Patch _ui_defs.json when loaded (inject custom JSON UI screen definitions)
-        if (p.find("_ui_defs.json") != std::string::npos) {
-            if (res) {
+            } else if (p.find("_ui_defs.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
-                return true;
+            } else if (p.find("blocks.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
+            } else if (p.find("sound_definitions.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchSoundDefinitionsJson(outBuffer);
+            } else if (p.find("flipbook_textures.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchFlipbookTexturesJson(outBuffer);
+            } else if (p.find(".lang") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer, p);
             }
-        }
-
-        // 5. CRITICAL RULE FOR STABILITY & SCUDO:
-        // If the original vanilla pack already loaded the asset (textures, audio, vanilla lang),
-        // return true IMMEDIATELY without mutating outBuffer across DSO libc++ heap boundaries!
-        if (res) {
             return true;
         }
 
-        // CRITICAL FOR STABILITY: Never serve .lang or languages.json from the fallback!
-        // Bedrock iterates 2,000+ pack entries checking for localization files. Serving a custom lang file
-        // across libc++ boundaries on every iteration corrupts Scudo heap chunks.
-        if (p.find(".lang") != std::string::npos || p.find("languages.json") != std::string::npos) {
-            return res;
+        // 2. Never serve global metadata files as fake pack overrides
+        if (isExcludedFromFallback(p)) {
+            return false;
         }
 
-        // 6. Fallback for mounted custom assets (textures, models, entities, particles, blocks)
+        // 3. Fallback for mounted custom assets (textures, models, entities, particles, ui)
         if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
             if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
                 return true;
@@ -153,6 +230,7 @@ static bool hooked_directoryPackGetAsset(void* self, void* pathPtr, std::string&
 }
 
 static bool hooked_zipPackGetAsset(void* self, void* pathPtr, std::string& outBuffer, bool loadMode) noexcept {
+    if (!isPointerReadable(&outBuffer, sizeof(std::string))) return false;
     bool res = false;
     try {
         if (sOrigZipPackGetAsset) {
@@ -164,53 +242,32 @@ static bool hooked_zipPackGetAsset(void* self, void* pathPtr, std::string& outBu
             return res;
         }
 
-        if (p.find("item_texture.json") != std::string::npos) {
-            if (res) {
+        // 1. Only patch global JSON files if the pack genuinely has them (e.g. vanilla packs)
+        if (res && !outBuffer.empty()) {
+            if (p.find("item_texture.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchItemTextureJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchItemTextureJson(outBuffer);
-                return true;
-            }
-        }
-        if (p.find("terrain_texture.json") != std::string::npos) {
-            if (res) {
+            } else if (p.find("terrain_texture.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchTerrainTextureJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchTerrainTextureJson(outBuffer);
-                return true;
-            }
-        }
-        if (p.find("blocks.json") != std::string::npos) {
-            if (res) {
-                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
-                return true;
-            }
-        }
-        if (p.find("_ui_defs.json") != std::string::npos) {
-            if (res) {
+            } else if (p.find("_ui_defs.json") != std::string::npos) {
                 ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
-                return true;
-            } else if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
-                ::ll::resource::ResourceManager::getInstance().patchUiDefsJson(outBuffer);
-                return true;
+            } else if (p.find("blocks.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchBlocksJson(outBuffer);
+            } else if (p.find("sound_definitions.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchSoundDefinitionsJson(outBuffer);
+            } else if (p.find("flipbook_textures.json") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchFlipbookTexturesJson(outBuffer);
+            } else if (p.find(".lang") != std::string::npos) {
+                ::ll::resource::ResourceManager::getInstance().patchLangFile(outBuffer, p);
             }
-        }
-
-        // CRITICAL RULE FOR STABILITY & SCUDO:
-        if (res) {
             return true;
         }
 
-        // CRITICAL FOR STABILITY: Never serve .lang or languages.json from the fallback!
-        if (p.find(".lang") != std::string::npos || p.find("languages.json") != std::string::npos) {
-            return res;
+        // 2. Never serve global metadata files as fake pack overrides
+        if (isExcludedFromFallback(p)) {
+            return false;
         }
 
+        // 3. Fallback for mounted custom assets (textures, models, entities, particles, ui)
         if (::ll::resource::ResourceManager::getInstance().hasAsset(p)) {
             if (::ll::resource::ResourceManager::getInstance().getAsset(p, outBuffer)) {
                 return true;

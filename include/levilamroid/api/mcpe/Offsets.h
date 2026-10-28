@@ -66,6 +66,18 @@ struct EngineOffsets {
     uintptr_t gameModeUseItem;
     uintptr_t gameModeUseItemOn;
     uintptr_t gameModeAttack;
+    uintptr_t gameModeBuildBlock;
+    uintptr_t gameModeStartBuildBlock;
+
+    // Touch & Mouse Input Subsystem RVAs (Audited from LeviMap)
+    uintptr_t mouseHandlerAndroidVtable;
+    uintptr_t clientInstanceVtable;
+    uintptr_t minecraftGameVtable;
+    uintptr_t blockSourceVtable;
+    uintptr_t mouseHandlerAndroidButtonInput;
+    uintptr_t mouseHandlerAndroidAbsoluteMouseInput;
+    uintptr_t mouseHandlerAndroidScrollInput;
+    uintptr_t mainActivityNativeKeyHandler;
 
     // Verified Engine & Graphics RVAs
     uintptr_t clientInstanceUpdate;
@@ -74,6 +86,7 @@ struct EngineOffsets {
     uintptr_t tessellatorBegin;
     uintptr_t blockSourceGetBlock;
     uintptr_t blockSourceGetBrightness;
+    uintptr_t dimensionGetBlockSource;
     uintptr_t commandAutocomplete;
     uintptr_t commandRequestPacketWrite;
 
@@ -92,6 +105,9 @@ struct EngineOffsets {
     uintptr_t resourcePackManagerLoad;
     uintptr_t resourcePackManagerGetStack;
     uintptr_t resourcePackManagerDoStackOp;
+    uintptr_t resourcePackManagerComposeFullStack;
+    uintptr_t resourcePackManager_composeFullStack;
+    uintptr_t resourcePackManagerSetStack;
     uintptr_t resourcePackGetResource;
     uintptr_t textureGroupLoadAsync;
     uintptr_t textureGroupEnableLRU;
@@ -180,6 +196,8 @@ struct EngineOffsets {
     uintptr_t blockItemVtable;
     uintptr_t blockItemUseOn;
     uintptr_t blockSourceSetBlock;
+    uintptr_t blockSourceDestroyBlock;
+    uintptr_t dimensionGetChunkSource;
     uintptr_t blockTypeRegistryGetInstance;
     uintptr_t blockTypeRegistryLookupByName;
     uintptr_t blockTypeRegistryLookupByNameImpl;

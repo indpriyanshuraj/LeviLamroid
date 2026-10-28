@@ -14,23 +14,56 @@ namespace ll::memory {
 
 static bool isMemoryReadable(const void* ptr, size_t size) {
     if (!ptr || size == 0) return false;
-    int nullfd = open("/dev/null", O_WRONLY);
-    if (nullfd < 0) return true;
-    ssize_t ret = write(nullfd, ptr, size);
-    close(nullfd);
-    return ret >= 0;
+    uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
+    uintptr_t untagged = v & 0x00ffffffffffffffULL;
+    if (untagged < 0x10000 || untagged > 0x00007fffffffffffULL) return false;
+    if (untagged + size < untagged) return false;
+    return true;
 }
 
 std::vector<int> parsePattern(const std::string& pattern) {
     std::vector<int> bytes;
-    std::istringstream stream(pattern);
-    std::string byteStr;
+    if (pattern.empty()) return bytes;
 
-    while (stream >> byteStr) {
-        if (byteStr == "?" || byteStr == "??") {
-            bytes.push_back(-1); // Wildcard
-        } else {
-            bytes.push_back(std::stoi(byteStr, nullptr, 16));
+    bool hasSpaces = (pattern.find(' ') != std::string::npos);
+    if (hasSpaces) {
+        std::istringstream stream(pattern);
+        std::string byteStr;
+        while (stream >> byteStr) {
+            if (byteStr == "?" || byteStr == "??") {
+                bytes.push_back(-1);
+            } else {
+                try {
+                    int val = std::stoi(byteStr, nullptr, 16);
+                    bytes.push_back(val & 0xFF);
+                } catch (...) {
+                    bytes.push_back(-1);
+                }
+            }
+        }
+    } else {
+        size_t i = 0;
+        while (i < pattern.size()) {
+            if (std::isspace(static_cast<unsigned char>(pattern[i]))) {
+                i++;
+                continue;
+            }
+            if (pattern[i] == '?') {
+                bytes.push_back(-1);
+                i++;
+                if (i < pattern.size() && pattern[i] == '?') i++;
+            } else if (i + 1 < pattern.size()) {
+                std::string hexByte = pattern.substr(i, 2);
+                try {
+                    int val = std::stoi(hexByte, nullptr, 16);
+                    bytes.push_back(val & 0xFF);
+                } catch (...) {
+                    bytes.push_back(-1);
+                }
+                i += 2;
+            } else {
+                break;
+            }
         }
     }
     return bytes;
@@ -98,20 +131,48 @@ uintptr_t scanPattern(const std::string& patternStr, uintptr_t start, size_t len
     return 0;
 }
 
+static std::unordered_map<std::string, uintptr_t> sScanCache;
+static std::mutex sScanMutex;
+
 uintptr_t scanMinecraft(const std::string& pattern) {
+    {
+        std::lock_guard<std::mutex> lock(sScanMutex);
+        auto it = sScanCache.find(pattern);
+        if (it != sScanCache.end()) return it->second;
+    }
+
     uintptr_t base = getMinecraftBase();
     if (!base) return 0;
     // Scan text segments of libminecraftpe.so (~328MB on Android ARM64)
-    return scanPattern(pattern, base, 0x15000000);
+    uintptr_t res = scanPattern(pattern, base, 0x15000000);
+    {
+        std::lock_guard<std::mutex> lock(sScanMutex);
+        sScanCache[pattern] = res;
+    }
+    return res;
 }
 
+static std::unordered_map<std::string, uintptr_t> sTextScanCache;
+static std::mutex sTextScanMutex;
+
 uintptr_t scanMinecraftText(const std::string& pattern) {
+    {
+        std::lock_guard<std::mutex> lock(sTextScanMutex);
+        auto it = sTextScanCache.find(pattern);
+        if (it != sTextScanCache.end()) return it->second;
+    }
+
     uintptr_t base = getMinecraftBase();
     if (!base) return 0;
     // Android ARM64 1.26.52.3 .text boundaries: offset 0x064C64E0, size 0x0C44AFCC (~205.8MB)
     uintptr_t textStart = base + 0x064C64E0;
     size_t textSize = 0x0C44AFCC;
-    return scanPattern(pattern, textStart, textSize);
+    uintptr_t res = scanPattern(pattern, textStart, textSize);
+    {
+        std::lock_guard<std::mutex> lock(sTextScanMutex);
+        sTextScanCache[pattern] = res;
+    }
+    return res;
 }
 
 static std::unordered_map<std::string, uintptr_t> sResolvedCache;
@@ -149,9 +210,16 @@ uintptr_t SignatureEngine::resolve(std::string_view name, uintptr_t fallbackRva,
             sResolvedCache[key] = foundAddr;
             return foundAddr;
         }
+
+        // Fast fallback to targetAddr: If bounded window scan failed, trust fallbackRva
+        // rather than freezing the main thread for 15 seconds scanning 540MB linearly!
+        uintptr_t targetAddr = base + fallbackRva;
+        std::lock_guard<std::mutex> lock(sCacheMutex);
+        sResolvedCache[key] = targetAddr;
+        return targetAddr;
     }
 
-    // 3. Fast .text section scan (205 MB)
+    // 3. Fast .text section scan (205 MB) only when no fallback RVA is provided
     if (!pattern.empty()) {
         uintptr_t foundAddr = scanMinecraftText(pattern);
         if (foundAddr != 0) {
@@ -159,17 +227,9 @@ uintptr_t SignatureEngine::resolve(std::string_view name, uintptr_t fallbackRva,
             sResolvedCache[key] = foundAddr;
             return foundAddr;
         }
-
-        // 4. Fallback full binary scan
-        foundAddr = scanMinecraft(pattern);
-        if (foundAddr != 0) {
-            std::lock_guard<std::mutex> lock(sCacheMutex);
-            sResolvedCache[key] = foundAddr;
-            return foundAddr;
-        }
     }
 
-    // 5. Fallback address if pattern scan failed but RVA was provided
+    // 4. Fallback address if pattern scan failed but RVA was provided
     if (fallbackRva != 0) {
         uintptr_t targetAddr = base + fallbackRva;
         std::lock_guard<std::mutex> lock(sCacheMutex);
@@ -177,8 +237,11 @@ uintptr_t SignatureEngine::resolve(std::string_view name, uintptr_t fallbackRva,
         return targetAddr;
     }
 
+    std::lock_guard<std::mutex> lock(sCacheMutex);
+    sResolvedCache[key] = 0;
     return 0;
 }
+
 
 void SignatureEngine::clearCache() {
     std::lock_guard<std::mutex> lock(sCacheMutex);

@@ -76,27 +76,67 @@ void* findMinecraftSymbol(const char* symbolName) {
 }
 
 void* resolveVtableFunction(const char* className, size_t slot, const char* moduleName) {
-    // 1. Try PreLoader API if host exports it
+    if (!className) return nullptr;
+
+    uintptr_t mcBase = getMinecraftBase();
+    if (mcBase) {
+        const auto& off = ::levilamroid::mcpe::getOffsets();
+        uintptr_t vtableSlot0 = 0;
+
+        if (strstr(className, "MouseHandlerAndroid") != nullptr) {
+            if (slot == 2 && off.mouseHandlerAndroidAbsoluteMouseInput) {
+                return reinterpret_cast<void*>(mcBase + off.mouseHandlerAndroidAbsoluteMouseInput);
+            }
+            if (slot == 5 && off.mouseHandlerAndroidButtonInput) {
+                return reinterpret_cast<void*>(mcBase + off.mouseHandlerAndroidButtonInput);
+            }
+            if (slot == 6 && off.mouseHandlerAndroidScrollInput) {
+                return reinterpret_cast<void*>(mcBase + off.mouseHandlerAndroidScrollInput);
+            }
+            vtableSlot0 = off.mouseHandlerAndroidVtable;
+        } else if (strstr(className, "ClientInstance") != nullptr) {
+            vtableSlot0 = off.clientInstanceVtable;
+        } else if (strstr(className, "MinecraftGame") != nullptr) {
+            vtableSlot0 = off.minecraftGameVtable;
+        } else if (strstr(className, "BlockSource") != nullptr) {
+            vtableSlot0 = off.blockSourceVtable;
+        }
+
+        if (vtableSlot0 != 0) {
+            void** vtArray = reinterpret_cast<void**>(mcBase + vtableSlot0);
+            return vtArray[slot];
+        }
+    }
+
+    // 1. Try PreLoader API only if host exports it AND it belongs to genuine libpreloader.so
     using ResolveVtableFn = void* (*)(std::string_view, size_t, std::string_view);
     static auto fnPreLoaderResolve = reinterpret_cast<ResolveVtableFn>(
         dlsym(RTLD_DEFAULT, "_ZN2pl6memory21resolveVtableFunctionENSt6__ndk117basic_string_viewIcNS1_11char_traitsIcEEEEmS5_")
     );
     if (fnPreLoaderResolve) {
-        void* res = fnPreLoaderResolve(className, slot, moduleName);
-        if (res) return res;
+        Dl_info dlinfo;
+        if (dladdr(reinterpret_cast<void*>(fnPreLoaderResolve), &dlinfo) && dlinfo.dli_fname) {
+            if (strstr(dlinfo.dli_fname, "libpreloader.so")) {
+                void* res = fnPreLoaderResolve(className, slot, moduleName ? moduleName : "libminecraftpe.so");
+                if (res) return res;
+            }
+        }
     }
 
-    // 2. Direct Itanium VTable resolution: _ZTV + length + className (e.g., _ZTV20LoopbackPacketSender)
+    // 2. Direct Itanium VTable resolution: _ZTV + className / _ZTV + length + className
     std::string classStr(className);
-    std::string vtableSym = "_ZTV" + std::to_string(classStr.length()) + classStr;
-    void* vt = findMinecraftSymbol(vtableSym.c_str());
-    if (!vt) {
-        // Fallback to legacy un-prefixed symbol
+    void* vt = nullptr;
+    if (classStr.rfind("_ZTV", 0) == 0) {
+        vt = findMinecraftSymbol(classStr.c_str());
+    } else {
         std::string fallbackSym = "_ZTV" + classStr;
         vt = findMinecraftSymbol(fallbackSym.c_str());
+        if (!vt) {
+            std::string vtableSym = "_ZTV" + std::to_string(classStr.length()) + classStr;
+            vt = findMinecraftSymbol(vtableSym.c_str());
+        }
     }
     if (vt) {
-        // In Itanium C++ ABI, vtable pointer starts after 2 header words (offset-to-top & RTTI)
         void** vtArray = reinterpret_cast<void**>(vt);
         return vtArray[2 + slot];
     }
@@ -209,14 +249,22 @@ bool hook(void* target, void* detour, void** original) {
 }
 
 bool hookRva(uintptr_t rva, void* detour, void** original) {
+    if (rva == 0 || !detour) {
+        if (original) *original = nullptr;
+        return false;
+    }
     uintptr_t base = getMinecraftBase();
     if (!base) return false;
     return hook(reinterpret_cast<void*>(base + rva), detour, original);
 }
 
 bool hookGotSlot(uintptr_t gotRva, void* detour, void** original) {
+    if (gotRva == 0 || !detour) {
+        if (original) *original = nullptr;
+        return false;
+    }
     uintptr_t base = getMinecraftBase();
-    if (!base || !detour) return false;
+    if (!base) return false;
 
     uintptr_t gotAddr = base + gotRva;
     long pageSize = sysconf(_SC_PAGESIZE);
@@ -329,7 +377,12 @@ bool registerHookHelper(const char* name, const char* symbolOrPattern, void* det
 }
 
 LL_API bool registerHookHelper(const char* name, uintptr_t rva, void* detour, void** original) {
-    Logger::getInstance().info("Registering hook [", name, "] at RVA 0x", std::hex, rva);
+    if (rva == 0) {
+        Logger::getInstance().warn("Skipping hook [", name ? name : "unknown", "] with null RVA 0x0");
+        if (original) *original = nullptr;
+        return false;
+    }
+    Logger::getInstance().info("Registering hook [", name ? name : "unknown", "] at RVA 0x", std::hex, rva);
     return hookRva(rva, detour, original);
 }
 

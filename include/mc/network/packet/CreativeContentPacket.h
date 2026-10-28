@@ -18,14 +18,17 @@ namespace cereal { struct ReflectionCtx; }
 
 class CreativeContentPacket : public ::ll::PayloadPacket<::CreativeContentPacketPayload> {
 public:
+    using ::Packet::write;
+    using ::Packet::read;
+
     // member variables
     // NOLINTBEGIN
     ::ll::TypedStorage<4, 4, ::SerializationMode> mSerializationMode;
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    CreativeContentPacket();
+    CreativeContentPacket() = default;
+    virtual ~CreativeContentPacket() = default;
 
 public:
     // virtual functions

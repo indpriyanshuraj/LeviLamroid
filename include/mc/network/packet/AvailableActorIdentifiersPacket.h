@@ -18,6 +18,9 @@ namespace cereal { struct ReflectionCtx; }
 
 class AvailableActorIdentifiersPacket : public ::ll::PayloadPacket<::AvailableActorIdentifiersPacketPayload> {
 public:
+    using ::Packet::write;
+    using ::Packet::read;
+
     // member variables
     // NOLINTBEGIN
     ::ll::TypedStorage<4, 4, ::SerializationMode> mSerializationMode;

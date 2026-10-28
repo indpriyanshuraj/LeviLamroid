@@ -21,6 +21,7 @@ struct CustomBlockDefinition {
     void* nativeBlockPermutation{nullptr};
     uint16_t blockId{0};
     std::string baseBlock{""};
+    std::string geometry{""};
 };
 
 } // namespace levilamroid::block

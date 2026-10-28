@@ -19,13 +19,17 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    ItemDescriptorCount();
+    ItemDescriptorCount() = default;
+    virtual ~ItemDescriptorCount() override = default;
+    ItemDescriptorCount(ItemDescriptorCount const&) = default;
+    ItemDescriptorCount(ItemDescriptorCount&&) = default;
+    ItemDescriptorCount& operator=(ItemDescriptorCount const&) = default;
+    ItemDescriptorCount& operator=(ItemDescriptorCount&&) = default;
 
 public:
     // virtual functions
     // NOLINTBEGIN
-    virtual void serialize(::BinaryStream& stream) const /*override*/;
+    virtual void serialize(::BinaryStream&) const override {}
     // NOLINTEND
 
 public:

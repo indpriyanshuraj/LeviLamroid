@@ -6,6 +6,8 @@
 
 #include "levilamroid/api/mcpe/Offsets.h"
 #include "levilamroid/api/Logger.h"
+#include "levilamroid/api/item/ItemRegistry.h"
+#include "levilamroid/api/block/BlockTypeRegistry.h"
 #include "ll/api/memory/Hook.h"
 #include <vector>
 #include <string>
@@ -240,15 +242,25 @@ bool registerCommand(const std::string& name, const std::string& desc,
     return true;
 }
 
+std::vector<std::pair<std::string, std::string>> getAllCustomCommands() {
+    std::lock_guard<std::recursive_mutex> lock(sCmdMutex);
+    std::vector<std::pair<std::string, std::string>> list;
+    list.reserve(sCommands.size());
+    for (const auto& [name, def] : sCommands) {
+        list.push_back({name, def.description});
+    }
+    return list;
+}
+
 // ── Default Built-in Commands Initialization ───────────────────────────────
 
 static void registerDefaultCommands() {
     auto& logger = ll::Logger::getInstance();
 
-    // 1. /record — BedrockReplay Command Engine
+    // Core LeviLamroid ModLoader Command: /ll and /levilamroid
     registerCommand(
-        "record",
-        "BedrockReplay recording controls: <start|pause|resume|stop|status>",
+        "ll",
+        "LeviLamroid mod loader info and status: <version|mods|help>",
         0,
         [](const std::string& args) {
             using SendToastFn = void (*)(const char*, const char*, const char*, int);
@@ -258,78 +270,21 @@ static void registerDefaultCommands() {
             while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.front()))) sub.erase(0, 1);
             while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.back()))) sub.pop_back();
 
-            if (sub == "start") {
-                if (sToast) sToast("BedrockReplay", "§aRecording started! Frame capture active.", "icon", 3000);
-            } else if (sub == "stop") {
-                if (sToast) sToast("BedrockReplay", "§eRecording saved to /sdcard/games/BedrockReplay!", "icon", 4000);
-            } else if (sub == "pause") {
-                if (sToast) sToast("BedrockReplay", "§6Recording paused.", "icon", 2500);
-            } else if (sub == "resume") {
-                if (sToast) sToast("BedrockReplay", "§aRecording resumed.", "icon", 2500);
+            if (sub == "version" || sub.empty()) {
+                if (sToast) sToast("LeviLamroid", "§6LeviLamroid v1.0.5-beta §7(Android ARM64)", "icon", 3500);
+            } else if (sub == "mods" || sub == "list") {
+                size_t customItemCount = ::levilamroid::item::getAllCustomItems().size();
+                size_t customBlockCount = ::levilamroid::block::getCustomBlockCount();
+                std::string msg = "§a" + std::to_string(customItemCount) + " Custom Items, §b" + std::to_string(customBlockCount) + " Custom Blocks";
+                if (sToast) sToast("Loaded Content", msg.c_str(), "icon", 4000);
             } else {
-                if (sToast) sToast("BedrockReplay", "Usage: /record <start|pause|resume|stop>", "icon", 4000);
+                if (sToast) sToast("LeviLamroid", "Usage: /ll <version|mods>", "icon", 3000);
             }
         },
-        {"playback"}
+        {"levilamroid"}
     );
 
-    // 2. /fd and /farmersdelight — Farmer's Delight Item Commands
-    registerCommand(
-        "fd",
-        "Farmer's Delight mod items: <knife|pot|board|stove|food|all>",
-        0,
-        [](const std::string& args) {
-            using GiveFn = bool (*)(void*, const char*, int, int);
-            static auto sGive = reinterpret_cast<GiveFn>(dlsym(RTLD_DEFAULT, "ll_item_give_player"));
-            using GetPlayerFn = void* (*)();
-            static auto sGetPlayer = reinterpret_cast<GetPlayerFn>(dlsym(RTLD_DEFAULT, "ll_service_get_local_player"));
-            using SendToastFn = void (*)(const char*, const char*, const char*, int);
-            static auto sToast = reinterpret_cast<SendToastFn>(dlsym(RTLD_DEFAULT, "ll_ui_send_toast"));
-
-            void* player = sGetPlayer ? sGetPlayer() : nullptr;
-            std::string sub = args;
-            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.front()))) sub.erase(0, 1);
-            while (!sub.empty() && std::isspace(static_cast<unsigned char>(sub.back()))) sub.pop_back();
-
-            if (sub == "knife") {
-                if (sGive && player) sGive(player, "farmersdelight:diamond_knife", 1, 0);
-                if (sToast) sToast("Farmer's Delight", "Received Diamond Knife!", "textures/items/diamond_knife", 3000);
-            } else if (sub == "pot") {
-                if (sGive && player) sGive(player, "farmersdelight:cooking_pot", 1, 1);
-                if (sToast) sToast("Farmer's Delight", "Received Cooking Pot!", "textures/blocks/cooking_pot_top", 3000);
-            } else if (sub == "board") {
-                if (sGive && player) sGive(player, "farmersdelight:cutting_board", 1, 2);
-                if (sToast) sToast("Farmer's Delight", "Received Cutting Board!", "textures/blocks/cutting_board_top", 3000);
-            } else if (sub == "stove") {
-                if (sGive && player) sGive(player, "farmersdelight:stove", 1, 3);
-                if (sToast) sToast("Farmer's Delight", "Received Stove!", "textures/blocks/stove_front_on", 3000);
-            } else if (sub == "food") {
-                if (sGive && player) {
-                    sGive(player, "farmersdelight:hamburger", 8, 4);
-                    sGive(player, "farmersdelight:noodle_soup", 4, 5);
-                }
-                if (sToast) sToast("Farmer's Delight", "Received Hamburgers & Noodle Soup!", "textures/items/hamburger", 3000);
-            } else if (sub == "all" || sub.empty()) {
-                if (sGive && player) {
-                    sGive(player, "farmersdelight:diamond_knife", 1, 0);
-                    sGive(player, "farmersdelight:cooking_pot", 1, 1);
-                    sGive(player, "farmersdelight:cutting_board", 1, 2);
-                    sGive(player, "farmersdelight:stove", 1, 3);
-                    sGive(player, "farmersdelight:hamburger", 16, 4);
-                    sGive(player, "farmersdelight:tomato", 16, 5);
-                    sGive(player, "farmersdelight:onion", 16, 6);
-                    sGive(player, "farmersdelight:cabbage", 16, 7);
-                    sGive(player, "farmersdelight:rice", 16, 8);
-                }
-                if (sToast) sToast("Farmer's Delight", "Chef Starter Kit Equipped!", "textures/items/diamond_knife", 4000);
-            } else {
-                if (sToast) sToast("Farmer's Delight", "Usage: /fd <knife|pot|board|stove|food|all>", "icon", 3000);
-            }
-        },
-        {"farmersdelight", "knife"}
-    );
-
-    logger.info("§6[CommandHooks] §aDefault commands (/record, /fd, /farmersdelight, /knife) registered.");
+    logger.info("§6[CommandHooks] §aCore modloader commands (/ll, /levilamroid) registered.");
 }
 
 // ── Hook Installation ──────────────────────────────────────────────────────

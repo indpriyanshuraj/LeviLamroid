@@ -17,6 +17,7 @@ using CreativeCategory = CreativeItemCategory;
 struct CustomItemDefinition {
     std::string identifier;                            // e.g. "custom:ruby_sword"
     short id{0};                                       // e.g. 10500
+    std::string displayName;                           // e.g. "Ruby Sword"
     std::string descriptionId;                         // e.g. "item.custom:ruby_sword.name"
     std::string iconName;                              // e.g. "ruby_sword"
     int iconFrame{0};                                  // e.g. 0
@@ -28,6 +29,7 @@ struct CustomItemDefinition {
     bool isBlock{false};                               // True for blocks (uses BlockItem vtable & atlas.terrain)
     bool isHandEquipped{false};
     bool isFood{false};
+    bool canAlwaysEat{false};                          // True if consumable when hunger bar is full
     short maxDamage{0};
 
     // ── Phase 1: Food / Tool / Weapon properties ──
@@ -38,13 +40,17 @@ struct CustomItemDefinition {
     float attackDamage{0.0f};                          // Bonus attack damage for weapons/tools
     int enchantSlot{0};                                // Enchantment slot bitmask
     float miningSpeed{1.0f};                           // Mining speed multiplier
+    std::string cooldownCategory{""};                  // Cooldown category/group identifier
+    float cooldownDuration{0.0f};                      // Cooldown duration in seconds
     // ── End Phase 1 ──
 
     void* nativeItemPtr{nullptr};
     void* nativeControlBlock{nullptr};
     void* nativeBlockPermutation{nullptr};
     void* nativeBlockControlBlock{nullptr};
+    void* nativeBlockLegacyPtr{nullptr};
     std::string baseBlock{""};
+    std::string geometry{""};
 };
 
 LL_API bool registerCustomItem(const CustomItemDefinition& def);
@@ -53,6 +59,8 @@ LL_API Item* getNativeItem(short id);
 LL_API bool giveItemToPlayer(void* player, const std::string& identifier, int count = 1, int slot = -1);
 LL_API void forEachRegisteredItem(void (*callback)(const CustomItemDefinition& def, void* udata), void* udata);
 LL_API void* getBlockPermutationForDef(CustomItemDefinition& def);
+LL_API const CustomItemDefinition* getCustomItem(std::string_view identifier);
+LL_API const CustomItemDefinition* getCustomItem(short id);
 LL_API std::vector<CustomItemDefinition>& getAllCustomItems();
 LL_API void refreshCustomBlockBindings();
 
@@ -111,4 +119,25 @@ LL_API void ll_item_set_max_stack(void* item, uint8_t maxStack);
 LL_API void ll_item_set_offhand_allowed(void* item, bool allowed);
 LL_API void ll_item_set_icon(void* item, const char* iconName, int iconFrame);
 LL_API const char* ll_item_group_get_name(int groupEnum);
+
+// Custom Item Event Listeners
+typedef bool (*LLPlayerAttackCallback)(void* player, void* targetActor, const char* heldItemIdent, void* udata);
+typedef bool (*LLItemUseCallback)(void* player, const char* itemIdent, void* itemStack, void* udata);
+
+LL_API bool ll_player_register_attack_listener(LLPlayerAttackCallback callback, void* udata);
+LL_API bool ll_item_register_use_listener(LLItemUseCallback callback, void* udata);
+
+// Player Inventory & Held Item Queries
+LL_API void* ll_player_get_selected_item_stack(void* player);
+LL_API bool ll_player_get_held_item_identifier(void* player, char* outIdent, size_t maxLen);
+LL_API void* ll_player_get_supplies(void* player);
+LL_API void* ll_player_get_inventory(void* player);
+
+// ItemStack Inspection & Mutation APIs
+LL_API int ll_item_stack_get_count(const void* itemStack);
+LL_API bool ll_item_stack_set_count(void* itemStack, uint8_t count);
+LL_API short ll_item_stack_get_aux(const void* itemStack);
+LL_API bool ll_item_stack_is_valid(const void* itemStack);
+LL_API void* ll_item_stack_get_item(const void* itemStack);
 }
+

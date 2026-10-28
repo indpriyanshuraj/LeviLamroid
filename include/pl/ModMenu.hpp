@@ -214,6 +214,21 @@ PL_EXPORT void setConfigSchemaJson(std::string_view moduleId,
 PL_EXPORT void unregisterButton(std::string_view buttonId);
 
 /**
+ * @brief Clears the JSON configuration schema for the module settings.
+ */
+PL_EXPORT void clearConfigSchema(std::string_view moduleId);
+
+struct HudSurfaceSize {
+  float width{1920.0f};
+  float height{1080.0f};
+};
+
+/**
+ * @brief Returns the HUD surface dimensions.
+ */
+PL_EXPORT HudSurfaceSize getHudSurfaceSize();
+
+/**
  * @brief Fluent helper for building and registering ModuleInfo.
  */
 class ModuleBuilder {

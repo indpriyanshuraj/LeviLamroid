@@ -8,10 +8,8 @@ DIST_DIR="${SCRIPT_DIR}/dist"
 echo "=== 1. Building LeviLamroid for Android ARM64 ==="
 mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
-if [ -f "/data/data/com.termux/files/usr/bin/clang++" ]; then
-    cmake -DCMAKE_CXX_COMPILER=/data/data/com.termux/files/usr/bin/clang++ ..
-else
-    cmake ..
+if [ ! -f "Makefile" ]; then
+    cmake -DCMAKE_CXX_COMPILER=/data/data/com.termux/files/usr/bin/clang++ -DCMAKE_C_COMPILER=/data/data/com.termux/files/usr/bin/clang ..
 fi
 make -j$(nproc || echo 4)
 SO_SOURCE="${BUILD_DIR}/liblevilamroid.so"
@@ -64,6 +62,8 @@ if [ -d "/sdcard" ]; then
     mkdir -p /sdcard/Download /sdcard/MG 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/Download/levilamroid.levipack" 2>/dev/null || true
     cp -f "${LEVIPACK_OUT}" "/sdcard/MG/levilamroid.levipack" 2>/dev/null || true
+    cp -f "${DIST_DIR}/liblevilamroid.so" "/sdcard/Download/liblevilamroid.so" 2>/dev/null || true
+    cp -f "${DIST_DIR}/liblevilamroid.so" "/sdcard/MG/liblevilamroid.so" 2>/dev/null || true
     cp -f "${ZIP_OUT}" "/sdcard/Download/LeviLamroid-1.0.5-beta-android-arm64.zip" 2>/dev/null || true
     cp -f "${ZIP_OUT}" "/sdcard/MG/LeviLamroid-1.0.5-beta-android-arm64.zip" 2>/dev/null || true
 

@@ -616,9 +616,13 @@ void* resolveSymbolAddress(std::string_view identifier) {
             if (base != 0) return reinterpret_cast<void*>(base + rva);
         }
 
-        // 5. Invariant Pattern Scan fallback if RVA shifted
+        // 5. Invariant Pattern Scan fallback if RVA shifted (bounded window + cached)
         if (info->idaSignature && info->idaSignature[0] != '\0') {
-            uintptr_t scanned = ll::memory::scanMinecraft(info->idaSignature);
+            uintptr_t scanned = ll::memory::SignatureEngine::resolve(
+                info->humanName ? info->humanName : identifier,
+                rva,
+                info->idaSignature
+            );
             if (scanned != 0) {
                 return reinterpret_cast<void*>(scanned);
             }

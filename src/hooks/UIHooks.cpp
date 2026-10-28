@@ -5,19 +5,22 @@
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/ui/UIEvents.h"
 #include "ll/api/ui/UI.h"
+#include "ll/api/resource/ResourceManager.h"
 #include <atomic>
 #include <vector>
 #include <string>
 #include <string_view>
 #include <algorithm>
+#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
 
 static inline bool isPointerReadable(const void* ptr, size_t size = sizeof(void*)) {
     if (!ptr || size == 0) return false;
     uintptr_t v = reinterpret_cast<uintptr_t>(ptr);
-    if (v < 0x10000 || v > 0x7fffffffff) return false;
-    if (v + size < v) return false;
+    uintptr_t untagged = v & 0x00ffffffffffffffULL;
+    if (untagged < 0x10000 || untagged > 0x00007fffffffffffULL) return false;
+    if (untagged + size < untagged) return false;
     return true;
 }
 
@@ -55,6 +58,11 @@ static std::string sLastScreenName;
 static bool sInSubMenu = false;
 
 void dispatchStartMenuOpen() {
+    static std::atomic<bool> sModResourcesActivated = false;
+    if (!sModResourcesActivated.exchange(true)) {
+        ::ll::resource::ResourceManager::getInstance().activateModResourcesOnStartScreen();
+    }
+
     for (auto cb : sStartMenuOpenCallbacks) {
         if (cb) cb();
     }
@@ -92,9 +100,6 @@ static int hooked_getTechStackForScreen(void* self, const std::string& name) {
     if (name == "pause_screen" || name == "pause") {
         dispatchPauseMenuOpen(sLastScreenController);
         return 0; // Force JsonUI (0) so pause_screen.json modifications render cleanly
-    }
-    if (name.find("advancement") != std::string::npos) {
-        return 0; // Force JsonUI (0) for custom advancements screen
     }
     ll::event::ScreenTechStackQueryEvent event(name, 1);
     ll::event::EventBus::getInstance().publish(event);
@@ -648,7 +653,7 @@ LL_API const char* ll_ui_get_current_screen() {
     return ::levilamroid::hooks::sLastScreenName.c_str();
 }
 
-extern "C" LL_API void ll_command_dispatch_client(const char* rawInput);
+extern "C" LL_API bool ll_command_dispatch_client(const char* fullCommand);
 
 LL_API void ll_ui_send_toast(const char* title, const char* message, const char* iconItem, int /*durationMs*/) {
     if (!title) return;

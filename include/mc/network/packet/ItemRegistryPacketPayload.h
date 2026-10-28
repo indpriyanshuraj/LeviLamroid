@@ -1,11 +1,11 @@
 #pragma once
 
 #include "mc/_HeaderOutputPredefine.h"
+#include "mc/network/packet/ItemData.h"
 
 // auto generated forward declare list
 // clang-format off
 class ItemRegistryRef;
-struct ItemData;
 // clang-format on
 
 struct ItemRegistryPacketPayload {

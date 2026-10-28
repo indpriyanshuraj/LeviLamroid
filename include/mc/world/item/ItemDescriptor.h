@@ -122,8 +122,10 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    ItemDescriptor(ItemDescriptor const&);
+    ItemDescriptor(ItemDescriptor const& other) {
+        if (other.mImpl) mImpl = other.mImpl->clone();
+        else mImpl = nullptr;
+    }
     ItemDescriptor() { mImpl = nullptr; }
 
 public:
@@ -131,9 +133,9 @@ public:
     // NOLINTBEGIN
     virtual ~ItemDescriptor() = default;
 
-    virtual void serialize(::Json::Value& val) const;
+    virtual void serialize(::Json::Value&) const {}
 
-    virtual void serialize(::BinaryStream& stream) const;
+    virtual void serialize(::BinaryStream&) const {}
     // NOLINTEND
 
 public:

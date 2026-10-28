@@ -1,9 +1,9 @@
 # LeviLamroid Mod Template
 
-A production-ready C++20 starter template for building native client mods for **Minecraft Bedrock Edition (Android ARM64)** using the **LeviLamroid** (`v1.0.0-beta`) mod loader runtime on **LeviLauncher**.
+A production-ready C++20 starter template for building native client mods for **Minecraft Bedrock Edition (Android ARM64)** using the **LeviLamroid** (`v1.0.5-beta`) mod loader runtime on **LeviLauncher**.
 
 > [!NOTE]
-> **Beta Testing Status**: This template targets **LeviLamroid v1.0.0-beta**. As the loader runtime is under active development, be sure to keep your LeviLamroid installation updated to receive the latest hook stability fixes and RVA mappings.
+> **Beta Testing Status**: This template targets **LeviLamroid v1.0.5-beta**. As the loader runtime is under active development, be sure to keep your LeviLamroid installation updated to receive the latest hook stability fixes and RVA mappings.
 
 ---
 

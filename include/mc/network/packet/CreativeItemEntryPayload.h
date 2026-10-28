@@ -19,4 +19,12 @@ public:
     ::ll::TypedStorage<8, 64, ::NetworkItemInstanceDescriptor> mItemDescriptor;
     ::ll::TypedStorage<4, 4, uint>                             mGroupIndex;
     // NOLINTEND
+
+public:
+    CreativeItemEntryPayload() = default;
+    ~CreativeItemEntryPayload() = default;
+    CreativeItemEntryPayload(CreativeItemEntryPayload const&) = default;
+    CreativeItemEntryPayload(CreativeItemEntryPayload&&) = default;
+    CreativeItemEntryPayload& operator=(CreativeItemEntryPayload const&) = default;
+    CreativeItemEntryPayload& operator=(CreativeItemEntryPayload&&) = default;
 };

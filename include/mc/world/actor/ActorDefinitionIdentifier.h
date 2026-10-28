@@ -24,8 +24,12 @@ public:
     // NOLINTEND
 
 public:
-    // prevent constructor by default
-    ActorDefinitionIdentifier();
+    ActorDefinitionIdentifier() = default;
+    ActorDefinitionIdentifier(::ActorDefinitionIdentifier const& other) = default;
+    ActorDefinitionIdentifier(::ActorDefinitionIdentifier&& other) noexcept = default;
+    ::ActorDefinitionIdentifier& operator=(::ActorDefinitionIdentifier const& other) = default;
+    ::ActorDefinitionIdentifier& operator=(::ActorDefinitionIdentifier&& other) noexcept = default;
+    ~ActorDefinitionIdentifier() = default;
 
 public:
     // member functions
@@ -33,8 +37,6 @@ public:
     MCAPI explicit ActorDefinitionIdentifier(::std::string const& fullName);
 
     MCAPI explicit ActorDefinitionIdentifier(char const* fullName);
-
-    MCAPI ActorDefinitionIdentifier(::ActorDefinitionIdentifier const& other);
 
     MCAPI ActorDefinitionIdentifier(::ActorType type, ::std::string initEvent);
 
@@ -44,8 +46,6 @@ public:
 
     MCAPI bool isVanilla() const;
 
-    MCAPI ::ActorDefinitionIdentifier& operator=(::ActorDefinitionIdentifier const& other);
-
     MCAPI bool operator==(::ActorDefinitionIdentifier const& other) const;
 
     MCAPI void setter(
@@ -53,8 +53,6 @@ public:
         ::BedrockLoadContext               context,
         ::cereal::SerializerContext const& serializerContext
     );
-
-    MCAPI ~ActorDefinitionIdentifier();
     // NOLINTEND
 
 public:

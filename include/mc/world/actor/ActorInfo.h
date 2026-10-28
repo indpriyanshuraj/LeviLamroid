@@ -23,18 +23,18 @@ public:
     // NOLINTEND
 
 public:
+    ActorInfo() = default;
+    ActorInfo(::ActorInfo const& other) = default;
+    ActorInfo(::ActorInfo&& other) noexcept = default;
+    ::ActorInfo& operator=(::ActorInfo const& other) = default;
+    ::ActorInfo& operator=(::ActorInfo&& other) noexcept = default;
+    ~ActorInfo() = default;
+
+public:
     // member functions
     // NOLINTBEGIN
-    MCAPI ActorInfo();
-
     MCAPI void load(::CompoundTag const* tag);
 
     MCAPI ::std::unique_ptr<::CompoundTag> save() const;
-    // NOLINTEND
-
-public:
-    // constructor thunks
-    // NOLINTBEGIN
-    MCAPI void* $ctor();
     // NOLINTEND
 };

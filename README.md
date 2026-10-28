@@ -79,6 +79,9 @@ Traditionally on Android Bedrock, each individual client mod had to:
      - Mounts an `InMemoryPackAccessStrategy` on top of Minecraft's `ResourcePackStack`.
      - Overrides existing vanilla block textures (`textures/blocks/stone.png`), item textures (`textures/items/diamond_sword.png`), or `sounds/sound_definitions.json` dynamically in RAM without modifying APK assets or creating disk files.
      - *Best for*: Texture replacement mods, dynamic item skins, vanilla asset overrides.
+   - **Option C (Global FullStack Interception via `ResourcePackManager::_composeFullStack`)**:
+     - Hooks `ResourcePackManager::_composeFullStack` (`0x0C931828` on 1.26.52.3 / `0x0C599700` on 1.26.45.1 / `0x0CF52774` on 1.26.60.6).
+     - Merges custom mod packs directly into `mFullStack` with zero user configuration, preserving Xbox Achievements and persisting across multiplayer servers.
 
 7. **Client Fabric API & RenderDragon In-Game Graphics Pipeline (`ll::event`)**:
    - **3D World Render Pass (`ll::event::RenderLevelEvent`)**:
@@ -101,17 +104,19 @@ Traditionally on Android Bedrock, each individual client mod had to:
    - **Full `.text` Scan**: Scans with `scanMinecraftText` using `memchr` vector acceleration.
    - Thread-safe RVA caching guarantees that once resolved, lookups have zero runtime overhead.
 
-9. **Native Custom Blocks & Placement Interception (`ll::block`)**:
-   - `ll_block_register(identifier, displayName, textureName, ...)` and `ll_block_register_with_base(...)`.
-   - Reverse-engineered base constructor `BlockItem::BlockItem` (`0x10009DC4`), vtable `0x13099938`, and placement routine `BlockItem::_useOn` (`0x1000B300`).
-   - *Technical Note*: Full runtime block state permutation graphs and schema registration remain under active reverse engineering. LeviLamroid currently intercepts placement in `GameMode::useItemOn` to safely trigger block placement without memory corruption.
+9. **Geyser-Parity Network Registration Subsystem (`ll::nbt`, `ll::item`, `ll::block`, `ll::entity`)**:
+   - **Wire-Level Parity with GeyserMC**: Instead of fragile C++ memory struct poking, LeviLamroid replicates GeyserMC's network wire format with `levilamroid::nbt::NbtBuilder`.
+   - **Custom Items**: Weapons (damage, durability), food (nutrition, saturation), tools (mining speed), and general items registered with DataDriven component NBT schemas.
+   - **Custom Blocks**: Unit cubes and custom geometries with property NBT compounds, light emission, collision boxes, and destructibility.
+   - **Custom Entities / Mobs**: Injects custom entity definitions into Bedrock runtime actor identifiers, enabling `/summon` and spawn eggs without world Behavior Pack toggles.
+   - **Zero-Drop Packet Interception**: Automatically intercepts `StartGamePacket` (ID 11), `ItemRegistryPacket` (ID 162), and `AvailableActorIdentifiersPacket` (ID 119) inside `ClientNetworkHandler::handle` to inject definitions cleanly into the engine pipeline.
 
 10. **100% LeviLamina API Parity (`include/ll/api/`)**:
    - Provides drop-in compatibility headers for Windows LeviLamina client mods, allowing seamless compilation and porting to Android.
 
 11. **Unified BP-in-RP Addon Ingestion Architecture (`ll::resource` & `ll::addon`)**:
    - **Zero Behavior Pack Overhead**: Merges Behavior Pack JSON definitions (`items/*.json`, `blocks/*.json`, `recipes/*.json`) directly inside the mod's single Resource Pack directory.
-   - **Safe Ingestion & Component Sanitization**: Automatically scans `blocks/` before `items/`, strips `"minecraft:block_placer"` to avoid Bedrock 1.21+ schema validator discards, and remaps unsafe creative categories to ensure clean inventory visibility while native components are being reversed.
+   - **Safe Ingestion & Component Sanitization**: Automatically scans `blocks/` before `items/`, strips `"minecraft:block_placer"` to avoid Bedrock 1.21+ schema validator discards, and remaps unsafe creative categories to ensure clean inventory visibility.
    - **No Experimental Warnings**: Bypasses the need for world-level Behavior Pack activation, avoiding "Holiday Creator Features" experimental prompts and keeping Xbox achievements intact.
 
 ---

@@ -1,4 +1,5 @@
 #include "levilamroid/LeviLamroid.h"
+#include "ll/api/resource/ResourceManager.h"
 #include <atomic>
 #include <dlfcn.h>
 #include <cstddef>
@@ -18,6 +19,15 @@ bool init() {
     auto& logger = ll::Logger::getInstance();
 
     if (!sRuntimeInitialized.exchange(true)) {
+        FILE* fp = fopen("/sdcard/Android/media/org.levimc.launcher/minecraft/levilamroid.log", "w");
+        if (fp) fclose(fp);
+
+        // Promote liblevilamroid.so visibility so all ll_* symbols are instantly available to mods via dlsym(RTLD_DEFAULT)
+        Dl_info info;
+        if (dladdr(reinterpret_cast<void*>(&levilamroid::init), &info) && info.dli_fname) {
+            dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+        }
+
         logger.info("=================================================");
         logger.info("   LeviLamroid Android Native Mod Loader v", LEVILAMROID_VERSION_STRING);
         logger.info("   Core Engine Runtime & Reverse-Engineering Hook Hub");
@@ -91,13 +101,8 @@ static PLModRegistration sLoaderRegistration = {
 // Lifecycle Exports & Automatic Constructor
 __attribute__((constructor))
 static void levilamroid_init_ctor() {
-    // Promote liblevilamroid.so to RTLD_GLOBAL so subsequent dlopened mods can resolve its symbols
-    Dl_info info;
-    if (dladdr(reinterpret_cast<void*>(&levilamroid_init_ctor), &info) && info.dli_fname) {
-        dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
-    }
-    // Heavy hook initialization deferred to PLGetModRegistration() / PLMod_Load() to avoid
-    // blocking Android dynamic linker thread or triggering ANR during MainActivity.onCreate.
+    // Zero-overhead constructor: Avoid re-entrant dlopen during library initialization.
+    // Initialization is cleanly performed in PLGetModRegistration() / PLMod_Load().
 }
 
 __attribute__((destructor))
@@ -110,12 +115,20 @@ extern "C" {
 
 __attribute__((visibility("default")))
 const void* PLGetModRegistration() {
+    Dl_info info;
+    if (dladdr(reinterpret_cast<void*>(&PLGetModRegistration), &info) && info.dli_fname) {
+        dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+    }
     levilamroid::init();
     return &sLoaderRegistration;
 }
 
 __attribute__((visibility("default")))
 bool PLMod_Load(void* /*context*/) {
+    Dl_info info;
+    if (dladdr(reinterpret_cast<void*>(&PLMod_Load), &info) && info.dli_fname) {
+        dlopen(info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+    }
     return levilamroid::init();
 }
 

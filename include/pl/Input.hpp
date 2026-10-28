@@ -58,6 +58,24 @@ PL_EXPORT void registerKeyCallback(KeyCallback callback);
 PL_EXPORT void registerMouseCallback(MouseCallback callback);
 
 /**
+ * @brief Dispatches a touch event to all registered touch callbacks.
+ * @return True if any callback swallowed/handled the event.
+ */
+PL_EXPORT bool dispatchTouchEvent(const TouchEvent &event);
+
+/**
+ * @brief Dispatches a key event to all registered key callbacks.
+ * @return True if any callback swallowed/handled the event.
+ */
+PL_EXPORT bool dispatchKeyEvent(const KeyEvent &event);
+
+/**
+ * @brief Dispatches a mouse event to all registered mouse callbacks.
+ * @return True if any callback swallowed/handled the event.
+ */
+PL_EXPORT bool dispatchMouseEvent(const MouseEvent &event);
+
+/**
  * @brief Requests the Android soft keyboard.
  */
 PL_EXPORT void showKeyboard();

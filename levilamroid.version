@@ -11,12 +11,11 @@
         ll_mod_disable;
         ll_mod_unload;
         ll_*;
+        fabric_*;
         _ZN2ll*;
         _ZNK2ll*;
         _ZN11levilamroid*;
         _ZNK11levilamroid*;
-        _ZN2pl*;
-        _ZNK2pl*;
         _ZNSt6__ndk1*;
     local:
         *;

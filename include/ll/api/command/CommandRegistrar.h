@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <dlfcn.h>
+
 namespace ll::command {
 
 class CommandRegistrar {
@@ -134,6 +136,13 @@ public:
         if (cmd) {
             cmd->invoke(args);
             return true;
+        }
+
+        // Fallback: Dispatch engine commands (/particle, /playsound, /give, /effect, /summon, /setblock, etc.)
+        using DispatchFn = bool (*)(const char*);
+        static DispatchFn sDispatchClient = (DispatchFn)dlsym(RTLD_DEFAULT, "ll_command_dispatch_client");
+        if (sDispatchClient) {
+            return sDispatchClient(line.c_str());
         }
         return false;
     }

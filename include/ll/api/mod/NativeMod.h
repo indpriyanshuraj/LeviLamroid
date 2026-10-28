@@ -11,6 +11,8 @@ public:
     std::string mName{"UnknownMod"};
     ll::Logger  mLogger{"Mod"};
 
+    mutable std::filesystem::path mCachedConfigDir;
+
     NativeMod() = default;
     explicit NativeMod(const char* name) : mName(name ? name : ""), mLogger(mName) {}
     explicit NativeMod(std::string_view name) : mName(name), mLogger(mName) {}
@@ -21,8 +23,10 @@ public:
     [[nodiscard]] ll::Logger const& getLogger() const noexcept { return mLogger; }
     [[nodiscard]] std::string const& getName() const noexcept { return mName; }
     [[nodiscard]] std::filesystem::path getConfigDir() const {
+        if (!mCachedConfigDir.empty()) return mCachedConfigDir;
 #ifdef _WIN32
-        return std::filesystem::path("config") / mName;
+        mCachedConfigDir = std::filesystem::path("config") / mName;
+        return mCachedConfigDir;
 #else
         std::error_code ec;
         const std::filesystem::path baseLauncherDir = "/sdcard/Android/media/org.levimc.launcher/minecraft";
@@ -31,7 +35,8 @@ public:
                 if (entry.is_directory(ec)) {
                     auto candidate = entry.path() / "mods" / mName;
                     if (std::filesystem::exists(candidate, ec)) {
-                        return candidate;
+                        mCachedConfigDir = candidate;
+                        return mCachedConfigDir;
                     }
                 }
             }
@@ -43,11 +48,13 @@ public:
         };
         for (const auto& dir : candidateDirs) {
             if (std::filesystem::exists(dir, ec)) {
-                return dir;
+                mCachedConfigDir = dir;
+                return mCachedConfigDir;
             }
         }
         std::filesystem::create_directories(candidateDirs[0], ec);
-        return candidateDirs[0];
+        mCachedConfigDir = candidateDirs[0];
+        return mCachedConfigDir;
 #endif
     }
     [[nodiscard]] std::filesystem::path getDataDir() const {
