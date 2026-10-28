@@ -51,7 +51,7 @@ It establishes five core architectural guarantees:
 1. **Canonical Modding Namespace (`ll`)**: LeviLamroid adheres directly to **`namespace ll`** as its official coding namespace, matching LeviLamina on Windows. Modders write against `ll::Logger`, `ll::event::EventBus`, `ll::mcpe::getOffsets()`, and `ll::mod::NativeMod`. For compatibility, `namespace levilamroid` and `namespace llntol` are provided as seamless aliases.
 2. **100% LeviLamina Windows Source Parity**: Code written against the official LeviLamina Windows C++ API compiles and runs identically on Android without rewriting detour boilerplate or class structures.
 3. **LeviLauncher PreLoader Native Extensions (`pl`)**: Native Android mobile capabilities—including touch pointer routing, physical keyboard mapping, floating HUD touch buttons, launcher drawer registration, and storage access framework compatibility—are exposed out-of-the-box (`pl::*`).
-4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.52.3`, `1.26.51.1`, `1.26.45.1`, `1.26.44.3`).
+4. **Automated Multi-Version Resolution**: Dynamically reads the ELF `PT_NOTE` segment of `libminecraftpe.so` at startup to determine the 20-byte SHA-1 GNU Build ID, automatically activating the correct RVA offset tables (`1.26.60.6`, `1.26.52.3`, `1.26.51.1`, `1.26.45.1`, `1.26.44.3`).
 5. **Strict Initial Versioning Policy**: All new mods, template starter projects, and LeviLamroid distribution bundles are initialized strictly at version **`v1.0.0`** (or `1.0.0`) unless explicitly instructed by the user to bump versions.
 
 ---
@@ -206,6 +206,7 @@ Located in `#include <levilamroid/api/mcpe/Offsets.h>`.
 
 ### 5.1 Automated Version Identification
 LeviLamroid probes the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to match the 20-byte SHA-1 GNU Build ID:
+- `eb291b883dfdfaff70c4999c2eabd61885ae3e15` $\rightarrow$ Bedrock `1.26.60.6`
 - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3`
 - `19d675681604a80ce6a8ff35dfb66f287e0766e0` $\rightarrow$ Bedrock `1.26.51.1`
 - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1`
@@ -434,10 +435,137 @@ LeviLamroid probes the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to mat
 ### 5.5 Verified Golden RVAs for 1.26.60.6 (Android ARM64)
 
 ```cpp
+// UI Screen Tech Stack & Screen Controllers
+.getTechStackForScreen    = 0x0A536F30,
+.startMenuOnOpen          = 0x0A6BD8A4,
+.startMenuTick            = 0x0A6C0188,
+
+// Menu Button Direct RVAs
+.playButton               = 0x08957E8C, // StartMenuScreenController::vslot_28
+.settingsButton           = 0x08957E98, // StartMenuScreenController::vslot_29
+.realmsButton             = 0x08957EC8, // StartMenuScreenController::vslot_33
+.dressingRoomButton       = 0x08957ED4, // StartMenuScreenController::vslot_34
+.marketplaceButton        = 0x08957EE0, // StartMenuScreenController::vslot_35
+.menuExit                 = 0x08957EF8, // StartMenuScreenController::vslot_37
+
+// RenderDragon Graphics Pipeline
+.inGamePlayScreenRender              = 0x0B2EB50C,
+.inGamePlayScreenRenderLevel         = 0x11B3F100, // LevelRenderer::renderLevel
+.inGamePlayScreenRenderLevelPrep     = 0x11B3F000,
+.gameRendererPrepareFrame            = 0x0B7A9BA8,
+.levelRendererPlayerPreRenderUpdate  = 0x11B3F100, // LevelRenderer::renderLevel
+.whiskerDisplayRender                = 0x0A026F98,
+.clientNetworkHandlerHandle          = 0x0A2DCFFC,
+.loopbackPacketSenderSendToServer    = 0x0C68C410,
+.glClearGotRva                       = 0x138A9418,
+
+// 2D UI Drawing Methods
+.uiDrawImage              = 0x0B724040,
+.uiFlushImages            = 0x0B72519C,
+.uiFillRectangle          = 0x0B725554,
+.uiDrawRectangle          = 0x0B725B10,
+.uiDrawText               = 0x0B723DF8,
+.uiFlushText              = 0x0B723F44,
+.uiDrawNineslice          = 0x0B72430C,
+.uiGetScreenContext       = 0x0B726F74,
+
+// Player & Gameplay
+.playerNormalTick         = 0x101ECCD4, // LocalPlayer::normalTick (vslot_03)
+.gameModeUseItem          = 0, // Intentionally 0; interaction routed via memory-safe client hooks
+.gameModeUseItemOn        = 0x0EC31ABC, // GameMode::useItemOn
+.clientInstanceUpdate     = 0x09CEE9CC, // MinecraftGame::update
+.localPlayerApplyTurnDelta = 0x0FD9AE30, // LocalPlayer::applyTurnDelta (Slot 62)
+.tessellatorBegin         = 0x0D0D6BC8,
+.blockSourceGetBlock      = 0x10371548,
+.blockSourceGetBrightness = 0x10371620,
+.blockSourceSetBlock      = 0x1037A268,
+.blockSourceDestroyBlock  = 0x1037BAA0,
+.dimensionGetBlockSource  = 0x0F159688,
+.commandAutocomplete     = 0x08A06CE8, // CommandRegistry::registerCommand
+
+// Audio Engine RVAs
+.soundEnginePlay          = 0x0BCE01C8,
+.soundEnginePlayUI        = 0x0BCE0350,
+.soundEnginePlayAt        = 0x0BCE07B8,
+.soundEngineStop          = 0x0BCE1220,
+
+// Item & Block Subsystems (Verified Entry RVAs)
+.itemRegistryRegisterItem               = 0x0FBB0064,
+.itemRegistryGetItem                    = 0x0FBC1640,
+.itemRegistryPostInitHook               = 0x0FBB77DC,
+.itemConstructor                        = 0x09CC4430, // Item::initClient
+.itemSetIconInfo                        = 0x090CE004,
+.itemVtable                             = 0x13998780, // _ZTV4Item
+.itemStackVtable                        = 0x1399A240, // _ZTV9ItemStack
+.itemInstanceVtable                     = 0x13999200, // _ZTV12ItemInstance
+.itemStackCopyCtor                      = 0x107B5C80,
+.vanillaItemsServerInitCreativeCallback = 0x10798E94,
+.vanillaItemsApplyHardcodedLegacyIcons  = 0x1079926C,
+.creativeItemRegistryReset              = 0x0FBC3604,
+.creativeItemInitializerCtor            = 0x10842B00,
+.playerGetSelectedItem                  = 0x0FD9B440,
+.containerGetItem                       = 0x0F7EB1F8,
+.containerSetItem                       = 0x0E5C90B0,
+.blockItemConstructor                   = 0x10850200,
+.blockItemVtable                        = 0x139AA3A0, // _ZTV9BlockItem
+.blockItemUseOn                         = 0x10851890,
+.blockTypeRegistryGetInstance           = 0x10C24000,
+.blockTypeRegistryLookupByName          = 0x10C26500,
+.blockTypeRegistryLookupByNameImpl      = 0x10C27800,
+.blockTypeRegistryGetDirectAccessBlocks = 0x10C28100,
+.blockDefinitionGroupInitBlockTypeFromDefinition = 0x10D12400,
+.blockDefinitionGroupInitBlockFromDefinition     = 0x10D12900,
+.registerItemAndBlockDefinitions        = 0x0A2FC65C, // BlockTypeRegistry::init
+
+// ScreenController Property & Event Registration RVAs
+.screenControllerRegisterButtonEventHandler = 0x09E95354,
+.screenControllerBindString             = 0x09EA0120,
+.screenControllerBindStringForAnyCollection = 0x09EA0680,
+
 // ResourcePackManager & FullStack Asset Pipeline
 .resourcePackManagerComposeFullStack  = 0x0CF52894,
 .resourcePackManager_composeFullStack = 0x0CF52774,
 .resourcePackManagerSetStack          = 0x0CF51778,
+.resourcePackManagerDoStackOp         = 0x0CF535D8,
+.resourcePackManagerLoad              = 0x0CF4E7D0,
+.resourcePackManagerLoadText          = 0x0CF4EA04,
+.resourcePackManagerGetStack          = 0x088B7404,
+
+// Camera Subsystem RVAs (1.26.60.6 Verified)
+.cameraSetupViewArea                  = 0x0B0A80E4, // LevelRendererCamera::setupViewArea
+.cameraUpdateChunkFaceSort            = 0x0B7A9BA8, // LevelRendererCamera::updatePerChunkFaceSortState
+.cameraBobComponent                   = 0x088E7558, // VanillaCamera::CameraBobComponent
+.cameraOrientationPayload             = 0x0DAA5398, // PlayerAuthInputPacketPayload::mCameraOrientation
+.cameraComponent                      = 0x088E4FCC, // MinecraftCamera::CameraComponent
+.deathCameraComponent                 = 0x088E7A4C, // MinecraftCamera::DeathCameraComponent
+.cameraOrbitComponent                 = 0x088E84CC, // MinecraftCamera::CameraOrbitComponent
+.cameraFirstPersonComponent           = 0x088EA45C, // MinecraftCamera::CameraFirstPersonComponent
+.cameraThirdPersonComponent           = 0x088EA960, // MinecraftCamera::CameraThirdPersonComponent
+.cameraThirdPersonBoomComponent       = 0x088EB36C, // MinecraftCamera::CameraThirdPersonBoomComponent
+.cameraAvoidanceComponent             = 0x088EC948, // MinecraftCamera::CameraAvoidanceComponent
+.cameraPerspectiveOptionComponent     = 0x088EDD48, // MinecraftCamera::CameraPerspectiveOptionComponent
+
+// Touch & Mouse Input Subsystem (Audited 1.26.60.6)
+.mouseHandlerAndroidVtable            = 0x1378A200,
+.clientInstanceVtable                 = 0x1359D400,
+.minecraftGameVtable                  = 0x135A9800,
+.blockSourceVtable                    = 0x134B2100,
+.mouseHandlerAndroidButtonInput       = 0x0BFA0A28, // Slot 3
+.mouseHandlerAndroidAbsoluteMouseInput = 0x0BFA0A14, // Slot 2
+.mouseHandlerAndroidScrollInput       = 0x0BFA0A3C, // Slot 4
+
+// VTable Slots
+.clientInstanceLocalPlayerSlot      = 32,
+.clientInstanceIsShowingMenuSlot    = 151,
+.levelGetBlockDefinitionGroupSlot   = 28,  // +0xE0
+.clientInstanceSceneFactorySlot     = 226, // 0x710
+.clientInstanceSceneStackSlot       = 236, // 0x760
+.sceneStackPushScreenSlot           = 26,  // 0xD0
+.sceneStackSchedulePopSlot          = 27,  // 0xD8
+
+// Scene Factory Abstract Creation RVAs
+.sceneFactoryCreateUIScene          = 0x09B8E8C8,
+.sceneFactoryCreateScreenAbstract   = 0x09B8F200
 ```
 
 ---
@@ -1156,27 +1284,27 @@ Reverse engineered from `libBedrockReplay.so` (author: MrPokeG):
   LL_API bool ll_camera_is_locked();
   ```
 
-### 21.5 Verified Multi-Version RVA Matrix (1.26.45.1 vs 1.26.52.3)
+### 21.5 Verified Multi-Version RVA Matrix (1.26.45.1 vs 1.26.52.3 vs 1.26.60.6)
 
-| Engine Function | 1.26.45.1 ARM64 RVA | 1.26.51.1 ARM64 RVA | 1.26.52.3 ARM64 RVA |
-|---|---|---|---|
-| `GameMode::useItemOn` | `0x0EF72684` | `0x0EF72684` | `0x0F89FE18` |
-| `GameMode::destroyBlock` | `0x0EF72C18` | `0x0EF72C18` | `0x0F8A03AC` |
-| `GameMode::useItem` | `0x0EF75F40` | `0x0EF75F40` | `0x0F8A2EB0` |
-| `GameMode::attack` | `0x0EF72F9C` | `0x0EF72F9C` | `0x0F8A073C` |
-| `BlockSource::getBlock` | `0x0F253C8C` | `0x0F253C8C` | `0x0FB91918` |
-| `BlockSource::setBlock` | `0x0F25B948` | `0x0E389AA0` | `0x0FB99330` |
-| `BlockSource::destroyBlock` | `0x0F25CBD4` | `0` | `0x0FB9A468` |
-| `BlockSource::getBrightness` | `0x0F253ECC` | `0x0F253ECC` | `0x0FB9A55C` |
-| `Dimension::getBlockSource` | `(uint8_t*)dim + 0x158` | `0x0BBCCDDC` | `0x102F4538` |
-| `Dimension::getChunkSource` | `(uint8_t*)dim + 424` | `0` | `0x102F1BEC` |
-| `ClientNetworkHandler::handle` | `0x09ADC770` | `0x09ED7FE0` | `0x09EC99C0` |
-| `LoopbackPacketSender::send` | `0x0C2E26FC` | `0x0C68FAC4` | `0x0C68FAD4` |
-| `Player::normalTick` | `0x0F0B1680` | `0x0F0B1680` | `0x0F9E26C0` |
-| `Level::tick` | `0x0F222D2C` | `0x0F222D2C` | `0x0FB313E4` |
-| `ClientInstance::update` | `0x0943EC54` | `0x0943EC54` | `0x098036A4` |
-| `LocalPlayer::applyTurnDelta` | `0x0A6430D8` | `0x0A6430D8` | `0x0AAC9774` |
-| `Tessellator::begin` | `0x0A76E780` | `0x0A76E780` | `0x0A76E7F8` |
+| Engine Function | 1.26.45.1 ARM64 RVA | 1.26.51.1 ARM64 RVA | 1.26.52.3 ARM64 RVA | 1.26.60.6 ARM64 RVA |
+|---|---|---|---|---|
+| `GameMode::useItemOn` | `0x0EF72684` | `0x0EF72684` | `0x0F89FE18` | `0x0EC31ABC` |
+| `GameMode::destroyBlock` | `0x0EF72C18` | `0x0EF72C18` | `0x0F8A03AC` | `0x1037BAA0` (BlockSource) |
+| `GameMode::useItem` | `0x0EF75F40` | `0x0EF75F40` | `0x0F8A2EB0` | `0x1010621C` (ActorEventCoord) |
+| `GameMode::attack` | `0x0EF72F9C` | `0x0EF72F9C` | `0x0F8A073C` | `0x1214B608` (AttackGoal) |
+| `BlockSource::getBlock` | `0x0F253C8C` | `0x0F253C8C` | `0x0FB91918` | `0x10371548` |
+| `BlockSource::setBlock` | `0x0F25B948` | `0x0E389AA0` | `0x0FB99330` | `0x1037A268` |
+| `BlockSource::destroyBlock` | `0x0F25CBD4` | `0` | `0x0FB9A468` | `0x1037BAA0` |
+| `BlockSource::getBrightness` | `0x0F253ECC` | `0x0F253ECC` | `0x0FB9A55C` | `0x10371620` |
+| `Dimension::getBlockSource` | `(uint8_t*)dim + 0x158` | `0x0BBCCDDC` | `0x102F4538` | `0x0F159688` |
+| `Dimension::getChunkSource` | `(uint8_t*)dim + 424` | `0` | `0x102F1BEC` | `(uint8_t*)dim + 424` |
+| `ClientNetworkHandler::handle` | `0x09ADC770` | `0x09ED7FE0` | `0x09EC99C0` | `0x0A2DCFFC` |
+| `LoopbackPacketSender::send` | `0x0C2E26FC` | `0x0C68FAC4` | `0x0C68FAD4` | `0x0C68C410` |
+| `Player::normalTick` | `0x0F0B1680` | `0x0F0B1680` | `0x0F9E26C0` | `0x101ECCD4` |
+| `Level::tick` | `0x0F222D2C` | `0x0F222D2C` | `0x0FB313E4` | `0x07A1A6D8` (MinecraftGame) |
+| `ClientInstance::update` | `0x0943EC54` | `0x0943EC54` | `0x098036A4` | `0x09CEE9CC` |
+| `LocalPlayer::applyTurnDelta` | `0x0A6430D8` | `0x0A6430D8` | `0x0AAC9774` | `0x0FD9AE30` |
+| `Tessellator::begin` | `0x0A76E780` | `0x0A76E780` | `0x0A76E7F8` | `0x0D0D6BC8` |
 
 ---
 

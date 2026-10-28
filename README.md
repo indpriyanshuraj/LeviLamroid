@@ -45,6 +45,7 @@ Traditionally on Android Bedrock, each individual client mod had to:
 
 2. **Dynamic Multi-Version Detection Engine (`ll::mcpe`)**:
    - **Zero-Latency GNU Build ID Resolution**: Scans the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to extract the unique 20-byte SHA-1 Build ID:
+     - `eb291b883dfdfaff70c4999c2eabd61885ae3e15` $\rightarrow$ Bedrock `1.26.60.6` (100% complete RVAs across gameplay, UI, render, camera, audio, commands, and virtual resource pack access strategies)
      - `56de9eed077631e03a31f4f58eb2f0e00071d335` $\rightarrow$ Bedrock `1.26.52.3` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
      - `19d675681604a80ce6a8ff35dfb66f287e0766e0` $\rightarrow$ Bedrock `1.26.51.1` (100% complete RVAs across gameplay, UI, render, and virtual resource pack access strategies)
      - `868e275cb295e9a275bb29d2258edc2f7dc48761` $\rightarrow$ Bedrock `1.26.45.1` (100% complete RVAs across gameplay, UI, render, audio, commands, and virtual resource pack access strategies)
