@@ -709,6 +709,76 @@ uintptr_t findFunctionRva(std::string_view name) {
     if (name == "itemConstructor" || name == "Item::Item") return off.itemConstructor;
     if (name == "scriptingQuickJS") return off.scriptingQuickJS;
     if (name == "scriptModuleMinecraftScriptSystem") return off.scriptModuleMinecraftScriptSystem;
+
+    // RenderDragon & Skybox Subsystem
+    if (name == "inGamePlayScreenRender") return off.inGamePlayScreenRender;
+    if (name == "inGamePlayScreenRenderLevel" || name == "LevelRenderer::renderLevel") return off.inGamePlayScreenRenderLevel;
+    if (name == "inGamePlayScreenRenderLevelPrep") return off.inGamePlayScreenRenderLevelPrep;
+    if (name == "gameRendererPrepareFrame" || name == "GameRenderer::prepareFrame") return off.gameRendererPrepareFrame;
+    if (name == "levelRendererPlayerPreRenderUpdate" || name == "LevelRendererPlayer::preRenderUpdate") return off.levelRendererPlayerPreRenderUpdate;
+    if (name == "oreUiSceneRender") return off.oreUiSceneRender;
+    if (name == "uiSceneRender") return off.uiSceneRender;
+    if (name == "whiskerDisplayRender") return off.whiskerDisplayRender;
+    if (name == "minecraftGameClientUpdate") return off.minecraftGameClientUpdate;
+    if (name == "clientInstanceRequestLeaveGame") return off.clientInstanceRequestLeaveGame;
+    if (name == "clientNetworkHandlerHandle" || name == "ClientNetworkHandler::handle") return off.clientNetworkHandlerHandle;
+    if (name == "loopbackPacketSenderSendToServer" || name == "LoopbackPacketSender::sendToServer") return off.loopbackPacketSenderSendToServer;
+
+    // Camera Subsystem
+    if (name == "localPlayerApplyTurnDelta" || name == "LocalPlayer::applyTurnDelta") return off.localPlayerApplyTurnDelta;
+    if (name == "tessellatorBegin" || name == "Tessellator::begin") return off.tessellatorBegin;
+    if (name == "blockSourceGetBrightness" || name == "BlockSource::getBrightness") return off.blockSourceGetBrightness;
+    if (name == "blockSourceSetBlock" || name == "BlockSource::setBlock") return off.blockSourceSetBlock;
+    if (name == "blockSourceDestroyBlock" || name == "BlockSource::destroyBlock") return off.blockSourceDestroyBlock;
+    if (name == "commandAutocomplete") return off.commandAutocomplete;
+    if (name == "commandRequestPacketWrite") return off.commandRequestPacketWrite;
+
+    // Touch & Mouse Input Subsystem
+    if (name == "mouseHandlerAndroidVtable") return off.mouseHandlerAndroidVtable;
+    if (name == "clientInstanceVtable") return off.clientInstanceVtable;
+    if (name == "minecraftGameVtable") return off.minecraftGameVtable;
+    if (name == "blockSourceVtable") return off.blockSourceVtable;
+    if (name == "mouseHandlerAndroidButtonInput") return off.mouseHandlerAndroidButtonInput;
+    if (name == "mouseHandlerAndroidAbsoluteMouseInput") return off.mouseHandlerAndroidAbsoluteMouseInput;
+    if (name == "mouseHandlerAndroidScrollInput") return off.mouseHandlerAndroidScrollInput;
+    if (name == "mainActivityNativeKeyHandler") return off.mainActivityNativeKeyHandler;
+
+    // Item & Block Subsystems
+    if (name == "itemRegistryRegisterItem" || name == "ItemRegistry::registerItem") return off.itemRegistryRegisterItem;
+    if (name == "itemRegistryGetItem" || name == "ItemRegistry::getItem") return off.itemRegistryGetItem;
+    if (name == "itemRegistryPostInitHook") return off.itemRegistryPostInitHook;
+    if (name == "itemSetDescriptionId" || name == "Item::setDescriptionId") return off.itemSetDescriptionId;
+    if (name == "itemVtable") return off.itemVtable;
+    if (name == "itemStackVtable") return off.itemStackVtable;
+    if (name == "itemInstanceVtable") return off.itemInstanceVtable;
+    if (name == "itemStackCopyCtor" || name == "ItemStack::ItemStack") return off.itemStackCopyCtor;
+    if (name == "vanillaItemsRegisterItems") return off.vanillaItemsRegisterItems;
+    if (name == "vanillaItemsServerInitCreativeCallback") return off.vanillaItemsServerInitCreativeCallback;
+    if (name == "vanillaItemsApplyHardcodedLegacyIcons") return off.vanillaItemsApplyHardcodedLegacyIcons;
+    if (name == "creativeItemRegistryReset") return off.creativeItemRegistryReset;
+    if (name == "creativeItemInitializerCtor") return off.creativeItemInitializerCtor;
+    if (name == "creativeItemInitializerAddCreativeServer") return off.creativeItemInitializerAddCreativeServer;
+    if (name == "playerGetSelectedItem" || name == "Player::getSelectedItem") return off.playerGetSelectedItem;
+    if (name == "containerGetItem" || name == "Container::getItem") return off.containerGetItem;
+    if (name == "containerSetItem" || name == "Container::setItem") return off.containerSetItem;
+    if (name == "blockItemConstructor" || name == "BlockItem::BlockItem") return off.blockItemConstructor;
+    if (name == "blockItemVtable") return off.blockItemVtable;
+    if (name == "blockItemUseOn" || name == "BlockItem::_useOn" || name == "BlockItem::useOn") return off.blockItemUseOn;
+    if (name == "dimensionGetChunkSource" || name == "Dimension::getChunkSource") return off.dimensionGetChunkSource;
+    if (name == "blockTypeRegistryGetDirectAccessBlocks" || name == "BlockTypeRegistry::getDirectAccessBlocks") return off.blockTypeRegistryGetDirectAccessBlocks;
+    if (name == "blockDefinitionGroupInitBlockTypeFromDefinition" || name == "BlockDefinitionGroup::initBlockTypeFromDefinition") return off.blockDefinitionGroupInitBlockTypeFromDefinition;
+    if (name == "blockDefinitionGroupInitBlockFromDefinition" || name == "BlockDefinitionGroup::initBlockFromDefinition") return off.blockDefinitionGroupInitBlockFromDefinition;
+    if (name == "registerItemAndBlockDefinitions") return off.registerItemAndBlockDefinitions;
+
+    // ScreenController Property & Event Registration
+    if (name == "screenControllerRegisterButtonEventHandler" || name == "ScreenController::registerButtonEventHandler") return off.screenControllerRegisterButtonEventHandler;
+    if (name == "screenControllerBindString" || name == "ScreenController::bindString") return off.screenControllerBindString;
+    if (name == "screenControllerBindStringForAnyCollection" || name == "ScreenController::bindStringForAnyCollection") return off.screenControllerBindStringForAnyCollection;
+
+    // Scene Factory Abstract Creation
+    if (name == "sceneFactoryCreateUIScene" || name == "SceneFactory::createUIScene") return off.sceneFactoryCreateUIScene;
+    if (name == "sceneFactoryCreateScreenAbstract" || name == "SceneFactory::createScreenAbstract") return off.sceneFactoryCreateScreenAbstract;
+
     return 0;
 }
 

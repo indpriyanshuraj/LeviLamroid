@@ -13,6 +13,7 @@ struct SymbolEntry {
     const char* idaSignature;
     uintptr_t rva1_26_52;
     uintptr_t rva1_26_45;
+    uintptr_t rva1_26_60;
     size_t vtableSlot;
 };
 

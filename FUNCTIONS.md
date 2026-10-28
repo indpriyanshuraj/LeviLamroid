@@ -77,6 +77,7 @@ To build mods for LeviLamroid, add `${LEVILAMROID_ROOT}/include` to your include
 | `<ll/api/command/CommandRegistrar.h>` | `ll::command` | Native client-side command registration and local dispatch |
 | `<ll/api/Logger.h>` | `ll` | Multi-level formatted logger outputting to Android Logcat and file |
 | `<levilamroid/api/mcpe/Offsets.h>` | `levilamroid::mcpe` | Engine version detection and golden RVA tables |
+| `<levilamroid/api/mcpe/Symbols.h>` | `levilamroid::mcpe` | Universal symbol resolution engine (5,573 multi-version symbols across MSVC & Itanium ABIs) |
 | `<levilamroid/api/memory/PatternScan.h>` | `levilamroid::memory` | Fast multi-threaded IDA-style wildcard byte pattern scanner |
 | `<levilamroid/api/sound/FmodSound.h>` | `levilamroid::sound` | Method A: Direct in-memory FMOD audio playback (WAV, OGG, MP3) without resource packs |
 | `<levilamroid/api/sound/SoundEngine.h>` | `levilamroid::mcpe` | Method B: In-game audio engine hook for 3D spatial sound and acoustic physics |
@@ -567,6 +568,19 @@ LeviLamroid probes the loaded ELF `PT_NOTE` segment via `dl_iterate_phdr` to mat
 .sceneFactoryCreateUIScene          = 0x09B8E8C8,
 .sceneFactoryCreateScreenAbstract   = 0x09B8F200
 ```
+
+### 5.6 Universal Symbol Dictionary & Multi-Version Resolver (`ll::mcpe::resolveSymbolAddress`)
+Located in `#include <levilamroid/api/mcpe/Symbols.h>`.
+
+LeviLamroid embeds a high-speed unified symbol dictionary containing **5,573 verified engine symbols** with simultaneous RVA bindings across `1.26.52.3`, `1.26.45.1`, and `1.26.60.6`:
+
+- `const SymbolEntry* ll::mcpe::findSymbolInfo(std::string_view identifier)`: Looks up a symbol by human-readable name (e.g. `Actor::normalTick`), MSVC mangled name, or Itanium ABI mangled name.
+- `void* ll::mcpe::resolveSymbolAddress(std::string_view identifier)`: Dynamically resolves the effective virtual memory pointer for any symbol in the running process:
+  1. Checks active `EngineOffsets` table.
+  2. Probes loaded `libminecraftpe.so` dynamic symbols (`dlsym`).
+  3. Queries the active version RVA table (`rva1_26_60`, `rva1_26_52`, `rva1_26_45`).
+  4. Falls back to cached invariant AArch64 pattern scanning.
+- `size_t ll::mcpe::getRegisteredSymbolCount()`: Returns total indexed universal symbols (**5,573**).
 
 ---
 

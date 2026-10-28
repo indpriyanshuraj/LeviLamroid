@@ -18,9 +18,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **AAPCS64 IDA/Amethyst Wildcard Byte Signatures**:
   - Discovered 100% byte-identical 48-byte machine code signature for `ResourcePackManager::composeFullStack` matching every 1.26.x Bedrock engine build.
   - Extracted unique masked signatures for `_composeFullStack`, `setStack`, and `_doStackOperation` for AArch64 pattern scanning.
-- **Universal Modder RE Studio Target Ingestion**:
-  - Ingested all 2,036 symbols from `Symbols_1_26_52_3.inl` into the RE Studio Parity Database, expanding master targets to **5,039 symbols**.
+- **Universal Modder RE Studio & Target Expansion (7,305 Targets)**:
+  - Ingested all multi-version ARM64 offset symbols across 1.26.44 to 1.26.60 into RE Studio, auto-harvesting BDS RTTI class structures, expanding the master target database to **7,305 Bedrock engine targets**.
   - Implemented Phase 1.5 Signature Scanner in RE Studio orchestrator, auto-generating C++ signature headers for all verified symbols.
+- **Universal Multi-Version Symbol Table Expansion (5,573 Symbols)**:
+  - Expanded `SymbolEntry` in `Symbols.h` and `kSymbolTable` in `Symbols.cpp` with native `rva1_26_60` resolution.
+  - Upgraded universal symbol table from 2,039 entries to **5,573 universal Bedrock engine symbols**, carrying exact tri-version RVAs (`1.26.52.3`, `1.26.45.1`, and `1.26.60.6`) side by side.
+  - Expanded `findFunctionRva` in `Offsets.cpp` to map all RenderDragon, Skybox, Camera, Audio, Block, Item, and Input subsystems without fallbacks.
 
 ## [1.0.8-beta] - 2026-10-27
 

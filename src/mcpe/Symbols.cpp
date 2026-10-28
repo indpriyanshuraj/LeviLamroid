@@ -20,7 +20,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?move@LocalPlayer@@UEAAXAEBVVec3@@@Z",
         "_ZN11LocalPlayer4moveERK4Vec3",
         "",
-        0x04C05BE0, 0x04C05BE0, 0
+        0x04C05BE0, 0x04C05BE0, 0, 0
 
     },
     {
@@ -28,7 +28,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?normalTick@Player@@UEAAXXZ",
         "_ZN6Player10normalTickEv",
         "",
-        0x056637B8, 0x056637B8, 0
+        0x056637B8, 0x056637B8, 0, 0
 
     },
     {
@@ -36,7 +36,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getPosition@Actor@@QEBAAEBVVec3@@XZ",
         "_ZNK5Actor11getPositionEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -44,7 +44,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setPos@Actor@@UEAAXAEBVVec3@@@Z",
         "_ZN5Actor6setPosERK4Vec3",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -52,7 +52,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getEyeHeight@Actor@@QEBAMXZ",
         "_ZNK5Actor12getEyeHeightEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -60,7 +60,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getAABB@Actor@@QEBAAEBVAABB@@XZ",
         "_ZNK5Actor7getAABBEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -68,7 +68,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getHealth@Actor@@QEBAHXZ",
         "_ZNK5Actor9getHealthEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -76,7 +76,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setHealth@Actor@@UEAAXH@Z",
         "_ZN5Actor9setHealthEi",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -84,7 +84,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?swing@Actor@@UEAAXXZ",
         "_ZN5Actor5swingEv",
         "",
-        0, 0, 0
+        0, 0, 0x0fdfb108, 0
 
     },
     {
@@ -92,7 +92,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getOffhandSlot@Player@@QEBAAEAVItemStack@@XZ",
         "_ZNK6Player14getOffhandSlotEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -100,7 +100,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getSelectedItem@Player@@QEBAAEBVItemStack@@XZ",
         "_ZNK6Player15getSelectedItemEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -108,7 +108,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getCarriedItem@Mob@@QEBAAEBVItemStack@@XZ",
         "_ZNK3Mob14getCarriedItemEv",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -116,7 +116,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setEquippedSlot@Player@@UEAAXW4EquipmentSlot@@AEBVItemStack@@@Z",
         "_ZN6Player15setEquippedSlotE13EquipmentSlotRK9ItemStack",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -124,7 +124,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setEquippedSlot@Mob@@UEAAXW4EquipmentSlot@@AEBVItemStack@@@Z",
         "_ZN3Mob15setEquippedSlotE13EquipmentSlotRK9ItemStack",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
 
@@ -134,7 +134,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?useItem@GameMode@@UEAA_NAEAVItemStack@@@Z",
         "_ZN8GameMode7useItemER9ItemStack",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -142,7 +142,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?useItemOn@GameMode@@UEAA_NAEAVItemStack@@AEBVBlockPos@@EAEBVVec3@@PEBVBlock@@@Z",
         "_ZN8GameMode9useItemOnER9ItemStackRK8BlockPoshRK4Vec3PK5Block",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -150,7 +150,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?attack@GameMode@@UEAA_NAEAVPlayer@@AEAVActor@@@Z",
         "_ZN8GameMode6attackER6PlayerR5Actor",
         "",
-        0, 0, 0
+        0, 0, 0x0ec31abc, 0
 
     },
     {
@@ -158,7 +158,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?isOffhandItemAllowed@Player@@QEBA_NAEBVItemStack@@@Z",
         "_ZNK6Player20isOffhandItemAllowedERK9ItemStack",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -166,7 +166,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setItem@PlayerInventory@@UEAAXHAEBVItemStack@@W4ContainerID@@@Z",
         "_ZN15PlayerInventory7setItemEiRK9ItemStack11ContainerID",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
     {
@@ -174,7 +174,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?clearSlot@PlayerInventory@@UEAAXHW4ContainerID@@@Z",
         "_ZN15PlayerInventory9clearSlotEi11ContainerID",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
 
@@ -184,7 +184,7 @@ static const SymbolEntry kSymbolTable[] = {
         "",
         "_ZN2ui23ScreenTechStackSelector21getTechStackForScreenERKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE",
         "",
-        0x0974E844, 0x0974E844, 0
+        0x0974E844, 0x0974E844, 0, 0
 
     },
     {
@@ -192,7 +192,7 @@ static const SymbolEntry kSymbolTable[] = {
         "",
         "_ZN25StartMenuScreenController7_onOpenEv",
         "",
-        0x0A2DF314, 0x0A2DF314, 0
+        0x0A2DF314, 0x0A2DF314, 0, 0
 
     },
     {
@@ -200,7 +200,7 @@ static const SymbolEntry kSymbolTable[] = {
         "",
         "_ZN25StartMenuScreenController5_tickEv",
         "",
-        0x0A2E1FF4, 0x0A2E1FF4, 0
+        0x0A2E1FF4, 0x0A2E1FF4, 0, 0
 
     },
     {
@@ -208,7 +208,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?renderLevel@LevelRenderer@@QEAAXAEAVScreenContext@@AEAVRenderView@@@Z",
         "_ZN13LevelRenderer11renderLevelER13ScreenContextR10RenderView",
         "",
-        0, 0, 0
+        0, 0, 0x0a6c0188, 0
 
     },
     {
@@ -216,7 +216,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getLocalPlayer@ClientInstance@@UEBAPEAVLocalPlayer@@XZ",
         "",
         "",
-        0, 0, 32
+        0, 0, 0x11b3f100, 32
 
     },
     {
@@ -224,7 +224,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?isShowingMenu@ClientInstance@@UEBA_NXZ",
         "",
         "",
-        0, 0, 151
+        0, 0, 0, 151
 
     },
     {
@@ -232,7 +232,7 @@ static const SymbolEntry kSymbolTable[] = {
         "",
         "_ZN14NetworkHandler10sendPacketERK6Packet",
         "",
-        0, 0, 0
+        0, 0, 0, 0
 
     },
 
@@ -242,7 +242,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?tick@ScreenController@@UEAAXXZ",
         "_ZN16ScreenController4tickEv",
         "",
-        0x09B14FEC, 0x096D73DC, 4
+        0x09B14FEC, 0x096D73DC, 0, 4
 
     },
     {
@@ -250,7 +250,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?handleEvent@ScreenController@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
         "_ZN16ScreenController11handleEventERK11ScreenEvent",
         "",
-        0x09B14870, 0x096D6EA8, 10
+        0x09B14870, 0x096D6EA8, 0x09e9586c, 10
 
     },
     {
@@ -258,7 +258,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?bind@ScreenController@@UEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@IPEAX@Z",
         "_ZN16ScreenController4bindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEjPv",
         "",
-        0x09B1481C, 0x096D6E54, 14
+        0x09B1481C, 0x096D6E54, 0, 14
 
     },
     {
@@ -266,7 +266,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?addStaticScreenVars@ScreenController@@UEAAXAEAV?$unordered_map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIPropertyBag@@U?$hash@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$equal_to@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@VUIPropertyBag@@@std@@@2@@std@@@Z",
         "_ZN16ScreenController19addStaticScreenVarsERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x09B15FA4, 0x096D8394, 19
+        0x09B15FA4, 0x096D8394, 0, 19
 
     },
     {
@@ -274,7 +274,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?canExit@ScreenController@@UEAA_NXZ",
         "_ZN16ScreenController7canExitEv",
         "",
-        0x09B169DC, 0x096D8DCC, 26
+        0x09B169DC, 0x096D8DCC, 0, 26
 
     },
     {
@@ -282,7 +282,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?createScreenController@SceneFactory@@UEAA?AV?$shared_ptr@VScreenController@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@V?$shared_ptr@VScreenModel@@@3@@Z",
         "_ZN12SceneFactory22createScreenControllerERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt10shared_ptrI11ScreenModelE",
         "",
-        0x09AEF950, 0x09765590, 2
+        0x09AEF950, 0x09765590, 0, 2
 
     },
     {
@@ -290,7 +290,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?createScreen@SceneFactory@@UEAA?AV?$shared_ptr@VScreenView@@@std@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z",
         "_ZN12SceneFactory12createScreenERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x09AFD430, 0x09783638, 3
+        0x09AFD430, 0x09783638, 0, 3
 
     },
     {
@@ -298,7 +298,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?handleEvent@ButtonComponent@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
         "_ZN15ButtonComponent11handleEventERK11ScreenEvent",
         "",
-        0x096FB8E8, 0x09338D6C, 2
+        0x096FB8E8, 0x09338D6C, 0, 2
 
     },
     {
@@ -306,7 +306,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setPressed@ButtonComponent@@UEAAX_N@Z",
         "_ZN15ButtonComponent10setPressedEb",
         "",
-        0x096FC22C, 0x093396B0, 3
+        0x096FC22C, 0x093396B0, 0, 3
 
     },
     {
@@ -314,7 +314,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getButtonState@ButtonComponent@@UEBA?AW4ButtonState@@XZ",
         "_ZNK15ButtonComponent14getButtonStateEv",
         "",
-        0x096FC208, 0x0933968C, 4
+        0x096FC208, 0x0933968C, 0, 4
 
     },
     {
@@ -322,7 +322,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?handleEvent@ChatScreenController@@UEAA?AW4UIEventResult@@AEBUScreenEvent@@@Z",
         "_ZN20ChatScreenController11handleEventERK11ScreenEvent",
         "",
-        0x09A0F020, 0x09684878, 10
+        0x09A0F020, 0x09684878, 0, 10
 
     },
     {
@@ -330,7 +330,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?propertyBind@ChatScreenController@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
         "_ZN20ChatScreenController12propertyBindERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x09A0F948, 0x09685198, 18
+        0x09A0F948, 0x09685198, 0, 18
 
     },
     {
@@ -338,7 +338,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?displayClientMessage@GuiData@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
         "_ZN7GuiData20displayClientMessageERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x0A10391C, 0x09CFBBD0, 0
+        0x0A10391C, 0x09CFBBD0, 0, 0
 
     },
     {
@@ -346,7 +346,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?registerCommand@CommandRegistry@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEBDW4CommandPermissionLevel@@W4CommandFlagValue@@3@Z",
         "_ZN15CommandRegistry15registerCommandERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEPKcb19CommandPermissionLevel11CommandFlagS8_",
         "",
-        0x0DC4A370, 0x0D6075CC, 0
+        0x0DC4A370, 0x0D6075CC, 0x08a06ce8, 0
 
     },
     {
@@ -354,7 +354,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?send@LoopbackPacketSender@@UEAAXAEAVPacket@@@Z",
         "_ZN20LoopbackPacketSender4sendER6Packet",
         "",
-        0x0C68FAD4, 0x0C2E26FC, 3
+        0x0C68FAD4, 0x0C2E26FC, 0, 3
 
     },
     {
@@ -362,7 +362,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBV?$shared_ptr@VPacket@@@std@@@Z",
         "_ZN20ServerNetworkHandler6handleERK17NetworkIdentifierRKSt10shared_ptrI6PacketE",
         "",
-        0x0C58394C, 0x0C1E5B4C, 3
+        0x0C58394C, 0x0C1E5B4C, 0, 3
 
     },
     {
@@ -370,7 +370,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?addShapedRecipe@Recipes@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemInstance@@AEBV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@3@AEBV?$vector@VRecipeIngredient@@V?$allocator@VRecipeIngredient@@@2@@3@@Z",
         "_ZN7Recipes15addShapedRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorIS5_SaIS5_EERKSA_I16RecipeIngredientSaISD_EE",
         "",
-        0x0FC3D3D8, 0x0F2FC108, 0
+        0x0FC3D3D8, 0x0F2FC108, 0, 0
 
     },
     {
@@ -378,7 +378,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?addShapelessRecipe@Recipes@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemInstance@@AEBV?$vector@VRecipeIngredient@@V?$allocator@VRecipeIngredient@@@2@@3@@Z",
         "_ZN7Recipes18addShapelessRecipeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERK12ItemInstanceRKSt6vectorI16RecipeIngredientSaISA_EE",
         "",
-        0x0FC3E1D4, 0x0F2FCFD4, 0
+        0x0FC3E1D4, 0x0F2FCFD4, 0, 0
 
     },
     {
@@ -386,7 +386,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?_tryRegisterAndInitItem@ItemRegistry@@QEAA?AV?$SharedPtr@VItem@@@@AEBVHashedString@@@Z",
         "_ZN12ItemRegistry23_tryRegisterAndInitItemERK12HashedString",
         "",
-        0x0FBB3014, 0x0F2AFB68, 0
+        0x0FBB3014, 0x0F2AFB68, 0, 0
 
     },
     {
@@ -394,7 +394,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?parseItemIdentifier@ItemRegistry@@QEBA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAH@Z",
         "_ZNK12ItemRegistry19parseItemIdentifierERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERi",
         "",
-        0x0FBB5A54, 0x0F2B2580, 0
+        0x0FBB5A54, 0x0F2B2580, 0, 0
 
     },
     {
@@ -402,7 +402,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?init@BlockTypeRegistry@@SAXXZ",
         "_ZN17BlockTypeRegistry4initEv",
         "",
-        0x0AD6D44C, 0x0954D9A4, 0
+        0x0AD6D44C, 0x0954D9A4, 0, 0
 
     },
     {
@@ -410,7 +410,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?processCustomComponents@BlockDefinitionLoader@@QEAAXXZ",
         "_ZN21BlockDefinitionLoader23processCustomComponentsEv",
         "",
-        0x10491FF8, 0x0FB26F04, 0
+        0x10491FF8, 0x0FB26F04, 0x0a2fc65c, 0
 
     },
     {
@@ -418,7 +418,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?normalTick@Actor@@UEAAXXZ",
         "_ZN5Actor10normalTickEv",
         "",
-        0x0F27DA94, 0x0EA412D4, 1
+        0x0F27DA94, 0x0EA412D4, 0, 1
 
     },
     {
@@ -426,7 +426,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?baseTick@Actor@@UEAAXXZ",
         "_ZN5Actor8baseTickEv",
         "",
-        0x0F560820, 0x0EC84620, 2
+        0x0F560820, 0x0EC84620, 0, 2
 
     },
     {
@@ -434,7 +434,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?hurt@Actor@@UEAA_NAEBVActorDamageSource@@M_N1@Z",
         "_ZN5Actor4hurtERK17ActorDamageSourcefbb",
         "",
-        0x0F5609A8, 0x0EC847A8, 3
+        0x0F5609A8, 0x0EC847A8, 0, 3
 
     },
     {
@@ -442,7 +442,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?die@Actor@@UEAAXAEBVActorDamageSource@@@Z",
         "_ZN5Actor3dieERK17ActorDamageSource",
         "",
-        0x0F564E7C, 0x0EC88C50, 4
+        0x0F564E7C, 0x0EC88C50, 0, 4
 
     },
     {
@@ -450,7 +450,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?teleportTo@Actor@@UEAAXAEBVVec3@@_NMHH@Z",
         "_ZN5Actor10teleportToERK4Vec3bfii",
         "",
-        0x0F5746BC, 0x0EC97F6C, 22
+        0x0F5746BC, 0x0EC97F6C, 0, 22
 
     },
     {
@@ -458,7 +458,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?hasComponent@Actor@@QEBA_NI@Z",
         "_ZNK5Actor12hasComponentEj",
         "",
-        0x0F583390, 0x0D6C1B88, 0
+        0x0F583390, 0x0D6C1B88, 0, 0
 
     },
     {
@@ -466,7 +466,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?setCustomName@Actor@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
         "_ZN5Actor13setCustomNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x0F57E694, 0x0ECA1C24, 0
+        0x0F57E694, 0x0ECA1C24, 0, 0
 
     },
     {
@@ -474,7 +474,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?QuickJS@Scripting@@QEAAXXZ",
         "_ZN9Scripting7QuickJSEv",
         "",
-        0x11432150, 0x10917BD4, 0
+        0x11432150, 0x10917BD4, 0, 0
 
     },
     {
@@ -482,7 +482,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?ScriptSystem@ScriptModuleMinecraft@@QEAAXXZ",
         "_ZN21ScriptModuleMinecraft12ScriptSystemEv",
         "",
-        0x0E069FE8, 0x0DA54B3C, 0
+        0x0E069FE8, 0x0DA54B3C, 0, 0
 
     },
     {
@@ -490,7 +490,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getResource@ResourcePack@@QEBA_NAEBVPath@@AEAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
         "_ZNK12ResourcePack11getResourceERKN4Core4PathERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE",
         "",
-        0x06A3DEA0, 0x066951F4, 0
+        0x06A3DEA0, 0x066951F4, 0, 0
 
     },
     {
@@ -498,7 +498,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?getResourcePackInPath@ResourcePackRepository@@QEAA?AV?$shared_ptr@VResourcePack@@@std@@AEBVPath@@@Z",
         "_ZN22ResourcePackRepository22getResourcePackInPathERKN4Core4PathE",
         "",
-        0x0C9356E4, 0x0C59FEF0, 0
+        0x0C9356E4, 0x0C59FEF0, 0, 0
 
     },
     {
@@ -506,7 +506,7 @@ static const SymbolEntry kSymbolTable[] = {
         "?findVanillaPacks@RepositoryLoading@@YA?AV?$vector@V?$shared_ptr@VResourcePack@@@std@@V?$allocator@V?$shared_ptr@VResourcePack@@@std@@@2@@std@@XZ",
         "_ZN17RepositoryLoading16findVanillaPacksEv",
         "",
-        0x0C96C79C, 0x0C5D9184, 0
+        0x0C96C79C, 0x0C5D9184, 0, 0
 
     },
 
@@ -605,7 +605,9 @@ void* resolveSymbolAddress(std::string_view identifier) {
         }
 
         uintptr_t rva = 0;
-        if (ver.find("1.26.44") != std::string::npos || ver.find("1.26.45") != std::string::npos) {
+        if (ver.find("1.26.60") != std::string::npos) {
+            rva = info->rva1_26_60;
+        } else if (ver.find("1.26.44") != std::string::npos || ver.find("1.26.45") != std::string::npos) {
             rva = info->rva1_26_45;
         } else {
             rva = info->rva1_26_52;
